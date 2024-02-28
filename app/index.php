@@ -51,6 +51,7 @@ if ($_GET['x'] == 1) {
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="javascript:opcion('admonUser');">Usuarios</a></li>
                             <li><a class="dropdown-item" href="javascript:opcion('momentos');">Momentos</a></li>
+                            <li><a class="dropdown-item" href="javascript:opcion('materiales');">Materiales</a></li>
                             <!-- <li>
                                 <hr class="dropdown-divider">
                             </li> -->

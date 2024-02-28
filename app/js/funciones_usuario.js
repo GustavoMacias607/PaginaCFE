@@ -119,4 +119,11 @@ function validateEmail() {
 
         return false;
     }
+
+
+    function cambiarEstiloImagen() {
+        var imagen = document.getElementById("imagen");
+        imagen.style.display = "block"; // Cambia el display a "block" cuando se pasa el mouse sobre h2
+        // También puedes realizar otros cambios de estilo aquí según tus necesidades
+    }
 } 

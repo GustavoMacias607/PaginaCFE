@@ -11,16 +11,16 @@ require("../../scripts/connect.php");
 require("../../scripts/Conexion.php");
 require("../../scripts/Departamento.php");
 require("../../scripts/Usuario.php");
+require("../../scripts/Materiales.php");
 require("../../scripts/Momentos.php");
-
 
 $c = new Conexion($conData);
 $u = new Usuario($c->getConnection());
 $resU = $u->getAllUsers();
 
 
-$m = new Momentos($c->getConnection());
-$resM = $m->getAllMomentos();
+$m = new Materiales($c->getConnection());
+$resM = $m->getAllMateriales();
 ?>
 
 <div class="row container">
@@ -60,6 +60,9 @@ $resM = $m->getAllMomentos();
             </div>
             <div class="col-12">
                 <button type="button" onclick="javascript:validaFrmMomento();" class="btn btn-primary">Guardar</button>
+            </div>
+            <div>
+                <input type="file">
             </div>
         </form>
 
@@ -126,15 +129,15 @@ $resM = $m->getAllMomentos();
         </div>
 
     </div>
+    <img src="../.././img/Capturas.JPG" class="card-img-top" alt="...">
     <div class="col-md-12 p-5">
         <table id="tbl_momentos" class="table">
             <thead>
-                <th>#</th>
-                <th>Momento</th>
-                <th>Estado</th>
-                <th>Orden</th>
-                <th>Responsable</th>
-                <th>Operaciones</th>
+                <th>Codigo</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Unidad</th>
+                <th>Imagen</th>
             </thead>
             <tbody>
                 <?php
@@ -148,11 +151,11 @@ $resM = $m->getAllMomentos();
                         $cont++;
                     ?>
                         <tr>
-                            <td><?= $cont ?></td>
-                            <td><?= utf8_encode($fila['momento']) ?></td>
-                            <td><?= $fila['estado'] ?></td>
-                            <td><?= $fila['orden'] ?></td>
-                            <td><?= utf8_encode($fila['responsable']) ?></td>
+                            <td><?= $fila['codigo'] ?></td>
+                            <td><?= utf8_encode($fila['descripcion']) ?></td>
+                            <td><?= $fila['precio'] ?></td>
+                            <td><?= $fila['unidad'] ?></td>
+                            <td></td>
                             <td>
                                 <button class="btn btn-danger" onclick="javascript:EliminarMomento(<?= $fila['idmomento'] ?>,'<?= $fila['momento'] ?>');"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
                                 <button class="btn btn-info" onclick="javascript:llenarModalModificar(<?= $fila['idmomento'] ?>, '<?= $fila['momento'] ?>','<?= $fila['estado'] ?>',<?= $fila['orden'] ?>,'<?= $fila['responsable'] ?>');" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-regular fa-pen-to-square" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i></button>

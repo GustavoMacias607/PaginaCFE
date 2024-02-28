@@ -8,6 +8,9 @@ function opcion(op) {
         case "momentos":
             url = "Momentos/addmomentosFrm.php";
             break;
+        case "materiales":
+            url = "Materiales/addmaterialesFrm.php";
+            break;
         default: alert("Opción incorrecta"); return;
     }
 
@@ -26,6 +29,13 @@ function opcion(op) {
                         break;
                     case "momentos":
                         $("#tbl_momentos").DataTable({
+                            language: {
+                                url: "../../DataTables-1.11.3/language.json"
+                            }
+                        });
+                        break;
+                    case "materiales":
+                        $("#tbl_materiales").DataTable({
                             language: {
                                 url: "../../DataTables-1.11.3/language.json"
                             }

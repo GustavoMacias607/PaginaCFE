@@ -1,10 +1,10 @@
 <?php
 
 session_start();
-if (!isset($_SESSION['idusuario'])) {
-    header("Location: ../../index.php");
-    die();
-}
+// if (!isset($_SESSION['idusuario'])) {
+//     header("Location: ../../index.php");
+//     die();
+// }
 require("../../scripts/connect.php");
 require("../../scripts/Conexion.php");
 require("../../scripts/Departamento.php");
