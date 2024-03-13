@@ -29,13 +29,55 @@ if ($_GET['x'] == 1) {
 </head>
 
 <body>
+
+
+    <div class="top-bar">
+        <img src="/img/Logocfelargo.png" alt="Logo" id="logoImage" style="height: 70%;">
+        <div class="btn-group dropstart">
+            <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
+            </button>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Usuarios</a></li>
+                <li><a class="dropdown-item" href="index.html">Cerrar sesión</a></li>
+            </ul>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- Por este icono de Font Awesome -->
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="Materiales.html">Materiales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Estructuras</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Normas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Button 4</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Button 5</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="bottom-rectangle">
+    </div>
     <!-- Inicio del navbar -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -47,8 +89,7 @@ if ($_GET['x'] == 1) {
                         <a class="nav-link" href="#">Link</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fa-solid fa-gear"></i> Configuración
                         </a>
                         <ul class="dropdown-menu">
