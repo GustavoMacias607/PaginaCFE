@@ -33,7 +33,9 @@ if ($_GET['x'] == 1) {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -45,13 +47,15 @@ if ($_GET['x'] == 1) {
                         <a class="nav-link" href="#">Link</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
                             <i class="fa-solid fa-gear"></i> Configuración
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="javascript:opcion('admonUser');">Usuarios</a></li>
                             <li><a class="dropdown-item" href="javascript:opcion('momentos');">Momentos</a></li>
                             <li><a class="dropdown-item" href="javascript:opcion('materiales');">Materiales</a></li>
+                            <li><a class="dropdown-item" href="../../PaginaCFE/app/tablita.php">prueba</a></li>
                             <!-- <li>
                                 <hr class="dropdown-divider">
                             </li> -->
@@ -80,6 +84,7 @@ if ($_GET['x'] == 1) {
     <script src="js/funciones.js"></script>
     <script src="js/funciones_usuario.js"></script>
     <script src="js/funciones_momentos.js"></script>
+    <script src="js/funciones_materiales.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
 </body>
 

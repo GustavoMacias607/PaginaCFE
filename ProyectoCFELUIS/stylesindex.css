@@ -1,0 +1,61 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('FuenteLato/Lato-Regular.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #008E5A;
+}
+.btn-outline-light {
+    --bs-btn-font-weight: 600;
+    --bs-btn-bg: #008E5A; /* Fondo verde */
+    --bs-btn-color: #ffffff; /* Letra blanca */
+    --bs-btn-border-color: #ffffff; /* Contorno blanco */
+    --bs-btn-border-width: 3px; /* Grosor del contorno */
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-17%, -140%);
+}
+
+.btn-outline-light:hover {
+    background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+    border-color: #008E5A; /* Contorno verde al pasar el mouse */
+    color: #008E5A; /* Letra verde al pasar el mouse */
+}
+
+.btn.btn-outline-light:active {
+    background-color: #008E5A; /* Fondo blanco al hacer clic */
+    border-color: #ffffff; /* Contorno verde al hacer clic */
+    color: #ffffff; /* Letra verde al hacer clic */
+}
+.center-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFFFFF;
+    padding: 40px;
+    border-radius: 7px;
+}
+
+
+/* Color del texto ingresado */
+.form-control {
+color: #303030; /* Color negro */
+border: none; /* Eliminar borde */
+    border-radius: 0; /* Eliminar bordes redondeados */
+    border-bottom: 3px solid #008E5A; /* Agregar una línea inferior */
+}
+.input-group-text {
+    border: none; /* Eliminar contorno del icono */
+    background-color: #FFFFFF;
+}
+.green-icon {
+    color: #008E5A; /* Color verde */          
+}
+img.logo {
+    display: block;
+    margin: -40px auto;
+}

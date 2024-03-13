@@ -1,0 +1,207 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('FuenteLato/Lato-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'LatoBold';
+    src: url('FuenteLato/Lato-Bold.ttf') format('truetype'); 
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+/*estilos para la barra superior*/
+.top-bar {
+    background-color: #008E5A;
+    height: 80px;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: self-start;
+    justify-content: space-between;
+    padding: 20px 20px 0;
+}
+
+/* Estilos para el navbar */
+.navbar {
+    font-family: 'LatoBold', sans-serif;
+    background-color: #008E5A; /* Color verde */
+    color: #ffffff; /* Color del texto */
+    z-index: 1100;
+    padding: 0.1rem .1rem; /* Espaciado interno */
+    height: 30px; /* Altura del navbar */
+    position: absolute;
+    top: 25px; /* Espacio desde arriba */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link {
+    color: #ffffff; /* Color del texto */
+    background-color: #008E5A;  
+}
+
+.navbar-nav .nav-link:hover {
+    color: #303030; /* Color del texto al pasar el cursor */
+}
+
+.navbar-nav .nav-link:active {
+    color: #303030; /* Color del texto al hacer clic */
+}
+.navbar-toggler {
+    color: #ffffff;
+    font-size: 30px; /* Tamaño del ícono */
+    border: none; /* Quita el borde del botón */
+}
+
+/* Estilos para el botón de menu derecho */
+.dropstart .dropdown-menu {
+    position: absolute;
+    background-color: #008E5A;
+    border-color: #ffffff;
+    border-width: 2px;
+    border-radius: 5px;
+    color: #ffffff;
+}
+
+.dropstart .dropdown-menu a {
+    background-color: #008E5A;
+    color: #ffffff;
+}
+
+.dropstart .dropdown-menu a:hover {
+    color: #303030;
+    background-color: #008E5A;
+}
+
+.dropstart .dropdown-menu a:active {
+    color: #303030;
+    background-color: #008E5A;
+}
+
+/*.menu-icon {
+    color: #ffffff;
+    font-size: 30px;
+    cursor: pointer;
+}*/
+/*barra superior negra*/
+.bottom-rectangle {
+    background-color: #303030;
+    width: 100%;
+    height: 60px;
+    position: absolute;
+    top: 80px; /* La altura del rectángulo superior */
+    left: 0;
+    z-index: 500; /* Asegura que el rectángulo esté detrás de los botones */     
+}
+
+
+
+/* Estilos para el buscador */
+.label-container {
+
+    position: absolute;
+    top: 170px; /* Espacio desde arriba */
+    left: 50%; /* Centrado horizontal */
+    transform: translateX(-50%); /* Centrado horizontal */
+    width: 700px; /* Ancho del label */
+    background-color: #FFFFFF; /* Fondo blanco */
+    border: 3px solid #008E5A; /* Contorno de 3px color verde */
+    border-radius: 5px; /* Bordes redondeados */
+    display: block; /* Para alinear el icono */
+}
+.label-container input[type="text"] {
+    width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
+}
+.label-container input[type="text"]::placeholder {
+    color: #858585; /* Color del texto del placeholder */
+    font-size: 20px; /* Tamaño del texto del placeholder */
+}
+.green-icon {
+    color: #008E5A; /* Color verde */          
+}
+
+      /* Estilos para el botón "Agregar material" */
+      .btn-agregar-material {
+        font-family: 'LatoBold', sans-serif;
+        --bs-btn-padding-y: .3rem;
+        --bs-btn-padding-x: 2.5rem;
+        --bs-btn-font-size: 1rem;
+        background-color: #ffffff; /* Fondo blanco */
+        color: #303030; /* Letra blanca */
+        border: 3px solid #ffffff; /* Contorno verde */
+        border-radius: 5; /* Sin bordes redondeados */
+        transition: all 0.3s ease; /* Transición suave */
+        transform: translate(50PX, 10PX);
+    }
+
+    .btn-agregar-material:hover {
+        background-color: #ffffffa2; /* Fondo blanco al pasar el mouse */
+        border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
+        color: #303030; /* Letra verde al pasar el mouse */
+    }
+
+    .btn-agregar-material:active {
+        background-color: #ffffffa2; /* Fondo blanco al hacer clic */
+    border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
+    color: #ffffff; /* Letra verde al hacer clic */
+    }
+
+    /*estilos para el modal agregar material*/
+    .modal {
+        z-index: 1200;
+        font-family: 'LatoBold', sans-serif;
+    }
+    /* Estilos para el botón Guardar del modal */
+.modal-footer .btn-primary {
+    background-color: #008E5A; /* Color verde */
+    border-color: #008E5A; /* Color del borde */
+    color: #ffffff;
+}
+
+.modal-footer .btn-primary:active {
+    background-color: #008E5A; /* Color verde al hacer clic */
+    border-color: #008E5A; /* Color del borde al hacer clic */
+    color: #000000; /* Color negro al hacer clic */
+}
+.modal-body input[type="text"] {
+    font-family: 'Lato', sans-serif;
+}
+
+/*estilos de la tabla*/
+.table table-striped{
+    top: 200PX;
+}
+
+        /* Estilos personalizados para la tabla */
+        #tabla-materiales {
+            border-collapse: collapse;
+            position: absolute;
+            left: 50%; /* Centrado horizontal */
+    transform: translateX(-50%); /* Centrado horizontal */
+            width: 95%;
+        }
+        #tabla-materiales th,
+        #tabla-materiales td {
+            border: 3px solid #008E5A; /* Líneas divisorias de 3px de grosor en color verde */
+            padding: 8px;
+            text-align: left;
+        }
+        #tabla-materiales th {
+            background-color: #008E5A; /* Encabezados con fondo verde */
+            color: white; /* Letras blancas en los encabezados */
+        }
+        #tabla-materiales tbody td {
+            color: #303030; /* Texto de las filas en color #303030 */
+        }
+

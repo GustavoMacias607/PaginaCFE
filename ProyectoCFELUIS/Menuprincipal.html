@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIFCAO</title>
+    <link href="../bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="stylesmenuprincipal.css">
+</head>
+
+<body>
+    <div class="top-bar">
+        <img src="img/Logocfelargo.png" alt="Logo" id="logoImage" style="height: 70%;">
+        <div class="btn-group dropstart">
+            <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false"
+                style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
+            </button>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Usuarios</a></li>
+                <li><a class="dropdown-item" href="index.html">Cerrar sesión</a></li>
+            </ul>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+
+                <!-- Por este icono de Font Awesome -->
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="Materiales.html">Materiales</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Estructuras</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Normas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Button 4</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Button 5</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="bottom-rectangle">
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script>
+        window.addEventListener('resize', function () {
+            const logoImage = document.getElementById('logoImage');
+            const windowWidth = window.innerWidth;
+            const originalWidth = logoImage.naturalWidth;
+
+            if (windowWidth < originalWidth) {
+                logoImage.src = 'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+                logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+            } else {
+                logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+                logoImage.alt = 'Logo'; // Restaura el atributo alt
+            }
+        });
+    </script>
+</body>
+
+</html>

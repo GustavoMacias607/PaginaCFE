@@ -39,12 +39,13 @@ class Materiales
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaterialesInsertar();";
+            $consulta = "call spMaterialesInsertar(:Codigo,:Descripcion,:Precio, :Unidad,1)";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
-                "Momento" => $datos->momento,
-                "Orden" => $datos->orden,
-                "Responsable" => $datos->responsable,
+                "Codigo" => $datos->codigo,
+                "Descripcion" => $datos->descripcion,
+                "Precio" => $datos->precio,
+                "Unidad" => $datos->unidad
 
             ));
             unset($c);
