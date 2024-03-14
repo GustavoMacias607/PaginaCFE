@@ -1,13 +1,7 @@
 function opcion(op) {
     let url = "";
-    let json = "asd123sda2wx";
+    let json = "";
     switch (op) {
-        case "admonUser":
-            url = "usuarios/addUserFrm.php";
-            break;
-        case "momentos":
-            url = "Momentos/addmomentosFrm.php";
-            break;
         case "materiales":
             url = "Materiales/addmaterialesFrm.php";
             break;
@@ -19,29 +13,6 @@ function opcion(op) {
             console.log(responseText);
             if (status == "success") {
                 document.getElementById("mainContent").innerHTML = responseText;
-                switch (op) {
-                    case "admonUser":
-                        $("#tbl_user").DataTable({
-                            language: {
-                                url: "../../DataTables-1.11.3/language.json"
-                            }
-                        });
-                        break;
-                    case "momentos":
-                        $("#tbl_momentos").DataTable({
-                            language: {
-                                url: "../../DataTables-1.11.3/language.json"
-                            }
-                        });
-                        break;
-                    case "materiales":
-                        $("#tbl_materiales").DataTable({
-                            language: {
-                                url: "../../DataTables-1.11.3/language.json"
-                            }
-                        });
-                        break;
-                }
             } else {
                 throw e = status;
             }
@@ -52,6 +23,3 @@ function opcion(op) {
 
 }
 
-function hola() {
-    hola
-}

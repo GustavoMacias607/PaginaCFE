@@ -26,13 +26,10 @@ if ($_GET['x'] == 1) {
     <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="indexStyles.css">
     <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
-
     <title></title>
 </head>
 
 <body>
-
-
     <div class="top-bar">
         <img src="../img/Logocfelargo.png" alt="Logo" id="logoImage" style="height: 70%;">
         <div class="btn-group dropstart">
@@ -44,6 +41,7 @@ if ($_GET['x'] == 1) {
             </ul>
         </div>
     </div>
+
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -72,54 +70,10 @@ if ($_GET['x'] == 1) {
             </div>
         </div>
     </nav>
-    <div class="bottom-rectangle">
-    </div>
-
-    <!-- Inicio del navbar -->
-    <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Link</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-gear"></i> Configuración
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="javascript:opcion('admonUser');">Usuarios</a></li>
-                            <li><a class="dropdown-item" href="javascript:opcion('momentos');">Momentos</a></li>
-                            <li><a class="dropdown-item" href="javascript:opcion('materiales');">Materiales</a></li>
-                            <li><a class="dropdown-item" href="../../PaginaCFE/app/tablita.php">prueba</a></li>
-                             <li>
-                                <hr class="dropdown-divider">
-                            </li> 
-                            <li><a class="dropdown-item" href="#">Something else here</a></li> 
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-                    </li>
-                </ul>
-                <form class="d-flex" role="search">
-                    <a class="btn btn-outline-danger" href="index.php?x=1">Salir</a>
-                </form>
-            </div>
-        </div>
-    </nav> -->
-    <!-- fin de navbar -->
 
     <!-- Inicio del contenido principal -->
-    <div id="mainContent" class="contaniner">
-        <h1>Bienvenido <?= $_SESSION['nombre'] ?></h1>
+    <div id="mainContent" class="contaniner" style="margin-top: 5rem;">
+
     </div>
     <!-- Final del contenido principal -->
     <script src="../bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
@@ -129,6 +83,23 @@ if ($_GET['x'] == 1) {
     <script src="js/funciones_momentos.js"></script>
     <script src="js/funciones_materiales.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
+
+    <script>
+        window.addEventListener('resize', function() {
+            const logoImage = document.getElementById('logoImage');
+            const windowWidth = window.innerWidth;
+            const originalWidth = logoImage.naturalWidth;
+
+            if (windowWidth < originalWidth) {
+                logoImage.src =
+                    '../img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+                logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+            } else {
+                logoImage.src = '../img/Logocfelargo.png'; // Vuelve a la imagen original
+                logoImage.alt = 'Logo'; // Restaura el atributo alt
+            }
+        });
+    </script>
 </body>
 
 </html>

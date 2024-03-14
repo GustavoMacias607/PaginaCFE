@@ -15,7 +15,7 @@ if ($debug_on == 1) {
         require("../scripts/Usuario.php");
 
         $c =  new Conexion($conData);
-        $u = new Usuario($c->getConnection());
+        //$u = new Usuario($c->getConnection());
         $res = $u->getUserLogin($datos, $clave_enc);
 
 
@@ -24,12 +24,6 @@ if ($debug_on == 1) {
             foreach ($res['datos'] as $fila) {
                 $_SESSION["idusuario"] = $fila['idusuario'];
                 $_SESSION["nombre"] = $fila['nombre'];
-                $_SESSION["correo"] = $fila['correo'];
-                $_SESSION["iniciales"] = $fila['iniciales'];
-                $_SESSION["estado"] = $fila['estado'];
-                $_SESSION["rol"] = $fila['rol'];
-                $_SESSION["llave_depto"] = $fila['llave_depto'];
-                $_SESSION["departamento"] = $fila['departamento'];
             }
             $resultado['estado'] = "OK";
         } else {

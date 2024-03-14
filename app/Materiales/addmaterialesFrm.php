@@ -19,8 +19,7 @@ $resM = $m->getAllMateriales();
 
 <div class="row container mt-5">
     <div class="bottom-rectangle">
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            style="--bs-btn-padding-y: .3rem; --bs-btn-padding-x: 2.5rem; --bs-btn-font-size: 1rem;">Agregar
+        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" style="--bs-btn-padding-y: .3rem; --bs-btn-padding-x: 2.5rem; --bs-btn-font-size: 1rem;">Agregar
             material</button>
     </div>
 
@@ -40,8 +39,7 @@ $resM = $m->getAllMateriales();
                     <th class="col-1" style="width: 140px;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                            <select class="form-select form-select-sm ml-2" id="selectUnidad" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected></option>
                                 <option value="PZ">PZ</option>
                                 <option value="KG">KG</option>
@@ -55,8 +53,7 @@ $resM = $m->getAllMateriales();
                     <th class="col-1" style="width: 170px;">
                         <div class="d-flex align-items-center">
                             <span>Estatus: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectEstatus"
-                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                            <select class="form-select form-select-sm ml-2" id="selectEstatus" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="Activo" selected>Activo</option>
                                 <option value="Inactivo">Inactivo</option>
                             </select>
@@ -68,33 +65,32 @@ $resM = $m->getAllMateriales();
                 <?php
                 if ($resM['filas'] == 0) {
                 ?>
-                <td colspan="8">Sin resultados</td>
-                <?php
+                    <td colspan="8">Sin resultados</td>
+                    <?php
                 } else {
                     $cont = 0;
                     foreach ($resM['datos'] as $fila) {
                         $cont++;
                     ?>
-                <tr>
-                    <td><?= $fila['codigo'] ?></td>
-                    <td><?= $fila['norma'] ?></td>
-                    <td><?= utf8_encode($fila['descripcion']) ?></td>
-                    <td><?= $fila['precio'] ?></td>
-                    <td><?= $fila['unidad'] ?></td>
+                        <tr>
+                            <td><?= $fila['codigo'] ?></td>
+                            <td><?= $fila['norma'] ?></td>
+                            <td><?= utf8_encode($fila['descripcion']) ?></td>
+                            <td><?= $fila['precio'] ?></td>
+                            <td><?= $fila['unidad'] ?></td>
 
-                    <td class="estatus">
-                        <?php if ($fila['estatus']) { ?>
-                        <input type="checkbox" checked>
-                        <?php
+                            <td class="estatus">
+                                <?php if ($fila['estatus']) { ?>
+                                    <input type="checkbox" checked>
+                                <?php
                                 } else { ?>
-                        <input type="checkbox">
-                        <?php
+                                    <input type="checkbox">
+                                <?php
                                 }
                                 ?>
-                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal"
-                            data-bs-target="#EditarModal"></i>
-                    </td>
-                </tr>
+                                <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal" data-bs-target="#EditarModal"></i>
+                            </td>
+                        </tr>
                 <?php
                     }
                 }
@@ -109,8 +105,7 @@ $resM = $m->getAllMateriales();
                     <td class="unidad">PZ</td>
                     <td class="estatus">
                         <input type="checkbox" checked>
-                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal"
-                            data-bs-target="#EditarModal"></i>
+                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal" data-bs-target="#EditarModal"></i>
                     </td>
                 </tr>
                 <tr>
@@ -121,8 +116,7 @@ $resM = $m->getAllMateriales();
                     <td class="unidad">PZ</td>
                     <td class="estatus">
                         <input type="checkbox" checked>
-                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal"
-                            data-bs-target="#EditarModal"></i>
+                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal" data-bs-target="#EditarModal"></i>
                     </td>
                 </tr>
 
@@ -149,8 +143,7 @@ $resM = $m->getAllMateriales();
                     </div>
                     <div class="mb-3">
                         <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción</label>
-                        <textarea class="form-control" id="descripcionInput" rows="3"
-                            style="border: 3px solid #008E5A;"></textarea>
+                        <textarea class="form-control" id="descripcionInput" rows="3" style="border: 3px solid #008E5A;"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="precioInput" class="form-label" style="color: #303030;">Precio</label>
@@ -158,8 +151,7 @@ $resM = $m->getAllMateriales();
                     </div>
                     <div class="mb-3">
                         <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                        <input type="date" class="form-control" id="fechaPrecioInput"
-                            style="border: 3px solid #008E5A;">
+                        <input type="date" class="form-control" id="fechaPrecioInput" style="border: 3px solid #008E5A;">
                     </div>
                     <div class="mb-3">
                         <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
@@ -179,8 +171,7 @@ $resM = $m->getAllMateriales();
                     </div>
                 </div>
                 <div class="modal-footer" style="border-top: 2px solid #008E5A;">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
         </div>
@@ -205,8 +196,7 @@ $resM = $m->getAllMateriales();
                     </div>
                     <div class="mb-3">
                         <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción</label>
-                        <textarea class="form-control" id="descripcionInput" rows="3"
-                            style="border: 3px solid #008E5A;"></textarea>
+                        <textarea class="form-control" id="descripcionInput" rows="3" style="border: 3px solid #008E5A;"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="precioInput" class="form-label" style="color: #303030;">Precio</label>
@@ -214,8 +204,7 @@ $resM = $m->getAllMateriales();
                     </div>
                     <div class="mb-3">
                         <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                        <input type="date" class="form-control" id="fechaPrecioInput"
-                            style="border: 3px solid #008E5A;">
+                        <input type="date" class="form-control" id="fechaPrecioInput" style="border: 3px solid #008E5A;">
                     </div>
                     <div class="mb-3">
                         <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
@@ -235,31 +224,29 @@ $resM = $m->getAllMateriales();
                     </div>
                 </div>
                 <div class="modal-footer" style="border-top: 2px solid #008E5A;">
-                    <button type="button" class="btn btn-primary"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
     <script>
-    window.addEventListener('resize', function() {
-        const logoImage = document.getElementById('logoImage');
-        const windowWidth = window.innerWidth;
-        const originalWidth = logoImage.naturalWidth;
+        window.addEventListener('resize', function() {
+            const logoImage = document.getElementById('logoImage');
+            const windowWidth = window.innerWidth;
+            const originalWidth = logoImage.naturalWidth;
 
-        if (windowWidth < originalWidth) {
-            logoImage.src =
-                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+            if (windowWidth < originalWidth) {
+                logoImage.src =
+                    'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+                logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-        } else {
-            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-            logoImage.alt = 'Logo'; // Restaura el atributo alt
-        }
-    });
+            } else {
+                logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+                logoImage.alt = 'Logo'; // Restaura el atributo alt
+            }
+        });
     </script>
