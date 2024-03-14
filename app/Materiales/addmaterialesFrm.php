@@ -96,31 +96,6 @@ $resM = $m->getAllMateriales();
                 }
                 ?>
             </tbody>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>N123</td>
-                    <td>Descripción del material 1</td>
-                    <td>$10.00</td>
-                    <td class="unidad">PZ</td>
-                    <td class="estatus">
-                        <input type="checkbox" checked>
-                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal" data-bs-target="#EditarModal"></i>
-                    </td>
-                </tr>
-                <tr>
-                    <td>1</td>
-                    <td>N123</td>
-                    <td>Descripción del material 1</td>
-                    <td>$10.00</td>
-                    <td class="unidad">PZ</td>
-                    <td class="estatus">
-                        <input type="checkbox" checked>
-                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal" data-bs-target="#EditarModal"></i>
-                    </td>
-                </tr>
-
-            </tbody>
         </table>
     </div>
 
