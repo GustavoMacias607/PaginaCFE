@@ -1,3 +1,3 @@
-function sele() {
+function AddMaterialValidar() {
     alert("Se presiono");
 }

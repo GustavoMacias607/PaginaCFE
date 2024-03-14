@@ -24,6 +24,8 @@ if ($_GET['x'] == 1) {
     <link href="../bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
     <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="indexStyles.css">
+    <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
 
     <title></title>
 </head>
@@ -32,10 +34,9 @@ if ($_GET['x'] == 1) {
 
 
     <div class="top-bar">
-        <img src="/img/Logocfelargo.png" alt="Logo" id="logoImage" style="height: 70%;">
+        <img src="../img/Logocfelargo.png" alt="Logo" id="logoImage" style="height: 70%;">
         <div class="btn-group dropstart">
             <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
-            </button>
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Usuarios</a></li>
@@ -53,7 +54,7 @@ if ($_GET['x'] == 1) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="Materiales.html">Materiales</a>
+                        <a class="nav-link" href="javascript:opcion('materiales');">Materiales</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Estructuras</a>
@@ -73,8 +74,9 @@ if ($_GET['x'] == 1) {
     </nav>
     <div class="bottom-rectangle">
     </div>
+
     <!-- Inicio del navbar -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <!-- <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Navbar</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -97,10 +99,10 @@ if ($_GET['x'] == 1) {
                             <li><a class="dropdown-item" href="javascript:opcion('momentos');">Momentos</a></li>
                             <li><a class="dropdown-item" href="javascript:opcion('materiales');">Materiales</a></li>
                             <li><a class="dropdown-item" href="../../PaginaCFE/app/tablita.php">prueba</a></li>
-                            <!-- <li>
+                             <li>
                                 <hr class="dropdown-divider">
-                            </li> -->
-                            <!-- <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                            </li> 
+                            <li><a class="dropdown-item" href="#">Something else here</a></li> 
                         </ul>
                     </li>
                     <li class="nav-item">
@@ -112,7 +114,7 @@ if ($_GET['x'] == 1) {
                 </form>
             </div>
         </div>
-    </nav>
+    </nav> -->
     <!-- fin de navbar -->
 
     <!-- Inicio del contenido principal -->

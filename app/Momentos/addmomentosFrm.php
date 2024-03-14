@@ -43,8 +43,8 @@ $resM = $m->getAllMateriales();
                     if ($resU['filas'] > 0) {
                         foreach ($resU['datos'] as $fila) {
                     ?>
-                            <option value="<?= $fila['nombre'] ?>"><?= utf8_encode($fila['nombre']) ?>
-                            </option>
+                    <option value="<?= $fila['nombre'] ?>"><?= utf8_encode($fila['nombre']) ?>
+                    </option>
                     <?php
                         }
                     } else {
@@ -68,7 +68,8 @@ $resM = $m->getAllMateriales();
 
 
         <!-- Modal Modificar -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -82,7 +83,8 @@ $resM = $m->getAllMateriales();
                             <input style="display: none;" type="text" id="OrModal">
                             <div class="col-md-12">
                                 <label for="momentoModal" class="form-label">Momento</label>
-                                <input onblur="javascript:validaMomentoModal();" type="text" class="form-control" id="momentoModal">
+                                <input onblur="javascript:validaMomentoModal();" type="text" class="form-control"
+                                    id="momentoModal">
                             </div>
                             <!-- Select para responsable -->
                             <div class="col-md-12">
@@ -93,8 +95,8 @@ $resM = $m->getAllMateriales();
                                     if ($resU['filas'] > 0) {
                                         foreach ($resU['datos'] as $fila) {
                                     ?>
-                                            <option value="<?= $fila['nombre'] ?>"><?= utf8_encode($fila['nombre']) ?>
-                                            </option>
+                                    <option value="<?= $fila['nombre'] ?>"><?= utf8_encode($fila['nombre']) ?>
+                                    </option>
                                     <?php
                                         }
                                     } else {
@@ -122,7 +124,8 @@ $resM = $m->getAllMateriales();
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" onclick="javascript:validaFrmMomentoModal();" class="btn btn-primary">Guardar</button>
+                        <button type="button" onclick="javascript:validaFrmMomentoModal();"
+                            class="btn btn-primary">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -143,24 +146,30 @@ $resM = $m->getAllMateriales();
                 <?php
                 if ($resM['filas'] == 0) {
                 ?>
-                    <td colspan="8">Sin resultados</td>
-                    <?php
+                <td colspan="8">Sin resultados</td>
+                <?php
                 } else {
                     $cont = 0;
                     foreach ($resM['datos'] as $fila) {
                         $cont++;
                     ?>
-                        <tr>
-                            <td><?= $fila['codigo'] ?></td>
-                            <td><?= utf8_encode($fila['descripcion']) ?></td>
-                            <td><?= $fila['precio'] ?></td>
-                            <td><?= $fila['unidad'] ?></td>
-                            <td></td>
-                            <td>
-                                <button class="btn btn-danger" onclick="javascript:EliminarMomento(<?= $fila['idmomento'] ?>,'<?= $fila['momento'] ?>');"><i class="fa-solid fa-trash" style="color: #000000;"></i></button>
-                                <button class="btn btn-info" onclick="javascript:llenarModalModificar(<?= $fila['idmomento'] ?>, '<?= $fila['momento'] ?>','<?= $fila['estado'] ?>',<?= $fila['orden'] ?>,'<?= $fila['responsable'] ?>');" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-regular fa-pen-to-square" data-bs-toggle="modal" data-bs-target="#staticBackdrop"></i></button>
-                            </td>
-                        </tr>
+                <tr>
+                    <td><?= $fila['codigo'] ?></td>
+                    <td><?= utf8_encode($fila['descripcion']) ?></td>
+                    <td><?= $fila['precio'] ?></td>
+                    <td><?= $fila['unidad'] ?></td>
+                    <td></td>
+                    <td>
+                        <button class="btn btn-danger"
+                            onclick="javascript:EliminarMomento(<?= $fila['idmomento'] ?>,'<?= $fila['momento'] ?>');"><i
+                                class="fa-solid fa-trash" style="color: #000000;"></i></button>
+                        <button class="btn btn-info"
+                            onclick="javascript:llenarModalModificar(<?= $fila['idmomento'] ?>, '<?= $fila['momento'] ?>','<?= $fila['estado'] ?>',<?= $fila['orden'] ?>,'<?= $fila['responsable'] ?>');"
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i
+                                class="fa-regular fa-pen-to-square" data-bs-toggle="modal"
+                                data-bs-target="#staticBackdrop"></i></button>
+                    </td>
+                </tr>
                 <?php
                     }
                 }
