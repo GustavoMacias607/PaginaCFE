@@ -26,26 +26,20 @@ if ($_GET['x'] == 1) {
     <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="indexStyles.css">
     <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <title></title>
 </head>
 
 <body>
     <div class="top-bar">
-        <img src="../img/Logocfelargo.png" alt="Logo" id="logoImage" style="height: 70%;">
-        <div class="btn-group dropstart">
-            <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Usuarios</a></li>
-                <li><a class="dropdown-item" href="index.html">Cerrar sesión</a></li>
-            </ul>
-        </div>
+        <div id="logoImage" style="height: 70%;"></div>
+
     </div>
-
     <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-
+        <div class=" container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <!-- Por este icono de Font Awesome -->
                 <i class="fas fa-bars"></i>
             </button>
@@ -68,8 +62,18 @@ if ($_GET['x'] == 1) {
                     </li>
                 </ul>
             </div>
-        </div>
+
     </nav>
+
+    <div class="btn-group dropstart" style="display: flex; justify-content: end; margin: 20px">
+        <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false"
+            style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Usuarios</a></li>
+            <li><a class="dropdown-item" href="index.html">Cerrar sesión</a></li>
+        </ul>
+    </div>
 
     <!-- Inicio del contenido principal -->
     <div id="mainContent" class="contaniner" style="margin-top: 5rem;">
@@ -83,7 +87,7 @@ if ($_GET['x'] == 1) {
     <script src="js/funciones_momentos.js"></script>
     <script src="js/funciones_materiales.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
-
+    <!-- 
     <script>
         window.addEventListener('resize', function() {
             const logoImage = document.getElementById('logoImage');
@@ -99,7 +103,7 @@ if ($_GET['x'] == 1) {
                 logoImage.alt = 'Logo'; // Restaura el atributo alt
             }
         });
-    </script>
+    </script> -->
 </body>
 
 </html>
