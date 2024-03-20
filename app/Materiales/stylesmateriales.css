@@ -1,11 +1,11 @@
 @font-face {
   font-family: "Lato";
-  src: url("/fonts/FuenteLato/Lato-Regular.ttf") format("truetype");
+  src: url("../../fonts/FuenteLato/Lato-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "LatoBold";
-  src: url("/fonts/FuenteLato/Lato-Bold.ttf") format("truetype");
+  src: url("../../fonts/FuenteLato/Lato-Bold.ttf") format("truetype");
 }
 
 body {
