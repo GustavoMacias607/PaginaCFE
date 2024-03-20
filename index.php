@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Aplicacion de administracion de reunines</title>
+    <title>SIFCAO</title>
     <link href="bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="indexStyles.css">
     <link href="fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
