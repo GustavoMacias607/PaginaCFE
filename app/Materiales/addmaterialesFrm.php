@@ -12,9 +12,33 @@ require("../../scripts/Conexion.php");
 require("../../scripts/Materiales.php");
 
 $c = new Conexion($conData);
-
 $m = new Materiales($c->getConnection());
-$resM = $m->getAllMateriales();
+$datos = array(
+    "estatus" => false
+);
+$resM = $m->getAllMateriales($datos);
+
+
+
+
+
+// // Ruta de la carpeta
+// $valor = "140";
+// $carpeta = '../../Materiales/' . $valor;
+
+// // Buscar todos los archivos de imagen en la carpeta
+// $imagenes = glob($carpeta . '/*', GLOB_BRACE);
+
+// // Si se encontró al menos una imagen
+// if (!empty($imagenes)) {
+//     // Tomar la primera imagen encontrada
+//     $rutaImagen = $imagenes[0];
+// } else {
+//     // Si no se encontraron imágenes, puedes manejar esta situación según tu lógica de aplicación
+//     $rutaImagen = "hola"; // Otra opción sería asignar una imagen predeterminada
+// }
+
+// echo $rutaImagen
 ?>
 
 <div class="row container mt-5">
@@ -24,9 +48,8 @@ $resM = $m->getAllMateriales();
             onclick="javascript:AddlimpiarModal();">Agregar
             material</button>
     </div>
-
     <div class="label-container">
-        <input type="text" placeholder="Buscar" id="searchInput">
+        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetBuscarMateriales()">
         <i class="fas fa-search green-icon" id="searchIcon"></i>
     </div>
     <div style="margin-top: 120px">
@@ -42,6 +65,7 @@ $resM = $m->getAllMateriales();
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="selectUnidad"
+                                onchange="javacript:GetFiltrarUnidad()"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected></option>
                                 <option value="PZ">PZ</option>
@@ -54,16 +78,16 @@ $resM = $m->getAllMateriales();
                         </div>
                     </th>
                     <th class="col-1" style="width: 170px;">
-                        <div class="d-flex align-items-center justify-align-content-around">
+                        <div style="display: flex; justify-content: space-between;">
                             <span>Estatus: </span>
-                            <div style="text-align: center;"> <img src="../img/toggleon_26px.png" alt="toggle"
-                                    width="30px"></div>
+                            <div class="px-4">
+                                <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+                                <img id="ValEstatus" src="../img/toggleon_26px.png" width="30px"
+                                    onclick="javascript:valStatus(); javascript:GetMateriales()">
 
-                            <!-- <select class="form-select form-select-sm ml-2" id="selectEstatus"
-                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="Activo" selected>Activo</option>
-                                <option value="Inactivo">Inactivo</option>
-                            </select> -->
+                                <!-- <img id="toggleImage" src="../img/toggleoff_26px.png" width="30px"> -->
+
+                            </div>
                         </div>
                     </th>
                 </tr>
@@ -87,16 +111,26 @@ $resM = $m->getAllMateriales();
                     <td><?= date('d/m/Y', strtotime($fila['fechaprecio'])) ?></td>
                     <td><?= $fila['unidad'] ?></td>
                     <td class="estatus">
-                        <?php if ($fila['estatus']) { ?>
-                        <input type="checkbox" checked>
-                        <?php
-                                } else { ?>
-                        <input type="checkbox">
-                        <?php
-                                }
-                                ?>
-                        <i class="fas fa-edit ml-2 text-primary" data-bs-toggle="modal" data-bs-target="#EditarModal"
-                            onclick="javascript:llenarModalModificar(<?= $fila['codigo'] ?>,'<?= $fila['norma'] ?>','<?= $fila['descripcion'] ?>',<?= $fila['precio'] ?>,'<?= $fila['fechaprecio'] ?>','<?= $fila['unidad'] ?>')"></i>
+                        <div style="display: flex; justify-content: space-around;">
+                            <img style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen">
+
+                            <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar"
+                                data-bs-toggle="modal" data-bs-target="#EditarModal"
+                                onclick="llenarModalModificar(<?= $fila['codigo'] ?>,'<?= $fila['norma'] ?>','<?= $fila['descripcion'] ?>',<?= $fila['precio'] ?>,'<?= $fila['fechaprecio'] ?>','<?= $fila['unidad'] ?>')">
+
+                            <?php if ($fila['estatus']) { ?>
+                            <img style="cursor: pointer;"
+                                onclick="javascript:CambioEstatus(<?= $fila['codigo'] ?>,'<?= $fila['estatus'] ?>')"
+                                src="../img/checkedgreen_24px.png" alt="Checked">
+                            <?php
+                                    } else { ?>
+                            <img style="cursor: pointer;"
+                                onclick="javascript:CambioEstatus(<?= $fila['codigo'] ?>,'<?= $fila['estatus'] ?>')"
+                                src="../img/uncheckedgreen_24px.png" alt="Checked">
+                            <?php
+                                    }
+                                    ?>
+                        </div>
                     </td>
                 </tr>
                 <?php
@@ -212,11 +246,13 @@ $resM = $m->getAllMateriales();
                         <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
                         <input type="file" class="form-control" id="UpdimagenInput" onchange="UpdmostrarImagen(this)">
                     </div>
+
                     <img id="UpdimagenPreview" src="" width="100px">
                 </div>
                 <div class=" modal-footer" style="border-top: 2px solid #008E5A;">
                     <button type="button" class="btn btn-primary"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                        style="background-color: #008E5A; border-color: #008E5A;"
+                        onclick="javascript:UpdMaterialValidar()">Guardar</button>
                 </div>
             </div>
         </div>
@@ -242,8 +278,4 @@ $resM = $m->getAllMateriales();
             logoImage.alt = 'Logo'; // Restaura el atributo alt
         }
     });
-    </script>
-
-    <script>
-
     </script>
