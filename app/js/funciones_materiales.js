@@ -1,4 +1,5 @@
 function AddMaterialValidar() {
+
     const datos = {};
     let id = document.querySelector('#AddidInput');
     if (id.value == "") {
@@ -7,6 +8,7 @@ function AddMaterialValidar() {
         return;
     }
     datos.id = id.value;
+
     let norma = document.querySelector('#AddnormaInput');
     if (norma.value == 0) {
         alert('Ingrese un norma')
@@ -47,10 +49,6 @@ function AddMaterialValidar() {
 
     let json = JSON.stringify(datos);
     console.log(json);
-    var inputFile = document.getElementById('AddimagenInput');
-    if (inputFile.value) {
-        AddAgregarImagen();
-    }
 
     let url = "../ws/Materiales/wsAddMaterial.php";
     $.post(url, json, (responseText, status) => {
@@ -62,8 +60,16 @@ function AddMaterialValidar() {
                 console.log(resp)
                 if (resp.estado == "OK") {
                     alert("Material Agregado con Exito :)");
+                    var inputFile = document.getElementById('AddimagenInput');
+                    if (inputFile.value) {
+                        AddAgregarImagen();
+                    }
+
                     AddCerrarModal();
                     opcion('materiales');
+                } else {
+                    alert("El codigo de Material Ya existe")
+                    id.focus();
                 }
             } else {
                 throw e = status;
@@ -72,6 +78,7 @@ function AddMaterialValidar() {
             alert("Error: " + error)
         }
     });
+
 }
 function CambioEstatus(id, estatus) {
     const datos = {};
@@ -149,9 +156,10 @@ function GetBuscarMateriales() {
     const datos = {};
     let buscar = document.querySelector('#searchInput');
     let estatus = document.getElementById('ValCheEsta').checked;
+    let unidad = document.getElementById('selectUnidad');
 
     datos.buscar = buscar.value;
-
+    datos.unidad = unidad.value;
     if (estatus) {
         datos.estatus = 1;
     } else {
@@ -187,8 +195,11 @@ function GetMateriales() {
     const datos = {};
 
     let estatus = document.getElementById('ValCheEsta').checked;
+    let unidad = document.getElementById('selectUnidad');
     datos.estatus = estatus;
+    datos.unidad = unidad.value
     let json = JSON.stringify(datos);
+
     let url = "../ws/Materiales/wsGetMateriales.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -254,7 +265,7 @@ function mostrarDatosEnTabla(datos) {
 
     // Limpiar cualquier fila existente en la tabla
     tbody.innerHTML = "";
-    console.log(datos);
+
     if (datos == "N") {
 
         let fila = document.createElement("tr");
@@ -277,21 +288,35 @@ function mostrarDatosEnTabla(datos) {
     // Iterar sobre los datos y agregar filas a la tabla
     datos.forEach(function (material) {
         let fila = document.createElement("tr");
-
+        fila.classList.add("fila")
+        fila.addEventListener("mouseover", () => mostrarValores(fila));
+        fila.addEventListener("mouseout", () => ocultarValores(fila));
         // Agregar las celdas a la fila
         fila.innerHTML = `
-            <td>${material.codigo}</td>
-            <td>${material.norma}</td>
-            <td>${material.descripcion}</td>
-            <td>$ ${material.precio}</td>
-            <td>${material.fechaprecio}</td>
-            <td>${material.unidad}</td>
+            <td class="Code">${material.codigo}</td>
+            <td>${(!material.norma == "") ? material.norma : "---"}</td>
+            <td>${(!material.descripcion == "") ? material.descripcion : "---"}</td>
+            <td>$ ${(!material.precio == "") ? material.precio : "---"}</td>
+            <td>${(!material.fechaprecio == "") ? material.fechaprecio : "---"}</td>
+            <td>${(!material.unidad == "") ? material.unidad : "---"}</td>
             <td class="estatus">
-            <div  style="display: flex; justify-content: space-around;">
-            <img style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen">
+            <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div class="miDiv imaCuadro">
+                    <img class="imagenPreview" src="../Materiales/118" style="border: #303030 solid .5rem; background-color: gray; " height="100%" width="100%">
+                </div>
+            </div>
+            </div>
+            <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
+
+
+                <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png"
+                    alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
+
+            
                 <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')">
                 <img style="cursor: pointer;" onclick="CambioEstatus(${material.codigo},${material.estatus})" src="${material.estatus == 1 ? '../img/checkedgreen_24px.png' : '../img/uncheckedgreen_24px.png'}" alt="Checked">
-
+                </div>
                 </div>
             </td>
         `;
@@ -299,6 +324,34 @@ function mostrarDatosEnTabla(datos) {
         // Agregar la fila a la tabla
         tbody.appendChild(fila);
     });
+}
+
+function mostrarDiv(imagen) {
+
+    // Obtener el div asociado a la imagen
+    var div = imagen.parentElement.parentElement.querySelector(".miDiv");
+    var id = imagen.parentElement.parentElement.parentElement.querySelector(".Code").innerHTML;
+    // Mostrar el div
+    rutaCarpeta = "../Materiales/" + id;
+    cargarImagenCuadro(div)
+
+    div.style.display = "block";
+
+}
+
+function ocultarDiv(imagen) {
+    // Obtener el div asociado a la imagen
+    var div = imagen.parentElement.parentElement.querySelector(".miDiv");
+    // Ocultar el div
+    div.style.display = "none";
+}
+
+function mostrarValores(fila) {
+    fila.getElementsByClassName('valores')[0].style.display = 'flex';
+}
+
+function ocultarValores(fila) {
+    fila.getElementsByClassName('valores')[0].style.display = 'none';
 }
 
 function FormateoFecha(fecha) {
@@ -425,36 +478,45 @@ function UpdAgregarImagen() {
 }
 
 function validaExisteMaterial() {
-    let MomeModal = document.querySelector('#MomModal');
-    let obj = document.querySelector('#momentoModal');
-    let vali = document.querySelector('#vali');
-    if (MomeModal.value != obj.value) {
-        if (obj.value !== "") {
-            let datos = {};
-            datos.momento = obj.value;
-            let json = JSON.stringify(datos);
-            let url = "../ws/momento/wsCheckMomento.php";
-            $.post(url, json, (responseText, status) => {
-                try {
-                    if (status == 'success') {
-                        let resp = JSON.parse(responseText);
-                        if (resp.existe == 1) {
-                            vali.value = "I";
-                            throw e = "Advertencia: El Momento ya esta en uso";
-                        } else {
-                            vali.value = "A";
-                        }
-                    } else {
-                        throw e = "Error: No se alcanzo el recurso";
-                    }
-                } catch (error) {
-                    alert(error);
-                }
-            })
-        }
+
+    let datos = {};
+    let id = document.querySelector('#AddidInput');
+    var existe = false;
+    if (id.value == "") {
+        alert("Agrega el Codigo del Material")
+
     } else {
-        vali.value = "A";
+        datos.id = id.value;
+        let json = JSON.stringify(datos);
+        let url = "../ws/Materiales/wsCheckMaterial.php";
+        $.post(url, json, (responseText, status) => {
+            try {
+                if (status == "success") {
+
+                    let resp = JSON.parse(responseText);
+
+                    if (resp.estado == "OK") {
+                        // Llamar a la función para mostrar los datos en la tabla
+
+                        console.log(resp.datos);
+                        existe = true;
+
+
+                    } else {
+                        // Mostrar mensaje de error si el estado no es "OK"
+
+
+                    }
+                } else {
+                    throw e = status;
+                }
+            } catch (error) {
+
+            }
+        })
+        return existe
     }
+
 }
 
 function AddmostrarImagen(input) {
@@ -500,11 +562,14 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
 
 
     let idM = document.querySelector('#UpdidInput');
+    let idA = document.querySelector('#idAnterior');
     let normaM = document.querySelector('#UpdnormaInput');
     let descripcionM = document.querySelector('#UpddescripcionInput');
     let precioM = document.querySelector('#UpdprecioInput');
     let unidadM = document.querySelector('#UpdunidadInput');
     idM.value = id;
+    idA.value = id;
+
     normaM.value = norma;
     descripcionM.value = descripcion;
     precioM.value = precio;
@@ -560,10 +625,42 @@ function cargarImagen() {
         })
         .catch(error => console.error('Error al obtener archivos en la carpeta', error));
 }
+function cargarImagenCuadro(imagen) {
 
+    var div = imagen.parentElement.querySelector(".miDiv");
+    // Obtener la lista de archivos en la carpeta
+    obtenerArchivosEnCarpeta(rutaCarpeta)
+        .then(archivos => {
+            // Seleccionar la única imagen encontrada en la carpeta
+            const imagen = archivos.find(archivo => archivo.endsWith('.JPG') || archivo.endsWith('.jpg') || archivo.endsWith('.png') || archivo.endsWith('.jpeg'));
+            if (imagen == undefined) {
+                const elementoImagen = div.querySelector(".imagenPreview");
+                elementoImagen.src = "/paginacfe/app/img/Capturas.JPG";
+            } else {
+                // Crear la ruta completa de la imagen
+                const rutaImagen = `${rutaCarpeta}/${imagen}`;
+
+                // Obtener el elemento img
+                const elementoImagen = div.querySelector(".imagenPreview");
+
+                // Asignar la ruta de la imagen al src del elemento img
+                elementoImagen.src = rutaImagen;
+            }
+
+
+        })
+        .catch(error => {
+
+
+            console.error('Error al obtener archivos en la carpeta', error);
+
+        })
+}
 async function obtenerArchivosEnCarpeta(rutaCarpeta) {
     // Realizar una solicitud al servidor para obtener la lista de archivos en la carpeta
+
     const response = await fetch(rutaCarpeta);
+
     const textoHtml = await response.text();
 
     // Analizar el HTML para extraer los nombres de archivo
@@ -580,13 +677,16 @@ async function obtenerArchivosEnCarpeta(rutaCarpeta) {
 }
 
 function UpdMaterialValidar() {
+
     const datos = {};
+    let idA = document.querySelector('#idAnterior');
     let id = document.querySelector('#UpdidInput');
     if (id.value == "") {
         alert('Ingrese un id')
         id.focus();
         return;
     }
+    datos.idA = idA.value;
     datos.id = id.value;
     let norma = document.querySelector('#UpdnormaInput');
     if (norma.value == 0) {
@@ -627,6 +727,7 @@ function UpdMaterialValidar() {
     datos.unidad = unidad.value;
 
     let json = JSON.stringify(datos);
+    console.log(json)
     var inputFile = document.getElementById('UpdimagenInput');
     if (inputFile.value) {
         UpdAgregarImagen();
@@ -638,12 +739,15 @@ function UpdMaterialValidar() {
             if (status == "success") {
                 console.log(responseText);
                 let resp = JSON.parse(responseText);
-                console.log(resp)
+
                 if (resp.estado == "OK") {
                     alert("Material Modificado con Exito :)");
 
                     UpdateCerrarModal();
                     opcion('materiales');
+                } else {
+                    alert("El codigo del Material ya existe")
+                    id.focus();
                 }
             } else {
                 throw e = status;
@@ -661,4 +765,108 @@ function AddCerrarModal() {
 function UpdateCerrarModal() {
 
     $('#EditarModal').modal('hide');
+}
+
+function filtrarDes(fil) {
+    let ic = document.querySelector('#icId');
+    let idChe = document.querySelector('#filIdVal');
+
+    let icPre = document.querySelector('#icPre');
+    let PreChe = document.querySelector('#filPrecioVal');
+
+    let icFec = document.querySelector('#icFec');
+    let FecChe = document.querySelector('#filFechaVal');
+    let filtro = "";
+    if (fil == "id") {
+
+        if (idChe.checked) {
+            filtro = "DescCodigo";
+            idChe.checked = false;
+            PreChe.checked = false;
+            FecChe.checked = false;
+            ic.className = "fa-solid fa-chevron-down"
+            icPre.className = "fa-solid fa-chevron-up"
+            icFec.className = "fa-solid fa-chevron-up"
+        } else {
+            filtro = "AscCodigo";
+
+            idChe.checked = true;
+            PreChe.checked = false;
+            FecChe.checked = false;
+            ic.className = "fa-solid fa-chevron-up"
+            icPre.className = "fa-solid fa-chevron-up"
+            icFec.className = "fa-solid fa-chevron-up"
+        }
+
+
+    } else if (fil == "precio") {
+        if (PreChe.checked) {
+            filtro = "DescPrecio";
+            idChe.checked = false;
+            PreChe.checked = false;
+            FecChe.checked = false;
+            ic.className = "fa-solid fa-chevron-up"
+            icPre.className = "fa-solid fa-chevron-down"
+            icFec.className = "fa-solid fa-chevron-up"
+        } else {
+            filtro = "AscPrecio";
+            idChe.checked = false;
+            PreChe.checked = true;
+            FecChe.checked = false;
+            ic.className = "fa-solid fa-chevron-up"
+            icPre.className = "fa-solid fa-chevron-up"
+            icFec.className = "fa-solid fa-chevron-up"
+        }
+    } else if (fil == "fechaPrecio") {
+        if (FecChe.checked) {
+            filtro = "DescFecha";
+            idChe.checked = false;
+            PreChe.checked = false;
+            FecChe.checked = false;
+            ic.className = "fa-solid fa-chevron-up"
+            icPre.className = "fa-solid fa-chevron-up"
+            icFec.className = "fa-solid fa-chevron-down"
+        } else {
+            filtro = "AscFecha";
+            idChe.checked = false;
+            PreChe.checked = false;
+            FecChe.checked = true;
+            ic.className = "fa-solid fa-chevron-up"
+            icPre.className = "fa-solid fa-chevron-up"
+            icFec.className = "fa-solid fa-chevron-up"
+        }
+    }
+
+    const datos = {};
+    let estatus = document.getElementById('ValCheEsta').checked;
+    let unidad = document.getElementById('selectUnidad');
+    datos.filtro = filtro;
+    datos.unidad = unidad.value
+    datos.estatus = estatus;
+
+    let json = JSON.stringify(datos);
+    let url = "../ws/Materiales/wsFiltroAscDes.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+
+                let resp = JSON.parse(responseText);
+
+                if (resp.estado == "OK") {
+                    // Llamar a la función para mostrar los datos en la tabla
+                    mostrarDatosEnTabla(resp.datos);
+                } else {
+                    // Mostrar mensaje de error si el estado no es "OK"
+                    mostrarDatosEnTabla(resp.mensaje);
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+
+        }
+    });
+
+
+
 }

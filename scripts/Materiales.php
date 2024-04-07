@@ -15,11 +15,12 @@ class Materiales
         $c = $this->conn;
         try {
             // Modificar la consulta SQL para incluir el parámetro
-            $consulta = "call spMaterialesBuscarGeneral(:Buscar,:Estatus)";
+            $consulta = "call spMaterialesBuscarGeneral(:Buscar,:Estatus,:Unidad)";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Buscar" => $datos->buscar,
-                "Estatus" => $datos->estatus
+                "Estatus" => $datos->estatus,
+                "Unidad" => $datos->unidad
             ));
             unset($c);
 
@@ -45,7 +46,7 @@ class Materiales
         $c = $this->conn;
         try {
             if (!$datos->estatus) {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Todo', 1);";
+                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Todo',1,'PZ');";
                 $sql = $c->prepare($consulta);
             }
 
@@ -72,7 +73,7 @@ class Materiales
         $c = $this->conn;
         try {
 
-            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtar, :Estatus);";
+            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtar, :Estatus,'PZ');";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Filtar" => $datos->unidad,
@@ -92,7 +93,6 @@ class Materiales
         }
         return $R;
     }
-
     function CambiarEstatusMaterial($datos)
     {
         /*Método para obtener todos los Materiales*/
@@ -118,8 +118,6 @@ class Materiales
         }
         return $R;
     }
-
-
     function getFiltarEstatusAllMateriales($datos)
     {
 
@@ -128,14 +126,19 @@ class Materiales
         $c = $this->conn;
         try {
             if (!$datos->estatus) {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Todo', 0);";
+                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 0,:Unidad);";
                 $sql = $c->prepare($consulta);
+                $sql->execute(array(
+                    "Unidad" => $datos->unidad
+                ));
             } else {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Todo', 1);";
+                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 1,:Unidad);";
                 $sql = $c->prepare($consulta);
+                $sql->execute(array(
+                    "Unidad" => $datos->unidad
+                ));
             }
 
-            $sql->execute();
 
             $R['filas'] = $sql->rowCount();
             if ($R['filas'] <= 0) {
@@ -181,10 +184,11 @@ class Materiales
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaterialesModificar(:Id,:Norma,:Descripcion,:Precio,:FechaPrecio,:Unidad)";
+            $consulta = "call spMaterialesModificar(:IdA,:Id,:Norma,:Descripcion,:Precio,:FechaPrecio,:Unidad)";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
+                "IdA" => $datos->idA,
                 "Norma" => $datos->norma,
                 "Descripcion" => $datos->descripcion,
                 "Precio" => $datos->precio,
@@ -201,19 +205,44 @@ class Materiales
 
     function CheckMaterial($datos)
     {
-        /**
-         * Metodo para comprobar que el Material no exista
-         * recibe un objeto con el Material
-         */
+        /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
-
         $c = $this->conn;
         try {
-            $consulta =
-                "call spMaterialesBuscarID(:Id)";
 
+            $consulta = "call spMaterialesBuscarId(:Id);";
             $sql = $c->prepare($consulta);
-            $sql->execute(array("Id" => $datos->id));
+            $sql->execute(array(
+                "Id" => $datos->id,
+
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+
+    function filtrarDesAsc($datos)
+    {
+        /*Método para obtener todos los Materiales*/
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtro,:Estatus,:Unidad);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "Filtro" => $datos->filtro,
+                "Estatus" => $datos->estatus,
+                "Unidad" => $datos->unidad
+            ));
 
             $R['filas'] = $sql->rowCount();
             if ($R['filas'] <= 0) {
@@ -221,7 +250,7 @@ class Materiales
             } else {
                 $R['datos'] = $sql->fetchAll();
             }
-            $c == null;
+            $c = null;
         } catch (PDOException $e) {
             $R['estado'] = "Error: " . $e->getMessage();
         }

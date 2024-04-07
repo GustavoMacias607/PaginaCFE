@@ -38,8 +38,7 @@ if ($_GET['x'] == 1) {
     </div>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class=" container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <!-- Por este icono de Font Awesome -->
                 <i class="fas fa-bars"></i>
             </button>
@@ -52,7 +51,7 @@ if ($_GET['x'] == 1) {
                         <a class="nav-link" href="#">Estructuras</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Normas</a>
+                        <a class="nav-link" href="javascript:opcion('usuarios');">Usuarios</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Button 4</a>
@@ -66,8 +65,7 @@ if ($_GET['x'] == 1) {
     </nav>
 
     <div class="btn-group dropstart" style="display: flex; justify-content: end; margin: 20px">
-        <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false"
-            style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
+        <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
         </button>
         <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="#">Usuarios</a></li>

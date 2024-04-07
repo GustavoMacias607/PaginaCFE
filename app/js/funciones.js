@@ -5,6 +5,9 @@ function opcion(op) {
         case "materiales":
             url = "Materiales/addmaterialesFrm.php";
             break;
+        case "usuarios":
+            url = "Usuarios/addUsuariosFrm.php";
+            break;
         default: alert("Opción incorrecta"); return;
     }
 
