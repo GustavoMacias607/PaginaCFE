@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIFCAO</title>
     <link href="bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="indexStyles.css">
+    <link rel="stylesheet" href="loginStyles.css">
     <link href="fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
 </head>
 
@@ -29,7 +29,25 @@
             </form>
         </div>
     </div>
-    </div>
+
+
+    <li class="open_submenu">
+        <a href="#">
+            SIFCAO
+            <i class="fa-solid-fa-chevron-down"></i>
+        </a>
+        <div class="submenu">
+            <ul>
+                <li>Sistema</li>
+                <li>Integral de</li>
+                <li>Formulación de</li>
+                <li>Costo</li>
+                <li>Actualizado de</li>
+                <li>Obra</li>
+            </ul>
+        </div>
+    </li>
+
 
     <script src="bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/code.jquery.com_jquery-3.7.1.min.js"></script>
@@ -82,6 +100,23 @@
         });
 
     });
+
+
+    var subMenu = document.querySelector('.submenu');
+    var openSubMenu = document.querySelector('.open_submenu');
+
+    openSubMenu.addEventListener('click', function(){
+        subMenu.classList.toggle('show');
+    })
+
+    document.addEventListener('click', function(e){
+        if (subMenu.classList.contains('show')
+        && !subMenu.contains(e.target)
+        && !openSubMenu.contains(e.target)){
+
+            subMenu.classList.remove('show');
+        }
+    })
     </Script>
 </body>
 

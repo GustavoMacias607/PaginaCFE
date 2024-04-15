@@ -13,8 +13,10 @@ body {
 }
 
 /*barra superior negra*/
-.bottom-rectangle {
+.bottom-rectangle-materiales {
   background-color: #303030;
+  display: flex; 
+  position: fixed;
   width: 100%;
   height: 60px;
   position: absolute;
@@ -23,9 +25,17 @@ body {
   z-index: 500; /* Asegura que el rectángulo esté detrás de los botones */
 }
 
+    /* Estilos para el titulo materiales */
+.text-materiales{
+  font-family: "LatoBold", sans-serif;
+  color: #ffffff;
+  font-size: 140%;
+  transform: translate(2px, 10px);
+}
+
 /* Estilos para el buscador */
-.label-container {
-  position: absolute;
+.label-container-materiales {
+  position: fixed;
   top: 170px; /* Espacio desde arriba */
   left: 50%; /* Centrado horizontal */
   transform: translateX(-50%); /* Centrado horizontal */
@@ -35,7 +45,7 @@ body {
   border-radius: 5px; /* Bordes redondeados */
   display: block; /* Para alinear el icono */
 }
-.label-container input[type="text"] {
+.label-container-materiales input[type="text"] {
   width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
   border: none; /* Elimina el borde del input */
   outline: none; /* Elimina el borde de enfoque */
@@ -43,26 +53,26 @@ body {
   color: #303030; /* Color del texto */
   font-size: 20px; /* Tamaño del texto */
 }
-.label-container input[type="text"]::placeholder {
+.label-container-materiales input[type="text"]::placeholder {
   color: #858585; /* Color del texto del placeholder */
   font-size: 20px; /* Tamaño del texto del placeholder */
 }
-.green-icon {
+.icon-materiales {
   color: #008e5a; /* Color verde */
 }
 
 /* Estilos para el botón "Agregar material" */
 .btn-agregar-material {
-  font-family: "LatoBold", sans-serif;
-  --bs-btn-padding-y: 0.3rem;
-  --bs-btn-padding-x: 2.5rem;
-  --bs-btn-font-size: 1rem;
+  font-family: "LatoBold", sans-serif; /* tipografia */
+  --bs-btn-padding-y: .3rem;
+  --bs-btn-padding-x: 10px; /* largo del boton */
+  --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
   background-color: #ffffff; /* Fondo blanco */
   color: #303030; /* Letra blanca */
   border: 3px solid #ffffff; /* Contorno verde */
   border-radius: 5; /* Sin bordes redondeados */
   transition: all 0.3s ease; /* Transición suave */
-  transform: translate(50px, 10px);
+  transform: translate(20px); /* posicion del boton */ 
 }
 
 .btn-agregar-material:hover {
@@ -78,36 +88,40 @@ body {
 }
 
 /*estilos para el modal agregar material*/
-.modal {
+.modal-materiales {
   z-index: 1200;
   font-family: "LatoBold", sans-serif;
 }
 /* Estilos para el botón Guardar del modal */
-.modal-footer .btn-primary {
+.modal-footer-materiales .btn-primary {
   background-color: #008e5a; /* Color verde */
   border-color: #008e5a; /* Color del borde */
   color: #ffffff;
 }
 
-.modal-footer .btn-primary:active {
+.modal-footer-materiales .btn-primary:active {
   background-color: #008e5a; /* Color verde al hacer clic */
   border-color: #008e5a; /* Color del borde al hacer clic */
   color: #000000; /* Color negro al hacer clic */
 }
-.modal-body input[type="text"] {
+.modal-body-materiales input[type="text"] {
   font-family: "Lato", sans-serif;
 }
 
-.contTabla {
+.contTabla-materiales {
   width: calc(100% - 6rem);
+  margin-top: 10rem;
   position: absolute;
   margin-left: 3rem;
   margin-right: 3rem;
   left: 0;
 }
 /* Estilos personalizados para la tabla */
-.tabla-container {
-  height: 23rem;
+.tabla-container-materiales {
+  margin-top: 20px; 
+  text-align: center;
+ 
+  margin-bottom: 100px;
   /* Altura máxima del contenedor */
   overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
@@ -135,18 +149,21 @@ body {
   color: #303030; /* Texto de las filas en color #303030 */
 }
 
-.fila:hover {
+.fila-materiales:hover {
   background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
 }
 
-.valores {
+.valores-materiales {
+  justify-content: space-around; 
+  align-items: center;
   display: none;
 }
 
-.fila:hover .valores {
+.fila-materiales:hover .valores {
   display: flex;
 }
 
+/*
 .checkbox-wrapper-45 {
   position: relative;
 }
@@ -214,15 +231,16 @@ body {
   stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
+}*/
 
-.imaCuadro {
-  background-color: gray;
+.imaCuadro-materiales {
+  background-color: #008e5a;
+  border: #008e5a solid 6px;
   width: 10rem;
   height: 5rem;
-  display: none;
+  display: table-column-group;
 
-  top: 0;
+  
   transform: translateX(-40rem);
 
   position: absolute;
@@ -230,14 +248,12 @@ body {
     transform: translateX(-25rem);
     width: 15rem;
     height: 7.5rem;
-    top: 50%;
-    left: 95%;
+    
   }
   @media (min-width: 1192px) {
-    transform: translateX(-15rem);
+    transform: translateX(-40rem);
     width: 20rem;
     height: 10rem;
-    top: 50%;
-    left: 76%;
+   
   }
 }

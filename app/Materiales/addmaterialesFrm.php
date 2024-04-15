@@ -6,6 +6,7 @@ if (!isset($_SESSION['idusuario'])) {
     header("Location: ../../index.php");
     die();
 }
+<link rel="stylesheet" href="stylesmateriales.css">
 */
 require("../../scripts/connect.php");
 require("../../scripts/Conexion.php");
@@ -19,17 +20,20 @@ $datos = array(
 $resM = $m->getAllMateriales($datos);
 ?>
 
+<link rel="stylesheet" href="stylesmateriales.css">
+
 <div class="row container mt-5 text-lg-start">
-    <div class="bottom-rectangle">
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" style="--bs-btn-padding-y: .3rem; --bs-btn-padding-x: 2.5rem; --bs-btn-font-size: 1rem;" onclick="javascript:AddlimpiarModal();">Agregar
+    <div class="bottom-rectangle bottom-rectangle-materiales">
+        <div class="text-capitalize text-materiales" >Materiales</div>
+            <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModal();">Agregar
             material</button>
     </div>
-    <div class="label-container">
-        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetBuscarMateriales()">
-        <i class="fas fa-search green-icon" id="searchIcon"></i>
-    </div>
-    <div class="contTabla" style="margin-top: 5rem;">
-        <div class="tabla-container" style="margin-top: 95px; text-align: center;">
+        <div class="label-container label-container-materiales">
+            <input type="text" placeholder="Buscar" id="searchInput" oninput="GetBuscarMateriales()">
+            <i class="fas fa-search icon-materiales" id="searchIcon"></i>
+        </div>
+    <div class="contTabla contTabla-materiales">
+        <div class="tabla-container tabla-container-materiales">
             <table id="tabla-materiales">
                 <thead class="">
                     <tr>
@@ -55,7 +59,7 @@ $resM = $m->getAllMateriales($datos);
                                 </div>
                             </div>
                         </th>
-                        <th>
+                        <th style="width: 130px;">
                             <div class="d-flex"> FechaPrecio
                                 <input class="d-none" id="filFechaVal" type="checkbox">
                                 <div id="filNor" style="margin-left:10px;" onclick="javascript:filtrarDes('fechaPrecio')">
@@ -63,7 +67,7 @@ $resM = $m->getAllMateriales($datos);
                                 </div>
                             </div>
                         </th>
-                        <th class=" col-1" style="width: 140px;">
+                        <th class=" col-1" style="width: 150px;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetFiltrarUnidad()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -79,7 +83,7 @@ $resM = $m->getAllMateriales($datos);
                         </th>
                         <th class="col-1" style="width: 170px;">
                             <div style="display: flex; justify-content: space-between;">
-                                <span>Estatus: </span>
+                                <span>Acciones: </span>
                                 <div class="px-4">
                                     <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
                                     <img id="ValEstatus" src="../img/toggleon_26px.png" width="30px" onclick="javascript:valStatus(); javascript:GetMateriales()">
@@ -100,7 +104,7 @@ $resM = $m->getAllMateriales($datos);
                         foreach ($resM['datos'] as $fila) {
                             $cont++;
                         ?>
-                            <tr class="fila" onmouseover="javascript:mostrarValores(this)" onmouseout="javascript:ocultarValores(this)">
+                            <tr class="fila fila-materiales" onmouseover="javascript:mostrarValores(this)" onmouseout="javascript:ocultarValores(this)">
 
                                 <td class="Code"><?= !empty($fila['codigo']) ? $fila['codigo'] : "---" ?></td>
                                 <td><?= !empty($fila['norma']) ? $fila['norma'] : "---" ?></td>
@@ -111,11 +115,11 @@ $resM = $m->getAllMateriales($datos);
                                 <td><?= $fila['unidad'] ?></td>
                                 <td class="estatus">
                                     <div style="display: flex; justify-content: space-around; align-items: center;">
-                                        <div class="miDiv imaCuadro">
-                                            <img class="imagenPreview" src="../Materiales/118" style="border: #303030 solid .5rem; background-color: gray; " height="100%" width="100%">
+                                        <div class="miDiv imaCuadro-materiales">
+                                            <img class="imagenPreview" src="../Materiales/118" height="100%" width="100%">
                                         </div>
                                     </div>
-                                    <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
+                                    <div class="valores valores-materiales">
                                         <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
                                         <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(<?= $fila['codigo'] ?>,'<?= $fila['norma'] ?>','<?= $fila['descripcion'] ?>',<?= $fila['precio'] ?>,'<?= $fila['fechaprecio'] ?>','<?= $fila['unidad'] ?>')">
                                         <?php if ($fila['estatus']) { ?>
@@ -141,14 +145,14 @@ $resM = $m->getAllMateriales($datos);
 
 
     <!-- Modal insertar imagen -->
-    <div class="modal fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal modal-materiales" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="border: 3px solid #008E5A;">
                 <div class="modal-header" style="border-bottom: 2px solid #008E5A;">
                     <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar material</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body modal-body-materiales">
 
                     <div class="mb-3">
                         <label for="idInput" class="form-label" style="color: #303030;">ID</label>
@@ -186,9 +190,9 @@ $resM = $m->getAllMateriales($datos);
                         <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
                         <input type="file" class="form-control" id="AddimagenInput" onchange="AddmostrarImagen(this) " style=" border: 3px solid #008E5A;">
                     </div>
-                    <img id="AddimagenPreview" src="" alt="Imagen" width="100px">
+                    <img id="AddimagenPreview" src="" alt="Imagen" width="200px" style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
                 </div>
-                <div class="modal-footer" style="border-top: 2px solid #008E5A;">
+                <div class="modal-footer modal-footer-materiales" style="border-top: 2px solid #008E5A;">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
@@ -242,7 +246,7 @@ $resM = $m->getAllMateriales($datos);
                         <input type="file" class="form-control" id="UpdimagenInput" onchange="UpdmostrarImagen(this)" style=" border: 3px solid #008E5A;">
                     </div>
 
-                    <img id="UpdimagenPreview" src="" width="100px">
+                    <img id="UpdimagenPreview" src="" width="200px" style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
                 </div>
                 <div class=" modal-footer" style="border-top: 2px solid #008E5A;">
                     <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;" onclick="javascript:UpdMaterialValidar()">Guardar</button>

@@ -26,53 +26,62 @@ if ($_GET['x'] == 1) {
     <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet">
     <link rel="stylesheet" href="indexStyles.css">
     <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
+    <link rel="stylesheet" href="./Usuarios/stylesusuarios.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title></title>
 </head>
 
-<body>
-    <div class="top-bar">
+<body>  
+    <div class="top-bar">    
         <div id="logoImage" style="height: 70%;"></div>
+        
+            <div class="input-group-text custom-icon" style="display: flex; justify-content: end; top: 5px; position: fixed; right: 5px; background-color: #008E5A; border: none;">
+            <span style="color: white; font-family: 'LatoBold', sans-serif; z-index: 1500; background-color: #008E5A;">Aqui va el usuario</span>
 
-    </div>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class=" container-fluid">
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <!-- Por este icono de Font Awesome -->
-                <i class="fas fa-bars"></i>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:opcion('materiales');">Materiales</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Estructuras</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="javascript:opcion('usuarios');">Usuarios</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Button 4</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Button 5</a>
-                    </li>
-                </ul>
+            <i class="fas fa-user white-icon" style="color: white; z-index: 1500; background-color: #008E5A;"></i>
             </div>
 
-    </nav>
+            <div class="btn-group dropstart" style="display: flex; justify-content: end; top: 40px; position: fixed; right: 5px;">
+            <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
+            </button>
+            <ul class="dropdown-menu"   style="background-color: #008E5A; border: 3px; border-color: #ffffff;">
+                <li><a class="dropdown-item" style="color: #ffffff;" href="javascript:opcion('usuarios');">Usuarios</a></li>
+                <li><a class="dropdown-item" style="color: #ffffff;" href="index.html">Cerrar sesión</a></li>
+            </ul>
+            </div>
 
-    <div class="btn-group dropstart" style="display: flex; justify-content: end; margin: 20px">
-        <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Usuarios</a></li>
-            <li><a class="dropdown-item" href="index.html">Cerrar sesión</a></li>
-        </ul>
+            <nav class="navbar navbar-expand-lg navbar-dark" style="position: fixed;">
+                <div class=" container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <!-- Por este icono de Font Awesome -->
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link" href="javascript:opcion('materiales');">Materiales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Estructuras</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Conceptos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Button 4</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Button 5</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
     </div>
-
+    <div class="bottom-rectangle bottom-rectangle-index">
+    </div>
+    
     <!-- Inicio del contenido principal -->
     <div id="mainContent" class="contaniner" style="margin-top: 5rem;">
 

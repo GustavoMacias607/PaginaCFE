@@ -9,7 +9,7 @@ $db = "proyecto7mo";
 
 $host = "127.0.0.1";
 $user = "root";
-$pass = 'root';
+$pass = 'rootroot';
 $db = "proyectocfe";
 
 $clave_enc = "Cualquiera123";

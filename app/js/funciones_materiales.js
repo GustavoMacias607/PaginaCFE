@@ -11,14 +11,14 @@ function AddMaterialValidar() {
 
     let norma = document.querySelector('#AddnormaInput');
     if (norma.value == 0) {
-        alert('Ingrese un norma')
+        alert('Ingrese una norma')
         norma.focus();
         return;
     }
     datos.norma = norma.value;
     let descripcion = document.querySelector('#AdddescripcionInput');
     if (descripcion.value == "") {
-        alert('Ingrese un descripcion')
+        alert('Ingrese una descripción')
         descripcion.focus();
         return;
     }
@@ -32,7 +32,7 @@ function AddMaterialValidar() {
     datos.precio = precio.value;
     let fecha = document.querySelector('#AddfechaPrecioInput');
     if (fecha.value == "") {
-        alert('Ingrese un fecha')
+        alert('Ingrese una fecha')
         fecha.focus();
         return;
     }
@@ -41,7 +41,7 @@ function AddMaterialValidar() {
 
     let unidad = document.querySelector('#AddunidadInput');
     if (unidad.value == "") {
-        alert('Ingrese un unidad')
+        alert('Ingrese una unidad')
         unidad.focus();
         return;
     }
@@ -59,7 +59,7 @@ function AddMaterialValidar() {
                 let resp = JSON.parse(responseText);
                 console.log(resp)
                 if (resp.estado == "OK") {
-                    alert("Material Agregado con Exito :)");
+                    alert("Material agregado.");
                     var inputFile = document.getElementById('AddimagenInput');
                     if (inputFile.value) {
                         AddAgregarImagen();
@@ -68,7 +68,7 @@ function AddMaterialValidar() {
                     AddCerrarModal();
                     opcion('materiales');
                 } else {
-                    alert("El codigo de Material Ya existe")
+                    alert("¡Este código ya existe!")
                     id.focus();
                 }
             } else {
@@ -91,7 +91,7 @@ function CambioEstatus(id, estatus) {
     let json = JSON.stringify(datos);
     switch (parseInt(estatus)) {
         case 0: {
-            let conF = confirm("Esta seguro que quiere activar el material?")
+            let conF = confirm("¿Activar este material?")
             if (conF) {
                 let url = "../ws/Materiales/wsCambiarStatus.php";
                 $.post(url, json, (responseText, status) => {
@@ -103,7 +103,7 @@ function CambioEstatus(id, estatus) {
                             console.log(resp)
                             GetMateriales();
                             if (resp.estado == "OK") {
-                                alert("Material Agregado con Exito :)");
+                                alert("¡Material activo!");
                             }
                         } else {
                             throw e = status;
@@ -117,9 +117,9 @@ function CambioEstatus(id, estatus) {
         }
 
         case 1: {
-            let con = confirm("Esta seguro que quiere eliminar el material?")
+            let con = confirm("¿Eliminar este material?")
             if (con) {
-                con = confirm("De verdad esta seguro?")
+                con = confirm("¿Está seguro de que desea eliminar este material?")
                 if (con) {
                     let url = "../ws/Materiales/wsCambiarStatus.php";
                     $.post(url, json, (responseText, status) => {
@@ -131,7 +131,7 @@ function CambioEstatus(id, estatus) {
                                 console.log(resp)
                                 GetMateriales();
                                 if (resp.estado == "OK") {
-                                    alert("Material Agregado con Exito :)");
+                                    alert("¡Material eliminado!");
                                 }
                             } else {
                                 throw e = status;
@@ -147,7 +147,7 @@ function CambioEstatus(id, estatus) {
 
 
         default: {
-            console.error("hola")
+            console.error("Error")
         }
     }
 
@@ -424,7 +424,7 @@ function AddAgregarImagen() {
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log('Imagen guardada con éxito:', response);
+                    console.log('Imagen guardada:', response);
                 },
                 error: function (error) {
                     console.error('Error al guardar la imagen:', error);
@@ -462,7 +462,7 @@ function UpdAgregarImagen() {
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log('Imagen guardada con éxito:', response);
+                    console.log('Imagen guardada:', response);
                 },
                 error: function (error) {
                     console.error('Error al guardar la imagen:', error);
@@ -623,7 +623,7 @@ function cargarImagen() {
             // Asignar la ruta de la imagen al src del elemento img
             elementoImagen.src = rutaImagen;
         })
-        .catch(error => console.error('Error al obtener archivos en la carpeta', error));
+        .catch(error => console.error('Error al obtener archivos en la carpeta.', error));
 }
 function cargarImagenCuadro(imagen) {
 
@@ -635,7 +635,7 @@ function cargarImagenCuadro(imagen) {
             const imagen = archivos.find(archivo => archivo.endsWith('.JPG') || archivo.endsWith('.jpg') || archivo.endsWith('.png') || archivo.endsWith('.jpeg'));
             if (imagen == undefined) {
                 const elementoImagen = div.querySelector(".imagenPreview");
-                elementoImagen.src = "/paginacfe/app/img/Capturas.JPG";
+                elementoImagen.src = "/paginacfe/app/img/sinimagen.png";
             } else {
                 // Crear la ruta completa de la imagen
                 const rutaImagen = `${rutaCarpeta}/${imagen}`;
@@ -652,7 +652,7 @@ function cargarImagenCuadro(imagen) {
         .catch(error => {
 
 
-            console.error('Error al obtener archivos en la carpeta', error);
+            console.error('Error al obtener archivos en la carpeta.', error);
 
         })
 }
@@ -690,14 +690,14 @@ function UpdMaterialValidar() {
     datos.id = id.value;
     let norma = document.querySelector('#UpdnormaInput');
     if (norma.value == 0) {
-        alert('Ingrese un norma')
+        alert('Ingrese una norma')
         norma.focus();
         return;
     }
     datos.norma = norma.value;
     let descripcion = document.querySelector('#UpddescripcionInput');
     if (descripcion.value == "") {
-        alert('Ingrese un descripcion')
+        alert('Ingrese una descripción')
         descripcion.focus();
         return;
     }
@@ -711,7 +711,7 @@ function UpdMaterialValidar() {
     datos.precio = precio.value;
     let fecha = document.querySelector('#UpdfechaPrecioInput');
     if (fecha.value == "") {
-        alert('Ingrese un fecha')
+        alert('Ingrese una fecha')
         fecha.focus();
         return;
     }
@@ -720,7 +720,7 @@ function UpdMaterialValidar() {
 
     let unidad = document.querySelector('#UpdunidadInput');
     if (unidad.value == "") {
-        alert('Ingrese un unidad')
+        alert('Ingrese una unidad')
         unidad.focus();
         return;
     }
@@ -741,12 +741,12 @@ function UpdMaterialValidar() {
                 let resp = JSON.parse(responseText);
 
                 if (resp.estado == "OK") {
-                    alert("Material Modificado con Exito :)");
+                    alert("Material modificado");
 
                     UpdateCerrarModal();
                     opcion('materiales');
                 } else {
-                    alert("El codigo del Material ya existe")
+                    alert("¡Este código ya existe!")
                     id.focus();
                 }
             } else {

@@ -58,3 +58,67 @@ img.logo {
   display: block;
   margin: -40px auto;
 }
+
+/* SIFCAO */
+a{
+  
+  display: inline-block;
+  position: relative;
+  text-decoration: none;
+  color: #e92323;
+  font-weight: 500;
+  padding: 10px, 20px;
+  border-radius: 10px;
+  color: #ffffff;
+  transition: all 0.3s ease;
+  transform: translateX(50%);
+}
+a:hover{
+  background-color: #008e5a;
+}
+.header{
+  position: relative;
+  background-color: #ffffff;
+  width: 100%;
+  min-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header nav ul{
+  display: flex;
+  gap: 10px;
+  list-style: none;
+}
+.header nav a i{
+  font-size: 14px;
+  margin-left: 6px;
+}
+.submenu{
+  font-family: "Lato", sans-serif;
+  position: absolute;
+  top: 100%;
+  background-color: #008e5a;
+  color: #ffffff;
+  border-radius: 10px;
+  max-height: 0;
+  transition: max-height 2s ease;
+  overflow: hidden;
+}
+.submenu.show{
+  max-height: 100px;
+}
+.submenu ul{
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 10px;
+}
+.submenu ul li{
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.submenu ul li a{
+  width: 100%;
+}
