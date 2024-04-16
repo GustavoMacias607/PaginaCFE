@@ -31,7 +31,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
+  z-index: 3000;
   display: flex;
   align-items: self-start;
   justify-content: space-between;
@@ -39,16 +39,16 @@ body {
 }
 
 /*estilos para la barra negra*/
-.bottom-rectangle-index{
+.bottom-rectangle-index {
   background-color: #303030;
-  display: flex; 
+  display: flex;
   position: fixed;
   width: 100%;
   height: 60px;
   position: absolute;
   top: 80px; /* La altura del rectángulo superior */
   left: 0;
-  z-index: 500; /* Asegura que el rectángulo esté detrás de los botones */
+  z-index: 400; /* Asegura que el rectángulo esté detrás de los botones */
 }
 
 /* Estilos para el navbar */
@@ -56,14 +56,13 @@ body {
   font-family: "LatoBold", sans-serif;
   background-color: #ffffff; /* Color verde */
   color: #ffffff; /* Color del texto */
-  z-index: 1100;
+  z-index: 2000;
   padding: 0.1rem 0.1rem; /* Espaciado interno */
   height: 30px; /* Altura del navbar */
   position: absolute;
   top: 25px; /* Espacio desde arriba */
   left: 50%;
   transform: translateX(-50%);
-
 }
 
 .navbar-nav .nav-link {
@@ -82,4 +81,5 @@ body {
   color: #ffffff;
   font-size: 30px; /* Tamaño del ícono */
   border: none; /* Quita el borde del botón */
+  z-index: 1000;
 }

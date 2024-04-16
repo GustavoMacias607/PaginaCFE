@@ -23,15 +23,17 @@ $resM = $m->getAllMateriales($datos);
 <link rel="stylesheet" href="stylesmateriales.css">
 
 <div class="row container mt-5 text-lg-start">
-    <div class="bottom-rectangle bottom-rectangle-materiales">
-        <div class="text-capitalize text-materiales" >Materiales</div>
+    <div class="fondBlanco">
+        <div class="bottom-rectangle bottom-rectangle-materiales ">
+            <div class="text-capitalize text-materiales">Materiales</div>
             <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModal();">Agregar
-            material</button>
-    </div>
+                material</button>
+        </div>
         <div class="label-container label-container-materiales">
             <input type="text" placeholder="Buscar" id="searchInput" oninput="GetBuscarMateriales()">
             <i class="fas fa-search icon-materiales" id="searchIcon"></i>
         </div>
+    </div>
     <div class="contTabla contTabla-materiales">
         <div class="tabla-container tabla-container-materiales">
             <table id="tabla-materiales">
@@ -115,11 +117,11 @@ $resM = $m->getAllMateriales($datos);
                                 <td><?= $fila['unidad'] ?></td>
                                 <td class="estatus">
                                     <div style="display: flex; justify-content: space-around; align-items: center;">
-                                        <div class="miDiv imaCuadro-materiales">
-                                            <img class="imagenPreview" src="../Materiales/118" height="100%" width="100%">
+                                        <div class="miDiv imaCuadro">
+                                            <img class="imagenPreview" src="../Materiales/118" style="border: #303030 solid .5rem; background-color: gray; " height="100%" width="100%">
                                         </div>
                                     </div>
-                                    <div class="valores valores-materiales">
+                                    <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
                                         <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
                                         <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(<?= $fila['codigo'] ?>,'<?= $fila['norma'] ?>','<?= $fila['descripcion'] ?>',<?= $fila['precio'] ?>,'<?= $fila['fechaprecio'] ?>','<?= $fila['unidad'] ?>')">
                                         <?php if ($fila['estatus']) { ?>
@@ -200,7 +202,7 @@ $resM = $m->getAllMateriales($datos);
     </div>
 
     <!-- Modal modificar Material-->
-    <div class="modal fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade modal-materiales" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="border: 3px solid #008E5A;">
                 <div class="modal-header" style="border-bottom: 2px solid #008E5A;">

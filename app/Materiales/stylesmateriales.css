@@ -11,22 +11,31 @@
 body {
   font-family: "Lato", sans-serif;
 }
+.fondBlanco {
+  background-color: white;
+  height: 9rem;
+  width: 100%;
+  display: flex;
+  position: fixed;
+  z-index: 500;
+}
 
 /*barra superior negra*/
 .bottom-rectangle-materiales {
   background-color: #303030;
-  display: flex; 
+  display: flex;
   position: fixed;
   width: 100%;
   height: 60px;
-  position: absolute;
+  position: fixed;
+  padding: 5px 0 5px 30px;
   top: 80px; /* La altura del rectángulo superior */
   left: 0;
-  z-index: 500; /* Asegura que el rectángulo esté detrás de los botones */
+  z-index: 10; /* Asegura que el rectángulo esté detrás de los botones */
 }
 
-    /* Estilos para el titulo materiales */
-.text-materiales{
+/* Estilos para el titulo materiales */
+.text-materiales {
   font-family: "LatoBold", sans-serif;
   color: #ffffff;
   font-size: 140%;
@@ -39,7 +48,7 @@ body {
   top: 170px; /* Espacio desde arriba */
   left: 50%; /* Centrado horizontal */
   transform: translateX(-50%); /* Centrado horizontal */
-  width: 700px; /* Ancho del label */
+  width: 70vw; /* Ancho del label */
   background-color: #ffffff; /* Fondo blanco */
   border: 3px solid #008e5a; /* Contorno de 3px color verde */
   border-radius: 5px; /* Bordes redondeados */
@@ -64,7 +73,7 @@ body {
 /* Estilos para el botón "Agregar material" */
 .btn-agregar-material {
   font-family: "LatoBold", sans-serif; /* tipografia */
-  --bs-btn-padding-y: .3rem;
+  --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
   --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
   background-color: #ffffff; /* Fondo blanco */
@@ -72,7 +81,7 @@ body {
   border: 3px solid #ffffff; /* Contorno verde */
   border-radius: 5; /* Sin bordes redondeados */
   transition: all 0.3s ease; /* Transición suave */
-  transform: translate(20px); /* posicion del boton */ 
+  transform: translate(20px); /* posicion del boton */
 }
 
 .btn-agregar-material:hover {
@@ -89,7 +98,7 @@ body {
 
 /*estilos para el modal agregar material*/
 .modal-materiales {
-  z-index: 1200;
+  z-index: 5000;
   font-family: "LatoBold", sans-serif;
 }
 /* Estilos para el botón Guardar del modal */
@@ -115,12 +124,17 @@ body {
   margin-left: 3rem;
   margin-right: 3rem;
   left: 0;
+  @media (max-width: 700px) {
+    margin-left: 0rem;
+    margin-right: 0rem;
+    width: calc(100%);
+  }
 }
 /* Estilos personalizados para la tabla */
 .tabla-container-materiales {
-  margin-top: 20px; 
+  margin-top: 20px;
   text-align: center;
- 
+
   margin-bottom: 100px;
   /* Altura máxima del contenedor */
   overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
@@ -154,106 +168,49 @@ body {
 }
 
 .valores-materiales {
-  justify-content: space-around; 
+  justify-content: space-around;
   align-items: center;
   display: none;
 }
+.fila:hover {
+  background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
+}
 
-.fila-materiales:hover .valores {
+.valores {
+  display: none;
+}
+
+.fila:hover .valores {
   display: flex;
 }
 
-/*
-.checkbox-wrapper-45 {
-  position: relative;
-}
-
-.checkbox-wrapper-45 input[type="checkbox"] {
-  display: none;
-  visibility: hidden;
-}
-.checkbox-wrapper-45 .cbx {
-  -webkit-perspective: 20;
-  perspective: 20;
-  display: inline-block;
-  border: 2px solid #e8e8eb;
-  background: #e8e8eb;
-  border-radius: 4px;
-  transform: translate3d(0, 0, 0);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.checkbox-wrapper-45 .cbx:hover {
-  border-color: #0b76ef;
-}
-.checkbox-wrapper-45 .flip {
-  display: block;
-  transition: all 0.4s ease;
-  transform-style: preserve-3d;
-  position: relative;
-  width: 20px;
-  height: 20px;
-}
-.checkbox-wrapper-45 input[type="checkbox"]:checked + .cbx {
-  border-color: #0b76ef;
-}
-.checkbox-wrapper-45 input[type="checkbox"]:checked + .cbx .flip {
-  transform: rotateY(180deg);
-}
-.checkbox-wrapper-45 .front,
-.checkbox-wrapper-45 .back {
-  backface-visibility: hidden;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 20px;
-  height: 20px;
-  border-radius: 2px;
-}
-.checkbox-wrapper-45 .front {
-  background: #fff;
-  z-index: 1;
-}
-.checkbox-wrapper-45 .back {
-  transform: rotateY(180deg);
-  background: #0b76ef;
-  text-align: center;
-  color: #fff;
-  line-height: 20px;
-  box-shadow: 0 0 0 1px #0b76ef;
-}
-.checkbox-wrapper-45 .back svg {
-  margin-top: 3px;
-  fill: none;
-}
-.checkbox-wrapper-45 .back svg path {
-  stroke: #fff;
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}*/
-
-.imaCuadro-materiales {
-  background-color: #008e5a;
-  border: #008e5a solid 6px;
+.imaCuadro {
+  background-color: gray;
   width: 10rem;
   height: 5rem;
-  display: table-column-group;
+  display: none;
 
-  
   transform: translateX(-40rem);
 
   position: absolute;
+  @media (max-width: 700px) {
+    transform: translateX(-25rem);
+    width: 10rem;
+    height: 5rem;
+    left: 95%;
+  }
   @media (min-width: 700px) {
     transform: translateX(-25rem);
     width: 15rem;
     height: 7.5rem;
-    
+
+    left: 95%;
   }
   @media (min-width: 1192px) {
-    transform: translateX(-40rem);
+    transform: translateX(-15rem);
     width: 20rem;
     height: 10rem;
-   
+
+    left: 76%;
   }
 }

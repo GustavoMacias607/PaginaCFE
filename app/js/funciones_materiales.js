@@ -301,17 +301,12 @@ function mostrarDatosEnTabla(datos) {
             <td>${(!material.unidad == "") ? material.unidad : "---"}</td>
             <td class="estatus">
             <div style="display: flex; justify-content: space-around; align-items: center;">
-                <div style="display: flex; justify-content: space-around; align-items: center;">
-                <div class="miDiv imaCuadro">
-                    <img class="imagenPreview" src="../Materiales/118" style="border: #303030 solid .5rem; background-color: gray; " height="100%" width="100%">
-                </div>
+            <div class="miDiv imaCuadro">
+                <img class="imagenPreview" src="../Materiales/118" style="border: #303030 solid .5rem; background-color: gray; " height="100%" width="100%">
             </div>
-            </div>
-            <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
-
-
-                <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png"
-                    alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
+        </div>
+        <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
+            <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
 
             
                 <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')">
@@ -614,14 +609,19 @@ function cargarImagen() {
             // Seleccionar la única imagen encontrada en la carpeta
             const imagen = archivos.find(archivo => archivo.endsWith('.JPG') || archivo.endsWith('.jpg') || archivo.endsWith('.png') || archivo.endsWith('.jpeg'));
 
-            // Crear la ruta completa de la imagen
-            const rutaImagen = `${rutaCarpeta}/${imagen}`;
+            if (imagen == undefined) {
+                const elementoImagen = document.getElementById('UpdimagenPreview');
+                elementoImagen.src = "/paginacfe/app/img/sinimagen.png";
+            } else {
+                // Crear la ruta completa de la imagen
+                const rutaImagen = `${rutaCarpeta}/${imagen}`;
 
-            // Obtener el elemento img
-            const elementoImagen = document.getElementById('UpdimagenPreview');
+                // Obtener el elemento img
+                const elementoImagen = document.getElementById('UpdimagenPreview');
 
-            // Asignar la ruta de la imagen al src del elemento img
-            elementoImagen.src = rutaImagen;
+                // Asignar la ruta de la imagen al src del elemento img
+                elementoImagen.src = rutaImagen;
+            }
         })
         .catch(error => console.error('Error al obtener archivos en la carpeta.', error));
 }
