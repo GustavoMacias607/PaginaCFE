@@ -124,7 +124,7 @@ $datos = array(
     </div>
 </div>
 
-    <!-- Modal insertar imagen -->
+    <!-- Modal insertar usuario -->
     <div class="modal modal-usuarios" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content" style="border: 3px solid #008E5A;">
@@ -143,7 +143,15 @@ $datos = array(
                     </div>
                     <div class="mb-3">
                         <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario</label>
-                        <textarea class="form-control" id="AddusuarioInput" rows="3" style="border: 3px solid #008E5A;"></textarea>
+                        <input class="form-control" id="AddusuarioInput" rows="3" style="border: 3px solid #008E5A;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="passInput" class="form-label" style="color: #303030;">Contraseña</label>
+                        <input class="form-control" id="AddpassInput" rows="3" style="border: 3px solid #008E5A;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="passconfirmInput" class="form-label" style="color: #303030;">Confirme su contraseña</label>
+                        <input class="form-control" id="AddpassInput" rows="3" style="border: 3px solid #008E5A;">
                     </div>
                     <div class="mb-3">
                         <label for="rolInput" class="form-label" style="color: #303030;">Rol</label>
@@ -154,7 +162,7 @@ $datos = array(
                             <option value="USUDOS">Usuario dos</option>
                         </select>
                     </div>
-                <div class="modal-footer-usuarios" style="border-top: 2px solid #008E5A;">
+                <div class="modal-footer-usuarios" style="color: none">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddUsuarioValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
@@ -181,11 +189,11 @@ $datos = array(
                     </div>
                     <div class="mb-3">
                         <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario</label>
-                        <textarea class="form-control" id="UpdusuarioInput" rows="3" style="border: 3px solid #008E5A;"></textarea>
+                        <input class="form-control" id="UpdusuarioInput" rows="3" style="border: 3px solid #008E5A;">
                     </div>
                     <div class="mb-3">
                         <label for="urolInput" class="form-label" style="color: #303030;">Rol</label>
-                        <select class="form-select" id="UpdrolInput" style="border: 3px solid #008E5A;">
+                        <select class="form-select" id="UpdrolInput" style="border: 3px solid #008E5A;" disabled>
                             <option selected></option>
                             <option value="ADMIN">Administrador</option>
                             <option value="USUUNO">Usuario uno</option>
@@ -193,7 +201,7 @@ $datos = array(
                         </select>
                     </div>
                 </div>
-                <div class=" modal-footer" style="border-top: 2px solid #008E5A;">
+                <div class=" modal-footer" style="color: none">
                     <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;" onclick="javascript:UpdUsuarioValidar()">Guardar</button>
                 </div>
             </div>
