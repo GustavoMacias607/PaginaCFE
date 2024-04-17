@@ -73,11 +73,12 @@ class Materiales
         $c = $this->conn;
         try {
 
-            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtar, :Estatus,'PZ');";
+            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtar, :Estatus,'PZ',:Buscar);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Filtar" => $datos->unidad,
-                "Estatus" => $datos->estatus
+                "Estatus" => $datos->estatus,
+                "Buscar" => $datos->buscar,
 
             ));
 
@@ -126,16 +127,18 @@ class Materiales
         $c = $this->conn;
         try {
             if (!$datos->estatus) {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 0,:Unidad);";
+                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 0,:Unidad,:Buscar);";
                 $sql = $c->prepare($consulta);
                 $sql->execute(array(
-                    "Unidad" => $datos->unidad
+                    "Unidad" => $datos->unidad,
+                    "Buscar" => $datos->buscar,
                 ));
             } else {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 1,:Unidad);";
+                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 1,:Unidad,:Buscar);";
                 $sql = $c->prepare($consulta);
                 $sql->execute(array(
-                    "Unidad" => $datos->unidad
+                    "Unidad" => $datos->unidad,
+                    "Buscar" => $datos->buscar,
                 ));
             }
 

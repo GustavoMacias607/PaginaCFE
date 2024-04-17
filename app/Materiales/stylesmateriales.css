@@ -140,7 +140,6 @@ body {
   overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
   border-top: #008e5a solid 3px;
-  border-bottom: #008e5a solid 3px;
 }
 
 #tabla-materiales {
@@ -185,12 +184,21 @@ body {
 }
 
 .imaCuadro {
-  background-color: gray;
+  background-color: #000000;
   width: 10rem;
   height: 5rem;
   display: none;
-
+  top: auto;
   transform: translateX(-40rem);
+  clip-path: polygon(
+    0% 0%,
+    93% 0,
+    93% 39%,
+    100% 52%,
+    93% 63%,
+    93% 100%,
+    0 100%
+  );
 
   position: absolute;
   @media (max-width: 700px) {
@@ -211,6 +219,12 @@ body {
     width: 20rem;
     height: 10rem;
 
-    left: 76%;
+    left: 80%;
   }
+}
+
+.pagRegistros {
+  display: flex;
+  align-items: center;
+  padding-left: 4rem;
 }

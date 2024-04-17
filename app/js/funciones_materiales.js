@@ -1,3 +1,23 @@
+function incio() {
+
+    setTimeout(() => {
+        GetMateriales();
+    }, 800);
+}
+
+let paginaActual = 1; // Página actual
+let tamanoPagina = 10; // Número de elementos por página
+var totalPag = 1;
+
+
+function cambiarTamano() {
+    const cantidad = document.getElementById("cantRegistros");
+    tamanoPagina = parseInt(cantidad.value);
+    paginaActual = 1;
+    console.log(tamanoPagina);
+    GetMateriales();
+}
+
 function AddMaterialValidar() {
 
     const datos = {};
@@ -67,6 +87,9 @@ function AddMaterialValidar() {
 
                     AddCerrarModal();
                     opcion('materiales');
+                    setTimeout(() => {
+                        GetMateriales();
+                    }, 800);
                 } else {
                     alert("¡Este código ya existe!")
                     id.focus();
@@ -82,6 +105,7 @@ function AddMaterialValidar() {
 }
 function CambioEstatus(id, estatus) {
     const datos = {};
+
     datos.id = id;
     if (estatus == 1) {
         datos.estatus = "Inactivo";
@@ -89,6 +113,7 @@ function CambioEstatus(id, estatus) {
         datos.estatus = "Activo";
     }
     let json = JSON.stringify(datos);
+
     switch (parseInt(estatus)) {
         case 0: {
             let conF = confirm("¿Activar este material?")
@@ -101,6 +126,7 @@ function CambioEstatus(id, estatus) {
                             console.log(responseText);
                             let resp = JSON.parse(responseText);
                             console.log(resp)
+                            paginaActual = 1;
                             GetMateriales();
                             if (resp.estado == "OK") {
                                 alert("¡Material activo!");
@@ -130,6 +156,7 @@ function CambioEstatus(id, estatus) {
                                 let resp = JSON.parse(responseText);
                                 console.log(resp)
                                 GetMateriales();
+                                paginaActual = 1;
                                 if (resp.estado == "OK") {
                                     alert("¡Material eliminado!");
                                 }
@@ -153,6 +180,7 @@ function CambioEstatus(id, estatus) {
 
 }
 function GetBuscarMateriales() {
+    paginaActual = 1;
     const datos = {};
     let buscar = document.querySelector('#searchInput');
     let estatus = document.getElementById('ValCheEsta').checked;
@@ -177,10 +205,10 @@ function GetBuscarMateriales() {
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
 
-                    mostrarDatosEnTabla(resp.datos);
+                    mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje);
+                    mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
                 }
             } else {
                 throw e = status;
@@ -191,15 +219,41 @@ function GetBuscarMateriales() {
     });
 }
 
-function GetMateriales() {
-    const datos = {};
+function paginaAnterior() {
+    if (paginaActual > 1) {
+        paginaActual--;
 
+        GetMateriales();
+    }
+}
+function NoPag(pagi) {
+    paginaActual = pagi;
+    GetMateriales();
+
+}
+function obtenerTotalPaginas(totalDatos, tamanoPagina) {
+    return Math.ceil(totalDatos / tamanoPagina);
+}
+function paginaSiguiente() {
+    // Suponiendo que tienes el total de páginas disponible en alguna variable
+    // Debes implementar esta función
+
+    if (paginaActual < totalPag) {
+        paginaActual++;
+        GetMateriales();
+    }
+}
+
+function GetMateriales() {
+
+    const datos = {};
+    let buscar = document.querySelector('#searchInput');
+    datos.buscar = buscar.value;
     let estatus = document.getElementById('ValCheEsta').checked;
     let unidad = document.getElementById('selectUnidad');
     datos.estatus = estatus;
-    datos.unidad = unidad.value
+    datos.unidad = unidad.value;
     let json = JSON.stringify(datos);
-
     let url = "../ws/Materiales/wsGetMateriales.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -209,25 +263,28 @@ function GetMateriales() {
 
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
-                    mostrarDatosEnTabla(resp.datos);
+                    mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje);
+                    mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
                 }
             } else {
                 throw e = status;
             }
         } catch (error) {
-
+            console.error(error);
         }
     });
 }
 
 function GetFiltrarUnidad() {
+    paginaActual = 1;
     const datos = {};
+    let buscar = document.querySelector('#searchInput');
+
     let unidad = document.querySelector('#selectUnidad');
     let estatus = document.getElementById('ValCheEsta').checked;
-
+    datos.buscar = buscar.value;
     datos.unidad = unidad.value;
     if (estatus) {
         datos.estatus = 1;
@@ -245,10 +302,10 @@ function GetFiltrarUnidad() {
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
 
-                    mostrarDatosEnTabla(resp.datos);
+                    mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje);
+                    mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
                 }
             } else {
                 throw e = status;
@@ -259,34 +316,30 @@ function GetFiltrarUnidad() {
     });
 }
 
-function mostrarDatosEnTabla(datos) {
+function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
+    let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
+
+    totalPag = totalPaginas;
     // Obtener el cuerpo de la tabla
     let tbody = document.getElementById("tabla-materiales").getElementsByTagName("tbody")[0];
 
-    // Limpiar cualquier fila existente en la tabla
+
     tbody.innerHTML = "";
-
     if (datos == "N") {
-
         let fila = document.createElement("tr");
-
-        // Agregar las celdas a la fila
         fila.innerHTML = `
-                <td>No hay Resultados</td>
-                <td>No hay Resultados</td>
-                <td>No hay Resultados</td>
-                <td>No hay Resultados</td>
-                <td>No hay Resultados</td>
-                <td>No hay Resultados</td>
-                <td>No hay Resultados</td>
-                            `;
-
-        // Agregar la fila a la tabla
+        <td colspan="8">Sin resultados</td>
+        `;
         tbody.appendChild(fila);
-
+        return; // Detener la ejecución de la función si no hay datos
     }
+
+    // Calcular el índice de inicio y final de los datos a mostrar en esta página
+    let startIndex = (paginaActual - 1) * tamanoPagina;
+    let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
     // Iterar sobre los datos y agregar filas a la tabla
-    datos.forEach(function (material) {
+    for (let i = startIndex; i < endIndex; i++) {
+        let material = datos[i];
         let fila = document.createElement("tr");
         fila.classList.add("fila")
         fila.addEventListener("mouseover", () => mostrarValores(fila));
@@ -302,7 +355,7 @@ function mostrarDatosEnTabla(datos) {
             <td class="estatus">
             <div style="display: flex; justify-content: space-around; align-items: center;">
             <div class="miDiv imaCuadro">
-                <img class="imagenPreview" src="../Materiales/118" style="border: #303030 solid .5rem; background-color: gray; " height="100%" width="100%">
+                <img class="imagenPreview" src="../Materiales/118" style="border: black solid .2rem; background-color: black; " height="100%" width="92%">
             </div>
         </div>
         <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
@@ -314,11 +367,50 @@ function mostrarDatosEnTabla(datos) {
                 </div>
                 </div>
             </td>
+
+
+            
         `;
 
         // Agregar la fila a la tabla
         tbody.appendChild(fila);
-    });
+
+    }
+    actualizarPaginacion(datos.length, paginaActual, tamanoPagina);
+}
+
+function actualizarPaginacion(totalDatos, paginaActual, tamanoPagina) {
+    let paginationList = document.getElementById("pagination-list");
+    paginationList.innerHTML = ""; // Limpiar el contenido existente
+
+    // Calcular el número total de páginas
+    let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
+
+    // Definir el rango de páginas que deseas mostrar antes y después de la página actual
+    let rangoMostrar = 2; // Puedes ajustar este valor según tu preferencia
+
+    // Crear botón "Previous"
+    let liPrev = document.createElement("li");
+    liPrev.classList.add("page-item");
+    liPrev.innerHTML = `<button class="page-link" onclick="paginaAnterior()"><i class="fa-solid fa-angles-left"></i></button>`;
+    paginationList.appendChild(liPrev);
+
+    // Generar enlaces de página
+    for (let i = Math.max(1, paginaActual - rangoMostrar); i <= Math.min(totalPaginas, paginaActual + rangoMostrar); i++) {
+        let li = document.createElement("li");
+        li.classList.add("page-item");
+        if (i === paginaActual) {
+            li.classList.add("active");
+        }
+        li.innerHTML = `<button class="page-link" onclick="NoPag(${i})">${i}</button>`;
+        paginationList.appendChild(li);
+    }
+
+    // Crear botón "Next"
+    let liNext = document.createElement("li");
+    liNext.classList.add("page-item");
+    liNext.innerHTML = `<button class="page-link" onclick="paginaSiguiente()"><i class="fa-solid fa-angles-right"></i></button>`;
+    paginationList.appendChild(liNext);
 }
 
 function mostrarDiv(imagen) {
@@ -377,8 +469,8 @@ function AddlimpiarModal() {
     let unidad = document.querySelector('#AddunidadInput').value = "";
     let imagen = document.querySelector('#AddimagenInput').value = "";
     let img = document.querySelector('#AddimagenPreview');
-    img.src = "";
-    img.alt = "";
+    img.src = "img/sinimagen.png";
+    img.alt = "hola";
 
     // Obtener la fecha actual
     let fechaActual = new Date();
@@ -744,7 +836,11 @@ function UpdMaterialValidar() {
                     alert("Material modificado");
 
                     UpdateCerrarModal();
+
                     opcion('materiales');
+                    setTimeout(() => {
+                        GetMateriales();
+                    }, 800);
                 } else {
                     alert("¡Este código ya existe!")
                     id.focus();
@@ -765,108 +861,4 @@ function AddCerrarModal() {
 function UpdateCerrarModal() {
 
     $('#EditarModal').modal('hide');
-}
-
-function filtrarDes(fil) {
-    let ic = document.querySelector('#icId');
-    let idChe = document.querySelector('#filIdVal');
-
-    let icPre = document.querySelector('#icPre');
-    let PreChe = document.querySelector('#filPrecioVal');
-
-    let icFec = document.querySelector('#icFec');
-    let FecChe = document.querySelector('#filFechaVal');
-    let filtro = "";
-    if (fil == "id") {
-
-        if (idChe.checked) {
-            filtro = "DescCodigo";
-            idChe.checked = false;
-            PreChe.checked = false;
-            FecChe.checked = false;
-            ic.className = "fa-solid fa-chevron-down"
-            icPre.className = "fa-solid fa-chevron-up"
-            icFec.className = "fa-solid fa-chevron-up"
-        } else {
-            filtro = "AscCodigo";
-
-            idChe.checked = true;
-            PreChe.checked = false;
-            FecChe.checked = false;
-            ic.className = "fa-solid fa-chevron-up"
-            icPre.className = "fa-solid fa-chevron-up"
-            icFec.className = "fa-solid fa-chevron-up"
-        }
-
-
-    } else if (fil == "precio") {
-        if (PreChe.checked) {
-            filtro = "DescPrecio";
-            idChe.checked = false;
-            PreChe.checked = false;
-            FecChe.checked = false;
-            ic.className = "fa-solid fa-chevron-up"
-            icPre.className = "fa-solid fa-chevron-down"
-            icFec.className = "fa-solid fa-chevron-up"
-        } else {
-            filtro = "AscPrecio";
-            idChe.checked = false;
-            PreChe.checked = true;
-            FecChe.checked = false;
-            ic.className = "fa-solid fa-chevron-up"
-            icPre.className = "fa-solid fa-chevron-up"
-            icFec.className = "fa-solid fa-chevron-up"
-        }
-    } else if (fil == "fechaPrecio") {
-        if (FecChe.checked) {
-            filtro = "DescFecha";
-            idChe.checked = false;
-            PreChe.checked = false;
-            FecChe.checked = false;
-            ic.className = "fa-solid fa-chevron-up"
-            icPre.className = "fa-solid fa-chevron-up"
-            icFec.className = "fa-solid fa-chevron-down"
-        } else {
-            filtro = "AscFecha";
-            idChe.checked = false;
-            PreChe.checked = false;
-            FecChe.checked = true;
-            ic.className = "fa-solid fa-chevron-up"
-            icPre.className = "fa-solid fa-chevron-up"
-            icFec.className = "fa-solid fa-chevron-up"
-        }
-    }
-
-    const datos = {};
-    let estatus = document.getElementById('ValCheEsta').checked;
-    let unidad = document.getElementById('selectUnidad');
-    datos.filtro = filtro;
-    datos.unidad = unidad.value
-    datos.estatus = estatus;
-
-    let json = JSON.stringify(datos);
-    let url = "../ws/Materiales/wsFiltroAscDes.php";
-    $.post(url, json, (responseText, status) => {
-        try {
-            if (status == "success") {
-
-                let resp = JSON.parse(responseText);
-
-                if (resp.estado == "OK") {
-                    // Llamar a la función para mostrar los datos en la tabla
-                    mostrarDatosEnTabla(resp.datos);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje);
-                }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-
-        }
-    });
-
-
-
 }

@@ -1,4 +1,5 @@
 function opcion(op) {
+
     let url = "";
     let json = "";
     switch (op) {
@@ -14,6 +15,7 @@ function opcion(op) {
     $.post(url, json, (responseText, status) => {
         try {
             console.log(responseText);
+
             if (status == "success") {
                 document.getElementById("mainContent").innerHTML = responseText;
             } else {

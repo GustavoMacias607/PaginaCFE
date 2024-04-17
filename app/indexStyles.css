@@ -54,7 +54,6 @@ body {
 /* Estilos para el navbar */
 .navbar {
   font-family: "LatoBold", sans-serif;
-  background-color: #ffffff; /* Color verde */
   color: #ffffff; /* Color del texto */
   z-index: 2000;
   padding: 0.1rem 0.1rem; /* Espaciado interno */
