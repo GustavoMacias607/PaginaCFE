@@ -23,7 +23,7 @@ $datos = array(
 
 <div class="row container mt-5 text-lg-start">
     <div class="bottom-rectangle bottom-rectangle-usuarios">
-    <div class="text-capitalize text-usuarios" >Usuarios</div>
+    <div class="text-capitalize text-usuarios">Usuarios</div>
         <button type="button" class="btn btn-agregar-usuario" data-bs-toggle="modal" data-bs-target="#AgregarModal" style="--bs-btn-padding-y: .3rem; --bs-btn-padding-x: 2.5rem; --bs-btn-font-size: 1rem;" onclick="javascript:AddlimpiarModal();">Agregar
             Usuario</button>
     </div>

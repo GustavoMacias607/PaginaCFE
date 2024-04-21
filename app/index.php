@@ -40,7 +40,7 @@ if ($_GET['x'] == 1) {
             style="display: flex; justify-content: end; top: 5px; position: fixed; right: 5px; background-color: #008E5A; border: none;">
             <span
                 style="color: white; font-family: 'LatoBold', sans-serif; z-index: 1500; background-color: #008E5A;">Aqui
-                va el usuario</span>
+                va el usuario .</span>
 
             <i class="fas fa-user white-icon" style="color: white; z-index: 1500; background-color: #008E5A;"></i>
         </div>
@@ -48,12 +48,12 @@ if ($_GET['x'] == 1) {
         <div class="btn-group dropstart"
             style="display: flex; justify-content: end; top: 40px; position: fixed; right: 5px;">
             <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false"
-                style="background-color: #008E5A; color: #ffffff; z-index: 1500; border: none; font-size: 30px; top: -10px;">
+                >
             </button>
-            <ul class="dropdown-menu" style="background-color: #008E5A; border: 3px; border-color: #ffffff;">
-                <li><a class="dropdown-item" style="color: #ffffff;" href="javascript:opcion('usuarios');">Usuarios</a>
+            <ul class="dropdown-menu" >
+                <li><a class="dropdown-item" href="javascript:opcion('usuarios');">Usuarios</a>
                 </li>
-                <li><a class="dropdown-item" style="color: #ffffff;" href="../">Cerrar sesión</a></li>
+                <li><a class="dropdown-item" href="../">Cerrar sesión</a></li>
             </ul>
         </div>
 

@@ -1,11 +1,11 @@
 @font-face {
   font-family: "Lato";
-  src: url("FuenteLato/Lato-Regular.ttf") format("truetype");
+  src: url("../../fonts/FuenteLato/Lato-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "LatoBold";
-  src: url("FuenteLato/Lato-Bold.ttf") format("truetype");
+  src: url("../../fonts/FuenteLato/Lato-Bold.ttf") format("truetype");
 }
 
 #logoImage {
@@ -45,7 +45,6 @@ body {
   position: fixed;
   width: 100%;
   height: 60px;
-  position: absolute;
   top: 80px; /* La altura del rectángulo superior */
   left: 0;
   z-index: 400; /* Asegura que el rectángulo esté detrás de los botones */
@@ -59,7 +58,7 @@ body {
   padding: 0.1rem 0.1rem; /* Espaciado interno */
   height: 30px; /* Altura del navbar */
   position: absolute;
-  top: 25px; /* Espacio desde arriba */
+  top: 40px; /* Espacio desde arriba */
   left: 50%;
   transform: translateX(-50%);
 }
@@ -78,7 +77,40 @@ body {
 }
 .navbar-toggler {
   color: #ffffff;
+  background-color: #008e5a;
+  top: 20px;
   font-size: 30px; /* Tamaño del ícono */
   border: none; /* Quita el borde del botón */
   z-index: 1000;
+}
+.collapse{
+  border: 3px solid #008e5a;
+  border-radius: 5px;
+  text-align: center;
+  
+}
+
+.fa-bars{
+  background-color: #008E5A; 
+  color: #ffffff; 
+  z-index: 1500; 
+  border: none; 
+  font-size: 30px; 
+  top: -10px;
+}
+
+.dropdown-menu{
+  background-color: #008E5A; 
+  border: 3px solid #ffffff;
+}
+
+.dropdown-item{
+  font-family: "LatoBold", sans-serif;
+  color: #ffffff;
+}
+
+.dropdown-item:hover{
+  font-family: "LatoBold", sans-serif;
+  color:#303030;
+  background-color: #008E5A;
 }

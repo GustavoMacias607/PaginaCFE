@@ -9,6 +9,8 @@ let paginaActual = 1; // Página actual
 let tamanoPagina = 10; // Número de elementos por página
 var totalPag = 1;
 
+let idEliminar;
+let ActivarS;
 
 function cambiarTamano() {
     const cantidad = document.getElementById("cantRegistros");
@@ -16,6 +18,13 @@ function cambiarTamano() {
     paginaActual = 1;
     console.log(tamanoPagina);
     GetMateriales();
+}
+
+function AsignarValores(pidEliminar, pActivarS){
+idEliminar = pidEliminar;
+ActivarS = pActivarS;
+
+console.log(idEliminar,ActivarS);
 }
 
 function AddMaterialValidar() {
@@ -103,21 +112,20 @@ function AddMaterialValidar() {
     });
 
 }
-function CambioEstatus(id, estatus) {
+function CambioEstatus() {
     const datos = {};
 
-    datos.id = id;
-    if (estatus == 1) {
+    datos.id = idEliminar;
+    if (ActivarS == 1) {
         datos.estatus = "Inactivo";
     } else {
         datos.estatus = "Activo";
     }
     let json = JSON.stringify(datos);
 
-    switch (parseInt(estatus)) {
+    switch (parseInt(ActivarS)) {
         case 0: {
-            let conF = confirm("¿Activar este material?")
-            if (conF) {
+            
                 let url = "../ws/Materiales/wsCambiarStatus.php";
                 $.post(url, json, (responseText, status) => {
                     try {
@@ -129,7 +137,7 @@ function CambioEstatus(id, estatus) {
                             paginaActual = 1;
                             GetMateriales();
                             if (resp.estado == "OK") {
-                                alert("¡Material activo!");
+                             
                             }
                         } else {
                             throw e = status;
@@ -138,15 +146,13 @@ function CambioEstatus(id, estatus) {
                         alert("Error: " + error)
                     }
                 });
-            }
+            
             break;
         }
 
         case 1: {
-            let con = confirm("¿Eliminar este material?")
-            if (con) {
-                con = confirm("¿Está seguro de que desea eliminar este material?")
-                if (con) {
+          
+            
                     let url = "../ws/Materiales/wsCambiarStatus.php";
                     $.post(url, json, (responseText, status) => {
                         try {
@@ -167,8 +173,7 @@ function CambioEstatus(id, estatus) {
                             alert("Error: " + error)
                         }
                     });
-                }
-            }
+                
             break;
         }
 
@@ -355,7 +360,7 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
             <td class="estatus">
             <div style="display: flex; justify-content: space-around; align-items: center;">
             <div class="miDiv imaCuadro">
-                <img class="imagenPreview" src="../Materiales/118" style="border: black solid .2rem; background-color: black; " height="100%" width="92%">
+                <img class="imagenPreview" src="../Materiales/118" >
             </div>
         </div>
         <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
@@ -363,7 +368,7 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
 
             
                 <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')">
-                <img style="cursor: pointer;" onclick="CambioEstatus(${material.codigo},${material.estatus})" src="${material.estatus == 1 ? '../img/checkedgreen_24px.png' : '../img/uncheckedgreen_24px.png'}" alt="Checked">
+                <img style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})" src="${material.estatus == 1 ? '../img/checkedgreen_24px.png' : '../img/uncheckedgreen_24px.png'}" alt="Checked">
                 </div>
                 </div>
             </td>
@@ -391,25 +396,28 @@ function actualizarPaginacion(totalDatos, paginaActual, tamanoPagina) {
 
     // Crear botón "Previous"
     let liPrev = document.createElement("li");
-    liPrev.classList.add("page-item");
-    liPrev.innerHTML = `<button class="page-link" onclick="paginaAnterior()"><i class="fa-solid fa-angles-left"></i></button>`;
+    //liPrev.classList.add("page-item");
+    liPrev.innerHTML = `<button onclick="paginaAnterior()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
     paginationList.appendChild(liPrev);
 
     // Generar enlaces de página
     for (let i = Math.max(1, paginaActual - rangoMostrar); i <= Math.min(totalPaginas, paginaActual + rangoMostrar); i++) {
         let li = document.createElement("li");
-        li.classList.add("page-item");
+        //li.classList.add("page-item");
         if (i === paginaActual) {
             li.classList.add("active");
         }
-        li.innerHTML = `<button class="page-link" onclick="NoPag(${i})">${i}</button>`;
+        li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+        if (i === paginaActual) {
+            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+        }
         paginationList.appendChild(li);
     }
 
     // Crear botón "Next"
     let liNext = document.createElement("li");
-    liNext.classList.add("page-item");
-    liNext.innerHTML = `<button class="page-link" onclick="paginaSiguiente()"><i class="fa-solid fa-angles-right"></i></button>`;
+    //liNext.classList.add("page-item");
+    liNext.innerHTML = `<button onclick="paginaSiguiente()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
     paginationList.appendChild(liNext);
 }
 
@@ -640,9 +648,9 @@ function valStatus() {
     // Deseleccionar el checkbox
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
-        imgcheck.src = "../img/toggleon_26px.png"
+        imgcheck.src = "../img/toggle_on_35px.png"
     } else {
-        imgcheck.src = "../img/toggleoff_26px.png"
+        imgcheck.src = "../img/toggle_off_35px.png"
     }
 }
 function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unidad, imagen) { //Llenado de datos en el modal
@@ -862,3 +870,26 @@ function UpdateCerrarModal() {
 
     $('#EditarModal').modal('hide');
 }
+function ActivarCerrarModal() {
+
+    $('#confirmActivationModal').modal('hide');
+}
+function EliminarCerrarModal() {
+
+    $('#confirmAdditionalModal').modal('hide');
+}
+
+function AbrirModalConfirm(){
+    $('#confirmAdditionalModal').modal('show');
+}
+
+function AbrirModalConfirm1(){
+    let estatus = document.getElementById('ValCheEsta').checked;
+     if(estatus){
+         $('#confirmDeleteModal').modal('show');
+     }else{
+         $('#confirmActivationModal').modal('show');
+     }
+    
+}
+
