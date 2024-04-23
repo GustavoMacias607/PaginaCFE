@@ -24,7 +24,8 @@ if ($_GET['x'] == 1) {
     <link href="../bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
     <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="indexStyles.css">
+    <link rel="stylesheet" href="Navbar.css">
+    <link rel="stylesheet" href="NavbarMovile.css">
     <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
     <link rel="stylesheet" href="./Usuarios/stylesusuarios.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -33,65 +34,99 @@ if ($_GET['x'] == 1) {
 </head>
 
 <body>
-    <div class="top-bar">
-        <div id="logoImage" style="height: 70%;"></div>
 
-        <div class="input-group-text custom-icon"
-            style="display: flex; justify-content: end; top: 5px; position: fixed; right: 5px; background-color: #008E5A; border: none;">
-            <span
-                style="color: white; font-family: 'LatoBold', sans-serif; z-index: 1500; background-color: #008E5A;">Aqui
-                va el usuario .</span>
 
-            <i class="fas fa-user white-icon" style="color: white; z-index: 1500; background-color: #008E5A;"></i>
-        </div>
-
-        <div class="btn-group dropstart"
-            style="display: flex; justify-content: end; top: 40px; position: fixed; right: 5px;">
-            <button type="button" class="fas fa-bars" data-bs-toggle="dropdown" aria-expanded="false"
-                >
-            </button>
-            <ul class="dropdown-menu" >
-                <li><a class="dropdown-item" href="javascript:opcion('usuarios');">Usuarios</a>
-                </li>
-                <li><a class="dropdown-item" href="../">Cerrar sesión</a></li>
-            </ul>
-        </div>
-
-        <nav class="navbar navbar-expand-lg navbar-dark" style="position: fixed;">
-            <div class=" container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <!-- Por este icono de Font Awesome -->
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="lis navbar-nav ms-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" onclick="javascript:incio()"
-                                href="javascript:opcion('materiales');">Materiales</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Estructuras</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Conceptos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Button 4</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Button 5</a>
-                        </li>
-                    </ul>
+    <!-- Navbar movil -->
+    <div style="width: 100%;">
+        <nav class="navMovil" id="navbar-mobil">
+            <div class="logoMovil">
+                <a href="index.php" class="linkIcono">
+                    <img src="../img/Logocfelargo.png" height="100%" alt="">
+                </a>
+                <div class="desMenu">
+                    <button onClick="esconderMenu()" class="btnMenu">
+                        <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40"
+                            viewBox="0 0 24 24">
+                            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
         </nav>
     </div>
-    <div class="bottom-rectangle bottom-rectangle-index">
+    <!-- Opciones navbar movil -->
+    <div class="menuDesplegable esconder">
+        <ul class="listaMenuDesplegable">
+            <li class="NavOpc">
+                <a class="btnTituloApartado" onclick="javascript:incio()" href="javascript:opcion('materiales');">
+                    Materiales
+                </a>
+                <a class=" btnTituloApartado">
+                    Estructuras
+                </a>
+                <a class="btnTituloApartado" href="javascript:opcion('conceptos');">
+                    Conceptos
+                </a>
+                <a class="btnTituloApartado">
+                    Button 4
+                </a>
+                <a class="btnTituloApartado">
+                    Button 5
+                </a>
+            </li>
+            <li class="NavUsu">
+                <a class="btnTituloApartado" href="javascript:opcion('usuarios');">
+                    Usuarios
+                </a>
+                <a class="btnTituloApartado" href="../">
+                    Cerrar Sesión
+                </a>
+
+            </li>
+        </ul>
+
     </div>
 
+    <!-- Navbar normal -->
+    <nav class="nav">
+        <div class='logo'>
+            <a style="text-decoration: none;" href="./">
+                <img src="../img/Logocfelargo.png" height="40rem">
+            </a>
+        </div>
+        <ul class='menu'>
+            <li>
+                <a class="opcionesMenu" onclick="javascript:incio()"
+                    href="javascript:opcion('materiales');">Materiales</a>
+            </li>
+            <li>
+                <a class="opcionesMenu">Estructuras</a>
+            </li>
+            <li>
+                <a class="opcionesMenu" href="javascript:opcion('conceptos');">Conceptos</a>
+            </li>
+            <li>
+                <a class="opcionesMenu">Button 4</a>
+            </li>
+            <li>
+                <a class="opcionesMenu">Button 5</a>
+            </li>
+        </ul>
+        <ul class='menu'>
+            <li>
+                <i class="fas fa-bars"></i>
+                <ul class='MenuOpciones'>
+                    <a class="tex" href="javascript:opcion('usuarios');">Usuarios</a>
+                    <a class="tex" href="../">Cerrar sesión</a>
+                </ul>
+            </li>
+        </ul>
+
+    </nav>
+
+
     <!-- Inicio del contenido principal -->
-    <div id="mainContent" class="contaniner" style="margin-top: 5rem;">
+    <div id="mainContent">
 
     </div>
     <!-- Final del contenido principal -->
@@ -102,6 +137,16 @@ if ($_GET['x'] == 1) {
     <script src="js/funciones_momentos.js"></script>
     <script src="js/funciones_materiales.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
+    <script>
+    function esconderMenu() {
+        let menu = document.querySelector(".menuDesplegable");
+        if (menu.classList.contains("esconder")) {
+            menu.classList.remove("esconder");
+        } else {
+            menu.classList.add("esconder");
+        }
+    }
+    </script>
     <!-- 
     <script>
         window.addEventListener('resize', function() {

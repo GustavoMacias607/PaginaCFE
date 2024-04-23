@@ -6,16 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SIFCAO</title>
     <link href="bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="loginStyles.css">
     <link href="fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="container">
+    <div>
         <div class="center-box">
             <form class="px-4 py-3">
-                <img src="img/Logocfeblanco.png" alt="Logo" class="logo"
-                    style="width: 150px; height: auto; margin-bottom: 30px;">
+                <img src="img/Logocfeblanco.png" alt="Logo" class="logo" style="width: 150px; height: auto; margin-bottom: 30px;">
                 <div class="mb-3 input-group">
                     <span class="input-group-text custom-icon"><i class="fas fa-user green-icon"></i></span>
                     <input type="text" class="form-control" id="Usuario">
@@ -24,14 +24,13 @@
                     <span class="input-group-text custom-icon"><i class="fas fa-lock green-icon"></i></span>
                     <input type="password" class="form-control" id="Password">
                 </div>
-                <button type="button" id="btnIngresar" class="btn btn-outline-light"
-                    style="--bs-btn-padding-y: .3rem; --bs-btn-padding-x: 2.5rem; --bs-btn-font-size: 1rem;">Ingresar</button>
+                <button type="button" id="btnIngresar" class="btn btn-outline-light" style="--bs-btn-padding-y: .3rem; --bs-btn-padding-x: 2.5rem; --bs-btn-font-size: 1rem;">Ingresar</button>
             </form>
         </div>
     </div>
 
 
-    <li class="open_submenu">
+    <!-- <li class="open_submenu">
         <a href="#">
             SIFCAO
             <i class="fa-solid-fa-chevron-down"></i>
@@ -46,77 +45,79 @@
                 <li>Obra</li>
             </ul>
         </div>
-    </li>
+    </li> -->
 
 
     <script src="bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
+    <script src="node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/code.jquery.com_jquery-3.7.1.min.js"></script>
     <Script type="text/javascript">
-    $(document).ready(function() {
-        $('#btn_submit').click(function() {
-            try {
-                const datos = {};
-                const form = document.querySelector('#form');
-                for (let i = 0; i < form.elements.length; i++) {
-                    if (form.elements[i].type == "text" || form.elements[i].type == "password") {
-                        if (form.elements[i].value == "") {
-                            alert("El Campo " + form.elements[i].id + " esta Vacio")
-                            form.elements[i].focus()
-                            return;
-                        } else {
-                            if (form.elements[i].name == "usuario") {
-                                datos.usuario = form.elements[i].value
+        $(document).ready(function() {
+            $('#btn_submit').click(function() {
+                try {
+                    const datos = {};
+                    const form = document.querySelector('#form');
+                    for (let i = 0; i < form.elements.length; i++) {
+                        if (form.elements[i].type == "text" || form.elements[i].type == "password") {
+                            if (form.elements[i].value == "") {
+                                alert("El Campo " + form.elements[i].id + " esta Vacio")
+                                form.elements[i].focus()
+                                return;
                             } else {
-                                datos.password = form.elements[i].value
+                                if (form.elements[i].name == "usuario") {
+                                    datos.usuario = form.elements[i].value
+                                } else {
+                                    datos.password = form.elements[i].value
+                                }
                             }
                         }
                     }
+                    const json = JSON.stringify(datos);
+                    console.log(json)
+                    $.post("ws/wsLogin.php", json, (responseText, status) => {
+                        try {
+
+                            console.log(responseText);
+                            if (status == "success") {
+                                res = JSON.parse(responseText);
+
+                                if (res.estado == "OK") {
+
+                                    window.location.href = "app/index.php";
+                                } else {
+                                    console.log(res.estado);
+                                }
+                            } else {
+                                console.log(status);
+                            }
+                        } catch (error) {
+                            console.log(error);
+                        }
+                    });
+                } catch (error) {
+                    console.log(error);
                 }
-                const json = JSON.stringify(datos);
-                console.log(json)
-                $.post("ws/wsLogin.php", json, (responseText, status) => {
-                    try {
+            });
 
-                        console.log(responseText);
-                        if (status == "success") {
-                            res = JSON.parse(responseText);
-
-                            if (res.estado == "OK") {
-
-                                window.location.href = "app/index.php";
-                            } else {
-                                console.log(res.estado);
-                            }
-                        } else {
-                            console.log(status);
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                });
-            } catch (error) {
-                console.log(error);
-            }
         });
 
-    });
 
+        var subMenu = document.querySelector('.submenu');
+        var openSubMenu = document.querySelector('.open_submenu');
 
-    var subMenu = document.querySelector('.submenu');
-    var openSubMenu = document.querySelector('.open_submenu');
+        openSubMenu.addEventListener('click', function() {
+            subMenu.classList.toggle('show');
+        })
 
-    openSubMenu.addEventListener('click', function(){
-        subMenu.classList.toggle('show');
-    })
+        document.addEventListener('click', function(e) {
+            if (subMenu.classList.contains('show') &&
+                !subMenu.contains(e.target) &&
+                !openSubMenu.contains(e.target)) {
 
-    document.addEventListener('click', function(e){
-        if (subMenu.classList.contains('show')
-        && !subMenu.contains(e.target)
-        && !openSubMenu.contains(e.target)){
-
-            subMenu.classList.remove('show');
-        }
-    })
+                subMenu.classList.remove('show');
+            }
+        })
     </Script>
 </body>
 

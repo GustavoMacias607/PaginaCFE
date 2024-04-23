@@ -1,107 +1,147 @@
-function incio() {
 
+
+function incio() {
     setTimeout(() => {
         GetMateriales();
     }, 800);
 }
 
-let paginaActual = 1; // Página actual
-let tamanoPagina = 10; // Número de elementos por página
+let paginaActual = 1;
+let tamanoPagina = 10;
 var totalPag = 1;
-
+var rutaCarpeta = '../Materiales/1';
 let idEliminar;
 let ActivarS;
 
+//Mensajes
+let msgEliminar = "Eliminar";
+let msgActivar = "Activar";
+let msgAgregar = "Agregar";
+let msgModificar = "Modificar";
+
+//Metodo para cambiar el tamaño de los registros que se muestran
 function cambiarTamano() {
     const cantidad = document.getElementById("cantRegistros");
     tamanoPagina = parseInt(cantidad.value);
     paginaActual = 1;
-    console.log(tamanoPagina);
     GetMateriales();
 }
 
-function AsignarValores(pidEliminar, pActivarS){
-idEliminar = pidEliminar;
-ActivarS = pActivarS;
-
-console.log(idEliminar,ActivarS);
+//Metodo que asigna los el id y el estatus del material para ver cuales se veran afectados
+// Recibe el id del estatus y el valor actual del estatus
+function AsignarValores(pidEliminar, pActivarS) {
+    idEliminar = pidEliminar;
+    ActivarS = pActivarS;
 }
 
-function AddMaterialValidar() {
+//Metodo para establecer que con cada modificacion del filtro la paginacion vuelva a la pagina 1
+function EstablecerPag() {
+    paginaActual = 1;
+}
 
+//Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
+function AddMaterialValidar() {
+    let msgModal = document.getElementById('modalMsgMateriales');
+    let parrafoModal = document.getElementById('modParrafo');
+    let vacio = false;
+    let PrimerValorVacio;
     const datos = {};
     let id = document.querySelector('#AddidInput');
     if (id.value == "") {
-        alert('Ingrese un id')
-        id.focus();
-        return;
+        id.classList.add("inputVacio");
+        id.placeholder = "Requerido el ID del material"
+        vacio = true;
+        PrimerValorVacio = id;
     }
     datos.id = id.value;
 
     let norma = document.querySelector('#AddnormaInput');
-    if (norma.value == 0) {
-        alert('Ingrese una norma')
-        norma.focus();
-        return;
+    if (norma.value == "") {
+        norma.classList.add("inputVacio");
+        norma.placeholder = "Requerida la Norma del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = norma;
+        }
+
     }
     datos.norma = norma.value;
     let descripcion = document.querySelector('#AdddescripcionInput');
     if (descripcion.value == "") {
-        alert('Ingrese una descripción')
-        descripcion.focus();
-        return;
+        descripcion.classList.add("inputVacio");
+        descripcion.placeholder = "Requerida la Descripcion del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = descripcion;
+        }
+
     }
     datos.descripcion = descripcion.value;
     let precio = document.querySelector('#AddprecioInput');
     if (precio.value == "") {
-        alert('Ingrese un precio')
-        precio.focus();
-        return;
+        precio.classList.add("inputVacio");
+        precio.placeholder = "Requerido el Precio del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = precio;
+        }
     }
     datos.precio = precio.value;
     let fecha = document.querySelector('#AddfechaPrecioInput');
     if (fecha.value == "") {
-        alert('Ingrese una fecha')
-        fecha.focus();
-        return;
+        fecha.classList.add("inputVacio");
+        fecha.placeholder = "Requerida la Fecha del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = fecha;
+        }
+
     }
-
     datos.precioFecha = FormateoFecha(fecha.value);
-
     let unidad = document.querySelector('#AddunidadInput');
     if (unidad.value == "") {
-        alert('Ingrese una unidad')
-        unidad.focus();
-        return;
+        unidad.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = unidad;
+        }
+
     }
     datos.unidad = unidad.value;
 
-    let json = JSON.stringify(datos);
-    console.log(json);
+    if (vacio) {
+        PrimerValorVacio.focus();
+        return;
+    }
 
+    let json = JSON.stringify(datos);
     let url = "../ws/Materiales/wsAddMaterial.php";
     $.post(url, json, (responseText, status) => {
         try {
-
             if (status == "success") {
-                console.log(responseText);
                 let resp = JSON.parse(responseText);
-                console.log(resp)
+
                 if (resp.estado == "OK") {
-                    alert("Material agregado.");
+
                     var inputFile = document.getElementById('AddimagenInput');
                     if (inputFile.value) {
                         AddAgregarImagen();
                     }
 
                     AddCerrarModal();
-                    opcion('materiales');
+                    parrafoModal.innerHTML = msgAgregar;
+                    msgModal.classList.remove("modMsgEsconder");
                     setTimeout(() => {
-                        GetMateriales();
-                    }, 800);
+                        msgModal.classList.add("modMsgEsconder");
+                    }, 2000);
+                    GetMateriales();
+
                 } else {
+                    console.log(resp.estado);
                     alert("¡Este código ya existe!")
+                    id.classList.add("inputVacio");
                     id.focus();
+
                 }
             } else {
                 throw e = status;
@@ -112,9 +152,120 @@ function AddMaterialValidar() {
     });
 
 }
-function CambioEstatus() {
+//Metodo para validar el modal para modificar un material y al mismo tiempo valida los datos
+function UpdMaterialValidar() {
+    let msgModal = document.getElementById('modalMsgMateriales');
+    let parrafoModal = document.getElementById('modParrafo');
+    let vacio = false;
+    let PrimerValorVacio;
     const datos = {};
+    let idA = document.querySelector('#idAnterior');
+    let id = document.querySelector('#UpdidInput');
+    if (id.value == "") {
+        id.classList.add("inputVacio");
+        id.placeholder = "Requerido el ID del material"
+        vacio = true;
+        PrimerValorVacio = id;
+    }
+    datos.idA = idA.value;
+    datos.id = id.value;
+    let norma = document.querySelector('#UpdnormaInput');
+    if (norma.value == "") {
+        norma.classList.add("inputVacio");
+        norma.placeholder = "Requerida la Norma del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = norma;
+        }
+    }
+    datos.norma = norma.value;
+    let descripcion = document.querySelector('#UpddescripcionInput');
+    if (descripcion.value == "") {
+        descripcion.classList.add("inputVacio");
+        descripcion.placeholder = "Requerida la Descripcion del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = descripcion;
+        }
+    }
+    datos.descripcion = descripcion.value;
+    let precio = document.querySelector('#UpdprecioInput');
+    if (precio.value == "") {
+        precio.classList.add("inputVacio");
+        precio.placeholder = "Requerido el Precio del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = precio;
+        }
+    }
+    datos.precio = precio.value;
+    let fecha = document.querySelector('#UpdfechaPrecioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
+        fecha.placeholder = "Requerida la Fecha del material"
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = fecha;
+        }
+    }
+    datos.precioFecha = FormateoFecha(fecha.value);
+    let unidad = document.querySelector('#UpdunidadInput');
+    if (unidad.value == "") {
+        unidad.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = unidad;
+        }
+    }
+    datos.unidad = unidad.value;
+    if (vacio) {
+        PrimerValorVacio.focus();
+        return;
+    }
+    let json = JSON.stringify(datos);
+    var inputFile = document.getElementById('UpdimagenInput');
+    if (inputFile.value) {
+        UpdAgregarImagen();
+    }
+    let url = "../ws/Materiales/wsUpdMaterial.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                if (resp.estado == "OK") {
+                    UpdateCerrarModal();
+                    GetMateriales();
+                    parrafoModal.innerHTML = msgModificar;
+                    msgModal.classList.remove("modMsgEsconder");
+                    setTimeout(() => {
+                        msgModal.classList.add("modMsgEsconder");
+                    }, 2000);
+                } else {
+                    alert("¡Este código ya existe!")
+                    id.classList.add("inputVacio");
+                    id.focus();
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            alert("Error: " + error)
+        }
+    });
+}
 
+function CompruebaTieneAlgoInput(input) {
+    if (input.value) {
+        input.classList.add("inputLleno");
+        input.classList.remove("inputVacio");
+        input.placeholder = ""
+    }
+}
+//Metodo para cambiar el estatus de los materiales
+function CambioEstatus() {
+    let msgModal = document.getElementById('modalMsgMateriales');
+    let parrafoModal = document.getElementById('modParrafo');
+    const datos = {};
     datos.id = idEliminar;
     if (ActivarS == 1) {
         datos.estatus = "Inactivo";
@@ -122,140 +273,94 @@ function CambioEstatus() {
         datos.estatus = "Activo";
     }
     let json = JSON.stringify(datos);
-
     switch (parseInt(ActivarS)) {
         case 0: {
-            
-                let url = "../ws/Materiales/wsCambiarStatus.php";
-                $.post(url, json, (responseText, status) => {
-                    try {
-
-                        if (status == "success") {
-                            console.log(responseText);
-                            let resp = JSON.parse(responseText);
-                            console.log(resp)
-                            paginaActual = 1;
-                            GetMateriales();
-                            if (resp.estado == "OK") {
-                             
-                            }
-                        } else {
-                            throw e = status;
-                        }
-                    } catch (error) {
-                        alert("Error: " + error)
+            let url = "../ws/Materiales/wsCambiarStatus.php";
+            $.post(url, json, (responseText, status) => {
+                try {
+                    if (status == "success") {
+                        parrafoModal.innerHTML = msgActivar;
+                        msgModal.classList.remove("modMsgEsconder");
+                        setTimeout(() => {
+                            msgModal.classList.add("modMsgEsconder");
+                        }, 2000);
+                        paginaActual = 1;
+                        GetMateriales();
+                    } else {
+                        throw e = status;
                     }
-                });
-            
+                } catch (error) {
+                    alert("Error: " + error)
+                }
+            });
             break;
         }
-
         case 1: {
-          
-            
-                    let url = "../ws/Materiales/wsCambiarStatus.php";
-                    $.post(url, json, (responseText, status) => {
-                        try {
+            let url = "../ws/Materiales/wsCambiarStatus.php";
+            $.post(url, json, (responseText, status) => {
+                try {
+                    if (status == "success") {
+                        GetMateriales();
+                        paginaActual = 1;
+                        parrafoModal.innerHTML = msgEliminar;
+                        msgModal.classList.remove("modMsgEsconder");
+                        setTimeout(() => {
+                            msgModal.classList.add("modMsgEsconder");
+                        }, 2000);
 
-                            if (status == "success") {
-                                console.log(responseText);
-                                let resp = JSON.parse(responseText);
-                                console.log(resp)
-                                GetMateriales();
-                                paginaActual = 1;
-                                if (resp.estado == "OK") {
-                                    alert("¡Material eliminado!");
-                                }
-                            } else {
-                                throw e = status;
-                            }
-                        } catch (error) {
-                            alert("Error: " + error)
-                        }
-                    });
-                
+
+                    } else {
+                        throw e = status;
+                    }
+                } catch (error) {
+                    alert("Error: " + error)
+                }
+            });
             break;
         }
-
-
         default: {
             console.error("Error")
         }
     }
 
 }
-function GetBuscarMateriales() {
-    paginaActual = 1;
-    const datos = {};
-    let buscar = document.querySelector('#searchInput');
-    let estatus = document.getElementById('ValCheEsta').checked;
-    let unidad = document.getElementById('selectUnidad');
 
-    datos.buscar = buscar.value;
-    datos.unidad = unidad.value;
-    if (estatus) {
-        datos.estatus = 1;
-    } else {
-        datos.estatus = 0;
-    }
-    let json = JSON.stringify(datos);
-
-    let url = "../ws/Materiales/wsBuscarMaterial.php";
-    $.post(url, json, (responseText, status) => {
-        try {
-            if (status == "success") {
-
-                let resp = JSON.parse(responseText);
-
-                if (resp.estado == "OK") {
-                    // Llamar a la función para mostrar los datos en la tabla
-
-                    mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
-                }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-
-        }
-    });
-}
-
+//Metodo para regresar una pagina en la paginacion
 function paginaAnterior() {
     if (paginaActual > 1) {
         paginaActual--;
-
         GetMateriales();
     }
 }
+
+//Metodo para cambiar de pagona dando clic a la paginacion
+//Recobe el numero de pagina al cual se cambiara
 function NoPag(pagi) {
     paginaActual = pagi;
     GetMateriales();
+}
 
-}
-function obtenerTotalPaginas(totalDatos, tamanoPagina) {
-    return Math.ceil(totalDatos / tamanoPagina);
-}
+//Metodo para cambiar a la pagina siguiente en la paginacion
 function paginaSiguiente() {
-    // Suponiendo que tienes el total de páginas disponible en alguna variable
-    // Debes implementar esta función
-
     if (paginaActual < totalPag) {
         paginaActual++;
         GetMateriales();
     }
 }
 
-function GetMateriales() {
+// Metodo para obtener cuantas paginas tendra la paginacion
+// Recibe el total de datos y el numero de registros a mostrar en la tabla
+function obtenerTotalPaginas(totalDatos, tamanoPagina) {
+    return Math.ceil(totalDatos / tamanoPagina);
+}
 
+//Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
+function GetMateriales() {
     const datos = {};
     let buscar = document.querySelector('#searchInput');
-    datos.buscar = buscar.value;
     let estatus = document.getElementById('ValCheEsta').checked;
     let unidad = document.getElementById('selectUnidad');
+    datos.buscar = buscar.value;
     datos.estatus = estatus;
     datos.unidad = unidad.value;
     let json = JSON.stringify(datos);
@@ -268,6 +373,7 @@ function GetMateriales() {
 
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
+
                     mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
@@ -282,53 +388,12 @@ function GetMateriales() {
     });
 }
 
-function GetFiltrarUnidad() {
-    paginaActual = 1;
-    const datos = {};
-    let buscar = document.querySelector('#searchInput');
-
-    let unidad = document.querySelector('#selectUnidad');
-    let estatus = document.getElementById('ValCheEsta').checked;
-    datos.buscar = buscar.value;
-    datos.unidad = unidad.value;
-    if (estatus) {
-        datos.estatus = 1;
-    } else {
-        datos.estatus = 0;
-    }
-    let json = JSON.stringify(datos);
-
-    let url = "../ws/Materiales/wsFiltrarAllMateriales.php";
-    $.post(url, json, (responseText, status) => {
-        try {
-            if (status == "success") {
-
-                let resp = JSON.parse(responseText);
-                if (resp.estado == "OK") {
-                    // Llamar a la función para mostrar los datos en la tabla
-
-                    mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
-                }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-
-        }
-    });
-}
-
+// metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
+//recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
 function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
     let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
-
     totalPag = totalPaginas;
-    // Obtener el cuerpo de la tabla
     let tbody = document.getElementById("tabla-materiales").getElementsByTagName("tbody")[0];
-
-
     tbody.innerHTML = "";
     if (datos == "N") {
         let fila = document.createElement("tr");
@@ -336,25 +401,33 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
         <td colspan="8">Sin resultados</td>
         `;
         tbody.appendChild(fila);
-        return; // Detener la ejecución de la función si no hay datos
-    }
 
-    // Calcular el índice de inicio y final de los datos a mostrar en esta página
+        actualizarPaginacion(datos, paginaActual, tamanoPagina);
+        return;
+    }
     let startIndex = (paginaActual - 1) * tamanoPagina;
     let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
-    // Iterar sobre los datos y agregar filas a la tabla
     for (let i = startIndex; i < endIndex; i++) {
         let material = datos[i];
         let fila = document.createElement("tr");
         fila.classList.add("fila")
         fila.addEventListener("mouseover", () => mostrarValores(fila));
         fila.addEventListener("mouseout", () => ocultarValores(fila));
+        const formatoMXN = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN'
+        });
+
+        // Asegurarse de que el precio se formatee correctamente
+        const precioFormateado = (material.precio !== undefined && material.precio !== "")
+            ? formatoMXN.format(material.precio)
+            : "---";
         // Agregar las celdas a la fila
         fila.innerHTML = `
             <td class="Code">${material.codigo}</td>
             <td>${(!material.norma == "") ? material.norma : "---"}</td>
             <td>${(!material.descripcion == "") ? material.descripcion : "---"}</td>
-            <td>$ ${(!material.precio == "") ? material.precio : "---"}</td>
+            <td>${precioFormateado}</td>
             <td>${(!material.fechaprecio == "") ? material.fechaprecio : "---"}</td>
             <td>${(!material.unidad == "") ? material.unidad : "---"}</td>
             <td class="estatus">
@@ -365,45 +438,36 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
         </div>
         <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
             <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
-
-            
                 <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')">
                 <img style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})" src="${material.estatus == 1 ? '../img/checkedgreen_24px.png' : '../img/uncheckedgreen_24px.png'}" alt="Checked">
                 </div>
                 </div>
-            </td>
-
-
-            
+            </td>   
         `;
-
         // Agregar la fila a la tabla
         tbody.appendChild(fila);
 
     }
     actualizarPaginacion(datos.length, paginaActual, tamanoPagina);
 }
-
+//Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
+//recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
 function actualizarPaginacion(totalDatos, paginaActual, tamanoPagina) {
+    if (totalDatos == "N") {
+        let paginationList = document.getElementById("pagination-list");
+        paginationList.innerHTML = "";
+        return;
+    }
     let paginationList = document.getElementById("pagination-list");
-    paginationList.innerHTML = ""; // Limpiar el contenido existente
-
-    // Calcular el número total de páginas
+    paginationList.innerHTML = "";
     let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
-
-    // Definir el rango de páginas que deseas mostrar antes y después de la página actual
-    let rangoMostrar = 2; // Puedes ajustar este valor según tu preferencia
-
-    // Crear botón "Previous"
+    let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
     let liPrev = document.createElement("li");
-    //liPrev.classList.add("page-item");
     liPrev.innerHTML = `<button onclick="paginaAnterior()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
     paginationList.appendChild(liPrev);
-
     // Generar enlaces de página
     for (let i = Math.max(1, paginaActual - rangoMostrar); i <= Math.min(totalPaginas, paginaActual + rangoMostrar); i++) {
         let li = document.createElement("li");
-        //li.classList.add("page-item");
         if (i === paginaActual) {
             li.classList.add("active");
         }
@@ -413,95 +477,97 @@ function actualizarPaginacion(totalDatos, paginaActual, tamanoPagina) {
         }
         paginationList.appendChild(li);
     }
-
-    // Crear botón "Next"
     let liNext = document.createElement("li");
-    //liNext.classList.add("page-item");
     liNext.innerHTML = `<button onclick="paginaSiguiente()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
     paginationList.appendChild(liNext);
+
 }
 
+// Muestra el panel donde se muestra la imagen del material
+//Recibe la ubicacion de la fila del cual se mostrara la imagen
 function mostrarDiv(imagen) {
-
-    // Obtener el div asociado a la imagen
     var div = imagen.parentElement.parentElement.querySelector(".miDiv");
     var id = imagen.parentElement.parentElement.parentElement.querySelector(".Code").innerHTML;
-    // Mostrar el div
     rutaCarpeta = "../Materiales/" + id;
     cargarImagenCuadro(div)
-
+    // Mostrar el div
     div.style.display = "block";
-
 }
 
+// Muestra el panel donde se muestra la imagen del material
+//Recibe la ubicacion de la fila del cual se ocultara la imagen
 function ocultarDiv(imagen) {
-    // Obtener el div asociado a la imagen
     var div = imagen.parentElement.parentElement.querySelector(".miDiv");
     // Ocultar el div
     div.style.display = "none";
 }
 
+//Metodo para hacer visible las acciones de la fila
+//Recibe la fila
 function mostrarValores(fila) {
     fila.getElementsByClassName('valores')[0].style.display = 'flex';
 }
 
+//Metodo para oculas las acciones de la fila
+//Recibe la fila
 function ocultarValores(fila) {
     fila.getElementsByClassName('valores')[0].style.display = 'none';
 }
 
+// Metodo para dar formato a la fecha
+//Recibe la fecha a la que se le dara el formato
 function FormateoFecha(fecha) {
-
-    // Dividir la cadena de fecha en día, mes y año
     let partesFecha = fecha.split("/");
     let dia = partesFecha[0];
     let mes = partesFecha[1];
     let año = partesFecha[2];
-
-    // Crear un nuevo objeto Date
     let fechaFormateada = new Date(`${año}/${mes}/${dia}`);
-
-    // Extraer el año, mes y día de la fecha formateada
     let añoFormateado = fechaFormateada.getFullYear();
     let mesFormateado = (fechaFormateada.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
     let diaFormateado = fechaFormateada.getDate().toString().padStart(2, '0');
-
-    // Crear la fecha formateada en el formato deseado
     return fechaFinal = `${añoFormateado}-${mesFormateado}-${diaFormateado}`;
 }
 
+//Metodo para limpiar el modal de agregar material
 function AddlimpiarModal() {
-    let id = document.querySelector('#AddidInput').value = "";
-    let norma = document.querySelector('#AddnormaInput').value = "";
-    let descripcion = document.querySelector('#AdddescripcionInput').value = "";
-    let precio = document.querySelector('#AddprecioInput').value = "";
-    let unidad = document.querySelector('#AddunidadInput').value = "";
-    let imagen = document.querySelector('#AddimagenInput').value = "";
+    let id = document.querySelector('#AddidInput');
+    let norma = document.querySelector('#AddnormaInput');
+    let descripcion = document.querySelector('#AdddescripcionInput');
+    let precio = document.querySelector('#AddprecioInput');
+    let unidad = document.querySelector('#AddunidadInput');
     let img = document.querySelector('#AddimagenPreview');
     img.src = "img/sinimagen.png";
     img.alt = "hola";
-
-    // Obtener la fecha actual
     let fechaActual = new Date();
-
-    // Obtener el año, mes y día de la fecha actual
     let año = fechaActual.getFullYear();
-    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
+    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
     let dia = fechaActual.getDate().toString().padStart(2, '0');
-
-    // Formatear la fecha como "YYYY-MM-DD"
     let fechaFormateada = `${año}-${mes}-${dia}`;
-
-    // Establecer el valor del campo de entrada con la fecha formateada
     document.querySelector('#AddfechaPrecioInput').value = fechaFormateada;
+
+    id.value = "";
+    norma.value = "";
+    descripcion.value = "";
+    precio.value = "";
+    unidad.value = "";
+
+    id.placeholder = "";
+    norma.placeholder = "";
+    descripcion.placeholder = "";
+    precio.placeholder = "";
+
+    id.classList.remove("inputVacio");
+    norma.classList.remove("inputVacio");
+    descripcion.classList.remove("inputVacio");
+    precio.classList.remove("inputVacio");
+    unidad.classList.remove("inputVacio");
 }
 
+//Metodo para que se cree la carpeta y se le introduzca la imagen seleccionada a la hora de guardar el material
 function AddAgregarImagen() {
     let id = document.querySelector('#AddidInput').value;
     var inputFile = document.getElementById('AddimagenInput');
-
     var file = inputFile.files[0];
-
-
     // Verificar el tamaño del archivo (en bytes)
     var maxSizeBytes = 200 * 1024;
     if (file.size <= maxSizeBytes) {
@@ -510,7 +576,6 @@ function AddAgregarImagen() {
             var formData = new FormData();
             formData.append('imagen', file);
             formData.append('id', id);
-
             // Enviar la imagen al servidor
             $.ajax({
                 url: './js/guardar_imagen.php',
@@ -530,16 +595,16 @@ function AddAgregarImagen() {
         }
     } else {
         alert('El tamaño del archivo excede el límite de 200 KB.');
+
     }
 
 }
+
+//Metodo para que se cree la carpeta y se le introduzca la imagen seleccionada a la hora de modificar el material
 function UpdAgregarImagen() {
     let id = document.querySelector('#UpdidInput').value;
     var inputFile = document.getElementById('UpdimagenInput');
-
     var file = inputFile.files[0];
-
-
     // Verificar el tamaño del archivo (en bytes)
     var maxSizeBytes = 200 * 1024;
     if (file.size <= maxSizeBytes) {
@@ -572,76 +637,44 @@ function UpdAgregarImagen() {
 
 }
 
-function validaExisteMaterial() {
-
-    let datos = {};
-    let id = document.querySelector('#AddidInput');
-    var existe = false;
-    if (id.value == "") {
-        alert("Agrega el Codigo del Material")
-
-    } else {
-        datos.id = id.value;
-        let json = JSON.stringify(datos);
-        let url = "../ws/Materiales/wsCheckMaterial.php";
-        $.post(url, json, (responseText, status) => {
-            try {
-                if (status == "success") {
-
-                    let resp = JSON.parse(responseText);
-
-                    if (resp.estado == "OK") {
-                        // Llamar a la función para mostrar los datos en la tabla
-
-                        console.log(resp.datos);
-                        existe = true;
-
-
-                    } else {
-                        // Mostrar mensaje de error si el estado no es "OK"
-
-
-                    }
-                } else {
-                    throw e = status;
-                }
-            } catch (error) {
-
-            }
-        })
-        return existe
-    }
-
-}
-
+//Metodo para mostrar la imagen en el modal de agregar Material, recibe la imagen seleccionada
 function AddmostrarImagen(input) {
     const imagenPreview = document.getElementById('AddimagenPreview');
 
+    // Verifica que haya un archivo seleccionado
     if (input.files && input.files[0]) {
-        const reader = new FileReader();
+        const archivo = input.files[0]; // Obtener el archivo seleccionado
 
-        reader.onload = function (e) {
-            imagenPreview.src = e.target.result;
+        // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
+        if (archivo.size > 204800) {
+            alert("La imagen seleccionada es demasiado grande. Por favor, elige una imagen que pese menos de 200 KB.");
+            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
+            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            return; // Salir de la función para evitar cargar la imagen grande
         }
 
-        reader.readAsDataURL(input.files[0]);
+        const reader = new FileReader(); // Crea un lector de archivos
+        reader.onload = function (e) {
+            imagenPreview.src = e.target.result; // Muestra la imagen en el preview
+        };
+        reader.readAsDataURL(archivo); // Lee el archivo seleccionado
     }
 }
 
+
+//Metodo para mostrar la imagen en el modal de Modificar Material, recibe la imagen seleccionada
 function UpdmostrarImagen(input) {
     const imagenPreview = document.getElementById('UpdimagenPreview');
-
     if (input.files && input.files[0]) {
         const reader = new FileReader();
-
         reader.onload = function (e) {
             imagenPreview.src = e.target.result;
         }
-
         reader.readAsDataURL(input.files[0]);
     }
 }
 
+//Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
 function valStatus() {
     var checkbox = document.getElementById('ValCheEsta');
     var imgcheck = document.getElementById('ValEstatus');
@@ -653,7 +686,10 @@ function valStatus() {
         imgcheck.src = "../img/toggle_off_35px.png"
     }
 }
-function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unidad, imagen) { //Llenado de datos en el modal
+
+//Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
+//Recibe los datos del material
+function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unidad) { //Llenado de datos en el modal
 
 
     let idM = document.querySelector('#UpdidInput');
@@ -662,14 +698,12 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
     let descripcionM = document.querySelector('#UpddescripcionInput');
     let precioM = document.querySelector('#UpdprecioInput');
     let unidadM = document.querySelector('#UpdunidadInput');
+
     idM.value = id;
     idA.value = id;
-
     normaM.value = norma;
     descripcionM.value = descripcion;
     precioM.value = precio;
-
-
     unidadM.value = unidad;
     rutaCarpeta = "../Materiales/" + id;
     cargarImagen()
@@ -680,30 +714,34 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
             break;
         }
     }
-
-
-    //Fecha
-    if (fechaPrecio) {
+    if (normaM.value == "null") {
+        normaM.value = "";
+    }
+    if (fechaPrecio != "null") {
         document.querySelector('#UpdfechaPrecioInput').value = FormateoFecha(fechaPrecio);
     } else {
-        // Obtener la fecha actual
         let fechaActual = new Date();
-
-        // Obtener el año, mes y día de la fecha actual
         let año = fechaActual.getFullYear();
         let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
         let dia = fechaActual.getDate().toString().padStart(2, '0');
-
-        // Formatear la fecha como "YYYY-MM-DD"
         let fechaFormateada = `${año}-${mes}-${dia}`;
-
-        // Establecer el valor del campo de entrada con la fecha formateada
         document.querySelector('#UpdfechaPrecioInput').value = fechaFormateada;
     }
+
+    idM.placeholder = "";
+    normaM.placeholder = "";
+    descripcionM.placeholder = "";
+    precioM.placeholder = "";
+
+    idM.classList.remove("inputVacio");
+    normaM.classList.remove("inputVacio");
+    descripcionM.classList.remove("inputVacio");
+    precioM.classList.remove("inputVacio");
+    unidadM.classList.remove("inputVacio");
 }
-var rutaCarpeta = '../Materiales/1';
+
+//Metodo para que cuando se modifique algun material se cargue la imagen que este tenga
 function cargarImagen() {
-    // Obtener la lista de archivos en la carpeta
     obtenerArchivosEnCarpeta(rutaCarpeta)
         .then(archivos => {
             // Seleccionar la única imagen encontrada en la carpeta
@@ -725,8 +763,9 @@ function cargarImagen() {
         })
         .catch(error => console.error('Error al obtener archivos en la carpeta.', error));
 }
-function cargarImagenCuadro(imagen) {
 
+//Metodo para buscar la carpeta donde se encuentra la imagen del material
+function cargarImagenCuadro(imagen) {
     var div = imagen.parentElement.querySelector(".miDiv");
     // Obtener la lista de archivos en la carpeta
     obtenerArchivosEnCarpeta(rutaCarpeta)
@@ -746,126 +785,33 @@ function cargarImagenCuadro(imagen) {
                 // Asignar la ruta de la imagen al src del elemento img
                 elementoImagen.src = rutaImagen;
             }
-
-
         })
         .catch(error => {
-
-
             console.error('Error al obtener archivos en la carpeta.', error);
-
         })
 }
+//Metodo para obtener los archivos de la carpeta
+//Recibe la ruta de donde se encuentra la carpeta 
 async function obtenerArchivosEnCarpeta(rutaCarpeta) {
-    // Realizar una solicitud al servidor para obtener la lista de archivos en la carpeta
-
     const response = await fetch(rutaCarpeta);
-
     const textoHtml = await response.text();
-
     // Analizar el HTML para extraer los nombres de archivo
     const parser = new DOMParser();
     const htmlDocumento = parser.parseFromString(textoHtml, 'text/html');
     const enlaces = htmlDocumento.querySelectorAll('a');
-
     // Filtrar los nombres de archivo
     const archivos = Array.from(enlaces)
         .map(enlace => enlace.getAttribute('href'))
         .filter(archivo => archivo !== '../' && !archivo.startsWith('#'));
-
     return archivos;
 }
 
-function UpdMaterialValidar() {
 
-    const datos = {};
-    let idA = document.querySelector('#idAnterior');
-    let id = document.querySelector('#UpdidInput');
-    if (id.value == "") {
-        alert('Ingrese un id')
-        id.focus();
-        return;
-    }
-    datos.idA = idA.value;
-    datos.id = id.value;
-    let norma = document.querySelector('#UpdnormaInput');
-    if (norma.value == 0) {
-        alert('Ingrese una norma')
-        norma.focus();
-        return;
-    }
-    datos.norma = norma.value;
-    let descripcion = document.querySelector('#UpddescripcionInput');
-    if (descripcion.value == "") {
-        alert('Ingrese una descripción')
-        descripcion.focus();
-        return;
-    }
-    datos.descripcion = descripcion.value;
-    let precio = document.querySelector('#UpdprecioInput');
-    if (precio.value == "") {
-        alert('Ingrese un precio')
-        precio.focus();
-        return;
-    }
-    datos.precio = precio.value;
-    let fecha = document.querySelector('#UpdfechaPrecioInput');
-    if (fecha.value == "") {
-        alert('Ingrese una fecha')
-        fecha.focus();
-        return;
-    }
-
-    datos.precioFecha = FormateoFecha(fecha.value);
-
-    let unidad = document.querySelector('#UpdunidadInput');
-    if (unidad.value == "") {
-        alert('Ingrese una unidad')
-        unidad.focus();
-        return;
-    }
-    datos.unidad = unidad.value;
-
-    let json = JSON.stringify(datos);
-    console.log(json)
-    var inputFile = document.getElementById('UpdimagenInput');
-    if (inputFile.value) {
-        UpdAgregarImagen();
-    }
-    let url = "../ws/Materiales/wsUpdMaterial.php";
-    $.post(url, json, (responseText, status) => {
-        try {
-
-            if (status == "success") {
-                console.log(responseText);
-                let resp = JSON.parse(responseText);
-
-                if (resp.estado == "OK") {
-                    alert("Material modificado");
-
-                    UpdateCerrarModal();
-
-                    opcion('materiales');
-                    setTimeout(() => {
-                        GetMateriales();
-                    }, 800);
-                } else {
-                    alert("¡Este código ya existe!")
-                    id.focus();
-                }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-            alert("Error: " + error)
-        }
-    });
-}
+//Metodo para cerrar el modal de agregar material
 function AddCerrarModal() {
-
     $('#AgregarModal').modal('hide');
 }
-
+//Metodo para cerrar el modal de modificar material
 function UpdateCerrarModal() {
 
     $('#EditarModal').modal('hide');
@@ -879,17 +825,17 @@ function EliminarCerrarModal() {
     $('#confirmAdditionalModal').modal('hide');
 }
 
-function AbrirModalConfirm(){
+function AbrirModalConfirm() {
     $('#confirmAdditionalModal').modal('show');
 }
-
-function AbrirModalConfirm1(){
+//Metodo para abrir el modal dependiendo si se abre para activar o eliminar
+function AbrirModalConfirm1() {
     let estatus = document.getElementById('ValCheEsta').checked;
-     if(estatus){
-         $('#confirmDeleteModal').modal('show');
-     }else{
-         $('#confirmActivationModal').modal('show');
-     }
-    
+    if (estatus) {
+        $('#confirmDeleteModal').modal('show');
+    } else {
+        $('#confirmActivationModal').modal('show');
+    }
+
 }
 

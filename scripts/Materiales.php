@@ -8,92 +8,9 @@ class Materiales
         $this->conn = $conexion;
     }
 
-    function getMaterialesBuscar($datos)
-    {
-        /*Método para obtener todos los Materiales*/
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-            // Modificar la consulta SQL para incluir el parámetro
-            $consulta = "call spMaterialesBuscarGeneral(:Buscar,:Estatus,:Unidad)";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Buscar" => $datos->buscar,
-                "Estatus" => $datos->estatus,
-                "Unidad" => $datos->unidad
-            ));
-            unset($c);
 
-
-
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $sql->fetchAll();
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-    function getAllMateriales($datos)
-    {
-
-        /*Método para obtener todos los Materiales*/
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-            if (!$datos->estatus) {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Todo',1,'PZ');";
-                $sql = $c->prepare($consulta);
-            }
-
-            $sql->execute();
-
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $sql->fetchAll();
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-
-    function FiltarAllMateriales($datos)
-    {
-
-        /*Método para obtener todos los Materiales*/
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-
-            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtar, :Estatus,'PZ',:Buscar);";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Filtar" => $datos->unidad,
-                "Estatus" => $datos->estatus,
-                "Buscar" => $datos->buscar,
-
-            ));
-
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $sql->fetchAll();
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
+    //Metodo para cambiar el estatus del material
+    //Recibe un objeto con los datos
     function CambiarEstatusMaterial($datos)
     {
         /*Método para obtener todos los Materiales*/
@@ -119,9 +36,11 @@ class Materiales
         }
         return $R;
     }
+
+    // Metodo para filtrar los datos
+    //Recibe un objeto con los datos
     function getFiltarEstatusAllMateriales($datos)
     {
-
         /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
         $c = $this->conn;
@@ -155,8 +74,8 @@ class Materiales
         }
         return $R;
     }
-
-
+    //Metodo para agregar materiales
+    //Recibe un objeto con los datos
     function addMateriales($datos)
     {
         /*Metodo para agregar Materiales*/
@@ -181,6 +100,8 @@ class Materiales
         return $R;
     }
 
+    //Metodo para actualizar materiales
+    //Recibe un objeto con los datos
     function UpdateMateriales($datos)
     {
         /*Metodo para agregar Materiales*/
@@ -200,60 +121,6 @@ class Materiales
 
             ));
             unset($c);
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-
-    function CheckMaterial($datos)
-    {
-        /*Método para obtener todos los Materiales*/
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-
-            $consulta = "call spMaterialesBuscarId(:Id);";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Id" => $datos->id,
-
-            ));
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $sql->fetchAll();
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-
-
-    function filtrarDesAsc($datos)
-    {
-        /*Método para obtener todos los Materiales*/
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-            $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo(:Filtro,:Estatus,:Unidad);";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Filtro" => $datos->filtro,
-                "Estatus" => $datos->estatus,
-                "Unidad" => $datos->unidad
-            ));
-
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $sql->fetchAll();
-            }
-            $c = null;
         } catch (PDOException $e) {
             $R['estado'] = "Error: " . $e->getMessage();
         }

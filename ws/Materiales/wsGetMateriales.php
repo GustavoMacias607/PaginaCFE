@@ -16,7 +16,7 @@ $u = new Materiales($c->getConnection());
 $res = $u->getFiltarEstatusAllMateriales($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
-    $resultado['datos'] = $res['datos']; // Agregar datos al resultado
+    $resultado['datos'] = $res['datos'];
 } else {
     $resultado['estado'] = $res['estado'];
     $resultado['mensaje'] = "N";

@@ -9,6 +9,9 @@ function opcion(op) {
         case "usuarios":
             url = "Usuarios/addUsuariosFrm.php";
             break;
+        case "conceptos":
+            url = "Conceptos/addconceptosFrm.php";
+            break;
         default: alert("Opción incorrecta"); return;
     }
 
