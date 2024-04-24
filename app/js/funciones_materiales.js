@@ -14,10 +14,10 @@ let idEliminar;
 let ActivarS;
 
 //Mensajes
-let msgEliminar = "Eliminar";
-let msgActivar = "Activar";
-let msgAgregar = "Agregar";
-let msgModificar = "Modificar";
+let msgEliminar = "Material eliminado";
+let msgActivar = "Material activado";
+let msgAgregar = "Material agregado";
+let msgModificar = "Material modificado";
 
 //Metodo para cambiar el tamaño de los registros que se muestran
 function cambiarTamano() {

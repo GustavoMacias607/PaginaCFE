@@ -29,6 +29,13 @@
                     <div class="text">Registros </div>
                 </div>
             </nav>
+            <div class="toggle-estatus-conceptos">
+                <div class="text">Estatus</div>
+                <div class="">
+                    <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+                    <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatus(); javascript:GetConceptos(); javascript:EstablecerPag()">
+                </div>
+            </div>
         </div>
 
     </div>
@@ -203,7 +210,48 @@
         </div>
     </div>
 
+    <!-- modal para activar el registro de conceptos -->
+    <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true" style="z-index: 4000; color: #303030; top: 194px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
+                    <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
+                        ¿Activar este concepto?</h5>
+                    <button type="button" class="btn" id="confirmActivationButton" onclick="javascript:ActivarCerrarModal(); CambioEstatus();" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Activar</button>
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div class="modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 4000; color: #303030; top: 194px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
+                        ¿Eliminar este concepto?</h5>
+                    <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();" id="confirmDeleteButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Eliminar</button>
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación Adicional -->
+    <div class="modal" id="confirmAdditionalModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 4000; color: #303030; top: 194px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
+                    <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
+                        seguro de que desea eliminar este concepto?</h5>
+                    <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatus();" class="btn" id="confirmAdditionalButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
+                    <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <!-- Modal Mensaje -->
