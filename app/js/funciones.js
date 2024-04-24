@@ -12,6 +12,9 @@ function opcion(op) {
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
             break;
+        case "principal":
+            url = "Principal/addPrincipalFrm.php";
+            break;
         default: alert("Opción incorrecta"); return;
     }
 

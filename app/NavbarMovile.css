@@ -26,18 +26,6 @@
   width: 100vw;
   z-index: 9999;
   padding: 1rem 0 1rem 0;
-  @media (max-width: 766px) {
-    height: 50%;
-    padding: 0;
-  }
-  @media (max-width: 462px) {
-    height: 40%;
-    padding: 0;
-  }
-  @media (max-width: 376px) {
-    height: 30%;
-    padding: 0;
-  }
 }
 
 .desMenu {
@@ -100,4 +88,8 @@
   display: block;
   align-items: flex-end;
   border-top: #fff solid 2px;
+}
+
+.colorUser {
+  color: white;
 }

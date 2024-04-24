@@ -42,15 +42,17 @@ if ($_GET['x'] == 1) {
         <nav class="navMovil" id="navbar-mobil">
             <div class="logoMovil">
                 <a href="index.php" class="linkIcono">
-                    <img src="../img/Logocfelargo.png" height="100%" alt="">
+                    <img src="../img/Logocfeverde.png" height="100%" alt="">
                 </a>
                 <div class="desMenu">
-                    <button onClick="esconderMenu()" class="btnMenu">
-                        <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40"
-                            viewBox="0 0 24 24">
-                            <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
-                        </svg>
-                    </button>
+                    <div>
+                        <button onClick="esconderMenu()" class="btnMenu">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40"
+                                viewBox="0 0 24 24">
+                                <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -58,6 +60,7 @@ if ($_GET['x'] == 1) {
     <!-- Opciones navbar movil -->
     <div class="menuDesplegable esconder">
         <ul class="listaMenuDesplegable">
+            <div class="colorUser">Nombre usuario <i class="fa-solid fa-user"></i></div>
             <li class="NavOpc">
                 <a class="btnTituloApartado" onclick="javascript:incio()" href="javascript:opcion('materiales');">
                     Materiales
@@ -91,31 +94,33 @@ if ($_GET['x'] == 1) {
     <!-- Navbar normal -->
     <nav class="nav">
         <div class='logo'>
-            <a style="text-decoration: none;" href="./">
+            <a style="text-decoration: none; height: 100%;" href="./">
                 <img src="../img/Logocfelargo.png" height="40rem">
             </a>
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="javascript:incio()"
+                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this)"
                     href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
-                <a class="opcionesMenu">Estructuras</a>
+                <a class="opcionesMenu" onclick="preciona(this)">Estructuras</a>
             </li>
             <li>
-                <a class="opcionesMenu" href="javascript:opcion('conceptos');">Conceptos</a>
+                <a class="opcionesMenu" onclick="preciona(this)" href="javascript:opcion('conceptos');">Conceptos</a>
             </li>
             <li>
-                <a class="opcionesMenu">Button 4</a>
+                <a class="opcionesMenu" onclick="preciona(this)">Button 4</a>
             </li>
             <li>
-                <a class="opcionesMenu">Button 5</a>
+                <a class="opcionesMenu" onclick="preciona(this)">Button 5</a>
             </li>
         </ul>
         <ul class='menu'>
-            <li>
+            <li class="btnOpciones">
+                <div>Nombre usuario <i class="fa-solid fa-user"></i></div>
                 <i class="fas fa-bars"></i>
+
                 <ul class='MenuOpciones'>
                     <a class="tex" href="javascript:opcion('usuarios');">Usuarios</a>
                     <a class="tex" href="../">Cerrar sesión</a>
@@ -139,6 +144,18 @@ if ($_GET['x'] == 1) {
     <script src="js/funciones_materiales.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
     <script>
+    window.onload = function() {
+        opcion('principal');
+    };
+
+    function preciona(valor) {
+        let opciones = document.querySelectorAll(".opcionesMenu");
+        opciones.forEach(opcion => {
+            opcion.classList.remove("precionado");
+        });
+        valor.classList.add('precionado');
+    }
+
     function esconderMenu() {
         let menu = document.querySelector(".menuDesplegable");
         if (menu.classList.contains("esconder")) {
