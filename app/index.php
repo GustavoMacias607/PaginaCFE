@@ -8,12 +8,12 @@ if ($_GET['x'] == 1) {
     die();
 }
 // funcionalidad para validar sesion iniciada
-/*if (!isset($_SESSION['idusuario'])) {
+if (!isset($_SESSION['idusuario'])) {
 
     header("Location: ../");
     die();
 }
-*/
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,8 +47,7 @@ if ($_GET['x'] == 1) {
                 <div class="desMenu">
                     <div>
                         <button onClick="esconderMenu()" class="btnMenu">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40"
-                                viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40" viewBox="0 0 24 24">
                                 <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
                             </svg>
                         </button>
@@ -60,15 +59,15 @@ if ($_GET['x'] == 1) {
     <!-- Opciones navbar movil -->
     <div class="menuDesplegable esconder">
         <ul class="listaMenuDesplegable">
-            <div class="colorUser">Nombre usuario <i class="fa-solid fa-user"></i></div>
+            <div class="colorUser"><?= $_SESSION['nombre'] ?><i class="fa-solid fa-user"></i></div>
             <li class="NavOpc">
-                <a class="btnTituloApartado" onclick="javascript:incio()" href="javascript:opcion('materiales');">
+                <a class="btnTituloApartado" onclick="javascript:incio(); EstablecerPag();" href="javascript:opcion('materiales');">
                     Materiales
                 </a>
                 <a class=" btnTituloApartado">
                     Estructuras
                 </a>
-                <a class="btnTituloApartado" href="javascript:opcion('conceptos');">
+                <a class="btnTituloApartado" onclick="incioConcepto();" href="javascript:opcion('conceptos');">
                     Conceptos
                 </a>
                 <a class="btnTituloApartado">
@@ -79,16 +78,14 @@ if ($_GET['x'] == 1) {
                 </a>
             </li>
             <li class="NavUsu">
-                <a class="btnTituloApartado" href="javascript:opcion('usuarios');">
+                <a class="btnTituloApartado" onclick="javascript:incioUsuario(); EstablecerPag()" href="javascript:opcion('usuarios');">
                     Usuarios
                 </a>
-                <a class="btnTituloApartado" href="../">
+                <a class="btnTituloApartado" href="index.php?x=1">
                     Cerrar Sesión
                 </a>
-
             </li>
         </ul>
-
     </div>
 
     <!-- Navbar normal -->
@@ -100,14 +97,13 @@ if ($_GET['x'] == 1) {
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this)"
-                    href="javascript:opcion('materiales');">Materiales</a>
+                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this);EstablecerPag();" href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this)">Estructuras</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this)" href="javascript:opcion('conceptos');">Conceptos</a>
+                <a class="opcionesMenu" onclick="preciona(this);incioConcepto();" href="javascript:opcion('conceptos');">Conceptos</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this)">Button 4</a>
@@ -118,12 +114,12 @@ if ($_GET['x'] == 1) {
         </ul>
         <ul class='menu'>
             <li class="btnOpciones">
-                <div>Nombre usuario <i class="fa-solid fa-user"></i></div>
+                <div><?= $_SESSION['nombre'] ?> <i class="fa-solid fa-user"></i></div>
                 <i class="fas fa-bars"></i>
 
                 <ul class='MenuOpciones'>
-                    <a class="tex" href="javascript:opcion('usuarios');">Usuarios</a>
-                    <a class="tex" href="../">Cerrar sesión</a>
+                    <a class="tex" onclick="javascript:incioUsuario(); EstablecerPag();" href="javascript:opcion('usuarios');">Usuarios</a>
+                    <a class="tex" href="index.php?x=1">Cerrar sesión</a>
                 </ul>
             </li>
         </ul>
@@ -133,37 +129,36 @@ if ($_GET['x'] == 1) {
 
     <!-- Inicio del contenido principal -->
     <div id="mainContent">
-
     </div>
     <!-- Final del contenido principal -->
     <script src="../bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/code.jquery.com_jquery-3.7.1.min.js"></script>
     <script src="js/funciones.js"></script>
-    <script src="js/funciones_usuario.js"></script>
-    <script src="js/funciones_momentos.js"></script>
+    <script src="js/funciones_usuarios.js"></script>
     <script src="js/funciones_materiales.js"></script>
+    <script src="js/funciones_conceptos.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
     <script>
-    window.onload = function() {
-        opcion('principal');
-    };
+        window.onload = function() {
+            opcion('proyecto');
+        };
 
-    function preciona(valor) {
-        let opciones = document.querySelectorAll(".opcionesMenu");
-        opciones.forEach(opcion => {
-            opcion.classList.remove("precionado");
-        });
-        valor.classList.add('precionado');
-    }
-
-    function esconderMenu() {
-        let menu = document.querySelector(".menuDesplegable");
-        if (menu.classList.contains("esconder")) {
-            menu.classList.remove("esconder");
-        } else {
-            menu.classList.add("esconder");
+        function preciona(valor) {
+            let opciones = document.querySelectorAll(".opcionesMenu");
+            opciones.forEach(opcion => {
+                opcion.classList.remove("precionado");
+            });
+            valor.classList.add('precionado');
         }
-    }
+
+        function esconderMenu() {
+            let menu = document.querySelector(".menuDesplegable");
+            if (menu.classList.contains("esconder")) {
+                menu.classList.remove("esconder");
+            } else {
+                menu.classList.add("esconder");
+            }
+        }
     </script>
     <!-- 
     <script>

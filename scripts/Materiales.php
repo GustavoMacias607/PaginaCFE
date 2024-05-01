@@ -60,8 +60,6 @@ class Materiales
                     "Buscar" => $datos->buscar,
                 ));
             }
-
-
             $R['filas'] = $sql->rowCount();
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
@@ -74,6 +72,7 @@ class Materiales
         }
         return $R;
     }
+
     //Metodo para agregar materiales
     //Recibe un objeto con los datos
     function addMateriales($datos)

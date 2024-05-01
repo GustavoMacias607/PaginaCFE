@@ -8,16 +8,18 @@ $resultado['estado'] = "Error";
 
 require_once("../../scripts/connect.php");
 require_once("../../scripts/Conexion.php");
-require_once("../../scripts/Materiales.php");
+require_once("../../scripts/Conceptos.php");
 
 $c = new Conexion($conData);
-$u = new Materiales($c->getConnection());
+$u = new Conceptos($c->getConnection());
 
-$res = $u->UpdateMateriales($datos);
+$res = $u->getAllConceptos($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
+    $resultado['datos'] = $res['datos'];
 } else {
     $resultado['estado'] = $res['estado'];
+    $resultado['mensaje'] = "N";
 }
 
 echo json_encode($resultado);

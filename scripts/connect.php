@@ -12,7 +12,7 @@ $user = "root";
 $pass = 'root';
 $db = "proyectocfe";
 
-$clave_enc = "Cualquiera123";
+$clave_enc = "79A]D4ham*?N5y1f44";
 
 $conData = array(
 	'host' => $host,
@@ -20,7 +20,3 @@ $conData = array(
 	'pass' => $pass,
 	'db' => $db
 );
-
-$meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
-
-$debug_on = 0;

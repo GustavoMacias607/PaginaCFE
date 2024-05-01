@@ -1,23 +1,15 @@
 <?php
 
 session_start();
-/*
+
 if (!isset($_SESSION['idusuario'])) {
     header("Location: ../../index.php");
     die();
 }
-<link rel="stylesheet" href="stylesmateriales.css">
-*/
+
 require("../../scripts/connect.php");
 require("../../scripts/Conexion.php");
 require("../../scripts/Materiales.php");
-
-$c = new Conexion($conData);
-$m = new Materiales($c->getConnection());
-$datos = array(
-    "estatus" => false
-);
-//$resM = $m->getAllMateriales($datos);
 
 ?>
 
@@ -129,7 +121,6 @@ $datos = array(
                     <button type="button" class="fa-solid fa-xmark btnclose-materiales" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body modal-body-materiales">
-
                     <div class="mb-3">
                         <label for="idInput" class="form-label" style="color: #303030;">ID</label>
                         <input type="number" class="form-control inputLleno" id="AddidInput" onblur="javascript:CompruebaTieneAlgoInput(this)">

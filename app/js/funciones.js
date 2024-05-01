@@ -12,8 +12,8 @@ function opcion(op) {
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
             break;
-        case "principal":
-            url = "Principal/addPrincipalFrm.php";
+        case "proyecto":
+            url = "Proyectos/addProyectoFrm.php";
             break;
         default: alert("Opción incorrecta"); return;
     }
@@ -31,6 +31,82 @@ function opcion(op) {
             console.log("Error: " + error);
         }
     });
+}
+//Atributos globales
+
+let paginaActual = 1;
+let tamanoPagina = 10;
+var totalPag = 1;
+var rutaCarpeta = '../Materiales/1';
+let idEliminar;
+let ActivarS;
+
+
+//Funciones globales
+
+//Metodo para imprimir un mensaje en pantalla
+//recibe dos valores el mensaje y si el mensaje es positivo se pone true, si es negativo false
+function mensajePantalla(msg, valor) {
+    let msgModal = document.getElementById('modalMsgUsuarios');
+    let parrafoModal = document.getElementById('modParrafo');
+    let modUsu = document.getElementById('modUsu');
+    let img = document.getElementById('imgPic');
+    if (valor) {
+        img.src = "../img/imgPalomita.png"
+        parrafoModal.innerHTML = msg;
+        msgModal.classList.remove("modMsgEsconder");
+        modUsu.classList.add("modMsgBien");
+        setTimeout(() => {
+            msgModal.classList.add("modMsgEsconder");
+            modUsu.classList.remove("modMsgBien");
+        }, 1500);
+    } else {
+        img.src = "../img/imgEquis.png"
+        parrafoModal.innerHTML = msg;
+        msgModal.classList.remove("modMsgEsconder");
+        modUsu.classList.add("modMsgMal");
+        setTimeout(() => {
+            msgModal.classList.add("modMsgEsconder");
+            msgModal.classList.remove("modMsgMal");
+        }, 1500);
+    }
 
 }
 
+
+//Metodo que asigna los el id y el estatus del material para ver cuales se veran afectados
+// Recibe el id del estatus y el valor actual del estatus
+function AsignarValores(pidEliminar, pActivarS) {
+    idEliminar = pidEliminar;
+    ActivarS = pActivarS;
+}
+
+function EstablecerPag() {
+    paginaActual = 1;
+}
+
+// Metodo para obtener cuantas paginas tendra la paginacion
+// Recibe el total de datos y el numero de registros a mostrar en la tabla
+function obtenerTotalPaginas(totalDatos, tamanoPagina) {
+    return Math.ceil(totalDatos / tamanoPagina);
+}
+
+//Metodo para hacer visible las acciones de la fila
+//Recibe la fila
+function mostrarValores(fila) {
+    fila.getElementsByClassName('valores')[0].style.display = 'flex';
+}
+
+//Metodo para oculas las acciones de la fila
+//Recibe la fila
+function ocultarValores(fila) {
+    fila.getElementsByClassName('valores')[0].style.display = 'none';
+}
+
+function CompruebaTieneAlgoInput(input) {
+    if (input.value) {
+        input.classList.add("inputLleno");
+        input.classList.remove("inputVacio");
+        input.placeholder = ""
+    }
+}

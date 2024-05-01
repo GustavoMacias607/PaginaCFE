@@ -8,12 +8,12 @@ $resultado['estado'] = "Error";
 
 require_once("../../scripts/connect.php");
 require_once("../../scripts/Conexion.php");
-require_once("../../scripts/Materiales.php");
+require_once("../../scripts/Usuarios.php");
 
 $c = new Conexion($conData);
-$u = new Materiales($c->getConnection());
+$u = new Usuario($c->getConnection());
 
-$res = $u->UpdateMateriales($datos);
+$res = $u->addUser($datos, $clave_enc);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
 } else {

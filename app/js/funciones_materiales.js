@@ -1,17 +1,9 @@
 
-
 function incio() {
     setTimeout(() => {
         GetMateriales();
     }, 800);
 }
-
-let paginaActual = 1;
-let tamanoPagina = 10;
-var totalPag = 1;
-var rutaCarpeta = '../Materiales/1';
-let idEliminar;
-let ActivarS;
 
 //Mensajes
 let msgEliminar = "Material eliminado";
@@ -27,17 +19,9 @@ function cambiarTamano() {
     GetMateriales();
 }
 
-//Metodo que asigna los el id y el estatus del material para ver cuales se veran afectados
-// Recibe el id del estatus y el valor actual del estatus
-function AsignarValores(pidEliminar, pActivarS) {
-    idEliminar = pidEliminar;
-    ActivarS = pActivarS;
-}
 
 //Metodo para establecer que con cada modificacion del filtro la paginacion vuelva a la pagina 1
-function EstablecerPag() {
-    paginaActual = 1;
-}
+
 
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaterialValidar() {
@@ -254,13 +238,6 @@ function UpdMaterialValidar() {
     });
 }
 
-function CompruebaTieneAlgoInput(input) {
-    if (input.value) {
-        input.classList.add("inputLleno");
-        input.classList.remove("inputVacio");
-        input.placeholder = ""
-    }
-}
 //Metodo para cambiar el estatus de los materiales
 function CambioEstatus() {
     let msgModal = document.getElementById('modalMsgMateriales');
@@ -370,7 +347,7 @@ function GetMateriales() {
             if (status == "success") {
 
                 let resp = JSON.parse(responseText);
-
+                console.log(resp);
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
 
@@ -502,17 +479,6 @@ function ocultarDiv(imagen) {
     div.style.display = "none";
 }
 
-//Metodo para hacer visible las acciones de la fila
-//Recibe la fila
-function mostrarValores(fila) {
-    fila.getElementsByClassName('valores')[0].style.display = 'flex';
-}
-
-//Metodo para oculas las acciones de la fila
-//Recibe la fila
-function ocultarValores(fila) {
-    fila.getElementsByClassName('valores')[0].style.display = 'none';
-}
 
 // Metodo para dar formato a la fecha
 //Recibe la fecha a la que se le dara el formato

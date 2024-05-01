@@ -1,5 +1,5 @@
 <?php
-class Usuario
+class Conceptos
 {
     private $conn;
     public function __construct($conexion)
@@ -13,40 +13,19 @@ class Usuario
      * devuelve arreglo con clave de estado
      */
 
-    function addUser($datos, $clave)
+    function addConcepto($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spUsuarioInsertar(:Nombre, :Usuario, :Pass,:Clave,:Rol);";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Nombre" => $datos->nombre,
-                "Usuario" => $datos->usuario,
-                "Pass" => $datos->pass,
-                "Clave" => $clave,
-                "Rol" => $datos->rol
-            ));
-            unset($c);
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-    function UpdUser($datos, $clave)
-    {
-        $R['estado'] = "OK";
-        $c = $this->conn;
-        try {
-            $consulta = "call spUsuarioModificar(:Id,:Nombre, :Usuario, :Pass,:Clave,:Rol);";
+            $consulta = "call spConceptosInsertar(:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
+                "Tipo" => $datos->tipo,
+                "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
-                "Usuario" => $datos->usuario,
-                "Pass" => $datos->pass,
-                "Clave" => $clave,
-                "Rol" => $datos->rol
+                "Plazo" => $datos->plazo
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -54,45 +33,41 @@ class Usuario
         }
         return $R;
     }
-    function getUserLogin($datos, $clave)
+    function UpdConcepto($datos)
     {
-        $R['estado'] = 'OK';
+        $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spUsuarioLogIn(:Usuario, :Pass, :Clave)";
-
+            $consulta = "call spConceptosModificar(:IdAnterior,:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
             $sql = $c->prepare($consulta);
-            $sql->execute(
-                array(
-                    "Usuario" => $datos->usuario,
-                    "Pass" => $datos->password,
-                    "Clave" => $clave
-                )
-            );
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] != 1) {
-                $R['estado'] = "Usuario y/o Contraseña incorrectos";
-            } else {
-                $R['datos'] = $sql->fetchAll();
-            }
-            $c == null;
+            $sql->execute(array(
+                "IdAnterior" => $datos->idAnterior,
+                "Id" => $datos->id,
+                "Tipo" => $datos->tipo,
+                "Unidad" => $datos->unidad,
+                "Nombre" => $datos->nombre,
+                "Plazo" => $datos->plazo
+            ));
+            unset($c);
         } catch (PDOException $e) {
             $R['estado'] = "Error: " . $e->getMessage();
         }
         return $R;
     }
 
-    function getAllUsers($datos)
+
+    function getAllConceptos($datos)
     {
         /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spUsuarioBuscarIdNombreUsuario(:Estatus,:Rol,:Buscar);";
+            $consulta = "call spConceptoBuscar(:Estatus,:Tipo,:Unidad, :Buscar);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Estatus" => $datos->estatus,
-                "Rol" => $datos->rol,
+                "Tipo" => $datos->tipo,
+                "Unidad" => $datos->unidad,
                 "Buscar" => $datos->buscar,
             ));
 
@@ -108,14 +83,38 @@ class Usuario
         }
         return $R;
     }
-    function CambiarEstatusUsuario($datos)
+
+    function checkConcepto($datos)
+    {
+        $R['estado'] = "OK";
+        $c = $this->conn;
+        try {
+            $consulta = "call spConceptoBuscarId(:Id);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "Id" => $datos->id
+
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] > 0) {
+                $R['estado'] = "A";
+            } else {
+                $R['estado'] = "N";
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+    function CambiarEstatusConcepto($datos)
     {
         /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
 
-            $consulta = "call spUsuarioEstatus(:Id, :Estatus);";
+            $consulta = "call spConceptoEstatus(:Id, :Estatus);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
