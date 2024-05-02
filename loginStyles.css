@@ -1,6 +1,11 @@
 @font-face {
   font-family: "Lato";
-  src: url("FuenteLato/Lato-Regular.ttf") format("truetype");
+  src: url("fonts/FuenteLato/Lato-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "LatoBold";
+  src: url("fonts/FuenteLato/Lato-Bold.ttf") format("truetype");
 }
 
 body {
@@ -8,6 +13,10 @@ body {
   background-color: #008e5a;
 }
 .btn-outline-light {
+  font-family: "LatoBold", sans-serif;
+  --bs-btn-padding-y: .3rem; 
+  --bs-btn-padding-x: 2.8rem; 
+  --bs-btn-font-size: 1rem;
   --bs-btn-font-weight: 600;
   --bs-btn-bg: #008e5a; /* Fondo verde */
   --bs-btn-color: #ffffff; /* Letra blanca */
@@ -41,7 +50,8 @@ body {
 }
 
 /* Color del texto ingresado */
-.form-control {
+.form-control-login {
+  font-family: "LatoBold", sans-serif;
   color: #303030; /* Color negro */
   border: none; /* Eliminar borde */
   border-radius: 0; /* Eliminar bordes redondeados */
@@ -61,26 +71,25 @@ img.logo {
 
 /* SIFCAO */
 a{
-  
+  font-size: 30px;
+  top: 105%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   display: inline-block;
-  position: relative;
+  position: absolute;
   text-decoration: none;
-  color: #e92323;
-  font-weight: 500;
-  padding: 10px, 20px;
-  border-radius: 10px;
   color: #ffffff;
   transition: all 0.3s ease;
-  transform: translateX(50%);
 }
 a:hover{
-  background-color: #008e5a;
+  color:#303030;
 }
 .header{
+  font-family: "LatoBold", sans-serif;
   position: relative;
   background-color: #ffffff;
   width: 100%;
-  min-height: 80px;
+  min-height: 80px; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -94,19 +103,23 @@ a:hover{
   font-size: 14px;
   margin-left: 6px;
 }
+
+/* SIFCAO SUBMENU*/
+.open_submenu {
+  list-style-type: none; /* Elimina la viñeta */
+}
+
 .submenu{
-  font-family: "Lato", sans-serif;
   position: absolute;
-  top: 100%;
-  background-color: #008e5a;
+  top: 106%;
+ transform: translateX(60%);
   color: #ffffff;
-  border-radius: 10px;
   max-height: 0;
-  transition: max-height 2s ease;
+  transition: max-height 3s ease;
   overflow: hidden;
 }
 .submenu.show{
-  max-height: 100px;
+  max-height: 160px;
 }
 .submenu ul{
   display: flex;
@@ -122,3 +135,4 @@ a:hover{
 .submenu ul li a{
   width: 100%;
 }
+
