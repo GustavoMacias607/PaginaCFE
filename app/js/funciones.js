@@ -9,6 +9,9 @@ function opcion(op) {
         case "usuarios":
             url = "Usuarios/addUsuariosFrm.php";
             break;
+        case "perfilUsu":
+            url = "Usuarios/perfilUsuarioFrm.php";
+            break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
             break;
@@ -33,7 +36,7 @@ function opcion(op) {
     });
 }
 //Atributos globales
-
+let existe = false;
 let paginaActual = 1;
 let tamanoPagina = 10;
 var totalPag = 1;
@@ -108,5 +111,18 @@ function CompruebaTieneAlgoInput(input) {
         input.classList.add("inputLleno");
         input.classList.remove("inputVacio");
         input.placeholder = ""
+    }
+}
+
+function comprobarExiste(valor, id) {
+
+    if (valor == "A") {
+        console.log("si existe");
+        existe = true;
+        id.classList.add("inputVacio");
+    } else {
+        console.log("no existe");
+        existe = false;
+        id.classList.remove("inputVacio");
     }
 }

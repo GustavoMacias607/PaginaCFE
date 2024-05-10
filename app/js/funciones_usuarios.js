@@ -1,7 +1,7 @@
 function incioUsuario() {
     setTimeout(() => {
         GetUsuario();
-
+        existe = false;
     }, 800);
 }
 
@@ -85,6 +85,11 @@ function AddUsuarioValidar() {
         passConfir.focus();
         return;
     }
+    checkUsuario('Add');
+    if (existe) {
+        usuario.focus();
+        return;
+    }
     let json = JSON.stringify(datos);
     let url = "../ws/Usuarios/wsAddUsuario.php";
     $.post(url, json, (responseText, status) => {
@@ -104,7 +109,6 @@ function AddUsuarioValidar() {
         }
     });
 }
-
 function ComprobarContrasenas() {
     let passConfir = document.querySelector('#AddConfirpassInput');
     let pass = document.querySelector('#AddpassInput').value;
@@ -162,11 +166,17 @@ function UpdUsuarioValidar() {
         PrimerValorVacio.focus();
         return;
     }
+    checkUsuario("Upd");
 
+    if (existe) {
+        usuario.focus();
+        return;
+    }
     let pass = document.querySelector('#UpdpassInput');
     datos.pass = pass.value;
+
+
     let json = JSON.stringify(datos);
-    console.log(json);
     let url = "../ws/Usuarios/wsUpdUsuario.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -185,6 +195,42 @@ function UpdUsuarioValidar() {
         }
     });
 }
+
+function checkUsuario(modal) {
+    const datos = {}
+    let UsuVali;
+    if (modal == "Add") {
+        UsuVali = document.querySelector('#AddusuarioInput');
+    } else {
+        UsuVali = document.querySelector('#UpdusuarioInput');
+        let UsuAnterior = document.querySelector('#UpUsuAnterior');
+        if (UsuVali.value == UsuAnterior.value) {
+            existe = false;
+            return;
+        }
+    }
+
+    if (UsuVali.value == "") {
+        return;
+    }
+    datos.usuario = UsuVali.value;
+    let json = JSON.stringify(datos);
+    let url = "../ws/Usuarios/wscheckUsuario.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                console.log(responseText);
+                let resp = JSON.parse(responseText);
+                comprobarExiste(resp.estado, UsuVali)
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            alert("Error: " + error)
+        }
+    });
+}
+
 
 function CompruebaTieneAlgoInputUsuario(input) {
 
@@ -283,14 +329,12 @@ function GetUsuario() {
         datos.estatus = 0;
     }
     datos.rol = rol.value;
-    let json = JSON.stringify(datos);
-    console.log(json);
+    let json = JSON.stringify(datos)
     let url = "../ws/Usuarios/wsGetUsuarios.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     //Llamar a la función para mostrar los datos en la tabla
 
@@ -433,7 +477,8 @@ function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de da
     let usuarioU = document.querySelector('#UpdusuarioInput');
     let rolU = document.querySelector('#UpdrolInput');
     let pass = document.querySelector('#UpdpassInput');
-
+    let UsuAnterior = document.querySelector('#UpUsuAnterior');
+    UsuAnterior.value = usuario;
     idU.value = id;
     nombreU.value = nombre;
     usuarioU.value = usuario;

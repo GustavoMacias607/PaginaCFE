@@ -93,7 +93,6 @@ class Conceptos
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id
-
             ));
             $R['filas'] = $sql->rowCount();
             if ($R['filas'] > 0) {

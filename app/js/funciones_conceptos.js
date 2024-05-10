@@ -1,9 +1,10 @@
 function incioConcepto() {
     setTimeout(() => {
-        cambiarTamanoConcepto();;
+        cambiarTamanoConcepto();
+        existe = false
     }, 800);
 }
-let existe = true;
+
 let msgEliminarCon = "Concepto eliminado";
 let msgActivarCon = "Concepto activado";
 let msgAgregarCon = "Concepto agregado";
@@ -212,10 +213,12 @@ function checkConcepto(modal) {
     }
     datos.id = idVali.value;
     let json = JSON.stringify(datos);
+
     let url = "../ws/Conceptos/wscheckConcepto.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
+
                 let resp = JSON.parse(responseText);
                 comprobarExiste(resp.estado, idVali)
             } else {
@@ -226,15 +229,7 @@ function checkConcepto(modal) {
         }
     });
 }
-function comprobarExiste(valor, id) {
-    if (valor == "A") {
-        existe = true;
-        id.classList.add("inputVacio");
-    } else {
-        existe = false;
-        id.classList.remove("inputVacio");
-    }
-}
+
 //Metodo para cambiar el estatus de los materiales
 function CambioEstatusConcepto() {
     const datos = {};

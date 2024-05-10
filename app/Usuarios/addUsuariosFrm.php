@@ -11,7 +11,8 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco">
     <div class="bottom-rectangle-materiales">
         <div class="text-materiales">Usuarios</div>
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModalUsuario();">Agregar
+        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModalUsuario();">Agregar
             usuario</button>
     </div>
     <div class="label-container-materiales">
@@ -30,7 +31,8 @@ if (!isset($_SESSION['idusuario'])) {
 
             <div class="cantregmateriales">
                 <div class="text">Mostrar</div>
-                <select class="cantregistrosmateriales" name="" id="cantRegistros" onchange="javascript:cambiarTamanoUsuario()">
+                <select class="cantregistrosmateriales" name="" id="cantRegistros"
+                    onchange="javascript:cambiarTamanoUsuario()">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -43,7 +45,8 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="text">Estatus</div>
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEstaUsuarios" checked>
-                <img id="ValEstatusUsuario" src="../img/toggle_on_35px.png" onclick="javascript:valStatusUsuario();GetUsuario();">
+                <img id="ValEstatusUsuario" src="../img/toggle_on_35px.png"
+                    onclick="javascript:valStatusUsuario();GetUsuario();">
             </div>
         </div>
     </div>
@@ -69,7 +72,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <th class=" col-1" style="width: 140px;">
                         <div class="d-flex align-items-center">
                             <span>Rol: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectUsuarios" onchange="javacript:GetUsuario();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                            <select class="form-select form-select-sm ml-2" id="selectUsuarios"
+                                onchange="javacript:GetUsuario();EstablecerPag()"
+                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="todo" selected>Todo</option>
                                 <option value="Administrador">Administrador</option>
                                 <option value="Invitado">Invitado</option>
@@ -94,7 +99,8 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <!-- Modal insertar usuario -->
-<div class="modal modal-usuarios" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-usuarios" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: 2px solid #008E5A;">
@@ -104,24 +110,31 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="nombreInput" class="form-label" style="color: #303030;">Nombre</label>
-                    <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddnombreInput">
+                    <input type="text" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddnombreInput">
                 </div>
                 <div class="mb-3">
-                    <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario</label>
-                    <input class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddusuarioInput" rows="3">
+                    <label for="AddusuarioInput" class="form-label" style="color: #303030;">Usuario</label>
+                    <input class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('Add');"
+                        id="AddusuarioInput" rows="3">
                 </div>
                 <div class="mb-3">
-                    <label for="passInput" class="form-label" style="color: #303030;">Contraseña</label>
-                    <input type="password" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddpassInput" rows="3">
+                    <label for="AddpassInput" class="form-label" style="color: #303030;">Contraseña</label>
+                    <input type="password" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddpassInput" rows="3">
                 </div>
                 <div class="mb-3">
                     <label for="passconfirmInput" class="form-label" style="color: #303030;">Confirme su
                         contraseña</label>
-                    <input type="password" class="form-control inputLleno" id="AddConfirpassInput" onblur="javascript:ComprobarContrasenas();javascript:CompruebaTieneAlgoInputUsuario(this)" rows="3">
+                    <input type="password" class="form-control inputLleno" id="AddConfirpassInput"
+                        onblur="javascript:ComprobarContrasenas();javascript:CompruebaTieneAlgoInputUsuario(this)"
+                        rows="3">
                 </div>
                 <div class="mb-3">
                     <label for="rolInput" class="form-label" style="color: #303030;">Rol</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddrolInput">
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
+                        id="AddrolInput">
                         <option selected value="">Selecciona una Opcion</option>
                         <option value="Administrador">Administrador</option>
                         <option value="Invitado">Invitado</option>
@@ -129,7 +142,8 @@ if (!isset($_SESSION['idusuario'])) {
                     </select>
                 </div>
                 <div class="modal-footer-usuarios" style="color: none">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddUsuarioValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:AddUsuarioValidar();"
+                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
         </div>
@@ -144,22 +158,25 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar usuario</h1>
             </div>
             <div class="modal-body modal-body-usuarios">
-
+                <input type="text" class="form-control " id="UpUsuAnterior" style="border: 3px solid #008E5A;">
                 <div class="mb-3 d-none">
                     <label for="idInput" class="form-label" style="color: #303030;">ID</label>
                     <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
                 </div>
                 <div class="mb-3">
                     <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" class="form-control inputLleno" id="UpdnombreInput" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                    <input type="text" class="form-control inputLleno" id="UpdnombreInput"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
                 </div>
                 <div class="mb-3">
                     <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
-                    <input class="form-control inputLleno" id="UpdusuarioInput" rows="3" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                    <input class="form-control inputLleno" id="UpdusuarioInput" rows="3"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('upd');">
                 </div>
                 <div class="mb-3">
                     <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
-                    <select class="form-select inputLleno" id="UpdrolInput" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                    <select class="form-select inputLleno" id="UpdrolInput"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
                         <option selected value="">Selecciona una Opcion</option>
                         <option value="Administrador">Administrador</option>
                         <option value="Invitado">Invitado</option>
@@ -170,11 +187,13 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="passInput" class="form-label" style="color: #303030;">Nueva contraseña para el
                         usuario</label>
-                    <input type="password" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
+                    <input type="password" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
                 </div>
             </div>
             <div class=" modal-footer" style="color: none">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;" onclick="javascript:UpdUsuarioValidar()">Guardar</button>
+                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                    onclick="javascript:UpdUsuarioValidar()">Guardar</button>
             </div>
         </div>
     </div>
@@ -182,14 +201,18 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- modal para activar el registro de materiales -->
-<div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true" style="z-index: 4000; color: #303030; top: 194px;">
+<div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Activar este material?</h5>
-                <button type="button" class="btn" id="confirmActivationButton" onclick="javascript:ActivarCerrarModalUsuario(); CambioEstatusUsuario();" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Activar</button>
-                <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+                <button type="button" class="btn" id="confirmActivationButton"
+                    onclick="javascript:ActivarCerrarModalUsuario(); CambioEstatusUsuario();"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Activar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
         </div>
     </div>
@@ -197,28 +220,37 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- Modal de Confirmación de Eliminación -->
-<div class="modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 4000; color: #303030; top: 194px;">
+<div class="modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Eliminar este material?</h5>
-                <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirmUsuario();" id="confirmDeleteButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Eliminar</button>
-                <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    onclick="javascript:AbrirModalConfirmUsuario();" id="confirmDeleteButton"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Eliminar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal de Confirmación Adicional -->
-<div class="modal" id="confirmAdditionalModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 4000; color: #303030; top: 194px;">
+<div class="modal" id="confirmAdditionalModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
+            <div class="modal-header"
+                style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
                     seguro de que desea eliminar este material?</h5>
-                <button type="button" onclick="javascript:EliminarCerrarModalUsuario(); CambioEstatusUsuario();" class="btn" id="confirmAdditionalButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
-                <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+                <button type="button" onclick="javascript:EliminarCerrarModalUsuario(); CambioEstatusUsuario();"
+                    class="btn" id="confirmAdditionalButton"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
         </div>
     </div>
@@ -239,23 +271,24 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script>
-    window.addEventListener('resize', function() {
-        const logoImage = document.getElementById('logoImage');
-        const windowWidth = window.innerWidth;
-        const originalWidth = logoImage.naturalWidth;
+window.addEventListener('resize', function() {
+    const logoImage = document.getElementById('logoImage');
+    const windowWidth = window.innerWidth;
+    const originalWidth = logoImage.naturalWidth;
 
-        if (windowWidth < originalWidth) {
-            logoImage.src =
-                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+    if (windowWidth < originalWidth) {
+        logoImage.src =
+            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-        } else {
-            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-            logoImage.alt = 'Logo'; // Restaura el atributo alt
-        }
-    });
+    } else {
+        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+        logoImage.alt = 'Logo'; // Restaura el atributo alt
+    }
+});
 </script>

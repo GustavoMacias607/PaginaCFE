@@ -133,4 +133,28 @@ class Usuario
         }
         return $R;
     }
+
+    function checkUsuario($datos)
+    {
+        $R['estado'] = "OK";
+        $c = $this->conn;
+        try {
+            $consulta = "call spUsuarioBuscarNombre(:Usuario);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "Usuario" => $datos->usuario
+
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] > 0) {
+                $R['estado'] = "A";
+            } else {
+                $R['estado'] = "N";
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
 }
