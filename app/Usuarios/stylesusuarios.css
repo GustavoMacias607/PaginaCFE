@@ -26,7 +26,7 @@ body {
 }
 
 /*barra superior negra*/
-.bottom-rectangle-materiales {
+.bottom-rectangle-usuarios {
   background-color: #303030;
   display: flex;
   position: fixed;
@@ -40,8 +40,8 @@ body {
   }
 }
 
-/* Estilos para el titulo materiales */
-.text-materiales {
+/* Estilos para el titulo usuarios */
+.text-usuarios {
   font-family: "LatoBold", sans-serif;
   color: #ffffff;
   font-size: 140%;
@@ -49,7 +49,7 @@ body {
 }
 
 /* Estilos para el buscador */
-.label-container-materiales {
+.label-container-usuarios {
   margin: 7rem auto 0 auto;
   width: 70vw; /* Ancho del label */
   background-color: #ffffff; /* Fondo blanco */
@@ -59,7 +59,7 @@ body {
     margin: 4rem auto 0 auto;
   }
 }
-.label-container-materiales input[type="text"] {
+.label-container-usuarios input[type="text"] {
   width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
   border: none; /* Elimina el borde del input */
   outline: none; /* Elimina el borde de enfoque */
@@ -67,16 +67,16 @@ body {
   color: #303030; /* Color del texto */
   font-size: 20px; /* Tamaño del texto */
 }
-.label-container-materiales input[type="text"]::placeholder {
+.label-container-usuarios input[type="text"]::placeholder {
   color: #858585; /* Color del texto del placeholder */
   font-size: 20px; /* Tamaño del texto del placeholder */
 }
-.icon-materiales {
+.icon-usuarios {
   color: #008e5a; /* Color verde */
 }
 
-/* Estilos para el botón "Agregar material" */
-.btn-agregar-material {
+/* Estilos para el botón "Agregar usuarios" */
+.btn-agregar-usuarios {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -89,25 +89,25 @@ body {
   transform: translate(20px); /* posicion del boton */
 }
 
-.btn-agregar-material:hover {
-  background-color: #ffffffa2; /* Fondo blanco al pasar el mouse */
-  border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
-  color: #303030; /* Letra verde al pasar el mouse */
+.btn-agregar-usuarios:hover {
+  background-color: #303030; /* Fondo blanco al pasar el mouse */
+  border-color: #ffffff; /* Contorno verde al pasar el mouse */
+  color: #ffffff; /* Letra verde al pasar el mouse */
 }
 
-.btn-agregar-material:active {
-  background-color: #ffffffa2; /* Fondo blanco al hacer clic */
-  border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
-  color: #ffffff; /* Letra verde al hacer clic */
+.btn-agregar-usuarios:active {
+  background-color: #ffffff; /* Fondo blanco al hacer clic */
+  border-color: #ffffff; /* Contorno verde al pasar el mouse */
+  color: #303030; /* Letra verde al hacer clic */
 }
 
 /*estilos para el modal agregar material*/
-.modal-materiales {
+.modal-usuarios {
   z-index: 5000;
   font-family: "LatoBold", sans-serif;
 }
 
-.btnclose-materiales {
+.btnclose-usuarios {
   background-color: #ffffff;
   color: #008e5a;
   border: none;
@@ -115,31 +115,31 @@ body {
 }
 
 /* Estilos para el botón Guardar del modal */
-.modal-footer-materiales .btn-primary {
+.modal-footer-usuarios .btn-primary {
   background-color: #008e5a; /* Color verde */
   border-color: #008e5a; /* Color del borde */
   color: #ffffff;
 }
 
-.modal-footer-materiales {
+.modal-footer-usuarios {
   border: none;
 }
 
-.modal-footer-materiales .btn-primary:active {
+.modal-footer-usuarios .btn-primary:active {
   background-color: #008e5a; /* Color verde al hacer clic */
   border-color: #008e5a; /* Color del borde al hacer clic */
   color: #000000; /* Color negro al hacer clic */
 }
-.modal-body-materiales input[type="text"] {
+.modal-body-usuarios input[type="text"] {
   font-family: "Lato", sans-serif;
 }
 
-.form-select-materiales {
+.form-select-usuarios {
   background-color: #ffffff;
   color: #303030;
 }
 
-.contTabla-materiales {
+.contTabla-usuarios {
   width: calc(100% - 0.2rem);
   margin-left: 0.2rem;
   margin-right: 0.2rem;
@@ -164,7 +164,7 @@ body {
   }
 }
 /* Estilos personalizados para la tabla */
-.tabla-container-materiales {
+.tabla-container-usuarios {
   text-align: center;
   margin-bottom: 100px;
   /* Altura máxima del contenedor */
@@ -175,31 +175,31 @@ body {
   margin-top: 0px;
 }
 
-#tabla-materiales {
+#tabla-usuarios {
   width: 100%;
 }
 
-#tabla-materiales th,
-#tabla-materiales td {
+#tabla-usuarios th,
+#tabla-usuarios td {
   border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
   padding: 8px;
   text-align: left;
 }
 
-#tabla-materiales th {
+#tabla-usuarios th {
   background-color: #008e5a; /* Encabezados con fondo verde */
   color: white; /* Letras blancas en los encabezados */
 }
 
-#tabla-materiales tbody td {
+#tabla-usuarios tbody td {
   color: #303030; /* Texto de las filas en color #303030 */
 }
 
-.fila-materiales:hover {
+.fila-usuarios:hover {
   background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
 }
 
-.valores-materiales {
+.valores-usuarios {
   justify-content: space-around;
   align-items: center;
   display: none;
@@ -261,7 +261,7 @@ body {
   }
 }
 
-.pagRegistrosmateriales {
+.pagRegistrosusuarios {
   font-family: "LatoBold", sans-serif;
   display: flex;
   flex-wrap: wrap;
@@ -275,12 +275,12 @@ body {
   margin-top: 1rem;
   margin-bottom: 0;
 }
-.cantregmateriales {
+.cantregusuarios {
   margin-top: 1.2rem;
   display: flex;
   align-items: start;
 }
-.cantregistrosmateriales {
+.cantregistrosusuarios {
   font-family: "LatoBold", sans-serif;
   color: #008e5a;
   border: 3px solid #008e5a;
@@ -300,7 +300,7 @@ body {
   background-color: #008e5a;
 }
 
-.toggle-estatus-materiales {
+.toggle-estatus-usuarios {
   margin-top: 1rem;
   display: flex;
   align-items: center;

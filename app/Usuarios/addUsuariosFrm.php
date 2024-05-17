@@ -9,29 +9,29 @@ if (!isset($_SESSION['idusuario'])) {
 ?>
 
 <div class="fondBlanco">
-    <div class="bottom-rectangle-materiales">
-        <div class="text-materiales">Usuarios</div>
+    <div class="bottom-rectangle-usuarios">
+        <div class="text-usuarios">Usuarios</div>
         <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalUsuario();">Agregar
             usuario</button>
     </div>
-    <div class="label-container-materiales">
+    <div class="label-container-usuarios">
         <input type="text" placeholder="Buscar" id="searchInputUsuarios" oninput="GetUsuario();EstablecerPag()">
-        <i class="fas fa-search icon-materiales" id="searchIcon"></i>
+        <i class="fas fa-search icon-usuarios" id="searchIcon"></i>
     </div>
 
 
     <!-- Paginacion  -->
-    <div class="pagRegistrosmateriales">
+    <div class="pagRegistrosusuarios">
         <nav class="pSeccion">
             <ul class="pagination" id="pagination-list">
                 <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                 <li class="page-item active"></li>
             </ul>
 
-            <div class="cantregmateriales">
+            <div class="cantregusuarios">
                 <div class="text">Mostrar</div>
-                <select class="cantregistrosmateriales" name="" id="cantRegistros"
+                <select class="cantregistrosusuarios" name="" id="cantRegistros"
                     onchange="javascript:cambiarTamanoUsuario()">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
@@ -41,7 +41,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="text">Registros </div>
             </div>
         </nav>
-        <div class="toggle-estatus-materiales">
+        <div class="toggle-estatus-usuarios">
             <div class="text">Estatus</div>
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEstaUsuarios" checked>
@@ -55,9 +55,9 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 
-<div class="contTabla-materiales">
-    <div class="tabla-container tabla-container-materiales">
-        <table id="tabla-materiales">
+<div class="contTabla-usuarios">
+    <div class="tabla-container tabla-container-usuarios">
+        <table id="tabla-usuarios">
             <thead class="">
                 <tr>
                     <th>
@@ -200,7 +200,7 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 
-<!-- modal para activar el registro de materiales -->
+<!-- modal para activar el registro de usuarios -->
 <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
     style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">

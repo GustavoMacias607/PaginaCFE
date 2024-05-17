@@ -31,10 +31,7 @@ require("../../scripts/Materiales.php");
 
         <div class="pagRegistrosmateriales">
             <nav class="pSeccion">
-                <ul class="pagination" id="pagination-list">
-                    <!-- Aquí se agregarán dinámicamente los enlaces de página -->
-                    <li class="page-item active"></li>
-                </ul>
+                
 
                 <div class="cantregmateriales">
                     <div class="text">Mostrar</div>
@@ -46,6 +43,11 @@ require("../../scripts/Materiales.php");
                     </select>
                     <div class="text">Registros </div>
                 </div>
+
+                <ul class="pagination" id="pagination-list">
+                    <!-- Aquí se agregarán dinámicamente los enlaces de página -->
+                    <li class="page-item active"></li>
+                </ul>
 
             </nav>
 

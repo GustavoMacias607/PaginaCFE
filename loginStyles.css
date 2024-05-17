@@ -20,7 +20,7 @@ body {
   --bs-btn-font-weight: 600;
   --bs-btn-bg: #008e5a; /* Fondo verde */
   --bs-btn-color: #ffffff; /* Letra blanca */
-  --bs-btn-border-color: #ffffff; /* Contorno blanco */
+  --bs-btn-border-color: #008e5a; /* Contorno blanco */
   --bs-btn-border-width: 3px; /* Grosor del contorno */
   position: absolute;
   top: 100%;
@@ -29,15 +29,17 @@ body {
 }
 
 .btn-outline-light:hover {
+  font-family: "LatoBold", sans-serif;
   background-color: #ffffff; /* Fondo blanco al pasar el mouse */
   border-color: #008e5a; /* Contorno verde al pasar el mouse */
   color: #008e5a; /* Letra verde al pasar el mouse */
 }
 
 .btn.btn-outline-light:active {
+  font-family: "LatoBold", sans-serif;
   background-color: #008e5a; /* Fondo blanco al hacer clic */
-  border-color: #ffffff; /* Contorno verde al hacer clic */
-  color: #ffffff; /* Letra verde al hacer clic */
+  border-color: #008e5a; /* Contorno verde al hacer clic */
+  color: #303030; /* Letra verde al hacer clic */
 }
 .center-box {
   position: absolute;

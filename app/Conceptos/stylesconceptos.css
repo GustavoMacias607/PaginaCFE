@@ -13,7 +13,7 @@
   }
   .fondBlanco {
     background-color: white;
-    height: 15rem;
+    height: 10rem;
     width: 100%;
     position: fixed;
     z-index: 500;
@@ -143,7 +143,7 @@
     width: calc(100% - 0.2rem);
     margin-left: 0.2rem;
     margin-right: 0.2rem;
-    padding-top: 12rem;
+    padding-top: 265px;
     @media (min-width: 393px) {
       padding-top: 8rem;
       margin-left: 0.2rem;

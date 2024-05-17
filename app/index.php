@@ -28,6 +28,7 @@ if (!isset($_SESSION['idusuario'])) {
     <link rel="stylesheet" href="NavbarMovile.css">
     <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
     <link rel="stylesheet" href="./Usuarios/stylesusuarios.css">
+    <link rel="stylesheet" href="./Usuarios/stylesperfilusuarios.css">
     <link rel="stylesheet" href="./Conceptos/stylesconceptos.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
