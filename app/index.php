@@ -13,7 +13,6 @@ if (!isset($_SESSION['idusuario'])) {
     header("Location: ../");
     die();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -30,6 +29,9 @@ if (!isset($_SESSION['idusuario'])) {
     <link rel="stylesheet" href="./Usuarios/stylesusuarios.css">
     <link rel="stylesheet" href="./Usuarios/stylesperfilusuarios.css">
     <link rel="stylesheet" href="./Conceptos/stylesconceptos.css">
+    <link rel="stylesheet" href="./Catalogo/stylesCatalogo.css">
+    <link rel="stylesheet" href="./ManoObra/stylesManoObra.css">
+    <link rel="stylesheet" href="./Maquinaria/stylesMaquinaria.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title></title>
@@ -102,22 +104,25 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this);EstablecerPag();"
-                    href="javascript:opcion('materiales');">Materiales</a>
-            </li>
-            <li>
-                <a class="opcionesMenu" onclick="preciona(this)">Estructuras</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Catalogo');">Catalogo</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);incioConcepto();"
                     href="javascript:opcion('conceptos');">Conceptos</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this)">Button 4</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de
+                    obra</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this)">Button 5</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
+            <li>
+                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this);EstablecerPag();"
+                    href="javascript:opcion('materiales');">Materiales</a>
+            </li>
+
+
         </ul>
         <ul class='usuApartado'>
             <div style="display: block;">

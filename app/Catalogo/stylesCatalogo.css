@@ -1,0 +1,75 @@
+@font-face {
+  font-family: "Lato";
+  src: url("../../fonts/FuenteLato/Lato-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "LatoBold";
+  src: url("../../fonts/FuenteLato/Lato-Bold.ttf") format("truetype");
+}
+
+body {
+  font-family: "Lato", sans-serif;
+}
+
+.fondBlancoCatalogo {
+  background-color: white;
+  height: 10rem;
+  width: 100%;
+  position: fixed;
+  z-index: 500;
+  margin-top: 5rem;
+  @media (max-width: 1090px) {
+    position: static;
+    margin-top: 0;
+    padding-top: 5rem;
+  }
+}
+
+/*barra superior negra*/
+.bottom-rectangle-Catalogo {
+  background-color: #303030;
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  padding: 5px 0 5px 10px;
+  top: 80px; /* La altura del rectángulo superior */
+  z-index: 1; /* Asegura que el rectángulo esté detrás de los botones */
+  @media (max-width: 1090px) {
+    position: static;
+  }
+}
+
+.text-Catalogo {
+  font-family: "LatoBold", sans-serif;
+  color: #ffffff;
+  font-size: 140%;
+  transform: translate(2px, 10px);
+}
+
+/* Estilos para el botón "Agregar concepto" */
+.btn-agregar-Catalogo {
+  font-family: "LatoBold", sans-serif; /* tipografia */
+  --bs-btn-padding-y: 0.3rem;
+  --bs-btn-padding-x: 10px; /* largo del boton */
+  --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
+  background-color: #ffffff; /* Fondo blanco */
+  color: #303030; /* Letra blanca */
+  border: 3px solid #ffffff; /* Contorno verde */
+  border-radius: 5; /* Sin bordes redondeados */
+  transition: all 0.3s ease; /* Transición suave */
+  transform: translate(20px); /* posicion del boton */
+}
+
+.btn-agregar-Catalogo:hover {
+  background-color: #ffffffa2; /* Fondo blanco al pasar el mouse */
+  border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
+  color: #303030; /* Letra verde al pasar el mouse */
+}
+
+.btn-agregar-Catalogo:active {
+  background-color: #ffffffa2; /* Fondo blanco al hacer clic */
+  border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
+  color: #ffffff; /* Letra verde al hacer clic */
+}

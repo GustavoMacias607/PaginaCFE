@@ -23,7 +23,7 @@ if (isset($datos->usuario) && isset($datos->password)) {
         }
         $resultado['estado'] = "OK";
     } else {
-        $resultado['estado'] = "Usuario y/o Contaseña Incorrecta";
+        $resultado['estado'] = "Usuario y/o contaseña incorrectos";
     }
 }
 

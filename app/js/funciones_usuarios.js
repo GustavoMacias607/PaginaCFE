@@ -337,7 +337,7 @@ function GetUsuario() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     //Llamar a la función para mostrar los datos en la tabla
-
+                    console.log(responseText)
                     mostrarDatosEnTablaUsuario(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
@@ -356,7 +356,7 @@ function GetUsuario() {
 function mostrarDatosEnTablaUsuario(datos, paginaActual, tamanoPagina) {
     let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
     totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-materiales").getElementsByTagName("tbody")[0];
+    let tbody = document.getElementById("tabla-usuarios").getElementsByTagName("tbody")[0];
     tbody.innerHTML = "";
     if (datos == "N") {
         let fila = document.createElement("tr");

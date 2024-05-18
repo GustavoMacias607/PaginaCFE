@@ -18,6 +18,15 @@ function opcion(op) {
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";
             break;
+        case "ManoObra":
+            url = "ManoObra/addManoObraFrm.php";
+            break;
+        case "Catalogo":
+            url = "Catalogo/addCatalogoFrm.php";
+            break;
+        case "Maquinaria":
+            url = "Maquinaria/addMaquinariaFrm.php";
+            break;
         default: alert("Opción incorrecta"); return;
     }
 
@@ -73,7 +82,6 @@ function mensajePantalla(msg, valor) {
             msgModal.classList.remove("modMsgMal");
         }, 1500);
     }
-
 }
 
 
@@ -84,6 +92,7 @@ function AsignarValores(pidEliminar, pActivarS) {
     ActivarS = pActivarS;
 }
 
+//Metodo para establecer la tabla en la pagina 1
 function EstablecerPag() {
     paginaActual = 1;
 }
@@ -106,6 +115,8 @@ function ocultarValores(fila) {
     fila.getElementsByClassName('valores')[0].style.display = 'none';
 }
 
+// Metodo que comprueba si el campo contiene un dato
+// Recibe el campo
 function CompruebaTieneAlgoInput(input) {
     if (input.value) {
         input.classList.add("inputLleno");
@@ -114,15 +125,14 @@ function CompruebaTieneAlgoInput(input) {
     }
 }
 
-function comprobarExiste(valor, id) {
-
+// cambia de valor la variable existe dependiendo si el valor recibido existe o no
+// recibe, valor y el campo que se esta comprobando si existe un dato igual al ingresado
+function comprobarExiste(valor, campo) {
     if (valor == "A") {
-        console.log("si existe");
         existe = true;
-        id.classList.add("inputVacio");
+        campo.classList.add("inputVacio");
     } else {
-        console.log("no existe");
         existe = false;
-        id.classList.remove("inputVacio");
+        campo.classList.remove("inputVacio");
     }
 }
