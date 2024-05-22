@@ -98,9 +98,9 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- Navbar normal -->
     <nav class="nav">
         <div class='logo'>
-            <a style="text-decoration: none; height: 100%;" href="./">
+            <div style="text-decoration: none; height: 100%;" >
                 <img src="../img/Logocfelargo.png" height="40rem">
-            </a>
+            </div>
         </div>
         <ul class='menu'>
             <li>

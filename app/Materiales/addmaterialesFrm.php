@@ -18,8 +18,9 @@ require("../../scripts/Materiales.php");
     <div class="fondBlanco">
         <div class="bottom-rectangle-materiales">
             <div class="text-materiales">Materiales</div>
-            <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModal();">Agregar
-                material</button>
+            <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModal();">Agregar material</button>
+            
+            <a href="index.php" class="text-inicio"><div >Ir al inicio</div></a>
         </div>
         <div class="label-container-materiales">
             <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMateriales();EstablecerPag()">
@@ -115,61 +116,61 @@ require("../../scripts/Materiales.php");
 
 
     <!-- Modal insertar material -->
-    <div class="modal modal-materiales" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content" style="border: 3px solid #008E5A;">
-                <div class="modal-header" style="border-bottom: none;">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar material</h1>
-                    <button type="button" class="fa-solid fa-xmark btnclose-materiales" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal modal-materiales fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border: 3px solid #008E5A;">
+            <div class="modal-header" style="border-bottom: none;">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar material</h1>
+                <button type="button" class="fa-solid fa-xmark btnclose-materiales" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-materiales">
+                <div class="mb-3">
+                    <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                    <input type="number" class="form-control inputLleno" id="AddidInput" onblur="javascript:CompruebaTieneAlgoInput(this)">
                 </div>
-                <div class="modal-body modal-body-materiales">
-                    <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">ID</label>
-                        <input type="number" class="form-control inputLleno" id="AddidInput" onblur="javascript:CompruebaTieneAlgoInput(this)">
-                    </div>
-                    <div class="mb-3">
-                        <label for="normaInput" class="form-label" style="color: #303030;">Norma</label>
-                        <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddnormaInput">
-                    </div>
-                    <div class="mb-3">
-                        <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción</label>
-                        <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="AdddescripcionInput" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="precioInput" class="form-label" style="color: #303030;">Precio</label>
-                        <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddprecioInput">
-                    </div>
-                    <div class="mb-3">
-                        <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddfechaPrecioInput">
-                    </div>
-                    <div class="mb-3">
-                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
-                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="AddunidadInput">
-                            <option selected value="">Seleccione una unidad</option>
-                            <option value="PZ">PZ</option>
-                            <option value="KG">KG</option>
-                            <option value="MT">MT</option>
-                            <option value="JG">JG</option>
-                            <option value="M">M</option>
-                            <option value="LT">LT</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
-                        <input type="file" class="form-control inputLleno" id="AddimagenInput" onchange="AddmostrarImagen(this)" style=" border: 3px solid #008E5A;">
-                    </div>
-                    <img id="AddimagenPreview" src="" alt="Imagen" width="200px" style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
+                <div class="mb-3">
+                    <label for="normaInput" class="form-label" style="color: #303030;">Norma</label>
+                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddnormaInput">
                 </div>
-                <div class="modal-footer modal-footer-materiales">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                <div class="mb-3">
+                    <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción</label>
+                    <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="AdddescripcionInput" rows="3"></textarea>
                 </div>
+                <div class="mb-3">
+                    <label for="precioInput" class="form-label" style="color: #303030;">Precio</label>
+                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddprecioInput">
+                </div>
+                <div class="mb-3">
+                    <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddfechaPrecioInput">
+                </div>
+                <div class="mb-3">
+                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="AddunidadInput">
+                        <option selected value="">Seleccione una unidad</option>
+                        <option value="PZ">PZ</option>
+                        <option value="KG">KG</option>
+                        <option value="MT">MT</option>
+                        <option value="JG">JG</option>
+                        <option value="M">M</option>
+                        <option value="LT">LT</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
+                    <input type="file" class="form-control inputLleno" id="AddimagenInput" onchange="AddmostrarImagen(this)" style="border: 3px solid #008E5A;">
+                </div>
+                <img id="AddimagenPreview" src="" alt="Imagen" width="200px" style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
+            </div>
+            <div class="modal-footer modal-footer-materiales">
+                <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Modal modificar Material-->
-    <div class="modal fade modal-materiales" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade modal-materiales fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content" style="border: 3px solid #008E5A;">
                 <div class="modal-header" style="border-bottom: none;">

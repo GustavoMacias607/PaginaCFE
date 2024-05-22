@@ -11,9 +11,8 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco">
     <div class="bottom-rectangle-usuarios">
         <div class="text-usuarios">Usuarios</div>
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:AddlimpiarModalUsuario();">Agregar
-            usuario</button>
+        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModalUsuario();">Agregar usuario</button>
+        <a href="index.php" class="text-inicio"><div >Ir al inicio</div></a>
     </div>
     <div class="label-container-usuarios">
         <input type="text" placeholder="Buscar" id="searchInputUsuarios" oninput="GetUsuario();EstablecerPag()">
@@ -99,11 +98,10 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <!-- Modal insertar usuario -->
-<div class="modal modal-usuarios" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal modal-usuarios fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: 2px solid #008E5A;">
+            <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar usuario</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -141,9 +139,9 @@ if (!isset($_SESSION['idusuario'])) {
                         <option value="Constructor">Constructor</option>
                     </select>
                 </div>
-                <div class="modal-footer-usuarios" style="color: none">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddUsuarioValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                <div class="modal-footer modal-footer-usuarios">
+                    <button type="button" class="btn btn-primary"  style="background-color: #008E5A; border-color: #008E5A;" 
+                    onclick="javascript:AddUsuarioValidar();">Guardar</button>
                 </div>
             </div>
         </div>
@@ -151,11 +149,12 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <!-- Modal modificar Usuario-->
-<div class="modal fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal modal-usuarios fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: 2px solid #008E5A;">
+            <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar usuario</h1>
+                <button type="button" class="fa-solid fa-xmark btnclose-usuarios" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-usuarios">
                 <input type="text" class="form-control " id="UpUsuAnterior" style="border: 3px solid #008E5A;">
@@ -191,7 +190,7 @@ if (!isset($_SESSION['idusuario'])) {
                         onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
                 </div>
             </div>
-            <div class=" modal-footer" style="color: none">
+            <div class=" modal-footer modal-footer-usuarios">
                 <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
                     onclick="javascript:UpdUsuarioValidar()">Guardar</button>
             </div>
