@@ -49,7 +49,7 @@ body {
 }
 
 /* Estilos para el titulo volver a inicio */
-.text-inicio{
+.text-inicio {
   text-decoration: none;
   position: static;
   font-family: "LatoBold", sans-serif;
@@ -60,7 +60,7 @@ body {
   margin-left: auto;
 }
 
-.text-inicio:hover{
+.text-inicio:hover {
   color: #ffffff;
 }
 
@@ -110,7 +110,7 @@ body {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
-} 
+}
 
 .btn-agregar-material:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
@@ -240,6 +240,10 @@ body {
   width: 93%;
 }
 
+.coloresIcono {
+  color: #858585;
+  font-size: 1.3rem;
+}
 .imaCuadro {
   color: #008e5a;
   background-color: #008e5a;
@@ -285,7 +289,7 @@ body {
   justify-content: space-between;
   padding: 0 2vw 0 2vw;
   align-items: center;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   width: 100%;
 }
 .pagination {

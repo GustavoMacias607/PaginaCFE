@@ -106,13 +106,28 @@ function obtenerTotalPaginas(totalDatos, tamanoPagina) {
 //Metodo para hacer visible las acciones de la fila
 //Recibe la fila
 function mostrarValores(fila) {
-    fila.getElementsByClassName('valores')[0].style.display = 'flex';
+    //fila.getElementsByClassName('valores')[0].style.display = 'flex';
+
+    const elementosColoresIcono = fila.querySelectorAll('.coloresIcono');
+
+    // Itera sobre cada elemento y cambia su estilo de color
+    elementosColoresIcono.forEach(elemento => {
+        elemento.style.color = "#008e5a";
+    });
+    //fila.('coloresIcono')[0.].style.color = "#858585";
 }
 
 //Metodo para oculas las acciones de la fila
 //Recibe la fila
 function ocultarValores(fila) {
-    fila.getElementsByClassName('valores')[0].style.display = 'none';
+    //fila.getElementsByClassName('valores')[0].style.display = 'none';
+    const elementosColoresIcono = fila.querySelectorAll('.coloresIcono');
+
+    // Itera sobre cada elemento y cambia su estilo de color
+    elementosColoresIcono.forEach(elemento => {
+        elemento.style.color = "#858585";
+    });
+
 }
 
 // Metodo que comprueba si el campo contiene un dato

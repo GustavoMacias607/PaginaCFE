@@ -408,16 +408,20 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
             <td>${(!material.fechaprecio == "") ? material.fechaprecio : "---"}</td>
             <td>${(!material.unidad == "") ? material.unidad : "---"}</td>
             <td class="estatus">
-            <div style="display: flex; justify-content: space-around; align-items: center;">
-            <div class="miDiv imaCuadro">
-                <img class="imagenPreview" src="../Materiales/118" >
-            </div>
-        </div>
-        <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
-            <img class=" miImagen" style="cursor: pointer;" src="../img/imageviewgreen_24px.png" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)">
-                <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')">
-                <img style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})" src="${material.estatus == 1 ? '../img/checkedgreen_24px.png' : '../img/uncheckedgreen_24px.png'}" alt="Checked">
-                </div>
+                <div style="display: flex; justify-content: space-around; align-items: center;">
+                    <div class="miDiv imaCuadro">
+                        <img class="imagenPreview" src="../Materiales/118" >
+                    </div>
+                    </div>
+                        <div class="" style="display: flex; justify-content: space-around; align-items: center; ">
+                            <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')"></i>
+                            ${material.estatus == 1 ?
+                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})"></i>` :
+                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})"></i>`
+            }
+                        
+                        </div>
                 </div>
             </td>   
         `;

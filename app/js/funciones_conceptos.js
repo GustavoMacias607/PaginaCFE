@@ -375,9 +375,13 @@ function mostrarDatosEnTablaConcepto(datos, paginaActual, tamanoPagina) {
             <td>${(!concepto.plazo == "") ? concepto.plazo : "---"}</td>
             <td>${(!concepto.unidad == "") ? concepto.unidad : "---"}</td>
             <td class="estatus">
-                <div class="valores" style="display: none; justify-content: space-around; align-items: center;">
-                <img style="cursor: pointer;" src="../img/edit_rowgreen_24px.png" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${concepto.idconcepto},'${concepto.nombre}','${concepto.tipo}',${concepto.plazo},'${concepto.unidad}')">
-                    <img style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})" src="${concepto.estatus == 1 ? '../img/checkedgreen_24px.png' : '../img/uncheckedgreen_24px.png'}" alt="Checked">
+                <div class="" style="display: flex; justify-content: space-around; align-items: center;">
+                <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${concepto.idconcepto},'${concepto.nombre}','${concepto.tipo}',${concepto.plazo},'${concepto.unidad}')"></i>
+                ${concepto.estatus == 1 ?
+                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})"></i>` :
+                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})"></i>`
+            }
+                   
                 </div>
             </td>   
         `;
