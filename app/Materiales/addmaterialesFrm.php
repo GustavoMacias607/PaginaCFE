@@ -21,7 +21,7 @@ require("../../scripts/Materiales.php");
             <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
                 onclick="javascript:AddlimpiarModal();">Agregar material</button>
 
-            <a href="index.php" class="text-inicio">
+            <a href="index.php" class="text-inicio-materiales">
                 <div>Ir al inicio</div>
             </a>
         </div>
@@ -136,23 +136,24 @@ require("../../scripts/Materiales.php");
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body modal-body-materiales">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                     <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                        <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                         <input type="number" class="form-control inputLleno" id="AddidInput"
                             onblur="javascript:CompruebaTieneAlgoInput(this)">
                     </div>
                     <div class="mb-3">
-                        <label for="normaInput" class="form-label" style="color: #303030;">Norma</label>
+                        <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
                         <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                             class="form-control inputLleno" id="AddnormaInput">
                     </div>
                     <div class="mb-3">
-                        <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción</label>
+                        <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción*</label>
                         <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                             id="AdddescripcionInput" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="precioInput" class="form-label" style="color: #303030;">Precio</label>
+                        <label for="precioInput" class="form-label" style="color: #303030;">Precio*</label>
                         <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                             class="form-control inputLleno" id="AddprecioInput">
                     </div>
@@ -162,7 +163,7 @@ require("../../scripts/Materiales.php");
                             class="form-control inputLleno" id="AddfechaPrecioInput">
                     </div>
                     <div class="mb-3">
-                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                         <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                             id="AddunidadInput">
                             <option selected value="">Seleccione una unidad</option>
@@ -201,24 +202,25 @@ require("../../scripts/Materiales.php");
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                     <input type="text" class="form-control d-none" id="idAnterior" style="border: 3px solid #008E5A;">
                     <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                        <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                         <input type="number" class="form-control inputLleno "
                             onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdidInput">
                     </div>
                     <div class="mb-3">
-                        <label for="normaInput" class="form-label" style="color: #303030;">Norma</label>
+                        <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
                         <input type="text" class="form-control inputLleno"
                             onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnormaInput">
                     </div>
                     <div class="mb-3">
-                        <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción</label>
+                        <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción*</label>
                         <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                             id="UpddescripcionInput" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="precioInput" class="form-label" style="color: #303030;">Precio</label>
+                        <label for="precioInput" class="form-label" style="color: #303030;">Precio*</label>
                         <input type="number" class="form-control inputLleno"
                             onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdprecioInput">
                     </div>

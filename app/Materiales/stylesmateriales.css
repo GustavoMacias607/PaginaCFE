@@ -49,7 +49,7 @@ body {
 }
 
 /* Estilos para el titulo volver a inicio */
-.text-inicio {
+.text-inicio-materiales {
   text-decoration: none;
   position: static;
   font-family: "LatoBold", sans-serif;
@@ -60,7 +60,7 @@ body {
   margin-left: auto;
 }
 
-.text-inicio:hover {
+.text-inicio-materiales:hover {
   color: #ffffff;
 }
 

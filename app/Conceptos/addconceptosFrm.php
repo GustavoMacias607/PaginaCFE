@@ -15,6 +15,9 @@ if (!isset($_SESSION['idusuario'])) {
         <button type="button" class="btn btn-agregar-conceptos" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalConcepto();">Agregar
             concepto</button>
+            <a href="index.php" class="text-inicio-conceptos">
+                <div>Ir al inicio</div>
+            </a>
     </div>
     <div class=" label-container-conceptos">
         <input type="text" placeholder="Buscar" id="searchInput" oninput="GetConcepto();EstablecerPag()">
@@ -25,10 +28,7 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- Paginacion  -->
     <div class="pagRegistrosconceptos">
         <nav class="pSeccion">
-            <ul class="pagination" id="pagination-list">
-                <!-- Aquí se agregarán dinámicamente los enlaces de página -->
-                <li class="page-item active"></li>
-            </ul>
+            
             <div class="cantregconceptos">
                 <div class="text">Mostrar</div>
                 <select class="cantregistrosconceptos" name="" id="cantRegistros"
@@ -40,6 +40,12 @@ if (!isset($_SESSION['idusuario'])) {
                 </select>
                 <div class="text">Registros </div>
             </div>
+
+            <ul class="pagination" id="pagination-list">
+                <!-- Aquí se agregarán dinámicamente los enlaces de página -->
+                <li class="page-item active"></li>
+            </ul>
+            
         </nav>
         <div class="toggle-estatus-conceptos">
             <div class="text">Estatus</div>
@@ -127,19 +133,19 @@ if (!isset($_SESSION['idusuario'])) {
                     aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-conceptos">
-
+            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno" id="AddidInputConcepto"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('Add');">
                 </div>
                 <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre</label>
+                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
                     <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddnombreInputConcepto">
                 </div>
                 <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Tipo</label>
+                    <label for="unidadInput" class="form-label" style="color: #303030;">Tipo*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AddtipoInputConcepto">
                         <option value="" selected>Seleccciona un tipo</option>
@@ -156,12 +162,12 @@ if (!isset($_SESSION['idusuario'])) {
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Plazo</label>
+                    <label for="precioInput" class="form-label" style="color: #303030;">Plazo*</label>
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddplazoInputConcepto">
                 </div>
                 <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
+                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AddunidadInputConcepto">
                         <option selected value="">Seleccione una unidad</option>
@@ -189,15 +195,16 @@ if (!isset($_SESSION['idusuario'])) {
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
+            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
 
                 <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
                 </div>
                 <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre</label>
+                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
                     <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdnombreInput">
                 </div>
@@ -219,7 +226,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Plazo</label>
+                    <label for="precioInput" class="form-label" style="color: #303030;">Plazo*</label>
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdPlazoInput">
                 </div>
