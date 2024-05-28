@@ -260,7 +260,7 @@ body {
     93% 100%,
     0 100%
   );
-
+  z-index: 1000;
   position: absolute;
   @media (max-width: 700px) {
     transform: translate(0, 9%);
@@ -275,7 +275,7 @@ body {
     left: auto;
   }
   @media (min-width: 1192px) {
-    transform: translate(-14rem, 5%);
+    transform: translate(-14.7rem, 5%);
     width: 20rem;
     height: 10rem;
     left: auto;

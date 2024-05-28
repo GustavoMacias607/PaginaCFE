@@ -11,19 +11,25 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco">
     <div class="bottom-rectangle-usuarios">
         <div class="text-usuarios">Usuarios</div>
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal" onclick="javascript:AddlimpiarModalUsuario();">Agregar usuario</button>
-        <a href="index.php" class="text-inicio-usuarios"><div >Ir al inicio</div></a>
+        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModalUsuario();">Agregar usuario</button>
+        <a href="index.php" class="text-inicio-usuarios">
+            <div>Ir al inicio</div>
+        </a>
     </div>
     <div class="label-container-usuarios">
-        <input type="text" placeholder="Buscar" id="searchInputUsuarios" oninput="GetUsuario();EstablecerPag()">
-        <i class="fas fa-search icon-usuarios" id="searchIcon"></i>
+        <form autocomplete="off">
+            <input type="text" placeholder="Buscar" id="searchInputUsuarios" name="no-autocomplete" autocomplete="off"
+                oninput="GetUsuario();EstablecerPag()">
+            <i class="fas fa-search icon-usuarios" id="searchIcon"></i>
+        </form>
     </div>
 
 
     <!-- Paginacion  -->
     <div class="pagRegistrosusuarios">
         <nav class="pSeccion">
-            
+
 
             <div class="cantregusuarios">
                 <div class="text">Mostrar</div>
@@ -101,105 +107,116 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <!-- Modal insertar usuario -->
-<div class="modal modal-usuarios fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal modal-usuarios fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar usuario</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <div class="mb-3">
-                    <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddnombreInput">
+            <form name="no-autocomplete" autocomplete="off">
+                <div class="modal-body">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                    <div class="mb-3">
+                        <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
+                        <input type="text" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddnombreInput">
+                    </div>
+                    <div class="mb-3">
+                        <label for="AddusuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
+                        <input class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('Add');"
+                            id="AddusuarioInput" rows="3">
+                    </div>
+                    <div class="mb-3">
+                        <label for="AddpassInput" class="form-label" style="color: #303030;">Contraseña*</label>
+                        <input type="password" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddpassInput" rows="3">
+                    </div>
+                    <div class="mb-3">
+                        <label for="passconfirmInput" class="form-label" style="color: #303030;">Confirme su
+                            contraseña*</label>
+                        <input type="password" class="form-control inputLleno" id="AddConfirpassInput"
+                            onblur="javascript:ComprobarContrasenas();javascript:CompruebaTieneAlgoInputUsuario(this)"
+                            rows="3">
+                    </div>
+                    <div class="mb-3">
+                        <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
+                            id="AddrolInput">
+                            <option selected value="">Selecciona una Opcion</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Invitado">Invitado</option>
+                            <option value="Constructor">Constructor</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer modal-footer-usuarios">
+                        <button type="button" class="btn btn-primary"
+                            style="background-color: #008E5A; border-color: #008E5A;"
+                            onclick="javascript:AddUsuarioValidar();">Guardar</button>
+                    </div>
+
                 </div>
-                <div class="mb-3">
-                    <label for="AddusuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
-                    <input class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('Add');"
-                        id="AddusuarioInput" rows="3">
-                </div>
-                <div class="mb-3">
-                    <label for="AddpassInput" class="form-label" style="color: #303030;">Contraseña*</label>
-                    <input type="password" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddpassInput" rows="3">
-                </div>
-                <div class="mb-3">
-                    <label for="passconfirmInput" class="form-label" style="color: #303030;">Confirme su
-                        contraseña*</label>
-                    <input type="password" class="form-control inputLleno" id="AddConfirpassInput"
-                        onblur="javascript:ComprobarContrasenas();javascript:CompruebaTieneAlgoInputUsuario(this)"
-                        rows="3">
-                </div>
-                <div class="mb-3">
-                    <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
-                        id="AddrolInput">
-                        <option selected value="">Selecciona una Opcion</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Invitado">Invitado</option>
-                        <option value="Constructor">Constructor</option>
-                    </select>
-                </div>
-                <div class="modal-footer modal-footer-usuarios">
-                    <button type="button" class="btn btn-primary"  style="background-color: #008E5A; border-color: #008E5A;" 
-                    onclick="javascript:AddUsuarioValidar();">Guardar</button>
-                </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
 
 <!-- Modal modificar Usuario-->
-<div class="modal modal-usuarios fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal modal-usuarios fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar usuario</h1>
-                
-                <button type="button" class="fa-solid fa-xmark btnclose-usuarios" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <button type="button" class="fa-solid fa-xmark btnclose-usuarios" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
-            <div class="modal-body modal-body-usuarios">
-            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <input type="text" class="form-control d-none" id="UpUsuAnterior" style="border: 3px solid #008E5A;">
-                <div class="mb-3 d-none">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID</label>
-                    <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
+            <form autocomplete="off">
+                <div class="modal-body modal-body-usuarios">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                    <input type="text" class="form-control d-none" id="UpUsuAnterior"
+                        style="border: 3px solid #008E5A;">
+                    <div class="mb-3 d-none">
+                        <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                        <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
+                        <input type="text" class="form-control inputLleno" id="UpdnombreInput"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                    </div>
+                    <div class="mb-3">
+                        <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
+                        <input class="form-control inputLleno" id="UpdusuarioInput" rows="3"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('upd');">
+                    </div>
+                    <div class="mb-3">
+                        <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
+                        <select class="form-select inputLleno" id="UpdrolInput"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                            <option selected value="">Selecciona una Opcion</option>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Invitado">Invitado</option>
+                            <option value="Constructor">Constructor</option>
+                        </select>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <label for="passInput" class="form-label" style="color: #303030;">Nueva contraseña para el
+                            usuario</label>
+                        <input type="password" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" class="form-control inputLleno" id="UpdnombreInput"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                <div class=" modal-footer modal-footer-usuarios">
+                    <button type="button" class="btn btn-primary"
+                        style="background-color: #008E5A; border-color: #008E5A;"
+                        onclick="javascript:UpdUsuarioValidar()">Guardar</button>
                 </div>
-                <div class="mb-3">
-                    <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
-                    <input class="form-control inputLleno" id="UpdusuarioInput" rows="3"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('upd');">
-                </div>
-                <div class="mb-3">
-                    <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
-                    <select class="form-select inputLleno" id="UpdrolInput"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
-                        <option selected value="">Selecciona una Opcion</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Invitado">Invitado</option>
-                        <option value="Constructor">Constructor</option>
-                    </select>
-                </div>
-                <hr>
-                <div class="mb-3">
-                    <label for="passInput" class="form-label" style="color: #303030;">Nueva contraseña para el
-                        usuario</label>
-                    <input type="password" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
-                </div>
-            </div>
-            <div class=" modal-footer modal-footer-usuarios">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdUsuarioValidar()">Guardar</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -263,7 +280,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 <!-- Modal Mensaje -->
 <div class="centrarMsg modMsgEsconder" id="modalMsgUsuarios">
-    <div class="modMsgUsuario" id="modUsu">
+    <div class="modMsg" id="modUsu">
         <div class="modImg">
             <img id="imgPic" src="../img/imgPalomita.png" alt="Mensaje" height="100%">
         </div>

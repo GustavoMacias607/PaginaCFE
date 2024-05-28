@@ -124,7 +124,7 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
             <li class="btnOpciones">
                 <div style="display: flex; justify-content: end;">
-                    <i style="cursor: pointer; font-size: 1.5rem; margin-top: 5px;" onclick="mostrarOp()" class="fas fa-bars"></i>
+                    <i id="toggleButton" style="cursor: pointer; font-size: 1.5rem; margin-top: 5px;" onclick="mostrarOp()" class="fas fa-bars"></i>
                 </div>
                 <ul id="opc" class='MenuOpciones'>
                     <a class="tex opcionesMenu" onclick="javascript:incioUsuario(); EstablecerPag(); preciona(this)" href="javascript:opcion('usuarios');">Usuarios</a>
@@ -162,6 +162,7 @@ if (!isset($_SESSION['idusuario'])) {
             }
         }
 
+
         function preciona(valor) {
             let opciones = document.querySelectorAll(".opcionesMenu");
             opciones.forEach(opcion => {
@@ -178,24 +179,24 @@ if (!isset($_SESSION['idusuario'])) {
                 menu.classList.add("esconder");
             }
         }
-    </script>
-    <!-- 
-    <script>
-        window.addEventListener('resize', function() {
-            const logoImage = document.getElementById('logoImage');
-            const windowWidth = window.innerWidth;
-            const originalWidth = logoImage.naturalWidth;
 
-            if (windowWidth < originalWidth) {
-                logoImage.src =
-                    '../img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-                logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
-            } else {
-                logoImage.src = '../img/Logocfelargo.png'; // Vuelve a la imagen original
-                logoImage.alt = 'Logo'; // Restaura el atributo alt
+
+        document.addEventListener('click', function(event) {
+            const opc = document.getElementById('opc');
+
+            // Verifica si el clic ocurrió fuera del div
+            if (opc.classList.contains("MenuOpcionesMostrar")) {
+                if (!opc.contains(event.target)) {
+                    opc.classList.remove("MenuOpcionesMostrar");
+                }
             }
         });
-    </script> -->
+
+        const toggleButton = document.getElementById('toggleButton');
+        toggleButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Detiene la propagación del evento
+        });
+    </script>
 </body>
 
 </html>

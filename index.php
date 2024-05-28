@@ -19,13 +19,15 @@
                 style="width: 150px; height: auto; margin-bottom: 30px;">
             <div class="mb-3 input-group">
                 <span class="input-group-text custom-icon"><i class="fas fa-user green-icon"></i></span>
-                <input type="text" name="usuario" class="form-control form-control-login" id="Usuario">
+                <input type="text" name="usuario" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                    class="form-control  inputLleno form-control-login" id="Usuario">
             </div>
             <div class="mb-3 input-group">
                 <span class="input-group-text custom-icon"><i class="fas fa-lock green-icon"></i></span>
-                <input type="password" class="form-control form-control-login" id="Password">
+                <input type="password" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                    class="form-control inputLleno form-control-login" id="Password">
             </div>
-            <button type="button" id="btn_submit" class="btn btn-outline-light">Ingresar</button>
+            <button type="button" onclick="logueo()" id="btn_submit" class="btn btn-outline-light">Ingresar</button>
         </form>
         <li class="open_submenu">
 
@@ -62,52 +64,74 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/code.jquery.com_jquery-3.7.1.min.js"></script>
     <Script type="text/javascript">
-    $(document).ready(function() {
-        $('#btn_submit').click(function() {
-            try {
-                const datos = {};
-                const form = document.querySelector('#form');
-                for (let i = 0; i < form.elements.length; i++) {
-                    if (form.elements[i].type == "text" || form.elements[i].type == "password") {
-                        if (form.elements[i].value == "") {
-                            alert("El Campo " + form.elements[i].id + " esta Vacio")
-                            form.elements[i].focus()
-                            return;
-                        } else {
-                            if (form.elements[i].name == "usuario") {
-                                datos.usuario = form.elements[i].value
-                            } else {
-                                datos.password = form.elements[i].value
-                            }
-                        }
-                    }
-                }
-                const json = JSON.stringify(datos);
-                console.log(json)
-                $.post("ws/wsLogin.php", json, (responseText, status) => {
-                    try {
-                        console.log(responseText);
-                        if (status == "success") {
-                            res = JSON.parse(responseText);
-                            if (res.estado == "OK") {
+    function CompruebaTieneAlgoInput(input) {
+        if (input.value) {
+            input.classList.add("inputLleno");
+            input.classList.remove("inputVacio");
+            input.placeholder = ""
+        }
+    }
 
-                                window.location.href = "app/index.php";
-                            } else {
-                                mensajePantallaLogIn(res.estado, false);
-                            }
-                        } else {
-                            console.log(status);
-                        }
-                    } catch (error) {
-                        console.log(error);
-                    }
-                });
-            } catch (error) {
-                console.log(error);
+
+
+    function logueo() {
+
+
+        try {
+            let vacio = false;
+            let PrimerValorVacio;
+            const datos = {};
+            let usuario = document.querySelector('#Usuario');
+            if (usuario.value == "") {
+                usuario.classList.add("inputVacio");
+                usuario.placeholder = "Requerido el usuario"
+                vacio = true;
+                PrimerValorVacio = usuario;
             }
-        });
+            datos.usuario = usuario.value;
 
-    });
+            let password = document.querySelector('#Password');
+            if (password.value == "") {
+                password.classList.add("inputVacio");
+                password.placeholder = "Requerida la contraseña"
+                vacio = true;
+                if (!PrimerValorVacio) {
+                    PrimerValorVacio = password;
+                }
+
+            }
+            datos.password = password.value;
+
+            if (vacio) {
+                PrimerValorVacio.focus();
+                return;
+            }
+            const json = JSON.stringify(datos);
+            console.log(json)
+            $.post("ws/wsLogin.php", json, (responseText, status) => {
+                try {
+                    console.log(responseText);
+                    if (status == "success") {
+                        res = JSON.parse(responseText);
+                        if (res.estado == "OK") {
+
+                            window.location.href = "app/index.php";
+                        } else {
+                            mensajePantallaLogIn(res.estado, false);
+                        }
+                    } else {
+                        console.log(status);
+                    }
+                } catch (error) {
+                    console.log(error);
+                }
+            });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
 
 
     var subMenu = document.querySelector('.submenu');

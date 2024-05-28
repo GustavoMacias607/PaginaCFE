@@ -219,7 +219,7 @@ function checkUsuario(modal) {
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
-                console.log(responseText);
+
                 let resp = JSON.parse(responseText);
                 comprobarExiste(resp.estado, UsuVali)
             } else {
@@ -337,7 +337,7 @@ function GetUsuario() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     //Llamar a la función para mostrar los datos en la tabla
-                    console.log(responseText)
+
                     mostrarDatosEnTablaUsuario(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
@@ -384,15 +384,12 @@ function mostrarDatosEnTablaUsuario(datos, paginaActual, tamanoPagina) {
             <td>${(!usuario.rol == "") ? usuario.rol : "---"}</td>
             <td class="estatus">
                 <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${usuario.idusuario},'${usuario.nombre}','${usuario.usuario}','${usuario.rol}')"></i>
+                ${usuario.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${usuario.idusuario},'${usuario.nombre}','${usuario.usuario}','${usuario.rol}')"></i>
+                `: ``}
                 ${usuario.estatus == 1 ?
                 `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1Usuario(); AsignarValores(${usuario.idusuario},${usuario.estatus})"></i>` :
                 `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1Usuario(); AsignarValores(${usuario.idusuario},${usuario.estatus})"></i>`
-            }
-
-
-
-                 
+            }  
                 </div>
             </td>   
         `;

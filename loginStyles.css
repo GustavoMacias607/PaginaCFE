@@ -57,7 +57,6 @@ body {
   color: #303030; /* Color negro */
   border: none; /* Eliminar borde */
   border-radius: 0; /* Eliminar bordes redondeados */
-  border-bottom: 3px solid #008e5a; /* Agregar una línea inferior */
 }
 .input-group-text {
   border: none; /* Eliminar contorno del icono */
@@ -177,4 +176,16 @@ a:hover {
   font-weight: 800;
   padding: 5px;
   height: 40%;
+}
+.inputLleno {
+  border-bottom: 3px solid #008e5a;
+}
+.inputVacio {
+  border-bottom: 3px solid red;
+}
+.inputVacio::placeholder {
+  color: red;
+}
+.inputVacio:focus {
+  border-bottom: 3px solid red;
 }

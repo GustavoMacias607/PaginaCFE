@@ -15,9 +15,9 @@ if (!isset($_SESSION['idusuario'])) {
         <button type="button" class="btn btn-agregar-conceptos" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalConcepto();">Agregar
             concepto</button>
-            <a href="index.php" class="text-inicio-conceptos">
-                <div>Ir al inicio</div>
-            </a>
+        <a href="index.php" class="text-inicio-conceptos">
+            <div>Ir al inicio</div>
+        </a>
     </div>
     <div class=" label-container-conceptos">
         <input type="text" placeholder="Buscar" id="searchInput" oninput="GetConcepto();EstablecerPag()">
@@ -28,7 +28,7 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- Paginacion  -->
     <div class="pagRegistrosconceptos">
         <nav class="pSeccion">
-            
+
             <div class="cantregconceptos">
                 <div class="text">Mostrar</div>
                 <select class="cantregistrosconceptos" name="" id="cantRegistros"
@@ -45,7 +45,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                 <li class="page-item active"></li>
             </ul>
-            
+
         </nav>
         <div class="toggle-estatus-conceptos">
             <div class="text">Estatus</div>
@@ -133,7 +133,7 @@ if (!isset($_SESSION['idusuario'])) {
                     aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-conceptos">
-            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno" id="AddidInputConcepto"
@@ -195,7 +195,7 @@ if (!isset($_SESSION['idusuario'])) {
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
 
                 <div class="mb-3">
@@ -308,12 +308,12 @@ if (!isset($_SESSION['idusuario'])) {
 
 <!-- Modal Mensaje -->
 <div class="centrarMsg modMsgEsconder" id="modalMsgUsuarios">
-    <div class="modMsgUsuario" id="modUsu">
+    <div class="modMsg" id="modUsu">
         <div class="modImg">
             <img id="imgPic" src="../img/imgPalomita.png" alt="Mensaje" height="100%">
         </div>
         <div class="modCon">
-            <p id="modParrafo"></p>
+            <p id="modParrafo">Hola</p>
         </div>
     </div>
 </div>

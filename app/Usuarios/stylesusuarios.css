@@ -49,7 +49,7 @@ body {
 }
 
 /* Estilos para el titulo volver a inicio */
-.text-inicio-usuarios{
+.text-inicio-usuarios {
   text-decoration: none;
   position: static;
   font-family: "LatoBold", sans-serif;
@@ -60,7 +60,7 @@ body {
   margin-left: auto;
 }
 
-.text-inicio-usuarios:hover{
+.text-inicio-usuarios:hover {
   color: #ffffff;
 }
 
@@ -110,7 +110,7 @@ body {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
-} 
+}
 
 .btn-agregar-usuarios:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
@@ -233,51 +233,6 @@ body {
   display: flex;
 }
 
-.imagenPreview {
-  background-color: #008e5a;
-  border: #008e5a solid 0.2rem;
-  height: 100%;
-  width: 93%;
-}
-
-.imaCuadro {
-  color: #008e5a;
-  background-color: #008e5a;
-  width: 10rem;
-  height: 5rem;
-  top: auto;
-  display: none;
-  clip-path: polygon(
-    0% 0%,
-    93% 0,
-    93% 39%,
-    100% 52%,
-    93% 63%,
-    93% 100%,
-    0 100%
-  );
-
-  position: absolute;
-  @media (max-width: 700px) {
-    transform: translate(0, 9%);
-    width: 10rem;
-    height: 5rem;
-    left: 50vw;
-  }
-  @media (min-width: 700px) {
-    transform: translate(-11.5rem, 5%);
-    width: 15rem;
-    height: 7.5rem;
-    left: auto;
-  }
-  @media (min-width: 1192px) {
-    transform: translate(-14rem, 5%);
-    width: 20rem;
-    height: 10rem;
-    left: auto;
-  }
-}
-
 .pagRegistrosusuarios {
   font-family: "LatoBold", sans-serif;
   display: flex;
@@ -285,7 +240,7 @@ body {
   justify-content: space-between;
   padding: 0 2vw 0 2vw;
   align-items: center;
-  margin-top: .2rem;
+  margin-top: 0.2rem;
   width: 100%;
 }
 .pagination {

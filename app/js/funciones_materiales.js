@@ -382,8 +382,11 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
         actualizarPaginacion(datos, paginaActual, tamanoPagina);
         return;
     }
+    let mostrarPirmero = true;
     let startIndex = (paginaActual - 1) * tamanoPagina;
     let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
+
+
     for (let i = startIndex; i < endIndex; i++) {
         let material = datos[i];
         let fila = document.createElement("tr");
@@ -400,6 +403,7 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
             ? formatoMXN.format(material.precio)
             : "---";
         // Agregar las celdas a la fila
+
         fila.innerHTML = `
             <td class="Code">${material.codigo}</td>
             <td>${(!material.norma == "") ? material.norma : "---"}</td>
@@ -408,19 +412,19 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
             <td>${(!material.fechaprecio == "") ? material.fechaprecio : "---"}</td>
             <td>${(!material.unidad == "") ? material.unidad : "---"}</td>
             <td class="estatus">
-                <div style="display: flex; justify-content: space-around; align-items: center;">
+                <div style="display: flex; justify-content: space-around; align-items: center; ">
                     <div class="miDiv imaCuadro">
                         <img class="imagenPreview" src="../Materiales/118" >
                     </div>
-                    </div>
+                </div>
                         <div class="" style="display: flex; justify-content: space-around; align-items: center; ">
                             <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
-                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')"></i>
+                            ${material.estatus == 1 ? `                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')"></i>` : ``}
                             ${material.estatus == 1 ?
                 `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})"></i>` :
                 `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})"></i>`
             }
-                        
+
                         </div>
                 </div>
             </td>   
