@@ -11,25 +11,25 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancomanodeobra">
     <div class="bottom-rectangle-manodeobra">
         <div class="text-manodeobra">Mano de obra</div>
-        <button type="button" class="btn btn-agregar-manodeobra" data-bs-toggle="modal"
-            data-bs-target="#AgregarModal">Agregar mano de obra</button>
-            <a href="index.php" class="text-inicio-manodeobra">
+        <button type="button" class="btn btn-agregar-manodeobra" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModalManoObra();">Agregar mano de obra</button>
+        <a href="index.php" class="text-inicio-manodeobra">
             <div>Ir al inicio</div>
         </a>
     </div>
     <div class=" label-container-manodeobra">
-        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetManodeobra();EstablecerPag()">
+        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetManoObra();EstablecerPag()">
         <i class="fas fa-search icon-manodeobra" id="searchIcon"></i>
     </div>
 
-<!-- Paginacion  -->
-<div class="pagRegistrosmanodeobra">
+    <!-- Paginacion  -->
+    <div class="pagRegistrosmanodeobra">
         <nav class="pSeccion">
 
             <div class="cantregmanodeobra">
                 <div class="text">Mostrar</div>
                 <select class="cantregistrosmanodeobra" name="" id="cantRegistros"
-                    onchange="javascript:cambiarTamanoManodeobra()">
+                    onchange="javascript:cambiarTamanoManoObra()">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -49,7 +49,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
                 <img id="ValEstatus" src="../img/toggle_on_35px.png"
-                    onclick="javascript:valStatusManodeobra(); javascript:GetManodeobra(); javascript:EstablecerPag()">
+                    onclick="javascript:valStatusManoObra(); javascript:GetManoObra(); javascript:EstablecerPag()">
             </div>
         </div>
     </div>
@@ -69,23 +69,23 @@ if (!isset($_SESSION['idusuario'])) {
                     <th class=" col-1" style="width: 250px;">
                         <div class="d-flex align-items-center">
                             <span>Categoría: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectTipo"
-                                onchange="javacript:GetManodeobra();EstablecerPag()"
+                            <select class="form-select form-select-sm ml-2" id="selectCategoria"
+                                onchange="javacript:GetManoObra();EstablecerPag()"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
-                                <option value="Ayudantegeneral">Ayudante General</option>
-                                <option value="Oficialelectricista">Oficial Electricista</option>
-                                <option value="Oficialalbanil">Oficial Albañil</option>
+                                <option value="Todo" selected>Todo</option>
+                                <option value="Ayudante General">Ayudante General</option>
+                                <option value="Oficial Electricista">Oficial Electricista</option>
+                                <option value="Oficial Albanil">Oficial Albañil</option>
                             </select>
                         </div>
                     </th>
                     <th class=" col-1" style="width: 150px;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectTipo"
-                                onchange="javacript:GetManodeobra();EstablecerPag()"
+                            <select class="form-select form-select-sm ml-2" id="selectUnidad"
+                                onchange="javacript:GetManoObra();EstablecerPag()"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
+                                <option value="Todo" selected>Todo</option>
                                 <option value="JOR">JOR</option>
                             </select>
                         </div>
@@ -129,16 +129,16 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno" id="AddidInputManodeobra"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkManodeobra('Add');">
+                        onblur="javascript:CompruebaTieneAlgoInput(this);">
                 </div>
                 <div class="mb-3">
                     <label for="categoriaInput" class="form-label" style="color: #303030;">Categoría*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AddCategoriaInputManodeobra">
                         <option value="" selected>Seleccciona una categoría</option>
-                        <option value="Ayudantegeneral">Ayudante General</option>
-                        <option value="Oficialelectricista">Oficial Electricista</option>
-                        <option value="Oficialalbanil">Oficial Albañil</option>
+                        <option value="Ayudante General">Ayudante General</option>
+                        <option value="Oficial Electricista">Oficial Electricista</option>
+                        <option value="Oficial Albanil">Oficial Albañil</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -165,7 +165,7 @@ if (!isset($_SESSION['idusuario'])) {
                         class="form-control inputLleno" id="AddrendimientoInputManodeobra">
                 </div>
                 <div class="modal-footer modal-footer-manodeobra">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddManodeobraValidar();"
+                    <button type="button" class="btn btn-primary" onclick="javascript:AddManoObraValidar();"
                         style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
@@ -185,27 +185,28 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
             <div class="modal-body">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
+                <input type="text" class="form-control d-none" id="UpdidAnteriorMano"
+                    style="border: 3px solid #008E5A;">
 
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkManodeobra('upd');" id="UpdidInput">
+                        onblur="javascript:CompruebaTieneAlgoInput(this);" id="UpdidInput">
                 </div>
                 <div class="mb-3">
                     <label for="categoriaInput" class="form-label" style="color: #303030;">Categoría*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddCategoriaInputManodeobra">
+                        id="UpdCategoriaInputManodeobra">
                         <option value="" selected>Seleccciona una categoría</option>
-                        <option value="Ayudantegeneral">Ayudante General</option>
-                        <option value="Oficialelectricista">Oficial Electricista</option>
-                        <option value="Oficialalbanil">Oficial Albañil</option>
+                        <option value="Ayudante General">Ayudante General</option>
+                        <option value="Oficial Electricista">Oficial Electricista</option>
+                        <option value="Oficial Albanil">Oficial Albañil</option>
                     </select>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddUnidadInputManodeobra">
+                        id="updUnidadInputManodeobra">
                         <option value="" selected>Seleccciona una unidad</option>
                         <option value="JOR">JOR</option>
                     </select>
@@ -228,7 +229,7 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
             <div class=" modal-footer modal-footer-manodeobra">
                 <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdManodeobraValidar()">Guardar</button>
+                    onclick="javascript:UpdManoObraValidar()">Guardar</button>
             </div>
         </div>
     </div>
@@ -243,7 +244,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Activar ésta mano de obra?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
-                    onclick="javascript:ActivarCerrarModal(); CambioEstatusManodeobra();"
+                    onclick="javascript:ActivarCerrarModal(); CambioEstatusManoObra();"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Activar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
@@ -281,7 +282,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Está
                     seguro de que desea eliminar ésta mano de obra?</h5>
-                <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusManodeobra();" class="btn"
+                <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusManoObra();" class="btn"
                     id="confirmAdditionalButton"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"

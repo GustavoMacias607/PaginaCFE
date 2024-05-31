@@ -50,7 +50,8 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="desMenu">
                     <div>
                         <button onClick="esconderMenu()" class="btnMenu">
-                            <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40" viewBox="0 0 24 24">
+                            <svg xmlns="http://www.w3.org/2000/svg" style="color: white;" width="40" height="40"
+                                viewBox="0 0 24 24">
                                 <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"></path>
                             </svg>
                         </button>
@@ -62,9 +63,11 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- Opciones navbar movil -->
     <div class="menuDesplegable esconder">
         <ul class="listaMenuDesplegable">
-            <div class="colorUser"><a href="javascript:opcion('perfilUsu');"><?= $_SESSION['nombre'] ?><i class="fa-solid fa-user"></a></i></div>
+            <div class="colorUser"><a href="javascript:opcion('perfilUsu');"><?= $_SESSION['nombre'] ?><i
+                        class="fa-solid fa-user"></a></i></div>
             <li class="NavOpc">
-                <a class="btnTituloApartado" onclick="javascript:incio(); EstablecerPag();" href="javascript:opcion('materiales');">
+                <a class="btnTituloApartado" onclick="javascript:incio(); EstablecerPag();"
+                    href="javascript:opcion('materiales');">
                     Materiales
                 </a>
                 <a class=" btnTituloApartado">
@@ -81,7 +84,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </a>
             </li>
             <li class="NavUsu">
-                <a class="btnTituloApartado" onclick="javascript:incioUsuario(); EstablecerPag()" href="javascript:opcion('usuarios');">
+                <a class="btnTituloApartado" onclick="javascript:incioUsuario(); EstablecerPag()"
+                    href="javascript:opcion('usuarios');">
                     Usuarios
                 </a>
                 <a class="btnTituloApartado" href="index.php?x=1">
@@ -103,31 +107,37 @@ if (!isset($_SESSION['idusuario'])) {
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Catalogo');">Catálogo</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);incioConcepto();" href="javascript:opcion('conceptos');">Conceptos</a>
+                <a class="opcionesMenu" onclick="preciona(this);incioConcepto();"
+                    href="javascript:opcion('conceptos');">Conceptos</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de
+                <a class="opcionesMenu" onclick="preciona(this);incioManoObra();"
+                    href="javascript:opcion('ManoObra');">Mano de
                     obra</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this);EstablecerPag();" href="javascript:opcion('materiales');">Materiales</a>
+                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this);EstablecerPag();"
+                    href="javascript:opcion('materiales');">Materiales</a>
             </li>
 
 
         </ul>
         <ul class='usuApartado'>
             <div style="display: block;">
-                <a class="opcionesMenu" href="javascript:opcion('perfilUsu');" onclick="preciona(this)"><?= $_SESSION['nombre'] ?> <i class=" fa-solid fa-user"></i></a>
+                <a class="opcionesMenu" href="javascript:opcion('perfilUsu');"
+                    onclick="preciona(this)"><?= $_SESSION['nombre'] ?> <i class=" fa-solid fa-user"></i></a>
             </div>
             <li class="btnOpciones">
                 <div style="display: flex; justify-content: end;">
-                    <i id="toggleButton" style="cursor: pointer; font-size: 1.5rem; margin-top: 5px;" onclick="mostrarOp()" class="fas fa-bars"></i>
+                    <i id="toggleButton" style="cursor: pointer; font-size: 1.5rem; margin-top: 5px;"
+                        onclick="mostrarOp()" class="fas fa-bars"></i>
                 </div>
                 <ul id="opc" class='MenuOpciones'>
-                    <a class="tex opcionesMenu" onclick="javascript:incioUsuario(); EstablecerPag(); preciona(this)" href="javascript:opcion('usuarios');">Usuarios</a>
+                    <a class="tex opcionesMenu" onclick="javascript:incioUsuario(); EstablecerPag(); preciona(this)"
+                        href="javascript:opcion('usuarios');">Usuarios</a>
                     <a class="tex" href="index.php?x=1">Cerrar sesión</a>
                 </ul>
             </li>
@@ -146,56 +156,57 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/funciones_usuarios.js"></script>
     <script src="js/funciones_materiales.js"></script>
     <script src="js/funciones_conceptos.js"></script>
+    <script src="js/funciones_ManoObra.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
     <script>
-        window.onload = function() {
-            opcion('proyecto');
-        };
+    window.onload = function() {
+        opcion('proyecto');
+    };
 
-        function mostrarOp() {
-            let opc = document.querySelector("#opc");
+    function mostrarOp() {
+        let opc = document.querySelector("#opc");
 
-            if (!opc.classList.contains("MenuOpcionesMostrar")) {
-                opc.classList.add("MenuOpcionesMostrar");
-            } else {
+        if (!opc.classList.contains("MenuOpcionesMostrar")) {
+            opc.classList.add("MenuOpcionesMostrar");
+        } else {
+            opc.classList.remove("MenuOpcionesMostrar");
+        }
+    }
+
+
+    function preciona(valor) {
+        let opciones = document.querySelectorAll(".opcionesMenu");
+        opciones.forEach(opcion => {
+            opcion.classList.remove("precionado");
+        });
+        valor.classList.add('precionado');
+    }
+
+    function esconderMenu() {
+        let menu = document.querySelector(".menuDesplegable");
+        if (menu.classList.contains("esconder")) {
+            menu.classList.remove("esconder");
+        } else {
+            menu.classList.add("esconder");
+        }
+    }
+
+
+    document.addEventListener('click', function(event) {
+        const opc = document.getElementById('opc');
+
+        // Verifica si el clic ocurrió fuera del div
+        if (opc.classList.contains("MenuOpcionesMostrar")) {
+            if (!opc.contains(event.target)) {
                 opc.classList.remove("MenuOpcionesMostrar");
             }
         }
+    });
 
-
-        function preciona(valor) {
-            let opciones = document.querySelectorAll(".opcionesMenu");
-            opciones.forEach(opcion => {
-                opcion.classList.remove("precionado");
-            });
-            valor.classList.add('precionado');
-        }
-
-        function esconderMenu() {
-            let menu = document.querySelector(".menuDesplegable");
-            if (menu.classList.contains("esconder")) {
-                menu.classList.remove("esconder");
-            } else {
-                menu.classList.add("esconder");
-            }
-        }
-
-
-        document.addEventListener('click', function(event) {
-            const opc = document.getElementById('opc');
-
-            // Verifica si el clic ocurrió fuera del div
-            if (opc.classList.contains("MenuOpcionesMostrar")) {
-                if (!opc.contains(event.target)) {
-                    opc.classList.remove("MenuOpcionesMostrar");
-                }
-            }
-        });
-
-        const toggleButton = document.getElementById('toggleButton');
-        toggleButton.addEventListener('click', function(event) {
-            event.stopPropagation(); // Detiene la propagación del evento
-        });
+    const toggleButton = document.getElementById('toggleButton');
+    toggleButton.addEventListener('click', function(event) {
+        event.stopPropagation(); // Detiene la propagación del evento
+    });
     </script>
 </body>
 
