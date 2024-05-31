@@ -12,7 +12,7 @@ body {
   font-family: "Lato", sans-serif;
 }
 
-.fondBlancoManoObra {
+.fondBlancomanodeobra {
   background-color: white;
   height: 10rem;
   width: 100%;
@@ -27,13 +27,13 @@ body {
 }
 
 /*barra superior negra*/
-.bottom-rectangle-ManoObra {
+.bottom-rectangle-manodeobra {
   background-color: #303030;
   display: flex;
   position: fixed;
   width: 100%;
   height: 60px;
-  padding: 5px 0 5px 10px;
+  padding: 5px 10px 5px 10px;
   top: 80px; /* La altura del rectángulo superior */
   z-index: 1; /* Asegura que el rectángulo esté detrás de los botones */
   @media (max-width: 1090px) {
@@ -41,15 +41,59 @@ body {
   }
 }
 
-.text-ManoObra {
+.text-manodeobra {
   font-family: "LatoBold", sans-serif;
   color: #ffffff;
   font-size: 140%;
   transform: translate(2px, 10px);
 }
 
-/* Estilos para el botón "Agregar concepto" */
-.btn-agregar-ManoObra {
+/* Estilos para el titulo volver a inicio */
+.text-inicio-manodeobra {
+  text-decoration: none;
+  position: static;
+  font-family: "LatoBold", sans-serif;
+  color: #ffffff;
+  font-size: 140%;
+  padding: 10px 2px;
+  z-index: 5000;
+  margin-left: auto;
+}
+
+.text-inicio-manodeobra:hover {
+  color: #ffffff;
+}
+
+/* Estilos para el buscador */
+.label-container-manodeobra {
+  margin: 7rem auto 0 auto;
+  width: 70vw; /* Ancho del label */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 3px solid #008e5a; /* Contorno de 3px color verde */
+  border-radius: 5px; /* Bordes redondeados */
+  @media (max-width: 1090px) {
+    margin: 4rem auto 0 auto;
+  }
+  margin-top: 70px;
+}
+.label-container-manodeobra input[type="text"] {
+  width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
+  border: none; /* Elimina el borde del input */
+  outline: none; /* Elimina el borde de enfoque */
+  padding: 3px; /* Espacio interno */
+  color: #303030; /* Color del texto */
+  font-size: 20px; /* Tamaño del texto */
+}
+.label-container-manodeobra input[type="text"]::placeholder {
+  color: #858585; /* Color del texto del placeholder */
+  font-size: 20px; /* Tamaño del texto del placeholder */
+}
+.icon-manodeobra {
+  color: #008e5a; /* Color verde */
+}
+
+/* Estilos para el botón "Agregar manodeobra" */
+.btn-agregar-manodeobra {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -62,14 +106,237 @@ body {
   transform: translate(20px); /* posicion del boton */
 }
 
-.btn-agregar-ManoObra:hover {
+.btn-agregar-manodeobra:hover {
   background-color: #ffffffa2; /* Fondo blanco al pasar el mouse */
   border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
   color: #303030; /* Letra verde al pasar el mouse */
 }
 
-.btn-agregar-ManoObra:active {
+.btn-agregar-manodeobra:active {
   background-color: #ffffffa2; /* Fondo blanco al hacer clic */
   border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al hacer clic */
+}
+
+/*estilos para el modal agregar manodeobra*/
+.modal-manodeobra {
+  z-index: 5000;
+  font-family: "LatoBold", sans-serif;
+}
+
+.btnclose-manodeobra {
+  background-color: #ffffff;
+  color: #008e5a;
+  border: none;
+  font-size: 30px;
+}
+
+/* Estilos para el botón Guardar del modal */
+.modal-footer-manodeobra .btn-primary {
+  background-color: #008e5a; /* Color verde */
+  border-color: #008e5a; /* Color del borde */
+  color: #ffffff;
+}
+
+.modal-footer-manodeobra {
+  border: none;
+}
+
+.modal-footer-manodeobra .btn-primary:active {
+  background-color: #008e5a; /* Color verde al hacer clic */
+  border-color: #008e5a; /* Color del borde al hacer clic */
+  color: #000000; /* Color negro al hacer clic */
+}
+.modal-body-manodeobra input[type="text"] {
+  font-family: "Lato", sans-serif;
+}
+
+.form-select-manodeobra {
+  background-color: #ffffff;
+  color: #303030;
+}
+
+.contTabla-manodeobra {
+  width: calc(100% - 0.2rem);
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+  padding-top: 12rem;
+  @media (min-width: 393px) {
+    padding-top: 8rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 508px) {
+    padding-top: 7rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 1090px) {
+    padding-top: 265px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: calc(100% - 4rem);
+  }
+}
+/* Estilos personalizados para la tabla */
+.tabla-container-manodeobra {
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+
+  position: relative;
+  height: calc(400px); /* Ajusta esta altura según tus necesidades */
+  overflow-y: auto;
+}
+
+#tabla-manodeobra {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead,
+th {
+  position: -webkit-sticky; /* Para Safari */
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Fondo para el encabezado */
+  z-index: 10; /* Asegura que el encabezado esté por encima del contenido */
+}
+#tabla-manodeobra th,
+#tabla-manodeobra td {
+  border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+  padding: 8px;
+  text-align: left;
+}
+
+#tabla-manodeobra th {
+  background-color: #008e5a; /* Encabezados con fondo verde */
+  color: white; /* Letras blancas en los encabezados */
+}
+
+#tabla-manodeobra tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
+.fila-manodeobra:hover {
+  background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
+}
+
+.valores-manodeobra {
+  justify-content: space-around;
+  align-items: center;
+  display: none;
+}
+.fila:hover {
+  background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
+}
+
+.valores {
+  display: none;
+}
+
+.fila:hover .valores {
+  display: flex;
+}
+
+.pagRegistrosmanodeobra {
+  font-family: "LatoBold", sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 2vw 0 2vw;
+  align-items: center;
+  margin-top: 0.2rem;
+  width: 100%;
+}
+.pagination {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+.cantregmanodeobra {
+  margin-top: 1.2rem;
+  display: flex;
+  align-items: start;
+}
+.cantregistrosmanodeobra {
+  font-family: "LatoBold", sans-serif;
+  color: #008e5a;
+  border: 3px solid #008e5a;
+}
+.pSeccion {
+  display: flex;
+  flex-wrap: wrap;
+}
+.text {
+  color: #008e5a;
+  font-family: "LatoBold", sans-serif;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.active {
+  background-color: #008e5a;
+}
+
+.toggle-estatus-manodeobra {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  padding-right: 2rem;
+}
+
+.inputLleno {
+  border: 3px solid #008e5a;
+}
+.inputVacio {
+  border: 3px solid red;
+}
+.inputVacio::placeholder {
+  color: red;
+}
+.inputVacio:focus {
+  border: 3px solid red;
+}
+
+.centrarMsg {
+  display: flex;
+  justify-content: center;
+}
+.modMsg {
+  position: fixed;
+  width: 13rem;
+  height: 12rem;
+  top: 45vh;
+  z-index: 9999;
+  border-radius: 1rem;
+  background-color: #ffffff;
+  border: #008e5a 3px solid;
+}
+
+.modMsgEsconder {
+  display: none;
+}
+.modImg {
+  padding-top: 2px;
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  height: 50%;
+}
+
+.modCon {
+  color: black;
+  text-align: center;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+  font-weight: 800;
+  padding: 5px;
+  height: 40%;
 }

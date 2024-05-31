@@ -145,7 +145,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
                         <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
                             id="AddrolInput">
-                            <option selected value="">Selecciona una Opcion</option>
+                            <option selected value="">Selecciona una opción</option>
                             <option value="Administrador">Administrador</option>
                             <option value="Invitado">Invitado</option>
                             <option value="Constructor">Constructor</option>
@@ -197,7 +197,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
                         <select class="form-select inputLleno" id="UpdrolInput"
                             onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
-                            <option selected value="">Selecciona una Opcion</option>
+                            <option selected value="">Selecciona una opción</option>
                             <option value="Administrador">Administrador</option>
                             <option value="Invitado">Invitado</option>
                             <option value="Constructor">Constructor</option>

@@ -84,7 +84,7 @@
             let usuario = document.querySelector('#Usuario');
             if (usuario.value == "") {
                 usuario.classList.add("inputVacio");
-                usuario.placeholder = "Requerido el usuario"
+                usuario.placeholder = "Campo usuario vacío"
                 vacio = true;
                 PrimerValorVacio = usuario;
             }
@@ -93,7 +93,7 @@
             let password = document.querySelector('#Password');
             if (password.value == "") {
                 password.classList.add("inputVacio");
-                password.placeholder = "Requerida la contraseña"
+                password.placeholder = "Campo constraseña vacío"
                 vacio = true;
                 if (!PrimerValorVacio) {
                     PrimerValorVacio = password;

@@ -100,7 +100,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Catalogo');">Catalogo</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Catalogo');">Catálogo</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);incioConcepto();" href="javascript:opcion('conceptos');">Conceptos</a>
