@@ -1,5 +1,5 @@
 <?php
-class ManoObra
+class Maquinaria
 {
     private $conn;
     public function __construct($conexion)
@@ -13,21 +13,20 @@ class ManoObra
      * devuelve arreglo con clave de estado
      */
 
-    function addManoObra($datos)
+    function addMaquinaria($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraInsertar(:Id,:Categoria,:Unidad,:Salario, :Cantidad,:Rendimiento);";
+            $consulta = "call spMaquinariaInsertar(:Id,:Descripcion,:Unidad,:PhM, :RhM);";
 
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
-                "Categoria" => $datos->categoria,
+                "Descripcion" => $datos->descripcion,
                 "Unidad" => $datos->unidad,
-                "Salario" => $datos->salario,
-                "Cantidad" => $datos->cantidad,
-                "Rendimiento" => $datos->rendimiento
+                "PhM" => $datos->phm,
+                "RhM" => $datos->rhm,
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -35,7 +34,7 @@ class ManoObra
         }
         return $R;
     }
-    function UpdManoObra($datos)
+    function UpdMaquinaria($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
@@ -59,7 +58,7 @@ class ManoObra
     }
 
 
-    function getAllManoObra($datos)
+    function getAllMaquinaria($datos)
     {
         /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
@@ -88,7 +87,7 @@ class ManoObra
         return $R;
     }
 
-    function checkManoObra($datos)
+    function checkMaquinaria($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
@@ -110,7 +109,7 @@ class ManoObra
         }
         return $R;
     }
-    function CambiarEstatusManoObra($datos)
+    function CambiarEstatusMaquinaria($datos)
     {
         /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';

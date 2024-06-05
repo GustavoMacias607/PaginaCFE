@@ -1,31 +1,31 @@
-function incioManoObra() {
+function incioMaquinaria() {
     setTimeout(() => {
-        cambiarTamanoManoObra();
+        cambiarMaquinaria();
         existe = false
     }, 800);
 }
 
-let msgEliminarObra = "Mano de obra desabilitada";
-let msgActivarObra = "Mano de obra activada";
-let msgAgregarObra = "Mano de obra agregada";
-let msgModificarObra = "Mano de obra modificada";
+let msgEliminarMaqui = "Maquinaria desabilitada";
+let msgActivarMaqui = "Maquinaria activada";
+let msgAgregarMaqui = "Maquinaria agregada";
+let msgModificarMaqui = "Maquinaria modificada";
 
 //Metodo para cambiar el tamaño de los registros que se muestran
-function cambiarTamanoManoObra() {
+function cambiarTamanoMaquinaria() {
     const cantidad = document.getElementById("cantRegistros");
     tamanoPagina = parseInt(cantidad.value);
     paginaActual = 1;
-    GetManoObra();
+    GetMaquinaria();
 }
 
 
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
-function AddManoObraValidar() {
+function AddMaquinariaValidar() {
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
 
-    let id = document.querySelector('#AddidInputManodeobra');
+    let id = document.querySelector('#AddidInputMaquinaria');
     if (id.value == "") {
         id.classList.add("inputVacio");
         id.placeholder = "Requerido el ID"
@@ -35,17 +35,18 @@ function AddManoObraValidar() {
         }
     }
     datos.id = id.value;
-    let categoria = document.querySelector('#AddCategoriaInputManodeobra');
-    if (categoria.value == "") {
-        categoria.classList.add("inputVacio");
+    let descripcion = document.querySelector('#AdddescripcionInputMaquinaria');
+    if (descripcion.value == "") {
+        descripcion.classList.add("inputVacio");
+        descripcion.placeholder = "Requerida la descripcion"
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = categoria;
+            PrimerValorVacio = descripcion;
         }
-
     }
-    datos.categoria = categoria.value;
-    let unidad = document.querySelector('#AddUnidadInputManodeobra');
+    datos.descripcion = descripcion.value;
+
+    let unidad = document.querySelector('#AddUnidadInputMaquinaria');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
         vacio = true;
@@ -55,47 +56,37 @@ function AddManoObraValidar() {
     }
     datos.unidad = unidad.value;
 
-    let salario = document.querySelector('#AddsalarioInputManodeobra');
-    if (salario.value == "") {
-        salario.classList.add("inputVacio");
-        salario.placeholder = "Requerido el salario"
+    let phm = document.querySelector('#AddphmInputMaquinaria');
+    if (phm.value == "") {
+        phm.classList.add("inputVacio");
+        phm.placeholder = "Requerido el phm"
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = salario;
+            PrimerValorVacio = phm;
         }
     }
-    datos.salario = salario.value;
+    datos.phm = phm.value;
 
-    let cantidad = document.querySelector('#AddcantidadInputManodeobra');
-    if (cantidad.value == "") {
-        cantidad.classList.add("inputVacio");
-        cantidad.placeholder = "Requerida la cantidad"
+
+    let rhm = document.querySelector('#AddrhmInputMaquinaria');
+    if (rhm.value == "") {
+        rhm.classList.add("inputVacio");
+        rhm.placeholder = "Requerido el rhm"
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = cantidad;
-        }
-
-    }
-    datos.cantidad = cantidad.value;
-    let rendimiento = document.querySelector('#AddrendimientoInputManodeobra');
-    if (rendimiento.value == "") {
-        rendimiento.classList.add("inputVacio");
-        rendimiento.placeholder = "Requerido el rendimiento"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = rendimiento;
+            PrimerValorVacio = rhm;
         }
 
     }
 
-    datos.rendimiento = rendimiento.value;
+    datos.rhm = rhm.value;
 
     if (vacio) {
         PrimerValorVacio.focus();
         return;
     }
 
-    checkManoObra("Add");
+    //checkMaquinaria("Add");
     if (existe) {
         id.focus();
         return;
@@ -103,15 +94,15 @@ function AddManoObraValidar() {
     let json = JSON.stringify(datos);
     console.log(json);
 
-    let url = "../ws/ManoObra/wsAddManoObra.php";
+    let url = "../ws/Maquinaria/wsAddMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     AddCerrarModal();
-                    GetManoObra();
-                    mensajePantalla(msgAgregarObra, true);
+                    //GetMaquinaria();
+                    mensajePantalla(msgAgregarMaqui, true);
 
                 }
             } else {
@@ -125,7 +116,7 @@ function AddManoObraValidar() {
 
 
 //Metodo para validar el modal para modificar un material y al mismo tiempo valida los datos
-function UpdManoObraValidar() {
+function UpdMaquinariaValidar() {
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
@@ -199,7 +190,7 @@ function UpdManoObraValidar() {
         PrimerValorVacio.focus();
         return;
     }
-    checkManoObra("Upd");
+    checkMaquinaria("Upd");
     if (existe) {
         id.focus();
         return;
@@ -226,7 +217,7 @@ function UpdManoObraValidar() {
     });
 }
 
-function checkManoObra(modal) {
+function checkMaquinaria(modal) {
     const datos = {}
     if (modal == "Add") {
         var idVali = document.querySelector('#AddidInputManodeobra');
@@ -262,7 +253,7 @@ function checkManoObra(modal) {
 }
 
 //Metodo para cambiar el estatus de los materiales
-function CambioEstatusManoObra() {
+function CambioEstatusMaquinaria() {
     const datos = {};
     datos.id = idEliminar;
     if (ActivarS == 1) {
@@ -274,13 +265,13 @@ function CambioEstatusManoObra() {
     console.log(json);
     switch (parseInt(ActivarS)) {
         case 0: {
-            let url = "../ws/ManoObra/wsCambiarStatus.php";
+            let url = "../ws/Maquinaria/wsCambiarStatus.php";
             $.post(url, json, (responseText, status) => {
                 try {
                     if (status == "success") {
-                        mensajePantalla(msgActivarObra, true)
+                        mensajePantalla(msgActivarMaqui, true)
                         paginaActual = 1;
-                        GetManoObra();
+                        //GetManoObra();
                     } else {
                         throw e = status;
                     }
@@ -291,13 +282,13 @@ function CambioEstatusManoObra() {
             break;
         }
         case 1: {
-            let url = "../ws/ManoObra/wsCambiarStatus.php";
+            let url = "../ws/Maquinaria/wsCambiarStatus.php";
             $.post(url, json, (responseText, status) => {
                 try {
                     if (status == "success") {
-                        GetManoObra();
+                        //GetManoObra();
                         paginaActual = 1;
-                        mensajePantalla(msgEliminarObra, true)
+                        mensajePantalla(msgEliminarMaqui, true)
                     } else {
                         throw e = status;
                     }
@@ -315,10 +306,10 @@ function CambioEstatusManoObra() {
 }
 
 //Metodo para regresar una pagina en la paginacion
-function paginaAnteriorManoObra() {
+function paginaAnteriorMaquinaria() {
     if (paginaActual > 1) {
         paginaActual--;
-        GetManoObra();
+        GetMaquinaria();
     }
 }
 
@@ -326,19 +317,19 @@ function paginaAnteriorManoObra() {
 //Recobe el numero de pagina al cual se cambiara
 function NoPagManoObra(pagi) {
     paginaActual = pagi;
-    GetManoObra();
+    GetMaquinaria();
 }
 
 //Metodo para cambiar a la pagina siguiente en la paginacion
 function paginaSiguienteManoObra() {
     if (paginaActual < totalPag) {
         paginaActual++;
-        GetManoObra();
+        GetMaquinaria();
     }
 }
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
-function GetManoObra() {
+function GetMaquinaria() {
     const datos = {};
     let buscar = document.querySelector('#searchInput');
     let estatus = document.getElementById('ValCheEsta').checked;
@@ -376,7 +367,7 @@ function GetManoObra() {
 }
 // metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
 //recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
-function mostrarDatosEnTablaManoObra(datos, paginaActual, tamanoPagina) {
+function mostrarDatosEnTablaMaquinaria(datos, paginaActual, tamanoPagina) {
     let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
     totalPag = totalPaginas;
     let tbody = document.getElementById("tabla-manodeobra").getElementsByTagName("tbody")[0];
@@ -423,11 +414,11 @@ function mostrarDatosEnTablaManoObra(datos, paginaActual, tamanoPagina) {
 
     }
 
-    actualizarPaginacionManoObra(datos.length, paginaActual, tamanoPagina);
+    actualizarPaginacionMaquinaria(datos.length, paginaActual, tamanoPagina);
 }
 //Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
 //recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
-function actualizarPaginacionManoObra(totalDatos, paginaActual, tamanoPagina) {
+function actualizarPaginacionMaquinaria(totalDatos, paginaActual, tamanoPagina) {
     if (totalDatos == "N") {
         let paginationList = document.getElementById("pagination-list");
         paginationList.innerHTML = "";
@@ -459,7 +450,7 @@ function actualizarPaginacionManoObra(totalDatos, paginaActual, tamanoPagina) {
 }
 
 //Metodo para limpiar el modal de agregar mano de obra
-function AddlimpiarModalManoObra() {
+function AddlimpiarModalMaquinaria() {
     let idMO = document.querySelector('#AddidInputManodeobra');
     let categoriaMO = document.querySelector('#AddCategoriaInputManodeobra');
     let UnidadMO = document.querySelector('#AddUnidadInputManodeobra');
@@ -489,7 +480,7 @@ function AddlimpiarModalManoObra() {
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
-function valStatusManoObra() {
+function valStatusMaquinaria() {
     var checkbox = document.getElementById('ValCheEsta');
     var imgcheck = document.getElementById('ValEstatus');
     // Deseleccionar el checkbox
@@ -503,7 +494,7 @@ function valStatusManoObra() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, rendimiento) {
+function llenarModalModificarMaquinaria(id, categoria, unidad, salario, cantidad, rendimiento) {
 
     //Llenado de datos en el modal
     let idMO = document.querySelector('#UpdidInput');

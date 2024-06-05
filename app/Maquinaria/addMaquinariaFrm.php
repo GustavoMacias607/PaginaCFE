@@ -13,9 +13,9 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-maquinaria">Maquinaria</div>
         <button type="button" class="btn btn-agregar-maquinaria" data-bs-toggle="modal"
             data-bs-target="#AgregarModal">Agregar maquinaria</button>
-            <a href="index.php" class="text-inicio-maquinaria">
+        <a href="index.php" class="text-inicio-maquinaria">
             <div>Ir al inicio</div>
-            </a>
+        </a>
     </div>
     <div class=" label-container-maquinaria">
         <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMaquianria();EstablecerPag()">
@@ -140,7 +140,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddrhmInputMaquinaria">
                 </div>
-                
+
                 <div class="modal-footer modal-footer-maquinaria">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddMaquinariaValidar();"
                         style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
