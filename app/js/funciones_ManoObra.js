@@ -547,7 +547,7 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, 
     UnidadMO.classList.remove("inputVacio");
     salarioMO.classList.remove("inputVacio");
     rendimientoMo.classList.remove("inputVacio");
-    rendimientoMo.classList.remove("inputVacio");
+    cantidadMo.classList.remove("inputVacio");
 }
 
 //Metodo para cerrar el modal de agregar material

@@ -39,16 +39,15 @@ class Maquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraModificar(:IdAnterior,:Id,:Categoria,:Unidad,:Salario, :Cantidad,:Rendimiento);";
+            $consulta = "call spMaquinariaModificar(:IdAnterior,:Id,:Descripcion,:Unidad,:Phm,:Rhm);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
-                "Categoria" => $datos->categoria,
+                "Descripcion" => $datos->descripcion,
                 "Unidad" => $datos->unidad,
-                "Salario" => $datos->salario,
-                "Cantidad" => $datos->cantidad,
-                "Rendimiento" => $datos->rendimiento
+                "Phm" => $datos->phm,
+                "Rhm" => $datos->rhm,
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -64,13 +63,12 @@ class Maquinaria
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraMostrar(:Estatus,:Buscar,:Categoria,:Unidad);";
+            $consulta = "call spMaquinariaBuscarTodoUnidad(:Estatus,:Unidad,:Buscar);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Estatus" => $datos->estatus,
-                "Buscar" => $datos->buscar,
-                "Categoria" => $datos->categoria,
                 "Unidad" => $datos->unidad,
+                "Buscar" => $datos->buscar,
 
             ));
 
@@ -116,7 +114,7 @@ class Maquinaria
         $c = $this->conn;
         try {
 
-            $consulta = "call spManoObraEstatus(:Id, :Estatus);";
+            $consulta = "call spMaquinariaEstatus(:Id, :Estatus);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,

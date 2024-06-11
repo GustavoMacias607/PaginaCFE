@@ -11,14 +11,14 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancomaquinaria">
     <div class="bottom-rectangle-maquinaria">
         <div class="text-maquinaria">Maquinaria</div>
-        <button type="button" class="btn btn-agregar-maquinaria" data-bs-toggle="modal"
-            data-bs-target="#AgregarModal">Agregar maquinaria</button>
+        <button type="button" class="btn btn-agregar-maquinaria" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModalMaquinaria();">Agregar maquinaria</button>
         <a href="index.php" class="text-inicio-maquinaria">
             <div>Ir al inicio</div>
         </a>
     </div>
     <div class=" label-container-maquinaria">
-        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMaquianria();EstablecerPag()">
+        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMaquinaria();EstablecerPag()">
         <i class="fas fa-search icon-maquinaria" id="searchIcon"></i>
     </div>
 
@@ -69,7 +69,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <th class=" col-1" style="width: 200px;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectTipo"
+                            <select class="form-select form-select-sm ml-2" id="selectUnidad"
                                 onchange="javacript:GetMaquinaria();EstablecerPag()"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="todo" selected>Todo</option>
@@ -162,7 +162,8 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
             <div class="modal-body">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
+                <input type="text" class="form-control d-none" id="UpdidAnteriorMaqui"
+                    style="border: 3px solid #008E5A;">
 
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
@@ -177,7 +178,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddUnidadInputMaquinaria">
+                        id="UpdUnidadInputMaquinaria">
                         <option value="" selected>Seleccciona una unidad</option>
                         <option value="HR">HR</option>
                         <option value="%MO">%MO</option>

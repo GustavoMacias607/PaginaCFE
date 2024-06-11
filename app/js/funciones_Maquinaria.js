@@ -1,6 +1,6 @@
 function incioMaquinaria() {
     setTimeout(() => {
-        cambiarMaquinaria();
+        cambiarTamanoMaquinaria();
         existe = false
     }, 800);
 }
@@ -101,7 +101,7 @@ function AddMaquinariaValidar() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     AddCerrarModal();
-                    //GetMaquinaria();
+                    GetMaquinaria();
                     mensajePantalla(msgAgregarMaqui, true);
 
                 }
@@ -120,7 +120,7 @@ function UpdMaquinariaValidar() {
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
-    let idAnterior = document.querySelector('#UpdidAnteriorMano');
+    let idAnterior = document.querySelector('#UpdidAnteriorMaqui');
     datos.idAnterior = idAnterior.value;
     let id = document.querySelector('#UpdidInput');
     if (id.value == "") {
@@ -132,17 +132,18 @@ function UpdMaquinariaValidar() {
         }
     }
     datos.id = id.value;
-    let categoria = document.querySelector('#UpdCategoriaInputManodeobra');
-    if (categoria.value == "") {
-        categoria.classList.add("inputVacio");
+    let descripcion = document.querySelector('#UpddescripcionInput');
+    if (descripcion.value == "") {
+        descripcion.classList.add("inputVacio");
+        descripcion.placeholder = "Requerida la descripcion"
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = categoria;
+            PrimerValorVacio = descripcion;
         }
-
     }
-    datos.categoria = categoria.value;
-    let unidad = document.querySelector('#updUnidadInputManodeobra');
+    datos.descripcion = descripcion.value;
+
+    let unidad = document.querySelector('#UpdUnidadInputMaquinaria');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
         vacio = true;
@@ -152,52 +153,43 @@ function UpdMaquinariaValidar() {
     }
     datos.unidad = unidad.value;
 
-    let salario = document.querySelector('#UpdsalarioInput');
-    if (salario.value == "") {
-        salario.classList.add("inputVacio");
-        salario.placeholder = "Requerido el salario"
+    let phm = document.querySelector('#UpdphmInput');
+    if (phm.value == "") {
+        phm.classList.add("inputVacio");
+        phm.placeholder = "Requerido el phm"
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = salario;
+            PrimerValorVacio = phm;
         }
     }
-    datos.salario = salario.value;
+    datos.phm = phm.value;
 
-    let cantidad = document.querySelector('#UpdcantidadInput');
-    if (cantidad.value == "") {
-        cantidad.classList.add("inputVacio");
-        cantidad.placeholder = "Requerida la cantidad"
+
+    let rhm = document.querySelector('#UpdrhmInput');
+    if (rhm.value == "") {
+        rhm.classList.add("inputVacio");
+        rhm.placeholder = "Requerido el rhm"
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = cantidad;
-        }
-
-    }
-    datos.cantidad = cantidad.value;
-    let rendimiento = document.querySelector('#UpdrendimientoInput');
-    if (rendimiento.value == "") {
-        rendimiento.classList.add("inputVacio");
-        rendimiento.placeholder = "Requerido el rendimiento"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = rendimiento;
+            PrimerValorVacio = rhm;
         }
 
     }
 
-    datos.rendimiento = rendimiento.value;
+    datos.rhm = rhm.value;
+
     if (vacio) {
         PrimerValorVacio.focus();
         return;
     }
-    checkMaquinaria("Upd");
+    //checkMaquinaria("Upd");
     if (existe) {
         id.focus();
         return;
     }
     let json = JSON.stringify(datos);
     console.log(json);
-    let url = "../ws/ManoObra/wsUpdManoObra.php";
+    let url = "../ws/Maquinaria/wsUpdMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -205,8 +197,8 @@ function UpdMaquinariaValidar() {
                 console.log(resp);
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
-                    mensajePantalla(msgModificarCon, true);
-                    GetManoObra();
+                    mensajePantalla(msgModificarMaqui, true);
+                    GetMaquinaria();
                 }
             } else {
                 throw e = status;
@@ -271,7 +263,7 @@ function CambioEstatusMaquinaria() {
                     if (status == "success") {
                         mensajePantalla(msgActivarMaqui, true)
                         paginaActual = 1;
-                        //GetManoObra();
+                        GetMaquinaria();
                     } else {
                         throw e = status;
                     }
@@ -286,7 +278,7 @@ function CambioEstatusMaquinaria() {
             $.post(url, json, (responseText, status) => {
                 try {
                     if (status == "success") {
-                        //GetManoObra();
+                        GetMaquinaria();
                         paginaActual = 1;
                         mensajePantalla(msgEliminarMaqui, true)
                     } else {
@@ -315,13 +307,13 @@ function paginaAnteriorMaquinaria() {
 
 //Metodo para cambiar de pagona dando clic a la paginacion
 //Recobe el numero de pagina al cual se cambiara
-function NoPagManoObra(pagi) {
+function NoPagMaquinaria(pagi) {
     paginaActual = pagi;
     GetMaquinaria();
 }
 
 //Metodo para cambiar a la pagina siguiente en la paginacion
-function paginaSiguienteManoObra() {
+function paginaSiguienteMaquinaria() {
     if (paginaActual < totalPag) {
         paginaActual++;
         GetMaquinaria();
@@ -334,7 +326,6 @@ function GetMaquinaria() {
     let buscar = document.querySelector('#searchInput');
     let estatus = document.getElementById('ValCheEsta').checked;
     let unidad = document.getElementById('selectUnidad');
-    let categoria = document.getElementById('selectCategoria');
     datos.buscar = buscar.value;
     if (estatus) {
         datos.estatus = 1;
@@ -342,9 +333,8 @@ function GetMaquinaria() {
         datos.estatus = 0;
     }
     datos.unidad = unidad.value;
-    datos.categoria = categoria.value;
     let json = JSON.stringify(datos);
-    let url = "../ws/ManoObra/wsGetManoObra.php";
+    let url = "../ws/Maquinaria/wsGetMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -352,10 +342,10 @@ function GetMaquinaria() {
                 if (resp.estado == "OK") {
 
                     //Llamar a la función para mostrar los datos en la tabla
-                    mostrarDatosEnTablaManoObra(resp.datos, paginaActual, tamanoPagina);
+                    mostrarDatosEnTablaMaquinaria(resp.datos, paginaActual, tamanoPagina);
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTablaManoObra(resp.mensaje, paginaActual, tamanoPagina);
+                    mostrarDatosEnTablaMaquinaria(resp.mensaje, paginaActual, tamanoPagina);
                 }
             } else {
                 throw e = status;
@@ -370,7 +360,7 @@ function GetMaquinaria() {
 function mostrarDatosEnTablaMaquinaria(datos, paginaActual, tamanoPagina) {
     let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
     totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-manodeobra").getElementsByTagName("tbody")[0];
+    let tbody = document.getElementById("tabla-maquinaria").getElementsByTagName("tbody")[0];
     tbody.innerHTML = "";
     if (datos == "N") {
         let fila = document.createElement("tr");
@@ -379,35 +369,35 @@ function mostrarDatosEnTablaMaquinaria(datos, paginaActual, tamanoPagina) {
         `;
         tbody.appendChild(fila);
 
-        actualizarPaginacionManoObra(datos, paginaActual, tamanoPagina);
+        actualizarPaginacionMaquinaria(datos, paginaActual, tamanoPagina);
         return;
     }
     let startIndex = (paginaActual - 1) * tamanoPagina;
     let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
     for (let i = startIndex; i < endIndex; i++) {
-        let manoObra = datos[i];
+        let maquinaria = datos[i];
         let fila = document.createElement("tr");
         fila.classList.add("fila")
         fila.addEventListener("mouseover", () => mostrarValores(fila));
         fila.addEventListener("mouseout", () => ocultarValores(fila));
         // Agregar las celdas a la fila
         fila.innerHTML = `
-            <td class="Code">${manoObra.idmanoobra}</td>
-            <td>${(!manoObra.categoria == "") ? manoObra.categoria : "---"}</td>
-            <td>${(!manoObra.unidad == "") ? manoObra.unidad : "---"}</td>
-            <td>${(!manoObra.salario == "") ? manoObra.salario : "---"}</td>
-            <td>${(!manoObra.cantidad == "") ? manoObra.cantidad : "---"}</td>
-            <td>${(!manoObra.rendimiento == "") ? manoObra.rendimiento : "---"}</td>
+            <td class="Code">${maquinaria.idmaquinaria}</td>
+            <td>${(!maquinaria.descripcion == "") ? maquinaria.descripcion : "---"}</td>
+            <td>${(!maquinaria.unidad == "") ? maquinaria.unidad : "---"}</td>
+            <td>${(!maquinaria.phm == "") ? maquinaria.phm : "---"}</td>
+            <td>${(!maquinaria.rhm == "") ? maquinaria.rhm : "---"}</td>
             <td class="estatus">
             <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                        ${manoObra.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${manoObra.idmanoobra},'${manoObra.categoria}','${manoObra.unidad}',${manoObra.salario},${manoObra.cantidad},${manoObra.rendimiento})"></i>
+                        ${maquinaria.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${maquinaria.idmaquinaria},'${maquinaria.descripcion}','${maquinaria.unidad}',${maquinaria.phm},${maquinaria.rhm})"></i>
                         `: ``}
-                        ${manoObra.estatus == 1 ?
-                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${manoObra.idmanoobra},${manoObra.estatus})"></i>` :
-                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${manoObra.idmanoobra},${manoObra.estatus})"></i>`
+                        ${maquinaria.estatus == 1 ?
+                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${maquinaria.idmaquinaria},${maquinaria.estatus})"></i>` :
+                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${maquinaria.idmaquinaria},${maquinaria.estatus})"></i>`
             }
 
                         </div>
+                        </td>
         `;
         // Agregar la fila a la tabla
         tbody.appendChild(fila);
@@ -429,7 +419,7 @@ function actualizarPaginacionMaquinaria(totalDatos, paginaActual, tamanoPagina) 
     let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
     let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
     let liPrev = document.createElement("li");
-    liPrev.innerHTML = `<button onclick="paginaAnteriorManoObra()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
+    liPrev.innerHTML = `<button onclick="paginaAnteriorMaquinaria()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
     paginationList.appendChild(liPrev);
     // Generar enlaces de página
     for (let i = Math.max(1, paginaActual - rangoMostrar); i <= Math.min(totalPaginas, paginaActual + rangoMostrar); i++) {
@@ -437,46 +427,44 @@ function actualizarPaginacionMaquinaria(totalDatos, paginaActual, tamanoPagina) 
         if (i === paginaActual) {
             li.classList.add("active");
         }
-        li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPagManoObra(${i})">${i}</button>`;
+        li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPagMaquinaria(${i})">${i}</button>`;
         if (i === paginaActual) {
-            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagManoObra(${i})">${i}</button>`;
+            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagMaquinaria(${i})">${i}</button>`;
         }
         paginationList.appendChild(li);
     }
     let liNext = document.createElement("li");
-    liNext.innerHTML = `<button onclick="paginaSiguienteManoObra()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
+    liNext.innerHTML = `<button onclick="paginaSiguienteMaquinaria()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
     paginationList.appendChild(liNext);
 
 }
 
 //Metodo para limpiar el modal de agregar mano de obra
 function AddlimpiarModalMaquinaria() {
-    let idMO = document.querySelector('#AddidInputManodeobra');
-    let categoriaMO = document.querySelector('#AddCategoriaInputManodeobra');
-    let UnidadMO = document.querySelector('#AddUnidadInputManodeobra');
-    let salarioMO = document.querySelector('#AddsalarioInputManodeobra');
-    let cantidadMo = document.querySelector('#AddcantidadInputManodeobra');
-    let rendimientoMo = document.querySelector('#AddrendimientoInputManodeobra');
+    let idMa = document.querySelector('#AddidInputMaquinaria');
+    let descripcionMa = document.querySelector('#AdddescripcionInputMaquinaria');
+    let UnidadMa = document.querySelector('#AddUnidadInputMaquinaria');
+    let phm = document.querySelector('#AddphmInputMaquinaria');
+    let rhm = document.querySelector('#AddrhmInputMaquinaria');
 
 
-    idMO.value = "";
-    categoriaMO.value = "";
-    UnidadMO.value = "";
-    salarioMO.value = "";
-    cantidadMo.value = "";
-    rendimientoMo.value = "";
 
-    idMO.placeholder = "";
-    salarioMO.placeholder = "";
-    cantidadMo.placeholder = "";
-    rendimientoMo.placeholder = "";
+    idMa.value = "";
+    descripcionMa.value = "";
+    UnidadMa.value = "";
+    phm.value = "";
+    rhm.value = "";
 
-    idMO.classList.remove("inputVacio");
-    categoriaMO.classList.remove("inputVacio");
-    UnidadMO.classList.remove("inputVacio");
-    salarioMO.classList.remove("inputVacio");
-    cantidadMo.classList.remove("inputVacio");
-    rendimientoMo.classList.remove("inputVacio");
+    idMa.placeholder = "";
+    descripcionMa.placeholder = "";
+    rhm.placeholder = "";
+    phm.placeholder = "";
+
+    idMa.classList.remove("inputVacio");
+    descripcionMa.classList.remove("inputVacio");
+    UnidadMa.classList.remove("inputVacio");
+    phm.classList.remove("inputVacio");
+    rhm.classList.remove("inputVacio");
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -494,51 +482,43 @@ function valStatusMaquinaria() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificarMaquinaria(id, categoria, unidad, salario, cantidad, rendimiento) {
+function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, rhM) {
 
     //Llenado de datos en el modal
-    let idMO = document.querySelector('#UpdidInput');
-    let categoriaMO = document.querySelector('#UpdCategoriaInputManodeobra');
-    let UnidadMO = document.querySelector('#updUnidadInputManodeobra');
-    let salarioMO = document.querySelector('#UpdsalarioInput');
-    let cantidadMo = document.querySelector('#UpdcantidadInput');
-    let rendimientoMo = document.querySelector('#UpdrendimientoInput');
-    let idAnterior = document.querySelector('#UpdidAnteriorMano');
+    let idMa = document.querySelector('#UpdidInput');
+    let descripcionMa = document.querySelector('#UpddescripcionInput');
+    let UnidadMa = document.querySelector('#UpdUnidadInputMaquinaria');
+    let phm = document.querySelector('#UpdphmInput');
+    let rhm = document.querySelector('#UpdrhmInput');
+    let idAnterior = document.querySelector('#UpdidAnteriorMaqui');
 
     idAnterior.value = id;
-    idMO.value = id;
-    salarioMO.value = salario;
-    cantidadMo.value = cantidad;
-    rendimientoMo.value = rendimiento;
+    idMa.value = id;
+    descripcionMa.value = descripcion;
+    phm.value = phM;
+    rhm.value = rhM;
 
-    //llenar el select de tipo
-    for (var i = 0; i < categoriaMO.options.length; i++) {
-        if (categoriaMO.options[i].value === categoria) {
-            categoriaMO.options[i].selected = true;
-            break;
-        }
-    }
+
     //llenar el select de unidad
-    for (var i = 0; i < UnidadMO.options.length; i++) {
-        if (UnidadMO.options[i].value === unidad) {
-            UnidadMO.options[i].selected = true;
+    for (var i = 0; i < UnidadMa.options.length; i++) {
+        if (UnidadMa.options[i].value === unidad) {
+            UnidadMa.options[i].selected = true;
             break;
         }
     }
 
 
-    idMO.placeholder = "";
-    salarioMO.placeholder = "";
-    cantidadMo.placeholder = "";
-    rendimientoMo.placeholder = "";
+    idMa.placeholder = "";
+    descripcionMa.placeholder = "";
+    phm.placeholder = "";
+    rhm.placeholder = "";
 
 
-    idMO.classList.remove("inputVacio");
-    categoriaMO.classList.remove("inputVacio");
-    UnidadMO.classList.remove("inputVacio");
-    salarioMO.classList.remove("inputVacio");
-    rendimientoMo.classList.remove("inputVacio");
-    rendimientoMo.classList.remove("inputVacio");
+    idMa.classList.remove("inputVacio");
+    descripcionMa.classList.remove("inputVacio");
+    UnidadMa.classList.remove("inputVacio");
+    phm.classList.remove("inputVacio");
+    rhm.classList.remove("inputVacio");
 }
 
 //Metodo para cerrar el modal de agregar material
