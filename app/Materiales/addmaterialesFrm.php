@@ -85,7 +85,7 @@ require("../../scripts/Materiales.php");
                             Precio
                         </th>
                         <th style="width: 60px;">
-                            FechaPrecio
+                            Fecha del precio
                         </th>
                         <th class=" col-1" style="width: 150px;">
                             <div class="d-flex align-items-center">
