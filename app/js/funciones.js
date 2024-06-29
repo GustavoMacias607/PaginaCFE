@@ -22,7 +22,7 @@ function opcion(op) {
             url = "ManoObra/addManoObraFrm.php";
             break;
         case "Catalogo":
-            url = "Catalogo/addCatalogoFrm.php";
+            url = "Catalogo/searchCatalogoFrm.php";
             break;
         case "Maquinaria":
             url = "Maquinaria/addMaquinariaFrm.php";

@@ -81,13 +81,13 @@ require("../../scripts/Materiales.php");
                         <th style="width: 20rem;">
                             Descripción
                         </th>
-                        <th style="width: 8rem;">
+                        <th style="width: 18rem;">
                             Precio
                         </th>
-                        <th style="width: 60px;">
+                        <th style="width: 100px;">
                             Fecha del precio
                         </th>
-                        <th class=" col-1" style="width: 150px;">
+                        <th class=" col-1" style="width: 100px;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetMateriales();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -101,7 +101,7 @@ require("../../scripts/Materiales.php");
                                 </select>
                             </div>
                         </th>
-                        <th class="col-1" style="width: 170px;">
+                        <th class="col-1" style="width: 100px;">
                             <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                 <span>Acciones</span>
 

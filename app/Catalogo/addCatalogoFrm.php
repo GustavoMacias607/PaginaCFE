@@ -11,7 +11,7 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancoCatalogo">
     <div class="bottom-rectangle-Catalogo">
         <div class="text-Catalogo">Agregar catálogo</div>
-            <a href="index.php" class="text-inicio-catalogo">
+            <a href="index.php" class="text-inicio-Catalogo">
             <div>Ir al inicio</div>
             </a>
     </div>
@@ -56,10 +56,9 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
         </div>
     </div>
-
+   
     <div> Materiales
         <button type="button" class="fa-solid fa-solid-agregar-materiales">Agregar</button>
-        <button type="button" class="fa-solid fa-solid-cancelar">Cancelar</button>
 
         <div class="contTabla-materiales">
             <div class="tabla-container tabla-container-materiales">
@@ -75,21 +74,21 @@ if (!isset($_SESSION['idusuario'])) {
                             <th style="width: 20rem;">
                                 Descripción
                             </th>
-                            <th style="width: 8rem;">
+                            <th style="width: 10rem;">
                                 Precio
                             </th>
-                            <th style="width: 60px;">
+                            <th style="width: 100px;">
                                 Fecha del precio
                             </th>
-                            <th style="width: 150rem;">
+                            <th style="width: 10rem;">
                                 Unidad
                             </th>
-                            <th class="col-1" style="width: 170px;">
+                            <th class="col-1" style="width: 80px;">
                                 <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                     <span>Acciones</span>
                                 </div>
                             </th>
-                            <th style="width: 70px;">
+                            <th style="width: 90px;">
                                 Cantidad
                             </th>
                         </tr>
