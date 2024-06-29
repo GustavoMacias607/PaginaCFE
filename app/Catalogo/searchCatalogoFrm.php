@@ -71,18 +71,19 @@ if (!isset($_SESSION['idusuario'])) {
         </div> 
         <div class="div-card">
             <div class="titulocatalogo">
-                Catalogo 1
+                Catalogo 2
             </div>
             <div class="contenidocatalogo">
                 <div>
-                    <div>Todo el Conceptohhhhhfgggfgf</div>
-                    <div>AAAAAAAAAABBBB</div> 
+                    <div class="titulosdecontenido">Concepto: <span class="textotitulosdecontenido">Nombre de concepto</span></div>
+                    <div class="titulosdecontenido">Tipo: <span class="textotitulosdecontenido">Tipo concepto</span></div> 
                 </div>
                 <div >
                     <button class="btn apartadoeliminarcatalogo">Eliminar</button> 
                 </div>
             </div>
         </div> 
+
     </div>
 
 
