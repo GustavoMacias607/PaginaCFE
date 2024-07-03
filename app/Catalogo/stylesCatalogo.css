@@ -383,7 +383,9 @@ body {
 background-color: #008e5a;
 color: #ffffff;
 padding-left: 5px;
+padding-right: 5px;
 padding-bottom: 5px;
+padding-top: 5px;
 }
 
 .contenidocatalogo{
@@ -420,10 +422,6 @@ color: #ffffff;
 color: #ffffff;
 }
 
-.titulosdecontenido{
-  font-family: "LatoBold", sans-serif;
-}
-
-.textotitulosdecontenido{
+.textolistado{
   font-family: "Lato", sans-serif;
 }

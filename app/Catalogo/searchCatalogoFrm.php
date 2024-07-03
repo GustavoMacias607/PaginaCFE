@@ -57,12 +57,11 @@ if (!isset($_SESSION['idusuario'])) {
 
         <div class="div-card">
             <div class="titulocatalogo">
-                Catalogo 1
+                Nombre concepto 1
             </div>
             <div class="contenidocatalogo">
                 <div>
-                    <div class="titulosdecontenido">Concepto: <span class="textotitulosdecontenido">Nombre de concepto</span></div>
-                    <div class="titulosdecontenido">Tipo: <span class="textotitulosdecontenido">Tipo concepto</span></div> 
+                    <div class="textolistado">Listado</div>
                 </div>
                 <div >
                     <button class="btn apartadoeliminarcatalogo">Eliminar</button> 
@@ -71,12 +70,11 @@ if (!isset($_SESSION['idusuario'])) {
         </div> 
         <div class="div-card">
             <div class="titulocatalogo">
-                Catalogo 2
+                Nombre concepto 2
             </div>
             <div class="contenidocatalogo">
                 <div>
-                    <div class="titulosdecontenido">Concepto: <span class="textotitulosdecontenido">Nombre de concepto</span></div>
-                    <div class="titulosdecontenido">Tipo: <span class="textotitulosdecontenido">Tipo concepto</span></div> 
+                    <div class="textolistado">Listado</div>
                 </div>
                 <div >
                     <button class="btn apartadoeliminarcatalogo">Eliminar</button> 
