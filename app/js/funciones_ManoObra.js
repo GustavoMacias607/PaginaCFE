@@ -1,9 +1,3 @@
-function incioManoObra() {
-    setTimeout(() => {
-        cambiarTamanoManoObra();
-        existe = false
-    }, 800);
-}
 
 let msgEliminarObra = "Mano de obra desabilitada";
 let msgActivarObra = "Mano de obra activada";

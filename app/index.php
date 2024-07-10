@@ -159,6 +159,7 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/funciones_conceptos.js"></script>
     <script src="js/funciones_ManoObra.js"></script>
     <script src="js/funciones_Maquinaria.js"></script>
+    <script src="js/funciones_Catalogo.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
     <script>
     window.onload = function() {

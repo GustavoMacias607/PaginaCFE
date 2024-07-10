@@ -2,30 +2,37 @@ function opcion(op) {
 
     let url = "";
     let json = "";
+    var funcion;
     switch (op) {
         case "materiales":
             url = "Materiales/addmaterialesFrm.php";
+            funcion = cambiarTamano;
             break;
         case "usuarios":
             url = "Usuarios/addUsuariosFrm.php";
+            funcion = cambiarTamanoUsuario
             break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
+            funcion = cambiarTamanoConcepto;
             break;
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";
             break;
         case "ManoObra":
             url = "ManoObra/addManoObraFrm.php";
+            funcion = cambiarTamanoManoObra;
             break;
         case "Catalogo":
-            url = "Catalogo/searchCatalogoFrm.php";
+            url = "Catalogo/viewCatalogoFrm.php";
+            funcion = AgregarDatosTablaConceptoCatalogo;
             break;
         case "Maquinaria":
             url = "Maquinaria/addMaquinariaFrm.php";
+            funcion = cambiarTamanoMaquinaria;
             break;
         default: alert("Opción incorrecta"); return;
     }
@@ -36,6 +43,7 @@ function opcion(op) {
 
             if (status == "success") {
                 document.getElementById("mainContent").innerHTML = responseText;
+                funcion();
             } else {
                 throw e = status;
             }
@@ -45,6 +53,7 @@ function opcion(op) {
     });
 }
 //Atributos globales
+var datosCatalogo = {};
 let existe = false;
 let paginaActual = 1;
 let tamanoPagina = 10;

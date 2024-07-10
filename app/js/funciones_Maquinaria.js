@@ -1,9 +1,3 @@
-function incioMaquinaria() {
-    setTimeout(() => {
-        cambiarTamanoMaquinaria();
-        existe = false
-    }, 800);
-}
 
 let msgEliminarMaqui = "Maquinaria desabilitada";
 let msgActivarMaqui = "Maquinaria activada";

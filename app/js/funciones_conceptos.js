@@ -1,9 +1,3 @@
-function incioConcepto() {
-    setTimeout(() => {
-        cambiarTamanoConcepto();
-        existe = false
-    }, 800);
-}
 
 let msgEliminarCon = "Concepto eliminado";
 let msgActivarCon = "Concepto activado";
@@ -378,6 +372,8 @@ function mostrarDatosEnTablaConcepto(datos, paginaActual, tamanoPagina) {
                 <div class="" style="display: flex; justify-content: space-around; align-items: center;">
                 ${concepto.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${concepto.idconcepto},'${concepto.nombre}','${concepto.tipo}',${concepto.plazo},'${concepto.unidad}')"></i>
                 `: ``}
+                ${concepto.estatus == 1 ? `<i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;"  alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo(${concepto.idconcepto},'${concepto.nombre}','${concepto.tipo}',${concepto.plazo},'${concepto.unidad}')"></i>
+                `: ``}
                 ${concepto.estatus == 1 ?
                 `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})"></i>` :
                 `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})"></i>`
@@ -537,6 +533,18 @@ function AbrirModalConfirm1() {
         $('#confirmDeleteModal').modal('show');
     } else {
         $('#confirmActivationModal').modal('show');
+    }
+}
+
+
+//Datos para el catalogo
+function InfoCatalogo(id, nombre, tipo, plazo, unidad) {
+    datosCatalogo = {
+        id,
+        nombre,
+        tipo,
+        plazo,
+        unidad
     }
 
 }

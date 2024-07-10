@@ -14,9 +14,9 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="text-Catalogo">Catálogo</div>
             <button type="button" class="btn btn-agregar-Catalogo" data-bs-toggle="modal"
                 data-bs-target="#AgregarModal">Agregar catalogo</button>
-                <a href="index.php" class="text-inicio-Catalogo">
+            <a href="index.php" class="text-inicio-Catalogo">
                 <div>Ir al inicio</div>
-                </a>
+            </a>
         </div>
         <div class="label-container-Catalogo">
             <input type="text" placeholder="Buscar" id="searchInput" oninput="GetCatalogo();EstablecerPag()">
@@ -28,7 +28,8 @@ if (!isset($_SESSION['idusuario'])) {
             <nav class="pSeccion">
                 <div class="cantregcatalogo">
                     <div class="text">Mostrar</div>
-                    <select class="cantregistroscatalogo" name="" id="cantRegistros" onchange="javascript:cambiarTamano()">
+                    <select class="cantregistroscatalogo" name="" id="cantRegistros"
+                        onchange="javascript:cambiarTamano()">
                         <option value="10" selected>10</option>
                         <option value="25">25</option>
                         <option value="50">50</option>
@@ -53,40 +54,41 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
         </div>
 
-    <div class="div-mayor" style="display: flex; flex-wrap; gap: 1.5rem; margin-left: 2rem; margin-right: 2rem; padding-top: 1rem;">
+        <div class="div-mayor"
+            style="display: flex; flex-wrap:wrap; gap: 1.5rem; margin-left: 2rem; margin-right: 2rem; padding-top: 1rem;">
 
-        <div class="div-card">
-            <div class="titulocatalogo">
-                Nombre concepto 1
-            </div>
-            <div class="contenidocatalogo">
-                <div>
-                    <div class="textolistado">Listado</div>
+            <div class="div-card">
+                <div class="titulocatalogo">
+                    Nombre concepto 1
                 </div>
-                <div >
-                    <button class="btn apartadoeliminarcatalogo">Eliminar</button> 
-                </div>
-            </div>
-        </div> 
-        <div class="div-card">
-            <div class="titulocatalogo">
-                Nombre concepto 2
-            </div>
-            <div class="contenidocatalogo">
-                <div>
-                    <div class="textolistado">Listado</div>
-                </div>
-                <div >
-                    <button class="btn apartadoeliminarcatalogo">Eliminar</button> 
+                <div class="contenidocatalogo">
+                    <div>
+                        <div class="textolistado">Listado</div>
+                    </div>
+                    <div>
+                        <button class="btn apartadoeliminarcatalogo">Eliminar</button>
+                    </div>
                 </div>
             </div>
-        </div> 
+            <div class="div-card">
+                <div class="titulocatalogo">
+                    Nombre concepto 2
+                </div>
+                <div class="contenidocatalogo">
+                    <div>
+                        <div class="textolistado">Listado</div>
+                    </div>
+                    <div>
+                        <button class="btn apartadoeliminarcatalogo">Eliminar</button>
+                    </div>
+                </div>
+            </div>
 
-    </div>
+        </div>
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        </script>

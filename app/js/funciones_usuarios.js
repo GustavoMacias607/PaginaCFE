@@ -1,9 +1,3 @@
-function incioUsuario() {
-    setTimeout(() => {
-        GetUsuario();
-        existe = false;
-    }, 800);
-}
 
 let msgEliminarUsu = "Usuario eliminado";
 let msgActivarUsu = "Usuario activado";

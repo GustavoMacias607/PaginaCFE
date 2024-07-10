@@ -26,7 +26,7 @@ body {
   }
 }
 
-.fondBlancosearchCatalogo{
+.fondBlancosearchCatalogo {
   background-color: white;
   height: 10.5rem;
   width: 100%;
@@ -91,7 +91,6 @@ body {
   align-items: center;
   padding-right: 2rem;
 }
-
 
 .text {
   color: #008e5a;
@@ -202,6 +201,44 @@ body {
   }
 }
 
+#tabla-conceptosCatalogo {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead,
+th {
+  position: -webkit-sticky; /* Para Safari */
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Fondo para el encabezado */
+  z-index: 10; /* Asegura que el encabezado esté por encima del contenido */
+}
+#tabla-conceptosCatalogo th,
+#tabla-conceptosCatalogo td {
+  border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+  padding: 8px;
+  text-align: left;
+}
+
+#tabla-conceptosCatalogo th {
+  background-color: #008e5a; /* Encabezados con fondo verde */
+  color: white; /* Letras blancas en los encabezados */
+}
+
+#tabla-conceptosCatalogo tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
+.tabla-container-conceptosCatalogo {
+  text-align: center;
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+
+  position: relative;
+  overflow-y: auto;
+}
+
 .contTabla-materialescatalogo {
   width: calc(100% - 0.2rem);
   margin-left: 0.2rem;
@@ -227,7 +264,7 @@ body {
   }
 }
 
-.fa-solid-agregar-concepto{
+.fa-solid-agregar-concepto {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -237,22 +274,22 @@ body {
   border: 3px solid #008e5a;
   border-radius: 5;
   transition: all 0.3s ease; /* Transición suave */
-  color: #ffffff
+  color: #ffffff;
 }
 
-.fa-solid-agregar-concepto:hover{
+.fa-solid-agregar-concepto:hover {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
 }
 
-.fa-solid-agregar-concepto:active{
+.fa-solid-agregar-concepto:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
   --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
 }
 
-.fa-solid-agregar-materiales{
+.fa-solid-agregar-materiales {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -262,22 +299,22 @@ body {
   border: 3px solid #008e5a;
   border-radius: 5;
   transition: all 0.3s ease; /* Transición suave */
-  color: #ffffff
+  color: #ffffff;
 }
 
-.fa-solid-agregar-materiales:hover{
+.fa-solid-agregar-materiales:hover {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
 }
 
-.fa-solid-agregar-materiales:active{
+.fa-solid-agregar-materiales:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
   --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
 }
 
-.fa-solid-cancelar{
+.fa-solid-cancelar {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -287,23 +324,22 @@ body {
   border: 3px solid #008e5a;
   border-radius: 5;
   transition: all 0.3s ease; /* Transición suave */
-  color: #ffffff
-  
+  color: #ffffff;
 }
 
-.fa-solid-cancelar:hover{
+.fa-solid-cancelar:hover {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
 }
 
-.fa-solid-cancelar:active{
+.fa-solid-cancelar:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
   --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
 }
 
-.fa-solid-Guardar{
+.fa-solid-Guardar {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -312,30 +348,29 @@ body {
   border: 3px solid #008e5a;
   border-radius: 5;
   transition: all 0.3s ease; /* Transición suave */
-  color: #ffffff
+  color: #ffffff;
 }
 
-.fa-solid-Guardar:hover{
+.fa-solid-Guardar:hover {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
 }
 
-.fa-solid-Guardar:active{
+.fa-solid-Guardar:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
   --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
 }
 
-.contenidoagg-catalogo{
+.contenidoagg-catalogo {
   padding-top: 9rem;
 }
 
-.titulo-concepto{
+.titulo-concepto {
   font-family: "LatoBold", sans-serif;
   font-size: 1.2rem;
   padding-top: 20px;
-
 
   display: flex;
   flex-wrap: wrap;
@@ -345,7 +380,7 @@ body {
   width: 100%;
 }
 
-.titulo-materiales{
+.titulo-materiales {
   font-family: "LatoBold", sans-serif;
   font-size: 1.2rem;
   padding-top: 1rem;
@@ -359,45 +394,44 @@ body {
   align-items: center;
 }
 
-.btncancelarconcepto{
+.btncancelarconcepto {
   margin-top: 1rem;
   display: flex;
   align-items: center;
 }
 
-.buttonguardarcatalogo{
+.buttonguardarcatalogo {
   padding: 0 2rem 0 2rem;
   float: right;
 }
 
-
-.div-card{
+.div-card {
   border: 3px solid #008e5a;
   border-radius: 5px;
   padding-bottom: 5px;
 }
 
-.titulocatalogo{
+.titulocatalogo {
   font-family: "LatoBold", sans-serif;
   font-size: 1.2rem;
-background-color: #008e5a;
-color: #ffffff;
-padding-left: 5px;
-padding-right: 5px;
-padding-bottom: 5px;
-padding-top: 5px;
+  background-color: #008e5a;
+  color: #ffffff;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
-.contenidocatalogo{
+.contenidocatalogo {
   font-family: "Lato", sans-serif;
   font-size: 1.2rem;
-background-color: #ffffff;
-color: #303030;
-padding-left: 5px;
-padding-right: 5px;
+  background-color: #ffffff;
+  color: #303030;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-.apartadoeliminarcatalogo{
+.apartadoeliminarcatalogo {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -407,21 +441,21 @@ padding-right: 5px;
   transition: all 0.3s ease;
   background-color: #008e5a;
   border-color: #ffffff;
-color: #ffffff;
+  color: #ffffff;
   float: right;
 }
 
-.apartadoeliminarcatalogo:hover{
+.apartadoeliminarcatalogo:hover {
   background-color: #303030;
   border-color: #ffffff;
   color: #ffffff;
 }
 
-.apartadoeliminarcatalogo:active{
+.apartadoeliminarcatalogo:active {
   background-color: #008e5a;
-color: #ffffff;
+  color: #ffffff;
 }
 
-.textolistado{
+.textolistado {
   font-family: "Lato", sans-serif;
 }

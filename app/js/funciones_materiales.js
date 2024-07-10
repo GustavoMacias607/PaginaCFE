@@ -1,10 +1,4 @@
 
-function incio() {
-    setTimeout(() => {
-        GetMateriales();
-    }, 800);
-}
-
 //Mensajes
 let msgEliminar = "Material eliminado";
 let msgActivar = "Material activado";
