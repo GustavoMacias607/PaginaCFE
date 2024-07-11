@@ -10,7 +10,7 @@ if (!isset($_SESSION['idusuario'])) {
 ?>
 <div class="fondBlancoCatalogo">
     <div class="bottom-rectangle-Catalogo">
-        <div class="text-Catalogo">Aqui se muestra el catalogo abierto</div>
+        <div class="text-Catalogo">Agregar catálogo</div>
         <a href="index.php" class="text-inicio-Catalogo">
             <div>Ir al inicio</div>
         </a>
@@ -22,8 +22,6 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-concepto">
         <nav class="pSeccion-catalogo">
             <div>Concepto</div>
-            <div><button type="button" class="btn fa-solid-agregar-concepto">Agregar</button></div>
-
         </nav>
         <div class="btncancelarconcepto"><button type="button" class="btn fa-solid-cancelar">Cancelar</button></div>
     </div>
@@ -35,16 +33,16 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             ID
                         </th>
-                        <th style="width: 60rem;">
+                        <th style="width: 28rem;">
                             Nombre
                         </th>
-                        <th style="width: 20rem;">
+                        <th style="width: 9rem;">
                             Tipo
                         </th>
                         <th style="width: 8rem;">
                             Plazo
                         </th>
-                        <th style="width: 12px;">
+                        <th style="width: 8rem;">
                             Unidad
                         </th>
                     </tr>
@@ -62,11 +60,12 @@ if (!isset($_SESSION['idusuario'])) {
         <nav class="pSeccion-catalogo">
             <div>Materiales</div>
             <div><button type="button" data-bs-toggle="modal" data-bs-target="#AgregarModalMaterialesConcepto" class="btn fa-solid-agregar-materiales">Agregar</button></div>
+            
         </nav>
     </div>
 
     <div class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materiales">
+        <div class="tabla-container tabla-container-materialescatalogo">
             <table id="tabla-materiales">
                 <thead class="">
                     <tr>
@@ -76,19 +75,19 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 12rem;">
                             Norma
                         </th>
-                        <th style="width: 20rem;">
+                        <th style="width: 28rem;">
                             Descripción
                         </th>
                         <th style="width: 8rem;">
                             Precio
                         </th>
-                        <th style="width: 60px;">
+                        <th style="width: 100px;">
                             Fecha del precio
                         </th>
-                        <th style="width: 150rem;">
+                        <th style="width: 100px;">
                             Unidad
                         </th>
-                        <th class="col-1" style="width: 170px;">
+                        <th class="col-1" style="width: 100px;">
                             <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                 <span>Acciones</span>
                             </div>
@@ -104,7 +103,7 @@ if (!isset($_SESSION['idusuario'])) {
             </table>
         </div>
     </div>
-    <div class="buttonguardarcatalogo"><button type="button" class="btn fa-solid-Guardar">Guardar</button></div>
+    <div class="buttonguardarcatalogo"><button type="button" class="btn fa-solid-Guardar-catalogo">Guardar</button></div>
 </div>
 </div>
 
@@ -112,20 +111,21 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- Modal insertar materiales -->
-<div class="modal modal-maquinaria" id="AgregarModalMaterialesConcepto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" style="border: 3px solid #008E5A;">
+<div class="modal modal-materiales_catalogo" id="AgregarModalMaterialesConcepto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog_catalogo">
+        <div class="modal-content" style="border: 3px solid #008E5A; top: 8.8rem; ">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar materiales</h1>
-                <button type="button" class="fa-solid fa-xmark btnclose-maquinaria" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body modal-body-maquinaria">
-                <div class="label-container-materiales">
+                <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMateriales();EstablecerPag()">
-                    <i class="fas fa-search icon-materiales" id="searchIcon"></i>
+                    <i class="fas fa-search icon-materiales_catalogo" id="searchIcon"></i>
                 </div>
-                <div class="contTabla-materiales">
-                    <div class="tabla-container tabla-container-materiales">
+                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-materiales_catalogo">
+                
+                <div class="contTabla-materialesmodal_catalogo">
+                    <div class="tabla-container tabla-container-materialesmodal_catalogo">
                         <table id="tabla-materiales">
                             <thead class="">
                                 <tr>
@@ -135,16 +135,16 @@ if (!isset($_SESSION['idusuario'])) {
                                     <th style="width: 12rem;">
                                         Norma
                                     </th>
-                                    <th style="width: 20rem;">
+                                    <th style="width: 28rem;">
                                         Descripción
                                     </th>
                                     <th style="width: 8rem;">
                                         Precio
                                     </th>
-                                    <th style="width: 60px;">
-                                        FechaPrecio
+                                    <th style="width: 100px;">
+                                        Fecha del precio
                                     </th>
-                                    <th class=" col-1" style="width: 150px;">
+                                    <th class=" col-1" style="width: 100px;">
                                         <div class="d-flex align-items-center">
                                             <span>Unidad: </span>
                                             <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetMateriales();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -175,77 +175,4 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
-</div>
-
-<!-- Modal insertar conceptos -->
-<div class="modal modal-maquinaria" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar materiales</h1>
-                <button type="button" class="fa-solid fa-xmark btnclose-maquinaria" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body modal-body-maquinaria">
-                <div class=" label-container-conceptos">
-                    <input type="text" placeholder="Buscar" id="searchInput" oninput="GetConcepto();EstablecerPag()">
-                    <i class="fas fa-search icon-conceptos" id="searchIcon"></i>
-                </div>
-                <div class="contTabla-conceptos">
-                    <div class="tabla-container tabla-container-conceptos">
-                        <table id="tabla-conceptos">
-                            <thead class="">
-                                <tr>
-                                    <th>
-                                        ID
-                                    </th>
-                                    <th>
-                                        Nombre
-                                    </th>
-                                    <th class=" col-1" style="width: 200px;">
-                                        <div class="d-flex align-items-center">
-                                            <span>Tipo: </span>
-                                            <select class="form-select form-select-sm ml-2" id="selectTipo" onchange="javacript:GetConcepto();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                                <option value="todo" selected>Todo</option>
-                                                <option value="Retenidas">Retenidas</option>
-                                                <option value="Sist. Tierra">Sist. Tierra</option>
-                                                <option value="Cables">Cables</option>
-                                                <option value="Postes">Postes</option>
-                                                <option value="Tros´s">Tros´s</option>
-                                                <option value="Acometidas">Acometidas</option>
-                                                <option value="Capacitores">Capacitores</option>
-                                                <option value="Seccionamiento">Seccionamiento</option>
-                                                <option value="Apartarrayos">Apartarrayos</option>
-                                                <option value="Alumbrado">Alumbrado</option>
-                                            </select>
-                                        </div>
-                                    </th>
-                                    <th>
-                                        Plazo
-                                    </th>
-                                    <th class=" col-1" style="width: 190px;">
-                                        <div class="d-flex align-items-center">
-                                            <span>Unidad: </span>
-                                            <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetConcepto();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                                <option value="todo" selected>Todo</option>
-                                                <option value="Estructuras">Estructura</option>
-                                                <option value="PZA">PZA</option>
-                                            </select>
-                                        </div>
-                                    </th>
-                                    <th class="col-1" style="width: 170px;">
-                                        <div style="display: flex; min-width: 144px; justify-content: space-between;">
-                                            <span>Acciones</span>
-                                        </div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <td colspan="8">Sin resultados</td>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

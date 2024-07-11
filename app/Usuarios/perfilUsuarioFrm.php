@@ -9,23 +9,31 @@ if (!isset($_SESSION['idusuario'])) {
 ?>
 <div class="bottom-rectangle-perfil">
     <div class="text-perfil">Perfil de usuario</div>
+    <a href="index.php" class="text-inicio-perfil">
+                <div>Ir al inicio</div>
+            </a>
 </div>
 <div class="container_perfil">
     <div class="texto_perfil">Nombre</div>
-    <div class="label-container-perfil">
-        <input type="text">
-    </div>
-    <div class="texto_perfil">Usuario</div>
-    <div class="label-container-perfil">
-        <input type="text">
-    </div>
+        <div class="label-containernombre-perfil">
+            <input type="text">
+        </div>
+    <nav class="pSeccion-perfil">
+        <div class="texto_perfil">Usuario</div>               
+        <div class="texto_perfil">Rol</div>
+    </nav>
+    <nav class="pSeccion-perfil">
+        <div class="label-containerusuario-perfil">
+            <input type="text">
+        </div>   
+        <div class="label-containerrol-perfil">
+            <input type="text">
+        </div>     
+    </nav>
+    <nav class="pSeccion_perfil">
     <div class="botones_perfil"> <button type="button" class="btn btn-editar-password">Editar contraseña</button> </div>
-
-    <div class="texto_perfil">Rol</div>
-    <div class="label-container-perfil">
-        <input type="text">
-    </div>
     <div class="botones_perfil"> <button type="button" class="btn btn-guardar-perfil">Guardar</button> </div>
+    </nav>
 </div>
 
 </div>

@@ -78,10 +78,10 @@ require("../../scripts/Materiales.php");
                         <th style="width: 12rem;">
                             Norma
                         </th>
-                        <th style="width: 20rem;">
+                        <th style="width: 28rem;">
                             Descripción
                         </th>
-                        <th style="width: 18rem;">
+                        <th style="width: 8rem;">
                             Precio
                         </th>
                         <th style="width: 100px;">

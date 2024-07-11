@@ -63,13 +63,13 @@ if (!isset($_SESSION['idusuario'])) {
         <table id="tabla-conceptos">
             <thead class="">
                 <tr>
-                    <th>
+                    <th style="width: 8rem;">
                         ID
                     </th>
-                    <th>
+                    <th style="width: 28rem;">
                         Nombre
                     </th>
-                    <th class=" col-1" style="width: 200px;">
+                    <th class=" col-1" style="width: 9rem;">
                         <div class="d-flex align-items-center">
                             <span>Tipo: </span>
                             <select class="form-select form-select-sm ml-2" id="selectTipo" onchange="javacript:GetConcepto();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -87,10 +87,10 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th>
+                    <th style="width: 8rem;">
                         Plazo
                     </th>
-                    <th class=" col-1" style="width: 190px;">
+                    <th class=" col-1" style="width: 8rem;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetConcepto();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -100,7 +100,7 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th class="col-1" style="width: 170px;">
+                    <th class="col-1" style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>

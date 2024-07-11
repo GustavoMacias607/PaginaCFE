@@ -19,7 +19,7 @@
     position: fixed;
     width: 100%;
     height: 60px;
-    padding: 5px 0 5px 10px;
+    padding: 5px 10px 5px 10px;
     top: 80px; /* La altura del rectángulo superior */
     z-index: 1; /* Asegura que el rectángulo esté detrás de los botones */
     @media (max-width: 1090px) {
@@ -36,23 +36,61 @@
   }
 
   .container_perfil{
-    transform: translate(15%, 160px);
+    transform: translate(40%, 160px);
   }
 
     /* Estilos para el titulo de cada textbox*/
-  .texto-perfil{
+  .texto_perfil{
     background-color: #ffffff; /* Fondo blanco */
     color: #303030;
-    font-family: "Lato", sans-serif;
+    font-family: "LatoBold", sans-serif;
   }
 
   /*Estilos para los textbox*/
-  .label-container-perfil {
-    width: 70vw; /* Ancho del label */
+  .label-containernombre-perfil {
+    width: 27rem; /* Ancho del label */
     background-color: #ffffff; /* Fondo blanco */
     border: 3px solid #008e5a; /* Contorno de 3px color verde */
     border-radius: 5px; /* Bordes redondeados */
     font-family: "Lato", sans-serif;
+  }
+  .label-containernombre-perfil input[type="text"] {
+    width: calc(100%); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
+  }
+  .label-containerusuario-perfil {
+    width: 15rem; /* Ancho del label */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 3px solid #008e5a; /* Contorno de 3px color verde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-family: "Lato", sans-serif;
+  }
+  .label-containerusuario-perfil input[type="text"] {
+    width: calc(100%); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
+  }
+  .label-containerrol-perfil {
+    width: 10rem; /* Ancho del label */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 3px solid #008e5a; /* Contorno de 3px color verde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-family: "Lato", sans-serif;
+  }
+  .label-containerrol-perfil input[type="text"] {
+    width: calc(100%); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
   }
 
     /*Estilos para el boton contrasñea*/
@@ -99,4 +137,27 @@
     border: 3px solid #008e5a;
     font-size: 16px;
     font-family: "LatoBold", sans-serif;
+}
+
+
+/* Estilos para el titulo volver a inicio */
+.text-inicio-perfil {
+  text-decoration: none;
+  position: static;
+  font-family: "LatoBold", sans-serif;
+  color: #ffffff;
+  font-size: 140%;
+  padding: 10px 2px;
+  z-index: 5000;
+  margin-left: auto;
+}
+
+.text-inicio-perfil:hover {
+  color: #ffffff;
+}
+
+
+.pSeccion_perfil {
+  display: flex;
+  flex-wrap: wrap;
 }

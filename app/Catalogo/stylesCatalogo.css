@@ -264,6 +264,19 @@ th {
   }
 }
 
+.tabla-container-materialescatalogo{
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+}
+
+
+
 .fa-solid-agregar-concepto {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
@@ -339,7 +352,7 @@ th {
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
 }
 
-.fa-solid-Guardar {
+.fa-solid-Guardar-catalogo {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
   --bs-btn-padding-x: 10px; /* largo del boton */
@@ -351,13 +364,13 @@ th {
   color: #ffffff;
 }
 
-.fa-solid-Guardar:hover {
+.fa-solid-Guardar-catalogo:hover {
   background-color: #303030; /* Fondo blanco al pasar el mouse */
   border-color: #ffffff; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al pasar el mouse */
 }
 
-.fa-solid-Guardar:active {
+.fa-solid-Guardar-catalogo:active {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
   --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
@@ -458,4 +471,109 @@ th {
 
 .textolistado {
   font-family: "Lato", sans-serif;
+}
+
+
+/* Estilos para el modal de agregar materiales*/
+.modal-dialog_catalogo{
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.modal-materiales_catalogo {
+  z-index: 5000;
+  font-family: "LatoBold", sans-serif;
+}
+
+.btnclose-materiales_catalogo {
+  background-color: #ffffff;
+  color: #008e5a;
+  border: none;
+  font-size: 30px;
+}
+
+/* Estilos para el botón Guardar del modal */
+.modal-footer-materiales_catalogo .btn-primary {
+  background-color: #008e5a; /* Color verde */
+  border-color: #008e5a; /* Color del borde */
+  color: #ffffff;
+}
+
+.modal-footer-materiales_catalogo {
+  border: none;
+}
+
+.modal-footer-materiales_catalogo .btn-primary:active {
+  background-color: #008e5a; /* Color verde al hacer clic */
+  border-color: #008e5a; /* Color del borde al hacer clic */
+  color: #000000; /* Color negro al hacer clic */
+}
+.modal-body-materiales_catalogo input[type="text"] {
+  font-family: "Lato", sans-serif;
+}
+
+/* Estilos para el buscador de materiales en el agregar material*/
+.label-container-materiales_catalogo {
+  margin: 7rem auto 0 auto;
+  width: 70vw; /* Ancho del label */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 3px solid #008e5a; /* Contorno de 3px color verde */
+  border-radius: 5px; /* Bordes redondeados */
+  @media (max-width: 1090px) {
+    margin: 4rem auto 0 auto;
+  }
+  margin-top: 0.1rem;
+}
+.label-container-materiales_catalogo input[type="text"] {
+  width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
+  border: none; /* Elimina el borde del input */
+  outline: none; /* Elimina el borde de enfoque */
+  padding: 3px; /* Espacio interno */
+  color: #303030; /* Color del texto */
+  font-size: 20px; /* Tamaño del texto */
+}
+.label-container-materiales_catalogo input[type="text"]::placeholder {
+  color: #858585; /* Color del texto del placeholder */
+  font-size: 20px; /* Tamaño del texto del placeholder */
+}
+
+.icon-materiales_catalogo{
+  color: #008e5a; /* Color verde */
+}
+
+
+.contTabla-materialesmodal_catalogo{
+  width: calc(100% - 0.2rem);
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+  padding-top: 1px;
+  @media (min-width: 393px) {
+    padding-top: 8rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 508px) {
+    padding-top: 7rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 1090px) {
+    padding-top: 1px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: calc(100% - 4rem);
+  }
+}
+.tabla-container-materialesmodal_catalogo{
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
 }
