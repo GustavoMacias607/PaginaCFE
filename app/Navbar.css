@@ -118,3 +118,52 @@ a:hover {
   list-style: none;
   text-decoration: none;
 }
+
+/*Estilos globales
+*****************************************************
+*****************************************************
+*****************************************************
+*****************************************************
+*/
+
+.centrarMsg {
+  display: flex;
+  justify-content: center;
+}
+.modMsg {
+  position: fixed;
+  width: 13rem;
+  height: 12rem;
+  top: 45vh;
+  z-index: 9999;
+  border-radius: 1rem;
+  background-color: #ffffff;
+}
+
+.modMsgMal {
+  border: red 3px solid;
+}
+.modMsgBien {
+  border: #008e5a 3px solid;
+}
+.modMsgEsconder {
+  display: none;
+}
+.modImg {
+  padding-top: 2px;
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  height: 50%;
+}
+
+.modCon {
+  color: black;
+  text-align: center;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+  font-weight: 800;
+  padding: 5px;
+  height: 40%;
+}

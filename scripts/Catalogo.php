@@ -17,7 +17,7 @@ class Catalogo
             $sql->execute(array(
                 "IdConcepto" => $datos->idConcepto,
                 "IdMaterial" => $datos->idMaterial,
-                "Cantidad" => $datos->Cantidad
+                "Cantidad" => $datos->cantidad
             ));
             unset($c);
         } catch (PDOException $e) {

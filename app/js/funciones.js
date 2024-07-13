@@ -53,7 +53,7 @@ function opcion(op) {
     });
 }
 //Atributos globales
-var datosCatalogo = {};
+
 let existe = false;
 let paginaActual = 1;
 let tamanoPagina = 10;

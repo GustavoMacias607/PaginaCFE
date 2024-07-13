@@ -125,4 +125,32 @@ class Materiales
         }
         return $R;
     }
+
+    /*Método para buscar un material por Id
+     Recibe un objeto con el id del material a buscar*/
+    function BuscarMaterialId($datos)
+    {
+
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spMaterialesBuscarId(:Id);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "Id" => $datos->id
+
+            ));
+
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
 }

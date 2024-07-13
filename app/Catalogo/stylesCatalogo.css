@@ -229,6 +229,34 @@ th {
   color: #303030; /* Texto de las filas en color #303030 */
 }
 
+#tabla-MaterialesCatalogo {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead,
+th {
+  position: -webkit-sticky; /* Para Safari */
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Fondo para el encabezado */
+  z-index: 10; /* Asegura que el encabezado esté por encima del contenido */
+}
+#tabla-MaterialesCatalogo th,
+#tabla-MaterialesCatalogo td {
+  border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+  padding: 8px;
+  text-align: left;
+}
+
+#tabla-MaterialesCatalogo th {
+  background-color: #008e5a; /* Encabezados con fondo verde */
+  color: white; /* Letras blancas en los encabezados */
+}
+
+#tabla-MaterialesCatalogo tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
 .tabla-container-conceptosCatalogo {
   text-align: center;
   border-top: #008e5a solid 3px;
@@ -264,7 +292,7 @@ th {
   }
 }
 
-.tabla-container-materialescatalogo{
+.tabla-container-materialescatalogo {
   text-align: center;
   margin-bottom: 100px;
   /* Altura máxima del contenedor */
@@ -274,8 +302,6 @@ th {
   border-top-width: 0px;
   margin-top: 0px;
 }
-
-
 
 .fa-solid-agregar-concepto {
   font-family: "LatoBold", sans-serif; /* tipografia */
@@ -473,10 +499,9 @@ th {
   font-family: "Lato", sans-serif;
 }
 
-
 /* Estilos para el modal de agregar materiales*/
-.modal-dialog_catalogo{
-  width: 100%;
+.modal-dialog_catalogo {
+  max-width: 100%;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -538,12 +563,11 @@ th {
   font-size: 20px; /* Tamaño del texto del placeholder */
 }
 
-.icon-materiales_catalogo{
+.icon-materiales_catalogo {
   color: #008e5a; /* Color verde */
 }
 
-
-.contTabla-materialesmodal_catalogo{
+.contTabla-materialesmodal_catalogo {
   width: calc(100% - 0.2rem);
   margin-left: 0.2rem;
   margin-right: 0.2rem;
@@ -567,7 +591,7 @@ th {
     width: calc(100% - 4rem);
   }
 }
-.tabla-container-materialesmodal_catalogo{
+.tabla-container-materialesmodal_catalogo {
   text-align: center;
   margin-bottom: 100px;
   /* Altura máxima del contenedor */
@@ -577,3 +601,10 @@ th {
   border-top-width: 0px;
   margin-top: 0px;
 }
+
+/*Fondo para fila Inabilitada 
+*****************************/
+.filaMaterialInactivo {
+  background-color: #ff0a0a;
+}
+/******************************/

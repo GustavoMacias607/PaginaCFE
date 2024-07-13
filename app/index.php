@@ -107,20 +107,17 @@ if (!isset($_SESSION['idusuario'])) {
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Catalogo');">Catálogo</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);incioConcepto();"
-                    href="javascript:opcion('conceptos');">Conceptos</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('conceptos');">Conceptos</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);incioManoObra();"
-                    href="javascript:opcion('ManoObra');">Mano de
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de
                     obra</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this); incioMaquinaria();"
-                    href="javascript:opcion('Maquinaria');">Maquinaria</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="javascript:incio(); preciona(this);EstablecerPag();"
+                <a class="opcionesMenu" onclick=" preciona(this);"
                     href="javascript:opcion('materiales');">Materiales</a>
             </li>
 

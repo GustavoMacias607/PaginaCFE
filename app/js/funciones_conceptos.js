@@ -539,6 +539,7 @@ function AbrirModalConfirm1() {
 
 //Datos para el catalogo
 function InfoCatalogo(id, nombre, tipo, plazo, unidad) {
+    listaMateriales = [];
     datosCatalogo = {
         id,
         nombre,
