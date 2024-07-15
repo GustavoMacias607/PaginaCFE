@@ -6,6 +6,7 @@ let MaterialInactivo = false;
 let msgGuardarMaterialInactivo = "Material inactivo";
 let msgGuardarSinCantidad = "Material sin cantidad";
 let msgMaterialYaHaSidoAgregado = "Material ya ha sido agregado";
+let mgsCatalogoAgregado = "Catalogo guardado";
 function AgregarDatosTablaConceptoCatalogo() {
 
     //Llena tabla concepto de la pagina catalogo
@@ -92,7 +93,7 @@ function AgregarCatalogoConcepto() {
                     let resp = JSON.parse(responseText);
                     if (resp.estado == "OK") {
 
-                        mensajePantalla(msgAgregar, true);
+                        mensajePantalla(mgsCatalogoAgregado, true);
 
                     }
                 } else {

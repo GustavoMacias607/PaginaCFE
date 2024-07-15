@@ -60,7 +60,7 @@ if (!isset($_SESSION['idusuario'])) {
         <nav class="pSeccion-catalogo">
             <div>Materiales</div>
             <div><button type="button" onclick="javascript:AbrirModalMateriales();" class="btn fa-solid-agregar-materiales">Agregar</button></div>
-            <div id="LecturaMaterial">Hay un material Inactivo</div>
+            <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
 
         </nav>
     </div>

@@ -62,13 +62,15 @@ class Conceptos
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBuscar(:Estatus,:Tipo,:Unidad, :Buscar);";
+            $consulta = "call spConceptoBuscarTipoUnidadNombrePlazo(:Estatus,:Tipo,:Unidad, :Buscar,:OrderId, :OrderNombre);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Estatus" => $datos->estatus,
                 "Tipo" => $datos->tipo,
                 "Unidad" => $datos->unidad,
                 "Buscar" => $datos->buscar,
+                "OrderId" => $datos->orderId,
+                "OrderNombre" => $datos->orderNombre,
             ));
 
             $R['filas'] = $sql->rowCount();

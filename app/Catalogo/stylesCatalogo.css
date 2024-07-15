@@ -608,3 +608,7 @@ th {
   background-color: #ff0a0a;
 }
 /******************************/
+
+.esconderTextoInactivo {
+  display: none;
+}

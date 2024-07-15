@@ -4,6 +4,11 @@ let msgActivarCon = "Concepto activado";
 let msgAgregarCon = "Concepto agregado";
 let msgModificarCon = "Concepto modificado";
 
+let ordenFiltro = {
+    id: null,
+    nombre: null
+};
+
 //Metodo para cambiar el tamaño de los registros que se muestran
 function cambiarTamanoConcepto() {
     const cantidad = document.getElementById("cantRegistros");
@@ -303,6 +308,8 @@ function paginaSiguienteConcepto() {
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetConcepto() {
     const datos = {};
+
+
     let buscar = document.querySelector('#searchInput');
     let estatus = document.getElementById('ValCheEsta').checked;
     let unidad = document.getElementById('selectUnidad');
@@ -315,7 +322,10 @@ function GetConcepto() {
     }
     datos.unidad = unidad.value;
     datos.tipo = tipo.value;
+    datos.orderId = ordenFiltro.id;
+    datos.orderNombre = ordenFiltro.nombre;
     let json = JSON.stringify(datos);
+    console.log(json)
     let url = "../ws/Conceptos/wsGetConcepto.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -550,3 +560,50 @@ function InfoCatalogo(id, nombre, tipo, plazo, unidad) {
 
 }
 
+
+function filtrarOrden(filtro) {
+    //filtro = 1 .. Id
+    let iconoId = document.querySelector('#iconoId')
+    //filtro = 2 .. Nombre
+    let iconoNombre = document.querySelector('#iconoNombre')
+
+
+    if (filtro == 1) {
+        if (iconoId.classList.contains("fa-chevron-up")) {
+            iconoId.classList.remove("fa-chevron-up");
+            iconoId.classList.add("fa-chevron-down");
+            ordenFiltro = {
+                id: "ASC",
+                nombre: null
+            }
+        } else {
+            iconoId.classList.remove("fa-chevron-down");
+            iconoId.classList.add("fa-chevron-up");
+            ordenFiltro = {
+                id: "DESC",
+                nombre: null
+            }
+        }
+        iconoNombre.classList.remove("fa-chevron-down");
+        iconoNombre.classList.add("fa-chevron-up");
+    } else {
+        if (iconoNombre.classList.contains("fa-chevron-up")) {
+            iconoNombre.classList.remove("fa-chevron-up");
+            iconoNombre.classList.add("fa-chevron-down");
+            ordenFiltro = {
+                id: null,
+                nombre: 'ASC'
+            }
+        } else {
+            iconoNombre.classList.remove("fa-chevron-down");
+            iconoNombre.classList.add("fa-chevron-up");
+            ordenFiltro = {
+                id: null,
+                nombre: "DESC"
+            }
+        }
+        iconoId.classList.remove("fa-chevron-down");
+        iconoId.classList.add("fa-chevron-up");
+    }
+    GetConcepto();
+}
