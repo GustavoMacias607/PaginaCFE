@@ -1,6 +1,6 @@
 
-let msgEliminarUsu = "Usuario eliminado";
-let msgActivarUsu = "Usuario activado";
+let msgEliminarUsu = "Usuario deshabilitado";
+let msgActivarUsu = "Usuario habilitado";
 let msgAgregarUsu = "Usuario agregado";
 let msgModificarUsu = "Usuario modificado";
 
@@ -409,15 +409,24 @@ function actualizarPaginacionUsuario(totalDatos, paginaActual, tamanoPagina) {
     let liPrev = document.createElement("li");
     liPrev.innerHTML = `<button onclick="paginaAnteriorUsuario()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
     paginationList.appendChild(liPrev);
+    // Ajuste del rango para mostrar siempre 5 páginas
+    let startPage = Math.max(1, paginaActual - rangoMostrar);
+    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
+    if (endPage - startPage < 4) {
+        if (startPage > 1) {
+            startPage = Math.max(1, endPage - 4);
+        } else if (endPage < totalPaginas) {
+            endPage = Math.min(totalPaginas, startPage + 4);
+        }
+    }
     // Generar enlaces de página
-    for (let i = Math.max(1, paginaActual - rangoMostrar); i <= Math.min(totalPaginas, paginaActual + rangoMostrar); i++) {
+    for (let i = startPage; i <= endPage; i++) {
         let li = document.createElement("li");
         if (i === paginaActual) {
             li.classList.add("active");
-        }
-        li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPagUsuario(${i})">${i}</button>`;
-        if (i === paginaActual) {
             li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagUsuario(${i})">${i}</button>`;
+            } else {
+            li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
         }
         paginationList.appendChild(li);
     }

@@ -19,12 +19,12 @@
                 style="width: 150px; height: auto; margin-bottom: 30px;">
             <div class="mb-3 input-group">
                 <span class="input-group-text custom-icon"><i class="fas fa-user green-icon"></i></span>
-                <input type="text" name="usuario" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                <input type="text" name="usuario" placeholder="Usuario" onblur="javascript:CompruebaTieneAlgoInput(this)"
                     class="form-control  inputLleno form-control-login" id="Usuario">
             </div>
             <div class="mb-3 input-group">
                 <span class="input-group-text custom-icon"><i class="fas fa-lock green-icon"></i></span>
-                <input type="password" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                <input type="password" placeholder="Contraseña" onblur="javascript:CompruebaTieneAlgoInput(this)"
                     class="form-control inputLleno form-control-login" id="Password">
             </div>
             <button type="button" onclick="logueo()" id="btn_submit" class="btn btn-outline-light">Ingresar</button>

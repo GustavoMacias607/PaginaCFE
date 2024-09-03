@@ -268,10 +268,10 @@ require("../../scripts/Materiales.php");
             <div class="modal-content">
                 <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
                     <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                        ¿Activar este material?</h5>
+                        ¿Habilitar este material?</h5>
                     <button type="button" class="btn" id="confirmActivationButton"
                         onclick="javascript:ActivarCerrarModal(); CambioEstatus();"
-                        style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Activar</button>
+                        style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
                     <button type="button" class="btn" data-bs-dismiss="modal"
                         style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
                 </div>
@@ -287,10 +287,10 @@ require("../../scripts/Materiales.php");
             <div class="modal-content">
                 <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
                     <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                        ¿Eliminar este material?</h5>
+                        ¿Deshabilitar este material?</h5>
                     <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
                         id="confirmDeleteButton"
-                        style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Eliminar</button>
+                        style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
                     <button type="button" class="btn" data-bs-dismiss="modal"
                         style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
                 </div>
@@ -306,7 +306,7 @@ require("../../scripts/Materiales.php");
                 <div class="modal-header"
                     style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
                     <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
-                        seguro de que desea eliminar este material?</h5>
+                        seguro de que desea deshabilitar este material?</h5>
                     <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatus();" class="btn"
                         id="confirmAdditionalButton"
                         style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
