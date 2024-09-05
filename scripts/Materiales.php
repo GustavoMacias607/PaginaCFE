@@ -142,10 +142,10 @@ class Materiales
             ));
 
             $R['filas'] = $sql->rowCount();
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
+            if ($R['filas'] > 0) {
+                $R['estado'] = "A";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['estado'] = "N";
             }
             $c = null;
         } catch (PDOException $e) {

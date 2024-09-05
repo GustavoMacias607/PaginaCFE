@@ -19,7 +19,8 @@
                 style="width: 150px; height: auto; margin-bottom: 30px;">
             <div class="mb-3 input-group">
                 <span class="input-group-text custom-icon"><i class="fas fa-user green-icon"></i></span>
-                <input type="text" name="usuario" placeholder="Usuario" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                <input type="text" name="usuario" placeholder="Usuario"
+                    onblur="javascript:CompruebaTieneAlgoInput(this)"
                     class="form-control  inputLleno form-control-login" id="Usuario">
             </div>
             <div class="mb-3 input-group">
@@ -163,7 +164,7 @@
             setTimeout(() => {
                 msgModal.classList.add("modMsgEsconder");
                 modLogIn.classList.remove("modMsgBien");
-            }, 1500);
+            }, 2500);
         } else {
             img.src = "img/imgEquis.png"
             parrafoModal.innerHTML = msg;
@@ -172,7 +173,7 @@
             setTimeout(() => {
                 msgModal.classList.add("modMsgEsconder");
                 msgModal.classList.remove("modMsgMal");
-            }, 1500);
+            }, 2500);
         }
     }
     </Script>

@@ -5,6 +5,9 @@ let msgActivar = "Material habilitado";
 let msgAgregar = "Material agregado";
 let msgModificar = "Material modificado";
 
+let msgPesoMaximo = "Maximo 200kb";
+let msgNoEsImagen = "No es una imagen";
+
 //Metodo para cambiar el tamaño de los registros que se muestran
 function cambiarTamano() {
     const cantidad = document.getElementById("cantRegistros");
@@ -14,13 +17,8 @@ function cambiarTamano() {
 }
 
 
-//Metodo para establecer que con cada modificacion del filtro la paginacion vuelva a la pagina 1
-
-
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaterialValidar() {
-    let msgModal = document.getElementById('modalMsgMateriales');
-    let parrafoModal = document.getElementById('modParrafo');
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
@@ -107,16 +105,12 @@ function AddMaterialValidar() {
                     }
 
                     AddCerrarModal();
-                    parrafoModal.innerHTML = msgAgregar;
-                    msgModal.classList.remove("modMsgEsconder");
-                    setTimeout(() => {
-                        msgModal.classList.add("modMsgEsconder");
-                    }, 2000);
+                    mensajePantalla(msgAgregar, true)
                     GetMateriales();
 
                 } else {
-                    console.log(resp.estado);
-                    alert("¡Este código ya existe!")
+
+
                     id.classList.add("inputVacio");
                     id.focus();
 
@@ -132,12 +126,11 @@ function AddMaterialValidar() {
 }
 //Metodo para validar el modal para modificar un material y al mismo tiempo valida los datos
 function UpdMaterialValidar() {
-    let msgModal = document.getElementById('modalMsgMateriales');
-    let parrafoModal = document.getElementById('modParrafo');
+
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
-    let idA = document.querySelector('#idAnterior');
+    let idA = document.querySelector('#UpdidAnteriorMaterial');
     let id = document.querySelector('#UpdidInput');
     if (id.value == "") {
         id.classList.add("inputVacio");
@@ -213,14 +206,9 @@ function UpdMaterialValidar() {
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
                     GetMateriales();
-                    parrafoModal.innerHTML = msgModificar;
-                    msgModal.classList.remove("modMsgEsconder");
-                    setTimeout(() => {
-                        msgModal.classList.add("modMsgEsconder");
-                    }, 2000);
+                    mensajePantalla(msgModificar, true)
                 } else {
-                    alert("¡Este código ya existe!")
-                    id.classList.add("inputVacio");
+
                     id.focus();
                 }
             } else {
@@ -231,6 +219,43 @@ function UpdMaterialValidar() {
         }
     });
 }
+
+function checkMaterial(modal) {
+    const datos = {}
+    if (modal == "Add") {
+        var idVali = document.querySelector('#AddidInput');
+    } else {
+        var idVali = document.querySelector('#UpdidInput');
+        let idAnterior = document.querySelector('#UpdidAnteriorMaterial');
+        if (idVali.value == idAnterior.value) {
+            existe = false;
+            return;
+        }
+    }
+
+    if (idVali.value == "") {
+        return;
+    }
+    datos.id = idVali.value;
+    let json = JSON.stringify(datos);
+
+    let url = "../ws/Materiales/wsBuscarMaterialId.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+
+                let resp = JSON.parse(responseText);
+
+                comprobarExiste(resp.estado, idVali)
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            alert("Error: " + error)
+        }
+    });
+}
+
 
 //Metodo para cambiar el estatus de los materiales
 function CambioEstatus() {
@@ -250,11 +275,8 @@ function CambioEstatus() {
             $.post(url, json, (responseText, status) => {
                 try {
                     if (status == "success") {
-                        parrafoModal.innerHTML = msgActivar;
-                        msgModal.classList.remove("modMsgEsconder");
-                        setTimeout(() => {
-                            msgModal.classList.add("modMsgEsconder");
-                        }, 2000);
+                        mensajePantalla(msgActivar, true)
+
                         paginaActual = 1;
                         GetMateriales();
                     } else {
@@ -273,12 +295,7 @@ function CambioEstatus() {
                     if (status == "success") {
                         GetMateriales();
                         paginaActual = 1;
-                        parrafoModal.innerHTML = msgEliminar;
-                        msgModal.classList.remove("modMsgEsconder");
-                        setTimeout(() => {
-                            msgModal.classList.add("modMsgEsconder");
-                        }, 2000);
-
+                        mensajePantalla(msgEliminar, true)
 
                     } else {
                         throw e = status;
@@ -513,8 +530,10 @@ function AddlimpiarModal() {
     let precio = document.querySelector('#AddprecioInput');
     let unidad = document.querySelector('#AddunidadInput');
     let img = document.querySelector('#AddimagenPreview');
+    let inputImg = document.querySelector('#AddimagenInput');
     img.src = "img/sinimagen.png";
-    img.alt = "hola";
+    img.alt = "";
+    inputImg.value = "";
     let fechaActual = new Date();
     let año = fechaActual.getFullYear();
     let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
@@ -568,10 +587,10 @@ function AddAgregarImagen() {
                 }
             });
         } else {
-            alert('El archivo seleccionado no es una imagen en formato PNG o JPG.');
+            mensajePantalla('El archivo seleccionado no es una imagen en formato PNG o JPG.', false);
         }
     } else {
-        alert('El tamaño del archivo excede el límite de 200 KB.');
+        mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
 
     }
 
@@ -606,10 +625,10 @@ function UpdAgregarImagen() {
                 }
             });
         } else {
-            alert('El archivo seleccionado no es una imagen en formato PNG o JPG.');
+            mensajePantalla('El archivo seleccionado no es una imagen en formato PNG o JPG.', false);
         }
     } else {
-        alert('El tamaño del archivo excede el límite de 200 KB.');
+        mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
     }
 
 }
@@ -622,9 +641,18 @@ function AddmostrarImagen(input) {
     if (input.files && input.files[0]) {
         const archivo = input.files[0]; // Obtener el archivo seleccionado
 
+        // Verifica el tipo MIME del archivo para asegurarse de que es una imagen
+        const tiposImagen = ['image/jpeg', 'image/png', 'image/gif']; // Tipos MIME permitidos para imágenes
+        if (!tiposImagen.includes(archivo.type)) {
+            mensajePantalla(msgNoEsImagen, false);
+            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
+            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            return; // Salir de la función para evitar cargar un archivo no imagen
+        }
+
         // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
         if (archivo.size > 204800) {
-            alert("La imagen seleccionada es demasiado grande. Por favor, elige una imagen que pese menos de 200 KB.");
+            mensajePantalla(msgPesoMaximo, false);
             input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
             imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
             return; // Salir de la función para evitar cargar la imagen grande
@@ -638,16 +666,37 @@ function AddmostrarImagen(input) {
     }
 }
 
-
 //Metodo para mostrar la imagen en el modal de Modificar Material, recibe la imagen seleccionada
 function UpdmostrarImagen(input) {
     const imagenPreview = document.getElementById('UpdimagenPreview');
+
+    // Verifica que haya un archivo seleccionado
     if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            imagenPreview.src = e.target.result;
+        const archivo = input.files[0]; // Obtener el archivo seleccionado
+
+        // Verifica el tipo MIME del archivo para asegurarse de que es una imagen
+        const tiposImagen = ['image/jpeg', 'image/png', 'image/gif']; // Tipos MIME permitidos para imágenes
+        if (!tiposImagen.includes(archivo.type)) {
+            mensajePantalla(msgNoEsImagen, false);
+            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
+            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            return; // Salir de la función para evitar cargar un archivo no imagen
         }
-        reader.readAsDataURL(input.files[0]);
+
+        // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
+        if (archivo.size > 204800) {
+            mensajePantalla(msgPesoMaximo, false);
+            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
+            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            return; // Salir de la función para evitar cargar la imagen grande
+        }
+
+        // Si pasa las validaciones, lee y muestra la imagen
+        const reader = new FileReader(); // Crea un lector de archivos
+        reader.onload = function (e) {
+            imagenPreview.src = e.target.result; // Muestra la imagen en el preview
+        }
+        reader.readAsDataURL(archivo); // Lee el archivo seleccionado
     }
 }
 
@@ -670,12 +719,14 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
 
 
     let idM = document.querySelector('#UpdidInput');
-    let idA = document.querySelector('#idAnterior');
+    let idA = document.querySelector('#UpdidAnteriorMaterial');
     let normaM = document.querySelector('#UpdnormaInput');
     let descripcionM = document.querySelector('#UpddescripcionInput');
     let precioM = document.querySelector('#UpdprecioInput');
     let unidadM = document.querySelector('#UpdunidadInput');
+    let inputImg = document.querySelector('#UpdimagenInput');
 
+    inputImg.value = "";
     idM.value = id;
     idA.value = id;
     normaM.value = norma;

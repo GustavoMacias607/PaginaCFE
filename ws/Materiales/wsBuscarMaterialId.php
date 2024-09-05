@@ -16,10 +16,9 @@ $u = new Materiales($c->getConnection());
 $res = $u->BuscarMaterialId($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
-    $resultado['datos'] = $res['datos'];
 } else {
     $resultado['estado'] = $res['estado'];
-    $resultado['mensaje'] = "N";
 }
+
 
 echo json_encode($resultado);

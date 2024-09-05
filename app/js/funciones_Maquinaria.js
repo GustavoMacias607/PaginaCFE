@@ -206,10 +206,10 @@ function UpdMaquinariaValidar() {
 function checkMaquinaria(modal) {
     const datos = {}
     if (modal == "Add") {
-        var idVali = document.querySelector('#AddidInputManodeobra');
+        var idVali = document.querySelector('#AddidInputMaquinaria');
     } else {
         var idVali = document.querySelector('#UpdidInput');
-        let idAnterior = document.querySelector('#UpdidAnteriorMano');
+        let idAnterior = document.querySelector('#UpdidAnteriorMaqui');
         if (idVali.value == idAnterior.value) {
             existe = false;
             return;
@@ -228,6 +228,7 @@ function checkMaquinaria(modal) {
             if (status == "success") {
 
                 let resp = JSON.parse(responseText);
+                console.log(resp)
                 comprobarExiste(resp.estado, idVali)
             } else {
                 throw e = status;
@@ -415,16 +416,16 @@ function actualizarPaginacionMaquinaria(totalDatos, paginaActual, tamanoPagina) 
     let liPrev = document.createElement("li");
     liPrev.innerHTML = `<button onclick="paginaAnteriorMaquinaria()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
     paginationList.appendChild(liPrev);
-        // Ajuste del rango para mostrar siempre 5 páginas
-        let startPage = Math.max(1, paginaActual - rangoMostrar);
-        let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
-        if (endPage - startPage < 4) {
-            if (startPage > 1) {
-                startPage = Math.max(1, endPage - 4);
-            } else if (endPage < totalPaginas) {
-                endPage = Math.min(totalPaginas, startPage + 4);
-            }
+    // Ajuste del rango para mostrar siempre 5 páginas
+    let startPage = Math.max(1, paginaActual - rangoMostrar);
+    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
+    if (endPage - startPage < 4) {
+        if (startPage > 1) {
+            startPage = Math.max(1, endPage - 4);
+        } else if (endPage < totalPaginas) {
+            endPage = Math.min(totalPaginas, startPage + 4);
         }
+    }
     // Generar enlaces de página
     for (let i = startPage; i <= endPage; i++) {
         let li = document.createElement("li");

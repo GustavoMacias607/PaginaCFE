@@ -140,7 +140,7 @@ require("../../scripts/Materiales.php");
                     <div class="mb-3">
                         <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                         <input type="number" class="form-control inputLleno" id="AddidInput"
-                            onblur="javascript:CompruebaTieneAlgoInput(this)">
+                            onblur="javascript:CompruebaTieneAlgoInput(this); checkMaterial('Add');">
                     </div>
                     <div class="mb-3">
                         <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
@@ -202,12 +202,14 @@ require("../../scripts/Materiales.php");
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <input type="text" class="form-control d-none" id="UpdidAnteriorMaterial"
+                        style="border: 3px solid #008E5A;">
                     <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                    <input type="text" class="form-control d-none" id="idAnterior" style="border: 3px solid #008E5A;">
+
                     <div class="mb-3">
                         <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                         <input type="number" class="form-control inputLleno "
-                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdidInput">
+                            onblur="javascript:CompruebaTieneAlgoInput(this); checkMaterial('upd');" id="UpdidInput">
                     </div>
                     <div class="mb-3">
                         <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
@@ -318,13 +320,13 @@ require("../../scripts/Materiales.php");
     </div>
 
     <!-- Modal Mensaje -->
-    <div class="centrarMsg modMsgEsconder" id="modalMsgMateriales">
-        <div class="modMsg">
+    <div class="centrarMsg modMsgEsconder" id="modalMsgUsuarios">
+        <div class="modMsg" id="modUsu">
             <div class="modImg">
-                <img src="../img/imgPalomita.png" alt="Mensaje" height="100%">
+                <img id="imgPic" src="../img/imgPalomita.png" alt="Mensaje" height="100%">
             </div>
             <div class="modCon">
-                <p id="modParrafo"></p>
+                <p id="modParrafo">Hola</p>
             </div>
         </div>
     </div>

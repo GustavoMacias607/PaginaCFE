@@ -48,7 +48,9 @@ function AgregarDatosTablaConceptoCatalogo() {
                             estatus: material.estatus
                         };
                         listaMateriales.push(valores);
+
                     })
+
                     llenarTablaPorModal();
                 }
             } else {
@@ -61,9 +63,8 @@ function AgregarDatosTablaConceptoCatalogo() {
 }
 
 function AgregarCatalogoConcepto() {
-    EliminarMaterialesConcepto();
-    let tbody = document.getElementById("tabla-materiales").getElementsByTagName("tbody")[0];
 
+    let tbody = document.getElementById("tabla-materiales").getElementsByTagName("tbody")[0];
     if (MaterialInactivo) {
         mensajePantalla(msgGuardarMaterialInactivo, false);
         return;
@@ -75,13 +76,12 @@ function AgregarCatalogoConcepto() {
             return;
         }
     }
-
+    EliminarMaterialesConcepto();
     for (let i = 0; i < tbody.rows.length; i++) {
         let fila = tbody.rows[i];
         let datos = {};
 
         // Obtener datos de cada celda y agregar al objeto filaObjeto
-
         datos.idConcepto = datosCatalogo.id;
         datos.idMaterial = fila.cells[0].textContent;
         datos.cantidad = fila.cells[7].textContent;
@@ -159,9 +159,6 @@ function GetMaterialesCatalogo() {
         }
     });
 }
-
-
-
 function mostrarDatosEnTablaMatCatalogo(datos, paginaActual, tamanoPagina) {
     let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
     totalPag = totalPaginas;
@@ -226,8 +223,6 @@ function mostrarDatosEnTablaMatCatalogo(datos, paginaActual, tamanoPagina) {
     }
     actualizarPaginacionCatalogoMateriales(datos.length, paginaActual, tamanoPagina);
 }
-
-
 //Metodo para regresar una pagina en la paginacion
 function paginaAnteriorCatMat() {
     if (paginaActual > 1) {

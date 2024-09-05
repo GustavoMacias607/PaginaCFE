@@ -129,6 +129,7 @@ a:hover {
 .centrarMsg {
   display: flex;
   justify-content: center;
+  width: 100%;
 }
 .modMsg {
   position: fixed;

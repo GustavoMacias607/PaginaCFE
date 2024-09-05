@@ -80,7 +80,7 @@ function mensajePantalla(msg, valor) {
         setTimeout(() => {
             msgModal.classList.add("modMsgEsconder");
             modUsu.classList.remove("modMsgBien");
-        }, 1500);
+        }, 2500);
     } else {
         img.src = "../img/imgEquis.png"
         parrafoModal.innerHTML = msg;
@@ -89,7 +89,7 @@ function mensajePantalla(msg, valor) {
         setTimeout(() => {
             msgModal.classList.add("modMsgEsconder");
             msgModal.classList.remove("modMsgMal");
-        }, 1500);
+        }, 2500);
     }
 }
 

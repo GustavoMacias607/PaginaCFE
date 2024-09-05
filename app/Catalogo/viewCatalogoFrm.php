@@ -23,7 +23,8 @@ if (!isset($_SESSION['idusuario'])) {
         <nav class="pSeccion-catalogo">
             <div>Concepto</div>
         </nav>
-        <div class="btncancelarconcepto"><button type="button" class="btn fa-solid-cancelar" onclick="javascript:opcion('conceptos')">Cancelar</button></div>
+        <div class="btncancelarconcepto"><button type="button" class="btn fa-solid-cancelar"
+                onclick="javascript:opcion('conceptos')">Cancelar</button></div>
     </div>
     <div class="contTabla-conceptoscatalogo">
         <div class="tabla-container tabla-container-conceptosCatalogo">
@@ -59,7 +60,8 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Materiales</div>
-            <div><button type="button" onclick="javascript:AbrirModalMateriales();" class="btn fa-solid-agregar-materiales">Agregar</button></div>
+            <div><button type="button" onclick="javascript:AbrirModalMateriales();"
+                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
             <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
 
         </nav>
@@ -104,21 +106,25 @@ if (!isset($_SESSION['idusuario'])) {
             </table>
         </div>
     </div>
-    <div class="buttonguardarcatalogo"><button type="button" class="btn fa-solid-Guardar-catalogo" onclick="javascript:AgregarCatalogoConcepto()">Guardar</button>
+    <div class="buttonguardarcatalogo"><button type="button" class="btn fa-solid-Guardar-catalogo"
+            onclick="javascript:AgregarCatalogoConcepto()">Guardar</button>
     </div>
 </div>
 
 <!-- Modal insertar materiales -->
-<div class="modal fade modal-materiales_catalogo" id="AgregarModalMaterialesConcepto" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade modal-materiales_catalogo" id="AgregarModalMaterialesConcepto" data-bs-backdrop="static"
+    data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A; top: 8.8rem; ">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar materiales</h1>
                 <div class="label-container-materiales_catalogo">
-                    <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMaterialesCatalogo();EstablecerPag()">
+                    <input type="text" placeholder="Buscar" id="searchInput"
+                        oninput="GetMaterialesCatalogo();EstablecerPag()">
                     <i class="fas fa-search icon-materiales_catalogo" id="searchIcon"></i>
                 </div>
-                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-materiales_catalogo">
                 <div class="pagRegistrosmateriales">
@@ -127,7 +133,8 @@ if (!isset($_SESSION['idusuario'])) {
 
                         <div class="cantregmateriales">
                             <div class="text">Mostrar</div>
-                            <select class="cantregistrosmateriales" name="" id="cantRegistros" onchange="javascript:LlenarCatalogoTabla()">
+                            <select class="cantregistrosmateriales" name="" id="cantRegistros"
+                                onchange="javascript:LlenarCatalogoTabla()">
                                 <option value="10" selected>10</option>
                                 <option value="25">25</option>
                                 <option value="50">50</option>
@@ -170,7 +177,9 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th class=" col-1" style="width: 100px;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
-                                        <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetMaterialesCatalogo();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
+                                            onchange="javacript:GetMaterialesCatalogo();EstablecerPag()"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                             <option value="todo" selected>Todo</option>
                                             <option value="PZ">PZ</option>
                                             <option value="KG">KG</option>
