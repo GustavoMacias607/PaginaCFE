@@ -34,6 +34,14 @@ function opcion(op) {
             url = "Maquinaria/addMaquinariaFrm.php";
             funcion = cambiarTamanoMaquinaria;
             break;
+        case "Basicos":
+            url = "Basicos/addBasicosFrm.php";
+            //funcion = cambiarTamanoMaquinaria;
+            break;
+        case "Especificaciones":
+            url = "Especificaciones/addEspecificaciones.php";
+            //funcion = cambiarTamanoMaquinaria;
+            break;
         default: alert("Opción incorrecta"); return;
     }
 

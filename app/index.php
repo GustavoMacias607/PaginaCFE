@@ -1,7 +1,7 @@
 <?php
 session_start();
 // funcionalidad de cierre de sesion
-if ($_GET['x'] == 1) {
+if (isset($_GET['x']) && $_GET['x'] == 1) {
     unset($_SESSION);
     session_destroy();
     header("Location: ../index.php");
@@ -32,6 +32,8 @@ if (!isset($_SESSION['idusuario'])) {
     <link rel="stylesheet" href="./Catalogo/stylesCatalogo.css">
     <link rel="stylesheet" href="./ManoObra/stylesManoObra.css">
     <link rel="stylesheet" href="./Maquinaria/stylesMaquinaria.css">
+    <link rel="stylesheet" href="./Especificaciones/stylesEspecificaciones.css">
+    <link rel="stylesheet" href="./Basicos/stylesBasicos.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title></title>
@@ -116,13 +118,15 @@ if (!isset($_SESSION['idusuario'])) {
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('materiales');">Materiales</a>
+                <a class="opcionesMenu" onclick=" preciona(this);"
+                    href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('basicos');">Basicos</a>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('Basicos');">Basicos</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('especificaciones');">Especificaciones</a>
+                <a class="opcionesMenu" onclick=" preciona(this);"
+                    href="javascript:opcion('Especificaciones');">Especificaciones</a>
             </li>
 
 
@@ -161,56 +165,58 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/funciones_ManoObra.js"></script>
     <script src="js/funciones_Maquinaria.js"></script>
     <script src="js/funciones_Catalogo.js"></script>
+    <script src="js/funciones_Basicos.js"></script>
+    <script src="js/funciones_Especificaciones.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
     <script>
-    window.onload = function() {
-        opcion('proyecto');
-    };
+        window.onload = function() {
+            opcion('proyecto');
+        };
 
-    function mostrarOp() {
-        let opc = document.querySelector("#opc");
+        function mostrarOp() {
+            let opc = document.querySelector("#opc");
 
-        if (!opc.classList.contains("MenuOpcionesMostrar")) {
-            opc.classList.add("MenuOpcionesMostrar");
-        } else {
-            opc.classList.remove("MenuOpcionesMostrar");
-        }
-    }
-
-
-    function preciona(valor) {
-        let opciones = document.querySelectorAll(".opcionesMenu");
-        opciones.forEach(opcion => {
-            opcion.classList.remove("precionado");
-        });
-        valor.classList.add('precionado');
-    }
-
-    function esconderMenu() {
-        let menu = document.querySelector(".menuDesplegable");
-        if (menu.classList.contains("esconder")) {
-            menu.classList.remove("esconder");
-        } else {
-            menu.classList.add("esconder");
-        }
-    }
-
-
-    document.addEventListener('click', function(event) {
-        const opc = document.getElementById('opc');
-
-        // Verifica si el clic ocurrió fuera del div
-        if (opc.classList.contains("MenuOpcionesMostrar")) {
-            if (!opc.contains(event.target)) {
+            if (!opc.classList.contains("MenuOpcionesMostrar")) {
+                opc.classList.add("MenuOpcionesMostrar");
+            } else {
                 opc.classList.remove("MenuOpcionesMostrar");
             }
         }
-    });
 
-    const toggleButton = document.getElementById('toggleButton');
-    toggleButton.addEventListener('click', function(event) {
-        event.stopPropagation(); // Detiene la propagación del evento
-    });
+
+        function preciona(valor) {
+            let opciones = document.querySelectorAll(".opcionesMenu");
+            opciones.forEach(opcion => {
+                opcion.classList.remove("precionado");
+            });
+            valor.classList.add('precionado');
+        }
+
+        function esconderMenu() {
+            let menu = document.querySelector(".menuDesplegable");
+            if (menu.classList.contains("esconder")) {
+                menu.classList.remove("esconder");
+            } else {
+                menu.classList.add("esconder");
+            }
+        }
+
+
+        document.addEventListener('click', function(event) {
+            const opc = document.getElementById('opc');
+
+            // Verifica si el clic ocurrió fuera del div
+            if (opc.classList.contains("MenuOpcionesMostrar")) {
+                if (!opc.contains(event.target)) {
+                    opc.classList.remove("MenuOpcionesMostrar");
+                }
+            }
+        });
+
+        const toggleButton = document.getElementById('toggleButton');
+        toggleButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Detiene la propagación del evento
+        });
     </script>
 </body>
 
