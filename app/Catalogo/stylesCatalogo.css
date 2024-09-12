@@ -247,6 +247,10 @@ th {
   padding: 8px;
   text-align: left;
 }
+.tabla-MaterialesCatalogo th:focus{
+  outline: none;
+  border: none;
+}
 
 #tabla-MaterialesCatalogo th {
   background-color: #008e5a; /* Encabezados con fondo verde */
@@ -342,15 +346,15 @@ th {
 }
 
 .fa-solid-agregar-materiales:hover {
-  background-color: #303030; /* Fondo blanco al pasar el mouse */
-  border-color: #ffffff; /* Contorno verde al pasar el mouse */
-  color: #ffffff; /* Letra verde al pasar el mouse */
+  background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+  border-color: #008e5a; /* Contorno verde al pasar el mouse */
+  color: #008e5a; /* Letra verde al pasar el mouse */
 }
 
 .fa-solid-agregar-materiales:active {
-  --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
-  --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
-  --bs-btn-color: #303030; /* Letra verde al hacer clic */
+  --bs-btn-background-color: #008e5a; /* Fondo blanco al hacer clic */
+  --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+  --bs-btn-color: #ffffff; /* Letra verde al hacer clic */
 }
 
 .fa-solid-cancelar {
@@ -367,15 +371,15 @@ th {
 }
 
 .fa-solid-cancelar:hover {
-  background-color: #303030; /* Fondo blanco al pasar el mouse */
-  border-color: #ffffff; /* Contorno verde al pasar el mouse */
-  color: #ffffff; /* Letra verde al pasar el mouse */
+  background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+  border-color: #008e5a; /* Contorno verde al pasar el mouse */
+  color: #008e5a; /* Letra verde al pasar el mouse */
 }
 
 .fa-solid-cancelar:active {
-  --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
-  --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
-  --bs-btn-color: #303030; /* Letra verde al hacer clic */
+  --bs-btn-background-color: #008e5a; /* Fondo blanco al hacer clic */
+  --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+  --bs-btn-color: #ffffff; /* Letra verde al hacer clic */
 }
 
 .fa-solid-Guardar-catalogo {
@@ -391,15 +395,18 @@ th {
 }
 
 .fa-solid-Guardar-catalogo:hover {
-  background-color: #303030; /* Fondo blanco al pasar el mouse */
-  border-color: #ffffff; /* Contorno verde al pasar el mouse */
-  color: #ffffff; /* Letra verde al pasar el mouse */
+  background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+  border: 3px solid #008e5a;
+  color: #008e5a; /* Letra verde al pasar el mouse */
 }
 
 .fa-solid-Guardar-catalogo:active {
-  --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
-  --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
-  --bs-btn-color: #303030; /* Letra verde al hacer clic */
+  background-color: #008e5a;
+  border: 3px solid #008e5a;
+  color: #ffffff;
+  --bs-btn-background-color: #008e5a; /* Fondo blanco al hacer clic */
+  --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+  --bs-btn-color: #ffffff; /* Letra verde al hacer clic */
 }
 
 .contenidoagg-catalogo {
@@ -611,4 +618,12 @@ th {
 
 .esconderTextoInactivo {
   display: none;
+}
+
+.cantidad-materialesencatalogo{
+  width: 70px;
+}
+.cantidad-materialesencatalogo:focus{
+outline: none;
+border: none;
 }

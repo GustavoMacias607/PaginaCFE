@@ -45,7 +45,7 @@ if (!isset($_SESSION['idusuario'])) {
         <nav class="navMovil" id="navbar-mobil">
             <div class="logoMovil">
                 <a href="index.php" class="linkIcono">
-                    <img src="../img/Logocfeverde.png" height="100%" alt="">
+                    <img src="../img/cfedistribucionblanco.png" height="100%" alt="">
                 </a>
                 <div class="desMenu">
                     <div>
@@ -99,26 +99,30 @@ if (!isset($_SESSION['idusuario'])) {
     <nav class="nav">
         <div class='logo'>
             <div style="text-decoration: none; height: 100%;">
-                <img src="../img/Logocfelargo.png" height="40rem">
+                <img src="../img/cfedistribucionblanco.png" height="60rem">
             </div>
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Catalogo');">Catálogo</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Tarjetas');">Tarjetas PU</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('conceptos');">Conceptos</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de
-                    obra</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de obra</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);"
-                    href="javascript:opcion('materiales');">Materiales</a>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('materiales');">Materiales</a>
+            </li>
+            <li>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('basicos');">Basicos</a>
+            </li>
+            <li>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('especificaciones');">Especificaciones</a>
             </li>
 
 

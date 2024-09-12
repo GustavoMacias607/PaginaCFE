@@ -203,6 +203,12 @@ body {
   text-align: left;
 }
 
+#tabla-materiales th,
+#tabla-materiales td:focus{
+  outline: none;
+  border: 3px solid #008e5a;
+}
+
 #tabla-materiales th {
   background-color: #008e5a; /* Encabezados con fondo verde */
   color: white; /* Letras blancas en los encabezados */

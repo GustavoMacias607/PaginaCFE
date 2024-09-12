@@ -95,7 +95,7 @@ if (!isset($_SESSION['idusuario'])) {
                                 <span>Acciones</span>
                             </div>
                         </th>
-                        <th style="width: 70px;">
+                        <th class="cantidad-materialesencatalogo">
                             Cantidad
                         </th>
                     </tr>

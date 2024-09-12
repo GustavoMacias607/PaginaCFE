@@ -60,10 +60,10 @@ if (!isset($_SESSION['idusuario'])) {
         <table id="tabla-manodeobra">
             <thead class="">
                 <tr>
-                    <th>
+                    <th style="width: 20%;">
                         ID
                     </th>
-                    <th class=" col-1" style="width: 250px;">
+                    <th class=" col-1" style="width: 20%;">
                         <div class="d-flex align-items-center">
                             <span>Categoría: </span>
                             <select class="form-select form-select-sm ml-2" id="selectCategoria" onchange="javacript:GetManoObra();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -71,10 +71,11 @@ if (!isset($_SESSION['idusuario'])) {
                                 <option value="Ayudante General">Ayudante General</option>
                                 <option value="Oficial Electricista">Oficial Electricista</option>
                                 <option value="Oficial Albanil">Oficial Albañil</option>
+                                <option value="Oficial Pintor">Oficial Pintor</option>
                             </select>
                         </div>
                     </th>
-                    <th class=" col-1" style="width: 150px;">
+                    <th class=" col-1" style="width: 20%;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="selectUnidad" onchange="javacript:GetManoObra();EstablecerPag()" style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
@@ -83,16 +84,10 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th>
+                    <th style="width: 20%;">
                         Salario
                     </th>
-                    <th>
-                        Cantidad
-                    </th>
-                    <th>
-                        Rendimiento
-                    </th>
-                    <th class="col-1" style="width: 170px;">
+                    <th class="col-1" style="width: 20%;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>
@@ -128,6 +123,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <option value="Ayudante General">Ayudante General</option>
                         <option value="Oficial Electricista">Oficial Electricista</option>
                         <option value="Oficial Albanil">Oficial Albañil</option>
+                        <option value="Oficial Pintor">Oficial Pintor</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -140,14 +136,6 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddsalarioInputManodeobra">
-                </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Cantidad*</label>
-                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddcantidadInputManodeobra">
-                </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Rendimiento*</label>
-                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddrendimientoInputManodeobra">
                 </div>
                 <div class="modal-footer modal-footer-manodeobra">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddManoObraValidar();" style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
@@ -180,6 +168,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <option value="Ayudante General">Ayudante General</option>
                         <option value="Oficial Electricista">Oficial Electricista</option>
                         <option value="Oficial Albanil">Oficial Albañil</option>
+                        <option value="Oficial Pintor">Oficial Pintor</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -193,14 +182,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
                     <input type="number" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Cantidad*</label>
-                    <input type="number" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdcantidadInput">
-                </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Rendimiento*</label>
-                    <input type="number" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdrendimientoInput">
-                </div>
+
             </div>
             <div class=" modal-footer modal-footer-manodeobra">
                 <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;" onclick="javascript:UpdManoObraValidar()">Guardar</button>
@@ -215,8 +197,8 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content">
             <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                    ¿Activar ésta mano de obra?</h5>
-                <button type="button" class="btn" id="confirmActivationButton" onclick="javascript:ActivarCerrarModal(); CambioEstatusManoObra();" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Activar</button>
+                    ¿Habilitar ésta mano de obra?</h5>
+                <button type="button" class="btn" id="confirmActivationButton" onclick="javascript:ActivarCerrarModal(); CambioEstatusManoObra();" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
         </div>
@@ -230,8 +212,8 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content">
             <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                    ¿Eliminar ésta mano de obra?</h5>
-                <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();" id="confirmDeleteButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Eliminar</button>
+                    ¿Deshabilitar ésta mano de obra?</h5>
+                <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();" id="confirmDeleteButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
         </div>
@@ -245,7 +227,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Está
-                    seguro de que desea eliminar ésta mano de obra?</h5>
+                    seguro de que desea deshabilitar ésta mano de obra?</h5>
                 <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusManoObra();" class="btn" id="confirmAdditionalButton" style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal" style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>

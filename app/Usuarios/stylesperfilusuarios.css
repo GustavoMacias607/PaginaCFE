@@ -14,17 +14,17 @@
 
   /*barra superior negra*/
   .bottom-rectangle-perfil {
-    background-color: #303030;
-    display: flex;
-    position: fixed;
-    width: 100%;
-    height: 60px;
-    padding: 5px 10px 5px 10px;
-    top: 80px; /* La altura del rectángulo superior */
-    z-index: 1; /* Asegura que el rectángulo esté detrás de los botones */
-    @media (max-width: 1090px) {
-      position: static;
-    }
+  background-color: #303030;
+  display: flex;
+  position: fixed;
+  width: 100%;
+  height: 60px;
+  padding: 5px 10px 5px 10px;
+  top: 80px; /* La altura del rectángulo superior */
+  z-index: 1; /* Asegura que el rectángulo esté detrás de los botones */
+  @media (max-width: 1090px) {
+    position: static;
+  }
   }
 
   /* Estilos para el titulo de la barra superior negra*/
@@ -35,8 +35,13 @@
     transform: translate(2px, 10px);
   }
 
+
+
   .container_perfil{
-    transform: translate(40%, 160px);
+    display: flex;
+  justify-content: center;
+  width: 100%;
+    padding-top: 12rem;
   }
 
     /* Estilos para el titulo de cada textbox*/
@@ -44,53 +49,70 @@
     background-color: #ffffff; /* Fondo blanco */
     color: #303030;
     font-family: "LatoBold", sans-serif;
+    font-size: 20px;
   }
 
-  /*Estilos para los textbox*/
-  .label-containernombre-perfil {
-    width: 27rem; /* Ancho del label */
-    background-color: #ffffff; /* Fondo blanco */
-    border: 3px solid #008e5a; /* Contorno de 3px color verde */
-    border-radius: 5px; /* Bordes redondeados */
+  .seccion-usu-rol{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .input-text-nombre{
+    border: 3px solid #008e5a;
+    border-radius: 5px;
+    font-size: 20px;
     font-family: "Lato", sans-serif;
+    background-color: #ffffff;
+    color: #303030;
+    width: 30rem;
   }
-  .label-containernombre-perfil input[type="text"] {
-    width: calc(100%); /* Ancho del input menos el espacio del icono */
-    border: none; /* Elimina el borde del input */
-    outline: none; /* Elimina el borde de enfoque */
-    padding: 3px; /* Espacio interno */
-    color: #303030; /* Color del texto */
-    font-size: 20px; /* Tamaño del texto */
+  .input-text-nombre:focus{
+    outline: none;
+    border: 3px solid #008e5a; 
   }
-  .label-containerusuario-perfil {
-    width: 15rem; /* Ancho del label */
-    background-color: #ffffff; /* Fondo blanco */
-    border: 3px solid #008e5a; /* Contorno de 3px color verde */
-    border-radius: 5px; /* Bordes redondeados */
+
+
+  .input-text-usuario{
+    border: 3px solid #008e5a;
+    border-radius: 5px;
+    font-size: 20px;
     font-family: "Lato", sans-serif;
+    background-color: #ffffff;
+    color: #303030;
+    width: 19.5rem;
   }
-  .label-containerusuario-perfil input[type="text"] {
-    width: calc(100%); /* Ancho del input menos el espacio del icono */
-    border: none; /* Elimina el borde del input */
-    outline: none; /* Elimina el borde de enfoque */
-    padding: 3px; /* Espacio interno */
-    color: #303030; /* Color del texto */
-    font-size: 20px; /* Tamaño del texto */
+  .input-text-usuario:focus{
+    outline: none;
+    border: 3px solid #008e5a;  
   }
-  .label-containerrol-perfil {
-    width: 10rem; /* Ancho del label */
-    background-color: #ffffff; /* Fondo blanco */
-    border: 3px solid #008e5a; /* Contorno de 3px color verde */
-    border-radius: 5px; /* Bordes redondeados */
+
+
+  .input-text-rol{
+    border: 3px solid #008e5a;
+    border-radius: 5px;
+    font-size: 20px;
     font-family: "Lato", sans-serif;
+    background-color: #ffffff;
+    color: #303030;
+    width: 9.5rem;
+    
   }
-  .label-containerrol-perfil input[type="text"] {
-    width: calc(100%); /* Ancho del input menos el espacio del icono */
-    border: none; /* Elimina el borde del input */
-    outline: none; /* Elimina el borde de enfoque */
-    padding: 3px; /* Espacio interno */
-    color: #303030; /* Color del texto */
-    font-size: 20px; /* Tamaño del texto */
+  .input-text-rol:focus{
+    outline: none;
+    border: 3px solid #008e5a; 
+  }
+
+  .pSeccion-titulos-usuariorol{
+   
+  }
+
+
+
+/*Estilos para la seccion de los botones*/
+  .pSeccion_perfil {
+    display: flex;
+    justify-content: space-between;
+    margin-top: .8rem;
   }
 
     /*Estilos para el boton contrasñea*/
@@ -151,13 +173,60 @@
   z-index: 5000;
   margin-left: auto;
 }
-
 .text-inicio-perfil:hover {
   color: #ffffff;
 }
 
 
-.pSeccion_perfil {
-  display: flex;
-  flex-wrap: wrap;
-}
+
+
+
+  /*Estilos para los textbox*/
+  .label-containernombre-perfil {
+    width: 27rem; /* Ancho del label */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 3px solid #008e5a; /* Contorno de 3px color verde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-family: "Lato", sans-serif;
+  }
+  .label-containernombre-perfil input[type="text"] {
+    width: calc(100%); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
+  }
+  .label-containerusuario-perfil {
+    width: 15rem; /* Ancho del label */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 3px solid #008e5a; /* Contorno de 3px color verde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-family: "Lato", sans-serif;
+  }
+  .label-containerusuario-perfil input[type="text"] {
+    width: calc(100%); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
+  }
+  .label-containerrol-perfil {
+    width: 10rem; /* Ancho del label */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 3px solid #008e5a; /* Contorno de 3px color verde */
+    border-radius: 5px; /* Bordes redondeados */
+    font-family: "Lato", sans-serif;
+  }
+  .label-containerrol-perfil input[type="text"] {
+    width: calc(100%); /* Ancho del input menos el espacio del icono */
+    border: none; /* Elimina el borde del input */
+    outline: none; /* Elimina el borde de enfoque */
+    padding: 3px; /* Espacio interno */
+    color: #303030; /* Color del texto */
+    font-size: 20px; /* Tamaño del texto */
+  }
+
+
+

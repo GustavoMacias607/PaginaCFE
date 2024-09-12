@@ -399,8 +399,7 @@ function mostrarDatosEnTablaManoObra(datos, paginaActual, tamanoPagina) {
             <td>${(!manoObra.categoria == "") ? manoObra.categoria : "---"}</td>
             <td>${(!manoObra.unidad == "") ? manoObra.unidad : "---"}</td>
             <td>${(!manoObra.salario == "") ? manoObra.salario : "---"}</td>
-            <td>${(!manoObra.cantidad == "") ? manoObra.cantidad : "---"}</td>
-            <td>${(!manoObra.rendimiento == "") ? manoObra.rendimiento : "---"}</td>
+            
             <td class="estatus">
             <div class="" style="display: flex; justify-content: space-around; align-items: center;">
                         ${manoObra.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${manoObra.idmanoobra},'${manoObra.categoria}','${manoObra.unidad}',${manoObra.salario},${manoObra.cantidad},${manoObra.rendimiento})"></i>
@@ -514,15 +513,12 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, 
     let categoriaMO = document.querySelector('#UpdCategoriaInputManodeobra');
     let UnidadMO = document.querySelector('#updUnidadInputManodeobra');
     let salarioMO = document.querySelector('#UpdsalarioInput');
-    let cantidadMo = document.querySelector('#UpdcantidadInput');
-    let rendimientoMo = document.querySelector('#UpdrendimientoInput');
     let idAnterior = document.querySelector('#UpdidAnteriorMano');
 
     idAnterior.value = id;
     idMO.value = id;
     salarioMO.value = salario;
-    cantidadMo.value = cantidad;
-    rendimientoMo.value = rendimiento;
+ 
 
     //llenar el select de tipo
     for (var i = 0; i < categoriaMO.options.length; i++) {
@@ -542,16 +538,13 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, 
 
     idMO.placeholder = "";
     salarioMO.placeholder = "";
-    cantidadMo.placeholder = "";
-    rendimientoMo.placeholder = "";
 
 
     idMO.classList.remove("inputVacio");
     categoriaMO.classList.remove("inputVacio");
     UnidadMO.classList.remove("inputVacio");
     salarioMO.classList.remove("inputVacio");
-    rendimientoMo.classList.remove("inputVacio");
-    cantidadMo.classList.remove("inputVacio");
+  
 }
 
 //Metodo para cerrar el modal de agregar material
