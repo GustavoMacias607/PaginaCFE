@@ -6,6 +6,9 @@ class Catalogo
     {
         $this->conn = $conexion;
     }
+    /** Metodo para agregar un Catalogo a un concepto a la base de datos
+     * recibe objeto datos
+     */
 
     function addCatalogo($datos)
     {
@@ -26,10 +29,11 @@ class Catalogo
         return $R;
     }
 
-
+    /*Método para obtener todos los materiales que le corresponden al concepto
+ Recibe el id del concepto para hacer la busqueda*/
     function getCatalogoMaterialesConcepto($datos)
     {
-        /*Método para obtener todos los Materiales*/
+
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
@@ -52,10 +56,11 @@ class Catalogo
         return $R;
     }
 
-
+    /*Metodo para eliminar los materiales que tiene asignado el concepto
+    recibe el id del concepto*/
     function DelCatalogo($datos)
     {
-        /*Método para obtener todos los Materiales*/
+
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {

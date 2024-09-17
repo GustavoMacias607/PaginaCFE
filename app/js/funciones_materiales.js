@@ -96,24 +96,17 @@ function AddMaterialValidar() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-
                 if (resp.estado == "OK") {
-
                     var inputFile = document.getElementById('AddimagenInput');
                     if (inputFile.value) {
                         AddAgregarImagen();
                     }
-
                     AddCerrarModal();
                     mensajePantalla(msgAgregar, true)
                     GetMateriales();
-
                 } else {
-
-
                     id.classList.add("inputVacio");
                     id.focus();
-
                 }
             } else {
                 throw e = status;
@@ -132,6 +125,8 @@ function UpdMaterialValidar() {
     const datos = {};
     let idA = document.querySelector('#UpdidAnteriorMaterial');
     let id = document.querySelector('#UpdidInput');
+
+    let idCambiado = id.value !== idA.value;
     if (id.value == "") {
         id.classList.add("inputVacio");
         id.placeholder = "Requerido el ID del material"
@@ -140,6 +135,7 @@ function UpdMaterialValidar() {
     }
     datos.idA = idA.value;
     datos.id = id.value;
+    datos.idCambiado = idCambiado;
     let norma = document.querySelector('#UpdnormaInput');
     if (norma.value == "") {
         norma.classList.add("inputVacio");
@@ -194,16 +190,17 @@ function UpdMaterialValidar() {
         return;
     }
     let json = JSON.stringify(datos);
-    var inputFile = document.getElementById('UpdimagenInput');
-    if (inputFile.value) {
-        UpdAgregarImagen();
-    }
+
     let url = "../ws/Materiales/wsUpdMaterial.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
+                    var inputFile = document.getElementById('UpdimagenInput');
+                    if (inputFile.value || id.value !== idA.value) {
+                        UpdAgregarImagen();
+                    }
                     UpdateCerrarModal();
                     GetMateriales();
                     mensajePantalla(msgModificar, true)
@@ -358,11 +355,11 @@ function GetMateriales() {
             if (status == "success") {
 
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
 
                     mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
+
                 } else {
                     // Mostrar mensaje de error si el estado no es "OK"
                     mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
@@ -393,7 +390,6 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
         actualizarPaginacion(datos, paginaActual, tamanoPagina);
         return;
     }
-    let mostrarPirmero = true;
     let startIndex = (paginaActual - 1) * tamanoPagina;
     let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
 
@@ -599,8 +595,11 @@ function AddAgregarImagen() {
 //Metodo para que se cree la carpeta y se le introduzca la imagen seleccionada a la hora de modificar el material
 function UpdAgregarImagen() {
     let id = document.querySelector('#UpdidInput').value;
+    let idAnterior = document.querySelector('#UpdidAnteriorMaterial').value; // Obtener el ID anterior
     var inputFile = document.getElementById('UpdimagenInput');
     var file = inputFile.files[0];
+    console.log(id, idAnterior)
+
     // Verificar el tamaño del archivo (en bytes)
     var maxSizeBytes = 200 * 1024;
     if (file.size <= maxSizeBytes) {
@@ -609,10 +608,11 @@ function UpdAgregarImagen() {
             var formData = new FormData();
             formData.append('imagen', file);
             formData.append('id', id);
+            formData.append('idAnterior', idAnterior); // Añadir el ID anterior al FormData
 
             // Enviar la imagen al servidor
             $.ajax({
-                url: './js/guardar_imagen.php',
+                url: './js/guardar_imagen.php', // Asegúrate de que la ruta es correcta
                 type: 'POST',
                 data: formData,
                 processData: false,
@@ -630,8 +630,8 @@ function UpdAgregarImagen() {
     } else {
         mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
     }
-
 }
+
 
 //Metodo para mostrar la imagen en el modal de agregar Material, recibe la imagen seleccionada
 function AddmostrarImagen(input) {
@@ -667,37 +667,48 @@ function AddmostrarImagen(input) {
 }
 
 //Metodo para mostrar la imagen en el modal de Modificar Material, recibe la imagen seleccionada
-function UpdmostrarImagen(input) {
-    const imagenPreview = document.getElementById('UpdimagenPreview');
+function UpdAgregarImagen() {
+    let id = document.querySelector('#UpdidInput').value;
+    let idAnterior = document.querySelector('#UpdidAnteriorMaterial').value; // Obtener el ID anterior
+    var inputFile = document.getElementById('UpdimagenInput');
+    var file = inputFile.files[0];
 
-    // Verifica que haya un archivo seleccionado
-    if (input.files && input.files[0]) {
-        const archivo = input.files[0]; // Obtener el archivo seleccionado
+    var formData = new FormData();
+    formData.append('id', id);
+    formData.append('idAnterior', idAnterior);
 
-        // Verifica el tipo MIME del archivo para asegurarse de que es una imagen
-        const tiposImagen = ['image/jpeg', 'image/png', 'image/gif']; // Tipos MIME permitidos para imágenes
-        if (!tiposImagen.includes(archivo.type)) {
-            mensajePantalla(msgNoEsImagen, false);
-            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
-            return; // Salir de la función para evitar cargar un archivo no imagen
+    // Solo añadir la imagen si se ha seleccionado un archivo
+    if (file) {
+        // Verificar el tamaño del archivo (en bytes)
+        var maxSizeBytes = 200 * 1024;
+        if (file.size <= maxSizeBytes) {
+            // Verificar si el archivo es una imagen con formato PNG o JPG
+            if (file.type === 'image/png' || file.type === 'image/jpeg') {
+                formData.append('imagen', file);
+            } else {
+                mensajePantalla('El archivo seleccionado no es una imagen en formato PNG o JPG.', false);
+                return; // Detener la ejecución si el archivo no es válido
+            }
+        } else {
+            mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
+            return; // Detener la ejecución si el archivo es demasiado grande
         }
-
-        // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
-        if (archivo.size > 204800) {
-            mensajePantalla(msgPesoMaximo, false);
-            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
-            return; // Salir de la función para evitar cargar la imagen grande
-        }
-
-        // Si pasa las validaciones, lee y muestra la imagen
-        const reader = new FileReader(); // Crea un lector de archivos
-        reader.onload = function (e) {
-            imagenPreview.src = e.target.result; // Muestra la imagen en el preview
-        }
-        reader.readAsDataURL(archivo); // Lee el archivo seleccionado
     }
+
+    // Enviar la imagen al servidor
+    $.ajax({
+        url: './js/guardar_imagen.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log('Operación completada:', response);
+        },
+        error: function (error) {
+            console.error('Error al procesar la solicitud:', error);
+        }
+    });
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -768,6 +779,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
     unidadM.classList.remove("inputVacio");
 }
 
+var rutaCarpeta = '../Materiales/1';
 //Metodo para que cuando se modifique algun material se cargue la imagen que este tenga
 function cargarImagen() {
     obtenerArchivosEnCarpeta(rutaCarpeta)

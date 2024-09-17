@@ -13,7 +13,7 @@ function cambiarTamanoUsuario() {
 }
 
 
-//Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
+//Metodo que valida el formulario para agregar usuarios y al mismo tiempo agrega el usuario
 function AddUsuarioValidar() {
     let vacio = false;
     let PrimerValorVacio;
@@ -103,6 +103,8 @@ function AddUsuarioValidar() {
         }
     });
 }
+
+//Metodo para validar si las contraseñas coinciden
 function ComprobarContrasenas() {
     let passConfir = document.querySelector('#AddConfirpassInput');
     let pass = document.querySelector('#AddpassInput').value;
@@ -116,7 +118,7 @@ function ComprobarContrasenas() {
     }
 
 }
-//Metodo para validar el modal para modificar un material y al mismo tiempo valida los datos
+//Metodo para validar el modal para modificar un usuario y al mismo tiempo valida los datos
 function UpdUsuarioValidar() {
     let vacio = false;
     let PrimerValorVacio;
@@ -189,7 +191,7 @@ function UpdUsuarioValidar() {
         }
     });
 }
-
+//Metodo que valida si un usuario ya existe o no en la base de datos
 function checkUsuario(modal) {
     const datos = {}
     let UsuVali;
@@ -225,7 +227,7 @@ function checkUsuario(modal) {
     });
 }
 
-
+//Metodo que valida si el campo del formulario ya tiene algo ingresado
 function CompruebaTieneAlgoInputUsuario(input) {
 
     if (input.value && input.id != "AddConfirpassInput") {
@@ -234,7 +236,7 @@ function CompruebaTieneAlgoInputUsuario(input) {
     }
     input.placeholder = ""
 }
-//Metodo para cambiar el estatus de los materiales
+//Metodo para cambiar el estatus de los usuarios
 function CambioEstatusUsuario() {
     const datos = {};
     datos.id = idEliminar;
@@ -310,7 +312,7 @@ function paginaSiguienteUsuario() {
     }
 }
 
-//Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
+//Metodo para hacer la consulta de los usuarios tomando en cuanta los filtros
 function GetUsuario() {
     const datos = {};
     let buscar = document.querySelector('#searchInputUsuarios');
@@ -345,6 +347,7 @@ function GetUsuario() {
         }
     });
 }
+
 // metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
 //recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
 function mostrarDatosEnTablaUsuario(datos, paginaActual, tamanoPagina) {
@@ -425,7 +428,7 @@ function actualizarPaginacionUsuario(totalDatos, paginaActual, tamanoPagina) {
         if (i === paginaActual) {
             li.classList.add("active");
             li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagUsuario(${i})">${i}</button>`;
-            } else {
+        } else {
             li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
         }
         paginationList.appendChild(li);
@@ -436,7 +439,7 @@ function actualizarPaginacionUsuario(totalDatos, paginaActual, tamanoPagina) {
 
 }
 
-//Metodo para limpiar el modal de agregar material
+//Metodo para limpiar el modal de agregar usuario
 function AddlimpiarModalUsuario() {
     let nombreU = document.querySelector('#AddnombreInput');
     let usuarioU = document.querySelector('#AddusuarioInput');
@@ -462,7 +465,7 @@ function AddlimpiarModalUsuario() {
     passConfir.classList.remove("inputVacio");
 }
 
-//Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
+//Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre usuarios activos e inactivos
 function valStatusUsuario() {
     var checkbox = document.getElementById('ValCheEstaUsuarios');
     var imgcheck = document.getElementById('ValEstatusUsuario');
@@ -476,7 +479,7 @@ function valStatusUsuario() {
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
-//Recibe los datos del material
+//Recibe los datos del usuario seleccionado
 function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de datos en el modal
     console.log(id, nombre, usuario, rol)
     let idU = document.querySelector('#UpdidInput');
@@ -491,7 +494,6 @@ function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de da
     usuarioU.value = usuario;
     rolU.value = rol;
     pass.value = "";
-
     //llenar el select de responsables
     for (var i = 0; i < rolU.options.length; i++) {
         if (rolU.options[i].value === rol) {
@@ -499,37 +501,14 @@ function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de da
             break;
         }
     }
-
     nombreU.placeholder = "";
     usuarioU.placeholder = "";
-
-
     nombreU.classList.remove("inputVacio");
     usuarioU.classList.remove("inputVacio");
     rolU.classList.remove("inputVacio");
 }
 
-//Metodo para cerrar el modal de agregar material
-function AddCerrarModalUsuario() {
-    $('#AgregarModal').modal('hide');
-}
-//Metodo para cerrar el modal de modificar material
-function UpdateCerrarModalUsuario() {
 
-    $('#EditarModal').modal('hide');
-}
-function ActivarCerrarModalUsuario() {
-
-    $('#confirmActivationModal').modal('hide');
-}
-function EliminarCerrarModalUsuario() {
-
-    $('#confirmAdditionalModal').modal('hide');
-}
-
-function AbrirModalConfirmUsuario() {
-    $('#confirmAdditionalModal').modal('show');
-}
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1Usuario() {
     let estatus = document.getElementById('ValCheEstaUsuarios').checked;

@@ -7,10 +7,8 @@ class Conceptos
         $this->conn = $conexion;
     }
 
-    /** Metodo para agregar un usuario a la base de datos
-     * recibe objeto datos
-     * recibe clave para encriptar contraseña
-     * devuelve arreglo con clave de estado
+    /** Metodo para agregar un concepto a la base de datos
+     * recibe objeto datos del concepto
      */
 
     function addConcepto($datos)
@@ -33,6 +31,8 @@ class Conceptos
         }
         return $R;
     }
+    /*Método para modificar un concepto
+     recibe un objeto con los datos del concepto*/
     function UpdConcepto($datos)
     {
         $R['estado'] = "OK";
@@ -55,10 +55,11 @@ class Conceptos
         return $R;
     }
 
-
+    /*Método para obtener todos los conceptos
+ recibe objeto con los datos para filtrar*/
     function getAllConceptos($datos)
     {
-        /*Método para obtener todos los Materiales*/
+
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
@@ -85,7 +86,8 @@ class Conceptos
         }
         return $R;
     }
-
+    /*Método para hacer una busqueda a la base de datos y verificar si existe el concepto
+ recibe objeto con el id del concepto*/
     function checkConcepto($datos)
     {
         $R['estado'] = "OK";
@@ -108,9 +110,11 @@ class Conceptos
         }
         return $R;
     }
+    /*Método para cambiar el estatus del concepto
+     recibe el id del concepto y el estatus al cual se cambiara*/
     function CambiarEstatusConcepto($datos)
     {
-        /*Método para obtener todos los Materiales*/
+
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {

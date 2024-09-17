@@ -66,7 +66,7 @@ let existe = false;
 let paginaActual = 1;
 let tamanoPagina = 10;
 var totalPag = 1;
-var rutaCarpeta = '../Materiales/1';
+
 let idEliminar;
 let ActivarS;
 

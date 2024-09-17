@@ -2,13 +2,15 @@ var listaMateriales = [];
 var datosCatalogo = {};
 let MaterialInactivo = false;
 
-
+//Mensajes de alertas
 let msgGuardarMaterialInactivo = "Material inactivo";
 let msgGuardarSinCantidad = "Material sin cantidad";
 let msgMaterialYaHaSidoAgregado = "Material ya ha sido agregado";
 let mgsCatalogoAgregado = "Catalogo guardado";
-function AgregarDatosTablaConceptoCatalogo() {
 
+
+//Metodo para llenar la tabla con el catalogo
+function AgregarDatosTablaConceptoCatalogo() {
     //Llena tabla concepto de la pagina catalogo
     let tbody = document.getElementById("tabla-conceptosCatalogo").getElementsByTagName("tbody")[0];
     let fila = document.createElement("tr");

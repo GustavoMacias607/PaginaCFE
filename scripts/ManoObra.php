@@ -7,10 +7,8 @@ class ManoObra
         $this->conn = $conexion;
     }
 
-    /** Metodo para agregar un usuario a la base de datos
-     * recibe objeto datos
-     * recibe clave para encriptar contraseña
-     * devuelve arreglo con clave de estado
+    /** Metodo para agregar una mano de obra a la base de datos
+     * recibe objeto datos de la mano de obra
      */
 
     function addManoObra($datos)
@@ -35,6 +33,9 @@ class ManoObra
         }
         return $R;
     }
+    /** Metodo para modificar una mano de obra
+     * recibe objeto datos de la mano de obra a la cual se modificara
+     */
     function UpdManoObra($datos)
     {
         $R['estado'] = "OK";
@@ -58,10 +59,12 @@ class ManoObra
         return $R;
     }
 
-
+    /** Metodo para obtener las manos de obra existentes
+     * recibe un objeto con los datos a filtrar sobre las manos de obras existentes
+     */
     function getAllManoObra($datos)
     {
-        /*Método para obtener todos los Materiales*/
+
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
@@ -87,7 +90,9 @@ class ManoObra
         }
         return $R;
     }
-
+    /**Metodo para verificar si una mano de obra ya existe
+     * recibe un objeto que contiene el id de la mano de obra
+     */
     function checkManoObra($datos)
     {
         $R['estado'] = "OK";
@@ -110,9 +115,12 @@ class ManoObra
         }
         return $R;
     }
+    /**Metodo para cambiar el estatus de las manos de obra 
+     * recibe un objeto con el id de la mano de obra y a cual estatus cambiara la mano de obra
+     */
     function CambiarEstatusManoObra($datos)
     {
-        /*Método para obtener todos los Materiales*/
+
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
