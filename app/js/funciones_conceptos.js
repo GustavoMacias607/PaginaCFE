@@ -4,18 +4,8 @@ let msgActivarCon = "Concepto habilitdo";
 let msgAgregarCon = "Concepto agregado";
 let msgModificarCon = "Concepto modificado";
 
-let ordenFiltro = {
-    id: null,
-    nombre: null
-};
+var estatusConcepto = 1;
 
-//Metodo para cambiar el tamaño de los registros que se muestran
-function cambiarTamanoConcepto() {
-    const cantidad = document.getElementById("cantRegistros");
-    tamanoPagina = parseInt(cantidad.value);
-    paginaActual = 1;
-    GetConcepto();
-}
 
 
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
@@ -104,7 +94,6 @@ function AddConceptoValidar() {
         }
     });
 }
-
 
 //Metodo para validar el modal para modificar un material y al mismo tiempo valida los datos
 function UpdConceptoValidar() {
@@ -282,61 +271,31 @@ function CambioEstatusConcepto() {
 
 }
 
-//Metodo para regresar una pagina en la paginacion
-function paginaAnteriorConcepto() {
-    if (paginaActual > 1) {
-        paginaActual--;
-        GetConcepto();
-    }
-}
-
-//Metodo para cambiar de pagona dando clic a la paginacion
-//Recobe el numero de pagina al cual se cambiara
-function NoPagConcepto(pagi) {
-    paginaActual = pagi;
-    GetConcepto();
-}
-
-//Metodo para cambiar a la pagina siguiente en la paginacion
-function paginaSiguienteConcepto() {
-    if (paginaActual < totalPag) {
-        paginaActual++;
-        GetConcepto();
-    }
-}
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetConcepto() {
-    const datos = {};
-
-
-    let buscar = document.querySelector('#searchInput');
-    let estatus = document.getElementById('ValCheEsta').checked;
-    let unidad = document.getElementById('selectUnidad');
-    let tipo = document.getElementById('selectTipo');
-    datos.buscar = buscar.value;
-    if (estatus) {
-        datos.estatus = 1;
-    } else {
-        datos.estatus = 0;
-    }
-    datos.unidad = unidad.value;
-    datos.tipo = tipo.value;
-    datos.orderId = ordenFiltro.id;
-    datos.orderNombre = ordenFiltro.nombre;
-    let json = JSON.stringify(datos);
-    console.log(json)
+    let json = "";
     let url = "../ws/Conceptos/wsGetConcepto.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
-                    //Llamar a la función para mostrar los datos en la tabla
-                    mostrarDatosEnTablaConcepto(resp.datos, paginaActual, tamanoPagina);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTablaConcepto(resp.mensaje, paginaActual, tamanoPagina);
+                    data = resp.datos;
+                    console.log(resp.datos);
+                    document.getElementById("sort-id").addEventListener("click", () => sortData('idconcepto'));
+                    document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
+                    // Eventos de clic para los botones
+                    document.getElementById("sort-id").addEventListener("click", function () {
+                        toggleSort(this, 'idconcepto');
+                    });
+
+                    document.getElementById("sort-name").addEventListener("click", function () {
+                        toggleSort(this, 'nombre');
+                    });
+                    llenarTablaConcepto();
+                    filterDataConcepto();
+
                 }
             } else {
                 throw e = status;
@@ -346,100 +305,246 @@ function GetConcepto() {
         }
     });
 }
-// metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
-//recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
-function mostrarDatosEnTablaConcepto(datos, paginaActual, tamanoPagina) {
-    let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
-    totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-conceptos").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = "";
-    if (datos == "N") {
-        let fila = document.createElement("tr");
-        fila.innerHTML = `
-        <td colspan="8">Sin resultados</td>
-        `;
-        tbody.appendChild(fila);
 
-        actualizarPaginacionConcepto(datos, paginaActual, tamanoPagina);
-        return;
+
+function sortData(field) {
+    if (currentSortField === field) {
+        // Si el campo de ordenación actual ya está seleccionado, alterna el orden
+        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+        // Si es un nuevo campo de ordenación, resetea la dirección a ascendente
+        currentSortField = field;
+        currentSortOrder = 'asc';
     }
-    let startIndex = (paginaActual - 1) * tamanoPagina;
-    let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
-    for (let i = startIndex; i < endIndex; i++) {
-        let concepto = datos[i];
-        let fila = document.createElement("tr");
-        fila.classList.add("fila")
-        fila.addEventListener("mouseover", () => mostrarValores(fila));
-        fila.addEventListener("mouseout", () => ocultarValores(fila));
-        // Agregar las celdas a la fila
-        fila.innerHTML = `
-            <td class="Code">${concepto.idconcepto}</td>
-            <td>${(!concepto.nombre == "") ? concepto.nombre : "---"}</td>
-            <td>${(!concepto.tipo == "") ? concepto.tipo : "---"}</td>
-            <td>${(!concepto.plazo == "") ? concepto.plazo : "---"}</td>
-            <td>${(!concepto.unidad == "") ? concepto.unidad : "---"}</td>
+
+    filteredData.sort((a, b) => {
+        // Manejo de valores nulos o vacíos para que no causen problemas
+        const valA = a[field] !== null && a[field] !== undefined ? a[field] : '';
+        const valB = b[field] !== null && b[field] !== undefined ? b[field] : '';
+
+        // Si el valor es numérico, lo comparamos como números, de lo contrario como strings
+        if (typeof valA === 'number' && typeof valB === 'number') {
+            return currentSortOrder === 'asc' ? valA - valB : valB - valA;
+        } else {
+            // Si son cadenas de texto, las comparamos en forma case-insensitive
+            return currentSortOrder === 'asc'
+                ? valA.toString().localeCompare(valB.toString(), undefined, { sensitivity: 'base' })
+                : valB.toString().localeCompare(valA.toString(), undefined, { sensitivity: 'base' });
+        }
+    });
+
+    // Reinicia la página a la primera después de ordenar
+    currentPage = 1;
+    displayTableConcepto(currentPage);
+    setupPaginationConcepto();
+}
+function toggleSort(button, field) {
+    // Desactiva los otros botones de ordenación
+    document.querySelectorAll('.sort-button').forEach(btn => btn.classList.remove('active'));
+
+    // Alterna la dirección del orden
+    if (currentSortField === field) {
+        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortField = field;
+        currentSortOrder = 'asc'; // Por defecto, cuando selecciona un nuevo campo
+    }
+
+    // Actualiza el icono visual según la dirección
+    if (currentSortOrder === 'asc') {
+        button.querySelector('i').classList.remove('fa-arrow-down-wide-short');
+        button.querySelector('i').classList.add('fa-arrow-up-wide-short');
+    } else {
+        button.querySelector('i').classList.remove('fa-arrow-up-wide-short');
+        button.querySelector('i').classList.add('fa-arrow-down-wide-short');
+    }
+
+    // Añade la clase active al botón actual
+    button.classList.add('active');
+
+    // Llama a la función de ordenación
+    sortData(field);
+}
+
+
+
+function displayTableConcepto(page) {
+    const tableBody = document.getElementById("table-bodyConceptos");
+    tableBody.innerHTML = "";
+
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = filteredData.slice(start, end);
+
+    if (paginatedData.length > 0) {
+        paginatedData.forEach(record => {
+            const row = `
+            <td class="Code">${record.idconcepto}</td>
+            <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
+            <td>${(!record.tipo == "") ? record.tipo : "---"}</td>
+            <td>${(!record.plazo == "") ? record.plazo : "---"}</td>
+            <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
             <td class="estatus">
                 <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                ${concepto.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${concepto.idconcepto},'${concepto.nombre}','${concepto.tipo}',${concepto.plazo},'${concepto.unidad}')"></i>
+                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${record.idconcepto},'${record.nombre}','${record.tipo}',${record.plazo},'${record.unidad}')"></i>
                 `: ``}
-                ${concepto.estatus == 1 ? `<i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;"  alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo(${concepto.idconcepto},'${concepto.nombre}','${concepto.tipo}',${concepto.plazo},'${concepto.unidad}')"></i>
+                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;"  alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo(${record.idconcepto},'${record.nombre}','${record.tipo}',${record.plazo},'${record.unidad}')"></i>
                 `: ``}
-                ${concepto.estatus == 1 ?
-                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})"></i>` :
-                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${concepto.idconcepto},${concepto.estatus})"></i>`
-            }
+                ${record.estatus == 1 ?
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>`
+                }
                    
                 </div>
             </td>   
         `;
-        // Agregar la fila a la tabla
-        tbody.appendChild(fila);
-
+            tableBody.innerHTML += row;
+        });
+    } else {
+        const row = `<tr>
+                        <td colspan="6" class="Code">Sin resultados</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
     }
-
-    actualizarPaginacionConcepto(datos.length, paginaActual, tamanoPagina);
 }
-//Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
-//recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
-function actualizarPaginacionConcepto(totalDatos, paginaActual, tamanoPagina) {
-    if (totalDatos == "N") {
-        let paginationList = document.getElementById("pagination-list");
-        paginationList.innerHTML = "";
-        return;
+//Datos para el catalogo
+function InfoCatalogo(id, nombre, tipo, plazo, unidad) {
+    listaMateriales = [];
+    datosCatalogo = {
+        id,
+        nombre,
+        tipo,
+        plazo,
+        unidad
     }
-    let paginationList = document.getElementById("pagination-list");
-    paginationList.innerHTML = "";
-    let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
-    let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
-    let liPrev = document.createElement("li");
-    liPrev.innerHTML = `<button onclick="paginaAnteriorConcepto()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
-    paginationList.appendChild(liPrev);
-    // Ajuste del rango para mostrar siempre 5 páginas
-    let startPage = Math.max(1, paginaActual - rangoMostrar);
-    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
-    if (endPage - startPage < 4) {
-        if (startPage > 1) {
-            startPage = Math.max(1, endPage - 4);
-        } else if (endPage < totalPaginas) {
-            endPage = Math.min(totalPaginas, startPage + 4);
-        }
-    }
-    // Generar enlaces de página
-    for (let i = startPage; i <= endPage; i++) {
-        let li = document.createElement("li");
-        if (i === paginaActual) {
-            li.classList.add("active");
-            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagConcepto(${i})">${i}</button>`;
+
+}
+function setupPaginationConcepto() {
+    const paginationDiv = document.getElementById("pagination");
+    paginationDiv.innerHTML = "";
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    const maxPagesToShow = 5; // Número máximo de páginas a mostrar
+    let startPage, endPage;
+
+    if (totalPages <= maxPagesToShow) {
+        // Mostrar todas las páginas si son menos o iguales a 5
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        const middle = Math.floor(maxPagesToShow / 2);
+
+        if (currentPage <= middle) {
+            startPage = 1;
+            endPage = maxPagesToShow;
+        } else if (currentPage + middle >= totalPages) {
+            startPage = totalPages - maxPagesToShow + 1;
+            endPage = totalPages;
         } else {
-            li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+            startPage = currentPage - middle;
+            endPage = currentPage + middle;
         }
-        paginationList.appendChild(li);
     }
-    let liNext = document.createElement("li");
-    liNext.innerHTML = `<button onclick="paginaSiguienteConcepto()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
-    paginationList.appendChild(liNext);
+    if (totalPages > 0) {
+        // Botón de "Atrás"
+        const prevButton = document.createElement("button");
+        prevButton.innerHTML = `<i class="fa-solid fa-angles-left"></i>`;
+        prevButton.style.backgroundColor = "#008e5a";
+        prevButton.style.color = "#ffffff";
+        prevButton.style.border = "3px solid #008e5a";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayTableConcepto(currentPage);
+                setupPaginationConcepto();
+            }
+        });
+        paginationDiv.appendChild(prevButton);
+        // Botones de página
+        for (let i = startPage; i <= endPage; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
 
+            if (currentPage === i) {
+                button.className = 'active';
+                button.style.color = "#ffffff";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#008e5a";
+            } else {
+                button.style.color = "#008e5a";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#ffffff";
+            }
+            button.addEventListener("click", () => {
+                currentPage = i;
+                displayTableConcepto(currentPage);
+                setupPaginationConcepto();
+            });
+            paginationDiv.appendChild(button);
+        }
+
+        // Botón de "Adelante"
+        const nextButton = document.createElement("button");
+        nextButton.innerHTML = `<i class="fa-solid fa-angles-right"></i>`;
+        nextButton.style.backgroundColor = "#008e5a";
+        nextButton.style.color = "#ffffff";
+        nextButton.style.border = "3px solid #008e5a";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayTableConcepto(currentPage);
+                setupPaginationConcepto();
+            }
+        });
+        paginationDiv.appendChild(nextButton);
+    }
 }
+
+function filterDataConcepto() {
+    const searchText = document.getElementById("search-inputConcepto").value.toLowerCase();
+    const unidadFilter = document.getElementById("unidad-filterConcepto").value;
+    const tipoFilter = document.getElementById("tipo-filterConcepto").value;
+
+    const statusFilter = estatusConcepto;
+
+    filteredData = data.filter(record => {
+        const matchesSearch = Object.values(record).some(value =>
+            value != null && value.toString().toLowerCase().includes(searchText)
+        );
+        const matchesTipo = tipoFilter ? record.tipo === tipoFilter : true;
+        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
+        const matchesStatus = record.estatus === statusFilter;
+        return matchesSearch && matchesUnidad && matchesStatus && matchesTipo;
+    });
+
+    currentPage = 1; // Reiniciar a la primera página después de filtrar
+    displayTableConcepto(currentPage);
+    setupPaginationConcepto();
+}
+
+function llenarTablaConcepto() {
+    displayTableConcepto(currentPage);
+    setupPaginationConcepto();
+    const searchInput = document.getElementById("search-inputConcepto");
+    searchInput.addEventListener("input", filterDataConcepto);
+
+    const unidadFilter = document.getElementById("unidad-filterConcepto");
+    unidadFilter.addEventListener("change", filterDataConcepto);
+
+    const tipoFilter = document.getElementById("tipo-filterConcepto");
+    tipoFilter.addEventListener("change", filterDataConcepto);
+
+    const rowsPerPageSelect = document.getElementById("rows-per-page");
+    rowsPerPageSelect.addEventListener("change", function () {
+        rowsPerPage = parseInt(this.value);
+        currentPage = 1;
+        displayTableConcepto(currentPage);
+        setupPaginationConcepto();
+    });
+}
+
 
 //Metodo para limpiar el modal de agregar material
 function AddlimpiarModalConcepto() {
@@ -475,9 +580,12 @@ function valStatusConcepto() {
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
         imgcheck.src = "../img/toggle_on_35px.png"
+        estatusConcepto = 1;
     } else {
         imgcheck.src = "../img/toggle_off_35px.png"
+        estatusConcepto = 0;
     }
+    filterDataConcepto();
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
@@ -524,27 +632,7 @@ function llenarModalModificarConcepto(id, nombre, tipo, plazo, unidad) {
     unidadC.classList.remove("inputVacio");
 }
 
-//Metodo para cerrar el modal de agregar material
-function AddCerrarModal() {
-    $('#AgregarModal').modal('hide');
-}
-//Metodo para cerrar el modal de modificar material
-function UpdateCerrarModal() {
 
-    $('#EditarModal').modal('hide');
-}
-function ActivarCerrarModal() {
-
-    $('#confirmActivationModal').modal('hide');
-}
-function EliminarCerrarModal() {
-
-    $('#confirmAdditionalModal').modal('hide');
-}
-
-function AbrirModalConfirm() {
-    $('#confirmAdditionalModal').modal('show');
-}
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1() {
     let estatus = document.getElementById('ValCheEsta').checked;
@@ -555,64 +643,3 @@ function AbrirModalConfirm1() {
     }
 }
 
-
-//Datos para el catalogo
-function InfoCatalogo(id, nombre, tipo, plazo, unidad) {
-    listaMateriales = [];
-    datosCatalogo = {
-        id,
-        nombre,
-        tipo,
-        plazo,
-        unidad
-    }
-
-}
-
-
-function filtrarOrden(filtro) {
-    //filtro = 1 .. Id
-    let iconoId = document.querySelector('#iconoId')
-    //filtro = 2 .. Nombre
-    let iconoNombre = document.querySelector('#iconoNombre')
-
-
-    if (filtro == 1) {
-        if (iconoId.classList.contains("fa-chevron-up")) {
-            iconoId.classList.remove("fa-chevron-up");
-            iconoId.classList.add("fa-chevron-down");
-            ordenFiltro = {
-                id: "ASC",
-                nombre: null
-            }
-        } else {
-            iconoId.classList.remove("fa-chevron-down");
-            iconoId.classList.add("fa-chevron-up");
-            ordenFiltro = {
-                id: "DESC",
-                nombre: null
-            }
-        }
-        iconoNombre.classList.remove("fa-chevron-down");
-        iconoNombre.classList.add("fa-chevron-up");
-    } else {
-        if (iconoNombre.classList.contains("fa-chevron-up")) {
-            iconoNombre.classList.remove("fa-chevron-up");
-            iconoNombre.classList.add("fa-chevron-down");
-            ordenFiltro = {
-                id: null,
-                nombre: 'ASC'
-            }
-        } else {
-            iconoNombre.classList.remove("fa-chevron-down");
-            iconoNombre.classList.add("fa-chevron-up");
-            ordenFiltro = {
-                id: null,
-                nombre: "DESC"
-            }
-        }
-        iconoId.classList.remove("fa-chevron-down");
-        iconoId.classList.add("fa-chevron-up");
-    }
-    GetConcepto();
-}

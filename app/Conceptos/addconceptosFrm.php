@@ -20,7 +20,7 @@ if (!isset($_SESSION['idusuario'])) {
         </a>
     </div>
     <div class=" label-container-conceptos">
-        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetConcepto();EstablecerPag()">
+        <input type="text" placeholder="Buscar" id="search-inputConcepto">
         <i class="fas fa-search icon-conceptos" id="searchIcon"></i>
     </div>
 
@@ -31,8 +31,7 @@ if (!isset($_SESSION['idusuario'])) {
 
             <div class="cantregconceptos">
                 <div class="text">Mostrar</div>
-                <select class="cantregistrosconceptos" name="" id="cantRegistros"
-                    onchange="javascript:cambiarTamanoConcepto()">
+                <select class="cantregistrosconceptos" name="" id="rows-per-page">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -41,7 +40,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="text">Registros </div>
             </div>
 
-            <ul class="pagination" id="pagination-list">
+            <ul class="pagination" id="pagination">
                 <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                 <li class="page-item active"></li>
             </ul>
@@ -51,8 +50,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="text">Estatus</div>
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
-                <img id="ValEstatus" src="../img/toggle_on_35px.png"
-                    onclick="javascript:valStatusConcepto(); javascript:GetConcepto(); javascript:EstablecerPag()">
+                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusConcepto();">
             </div>
         </div>
     </div>
@@ -67,26 +65,21 @@ if (!isset($_SESSION['idusuario'])) {
             <thead class="">
                 <tr>
                     <th style="width: 8rem; ">
-                        <div style="display: flex; gap:10px">
-                            <div>ID</div>
-                            <div onclick="javascript:filtrarOrden(1);" style="cursor: pointer;"><i id="iconoId"
-                                    class="fa-solid fa-chevron-down"></i></div>
-                        </div>
+                        <button id="sort-id" class="sort-button">
+                            ID <i class="fa-solid fa-arrow-up-wide-short"></i>
+                        </button>
                     </th>
                     <th style="width: 28rem;">
-                        <div style="display: flex; gap:10px">
-                            <div>Nombre</div>
-                            <div onclick="javascript:filtrarOrden(2);" style="cursor: pointer;"><i id="iconoNombre"
-                                    class="fa-solid fa-chevron-up"></i></div>
-                        </div>
+                        <button id="sort-name" class="sort-button">
+                            Nombre <i class="fa-solid fa-arrow-up-wide-short"></i>
+                        </button>
                     </th>
                     <th class=" col-1" style="width: 9rem;">
                         <div class="d-flex align-items-center">
                             <span>Tipo: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectTipo"
-                                onchange="javacript:GetConcepto();EstablecerPag()"
-                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
+                            <select class="form-select form-select-sm ml-2" id="tipo-filterConcepto" style=" background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold'
+                                , sans-serif;">
+                                <option value="" selected>Todo</option>
                                 <option value="Retenidas">Retenidas</option>
                                 <option value="Sist. Tierra">Sist. Tierra</option>
                                 <option value="Cables">Cables</option>
@@ -106,10 +99,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <th class=" col-1" style="width: 8rem;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                onchange="javacript:GetConcepto();EstablecerPag()"
+                            <select class="form-select form-select-sm ml-2" id="unidad-filterConcepto"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
+                                <option value="" selected>Todo</option>
                                 <option value="Estructuras">Estructura</option>
                                 <option value="PZA">PZA</option>
                             </select>
@@ -122,8 +114,8 @@ if (!isset($_SESSION['idusuario'])) {
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <td colspan="8">Sin resultados</td>
+            <tbody id="table-bodyConceptos">
+                <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
     </div>

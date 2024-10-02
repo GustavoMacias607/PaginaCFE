@@ -13,7 +13,7 @@ require_once("../../scripts/Conceptos.php");
 $c = new Conexion($conData);
 $u = new Conceptos($c->getConnection());
 
-$res = $u->getAllConceptos($datos);
+$res = $u->getAllConceptos();
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
     $resultado['datos'] = $res['datos'];

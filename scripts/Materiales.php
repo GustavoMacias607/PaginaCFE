@@ -39,32 +39,21 @@ class Materiales
 
     // Metodo para filtrar los datos
     //Recibe un objeto con los datos
-    function getFiltarEstatusAllMateriales($datos)
+    function getAllMateriales()
     {
-        /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            if (!$datos->estatus) {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 0,:Unidad,:Buscar);";
-                $sql = $c->prepare($consulta);
-                $sql->execute(array(
-                    "Unidad" => $datos->unidad,
-                    "Buscar" => $datos->buscar,
-                ));
-            } else {
-                $consulta = "call spMaterialesBuscarIdFechaPrecioUnidadTodo('Estatus', 1,:Unidad,:Buscar);";
-                $sql = $c->prepare($consulta);
-                $sql->execute(array(
-                    "Unidad" => $datos->unidad,
-                    "Buscar" => $datos->buscar,
-                ));
-            }
-            $R['filas'] = $sql->rowCount();
+            $consulta = "select * from vstmateriales;";
+            $sql = $c->prepare($consulta);
+            $sql->execute(); // Ejecutar la consulta
+            $datos = $sql->fetchAll();
+
+            $R['filas'] = count($datos); // Contar las filas de los resultados
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {
@@ -138,7 +127,6 @@ class Materiales
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id
-
             ));
 
             $R['filas'] = $sql->rowCount();

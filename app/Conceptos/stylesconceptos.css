@@ -303,3 +303,40 @@ th {
 .inputVacio:focus {
   border: 3px solid red;
 }
+
+.sort-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #008e5a;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-family: "LatoBold", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Iconos dentro del botón */
+.sort-button i {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Efecto hover */
+.sort-button:hover {
+  background-color: #006e45;
+}
+
+/* Efecto para cuando el botón está activo (ascendente o descendente) */
+.sort-button.active i {
+  transform: rotate(180deg); /* Rota el icono */
+}
+
+/* Botón deshabilitado */
+.sort-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}

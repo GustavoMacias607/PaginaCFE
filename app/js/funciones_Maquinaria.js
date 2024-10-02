@@ -1,17 +1,10 @@
-
 let msgEliminarMaqui = "Maquinaria desabilitada";
 let msgActivarMaqui = "Maquinaria habilitada";
 let msgAgregarMaqui = "Maquinaria agregada";
 let msgModificarMaqui = "Maquinaria modificada";
 
-//Metodo para cambiar el tamaño de los registros que se muestran
-function cambiarTamanoMaquinaria() {
-    const cantidad = document.getElementById("cantRegistros");
-    tamanoPagina = parseInt(cantidad.value);
-    paginaActual = 1;
-    GetMaquinaria();
-}
-
+var estatusMaquinaria = 1;
+data = []
 
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaquinariaValidar() {
@@ -107,7 +100,6 @@ function AddMaquinariaValidar() {
         }
     });
 }
-
 
 //Metodo para validar el modal para modificar un material y al mismo tiempo valida los datos
 function UpdMaquinariaValidar() {
@@ -222,7 +214,7 @@ function checkMaquinaria(modal) {
     datos.id = idVali.value;
     let json = JSON.stringify(datos);
 
-    let url = "../ws/ManoObra/wscheckManoObra.php";
+    let url = "../ws/Maquinaria/wscheckMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -292,55 +284,20 @@ function CambioEstatusMaquinaria() {
 
 }
 
-//Metodo para regresar una pagina en la paginacion
-function paginaAnteriorMaquinaria() {
-    if (paginaActual > 1) {
-        paginaActual--;
-        GetMaquinaria();
-    }
-}
-
-//Metodo para cambiar de pagona dando clic a la paginacion
-//Recobe el numero de pagina al cual se cambiara
-function NoPagMaquinaria(pagi) {
-    paginaActual = pagi;
-    GetMaquinaria();
-}
-
-//Metodo para cambiar a la pagina siguiente en la paginacion
-function paginaSiguienteMaquinaria() {
-    if (paginaActual < totalPag) {
-        paginaActual++;
-        GetMaquinaria();
-    }
-}
-
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetMaquinaria() {
-    const datos = {};
-    let buscar = document.querySelector('#searchInput');
-    let estatus = document.getElementById('ValCheEsta').checked;
-    let unidad = document.getElementById('selectUnidad');
-    datos.buscar = buscar.value;
-    if (estatus) {
-        datos.estatus = 1;
-    } else {
-        datos.estatus = 0;
-    }
-    datos.unidad = unidad.value;
-    let json = JSON.stringify(datos);
+    console.log(estatusMaquinaria)
+    let json = "";
     let url = "../ws/Maquinaria/wsGetMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
+
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
-
-                    //Llamar a la función para mostrar los datos en la tabla
-                    mostrarDatosEnTablaMaquinaria(resp.datos, paginaActual, tamanoPagina);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTablaMaquinaria(resp.mensaje, paginaActual, tamanoPagina);
+                    data = resp.datos;
+                    llenarTablaMaquinaria();
+                    filterDataMaquinaria();
                 }
             } else {
                 throw e = status;
@@ -350,98 +307,163 @@ function GetMaquinaria() {
         }
     });
 }
-// metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
-//recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
-function mostrarDatosEnTablaMaquinaria(datos, paginaActual, tamanoPagina) {
-    let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
-    totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-maquinaria").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = "";
-    if (datos == "N") {
-        let fila = document.createElement("tr");
-        fila.innerHTML = `
-        <td colspan="8">Sin resultados</td>
-        `;
-        tbody.appendChild(fila);
 
-        actualizarPaginacionMaquinaria(datos, paginaActual, tamanoPagina);
-        return;
-    }
-    let startIndex = (paginaActual - 1) * tamanoPagina;
-    let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
-    for (let i = startIndex; i < endIndex; i++) {
-        let maquinaria = datos[i];
-        let fila = document.createElement("tr");
-        fila.classList.add("fila")
-        fila.addEventListener("mouseover", () => mostrarValores(fila));
-        fila.addEventListener("mouseout", () => ocultarValores(fila));
-        // Agregar las celdas a la fila
-        fila.innerHTML = `
-            <td class="Code">${maquinaria.idmaquinaria}</td>
-            <td>${(!maquinaria.descripcion == "") ? maquinaria.descripcion : "---"}</td>
-            <td>${(!maquinaria.unidad == "") ? maquinaria.unidad : "---"}</td>
-            <td>${(!maquinaria.phm == "") ? maquinaria.phm : "---"}</td>
-            <td>${(!maquinaria.rhm == "") ? maquinaria.rhm : "---"}</td>
+function displayTableMaquinaria(page) {
+    const tableBody = document.getElementById("table-bodyMaquinaria");
+    tableBody.innerHTML = "";
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = filteredData.slice(start, end);
+
+    if (paginatedData.length > 0) {
+        paginatedData.forEach(record => {
+            const row = `<tr>
+                        <td class="Code">${record.idmaquinaria}</td>
+            <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
+            <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+            <td>${(!record.phm == "") ? record.phm : "---"}</td>
+            <td>${(!record.rhm == "") ? record.rhm : "---"}</td>
             <td class="estatus">
             <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                        ${maquinaria.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${maquinaria.idmaquinaria},'${maquinaria.descripcion}','${maquinaria.unidad}',${maquinaria.phm},${maquinaria.rhm})"></i>
+                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${record.idmaquinaria},'${record.descripcion}','${record.unidad}',${record.phm},${record.rhm})"></i>
                         `: ``}
-                        ${maquinaria.estatus == 1 ?
-                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${maquinaria.idmaquinaria},${maquinaria.estatus})"></i>` :
-                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${maquinaria.idmaquinaria},${maquinaria.estatus})"></i>`
-            }
-
+                        ${record.estatus == 1 ?
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>`
+                }
                         </div>
-                        </td>
-        `;
-        // Agregar la fila a la tabla
-        tbody.appendChild(fila);
-
+                        </td>    
+                     </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } else {
+        const row = `<tr>
+                        <td colspan="6" class="Code">Sin resultados</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
     }
-
-    actualizarPaginacionMaquinaria(datos.length, paginaActual, tamanoPagina);
 }
-//Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
-//recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
-function actualizarPaginacionMaquinaria(totalDatos, paginaActual, tamanoPagina) {
-    if (totalDatos == "N") {
-        let paginationList = document.getElementById("pagination-list");
-        paginationList.innerHTML = "";
-        return;
-    }
-    let paginationList = document.getElementById("pagination-list");
-    paginationList.innerHTML = "";
-    let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
-    let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
-    let liPrev = document.createElement("li");
-    liPrev.innerHTML = `<button onclick="paginaAnteriorMaquinaria()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
-    paginationList.appendChild(liPrev);
-    // Ajuste del rango para mostrar siempre 5 páginas
-    let startPage = Math.max(1, paginaActual - rangoMostrar);
-    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
-    if (endPage - startPage < 4) {
-        if (startPage > 1) {
-            startPage = Math.max(1, endPage - 4);
-        } else if (endPage < totalPaginas) {
-            endPage = Math.min(totalPaginas, startPage + 4);
-        }
-    }
-    // Generar enlaces de página
-    for (let i = startPage; i <= endPage; i++) {
-        let li = document.createElement("li");
-        if (i === paginaActual) {
-            li.classList.add("active");
-            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagMaquinaria(${i})">${i}</button>`;
+
+function setupPaginationMaquinaria() {
+    const paginationDiv = document.getElementById("pagination");
+    paginationDiv.innerHTML = "";
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    const maxPagesToShow = 5; // Número máximo de páginas a mostrar
+    let startPage, endPage;
+
+    if (totalPages <= maxPagesToShow) {
+        // Mostrar todas las páginas si son menos o iguales a 5
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        const middle = Math.floor(maxPagesToShow / 2);
+
+        if (currentPage <= middle) {
+            startPage = 1;
+            endPage = maxPagesToShow;
+        } else if (currentPage + middle >= totalPages) {
+            startPage = totalPages - maxPagesToShow + 1;
+            endPage = totalPages;
         } else {
-            li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+            startPage = currentPage - middle;
+            endPage = currentPage + middle;
         }
-        paginationList.appendChild(li);
     }
-    let liNext = document.createElement("li");
-    liNext.innerHTML = `<button onclick="paginaSiguienteMaquinaria()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
-    paginationList.appendChild(liNext);
+    if (totalPages > 0) {
+        // Botón de "Atrás"
+        const prevButton = document.createElement("button");
+        prevButton.innerHTML = `<i class="fa-solid fa-angles-left"></i>`;
+        prevButton.style.backgroundColor = "#008e5a";
+        prevButton.style.color = "#ffffff";
+        prevButton.style.border = "3px solid #008e5a";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayTableMaquinaria(currentPage);
+                setupPaginationMaquinaria();
+            }
+        });
+        paginationDiv.appendChild(prevButton);
+        // Botones de página
+        for (let i = startPage; i <= endPage; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
 
+            if (currentPage === i) {
+                button.className = 'active';
+                button.style.color = "#ffffff";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#008e5a";
+            } else {
+                button.style.color = "#008e5a";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#ffffff";
+            }
+            button.addEventListener("click", () => {
+                currentPage = i;
+                displayTableMaquinaria(currentPage);
+                setupPaginationMaquinaria();
+            });
+            paginationDiv.appendChild(button);
+        }
+
+        // Botón de "Adelante"
+        const nextButton = document.createElement("button");
+        nextButton.innerHTML = `<i class="fa-solid fa-angles-right"></i>`;
+        nextButton.style.backgroundColor = "#008e5a";
+        nextButton.style.color = "#ffffff";
+        nextButton.style.border = "3px solid #008e5a";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayTableMaquinaria(currentPage);
+                setupPaginationMaquinaria();
+            }
+        });
+        paginationDiv.appendChild(nextButton);
+    }
 }
+
+function filterDataMaquinaria() {
+    const searchText = document.getElementById("search-inputMaqui").value.toLowerCase();
+    const unidadFilter = document.getElementById("unidad-filterMaqui").value;
+    const statusFilter = estatusMaquinaria;
+
+    filteredData = data.filter(record => {
+        const matchesSearch = Object.values(record).some(value =>
+            value != null && value.toString().toLowerCase().includes(searchText)
+        );
+        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
+        const matchesStatus = record.estatus === statusFilter;
+        return matchesSearch && matchesUnidad && matchesStatus;
+    });
+
+    currentPage = 1; // Reiniciar a la primera página después de filtrar
+    displayTableMaquinaria(currentPage);
+    setupPaginationMaquinaria();
+}
+
+function llenarTablaMaquinaria() {
+    displayTableMaquinaria(currentPage);
+    setupPaginationMaquinaria();
+    const searchInput = document.getElementById("search-inputMaqui");
+    searchInput.addEventListener("input", filterDataMaquinaria);
+
+    const unidadFilter = document.getElementById("unidad-filterMaqui");
+    unidadFilter.addEventListener("change", filterDataMaquinaria);
+
+    const rowsPerPageSelect = document.getElementById("rows-per-page");
+    rowsPerPageSelect.addEventListener("change", function () {
+        rowsPerPage = parseInt(this.value);
+        currentPage = 1;
+        displayTableMaquinaria(currentPage);
+        setupPaginationMaquinaria();
+    });
+}
+
 
 //Metodo para limpiar el modal de agregar mano de obra
 function AddlimpiarModalMaquinaria() {
@@ -479,9 +501,12 @@ function valStatusMaquinaria() {
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
         imgcheck.src = "../img/toggle_on_35px.png"
+        estatusMaquinaria = 1;
     } else {
         imgcheck.src = "../img/toggle_off_35px.png"
+        estatusMaquinaria = 0
     }
+    filterDataMaquinaria();
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
@@ -525,27 +550,7 @@ function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, rhM) {
     rhm.classList.remove("inputVacio");
 }
 
-//Metodo para cerrar el modal de agregar material
-function AddCerrarModal() {
-    $('#AgregarModal').modal('hide');
-}
-//Metodo para cerrar el modal de modificar material
-function UpdateCerrarModal() {
 
-    $('#EditarModal').modal('hide');
-}
-function ActivarCerrarModal() {
-
-    $('#confirmActivationModal').modal('hide');
-}
-function EliminarCerrarModal() {
-
-    $('#confirmAdditionalModal').modal('hide');
-}
-
-function AbrirModalConfirm() {
-    $('#confirmAdditionalModal').modal('show');
-}
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1() {
     let estatus = document.getElementById('ValCheEsta').checked;

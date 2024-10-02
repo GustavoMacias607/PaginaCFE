@@ -13,7 +13,7 @@ require_once("../../scripts/Maquinaria.php");
 $c = new Conexion($conData);
 $u = new Maquinaria($c->getConnection());
 
-$res = $u->getAllMaquinaria($datos);
+$res = $u->getAllMaquinaria();
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
     $resultado['datos'] = $res['datos'];

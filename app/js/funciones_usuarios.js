@@ -3,15 +3,7 @@ let msgEliminarUsu = "Usuario deshabilitado";
 let msgActivarUsu = "Usuario habilitado";
 let msgAgregarUsu = "Usuario agregado";
 let msgModificarUsu = "Usuario modificado";
-
-//Metodo para cambiar el tamaño de los registros que se muestran
-function cambiarTamanoUsuario() {
-    const cantidad = document.getElementById("cantRegistros");
-    tamanoPagina = parseInt(cantidad.value);
-    paginaActual = 1;
-    GetUsuario();
-}
-
+var estatusUsuario = 1;
 
 //Metodo que valida el formulario para agregar usuarios y al mismo tiempo agrega el usuario
 function AddUsuarioValidar() {
@@ -91,7 +83,7 @@ function AddUsuarioValidar() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
-                    AddCerrarModalUsuario();
+                    AddCerrarModal();
                     mensajePantalla(msgAgregarUsu, true);
                     GetUsuario();
                 }
@@ -179,7 +171,7 @@ function UpdUsuarioValidar() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
-                    UpdateCerrarModalUsuario();
+                    UpdateCerrarModal();
                     mensajePantalla(msgModificarUsu, true);
                     GetUsuario();
                 }
@@ -289,55 +281,20 @@ function CambioEstatusUsuario() {
 
 }
 
-//Metodo para regresar una pagina en la paginacion
-function paginaAnteriorUsuario() {
-    if (paginaActual > 1) {
-        paginaActual--;
-        GetUsuario();
-    }
-}
-
-//Metodo para cambiar de pagona dando clic a la paginacion
-//Recobe el numero de pagina al cual se cambiara
-function NoPagUsuario(pagi) {
-    paginaActual = pagi;
-    GetUsuario();
-}
-
-//Metodo para cambiar a la pagina siguiente en la paginacion
-function paginaSiguienteUsuario() {
-    if (paginaActual < totalPag) {
-        paginaActual++;
-        GetUsuario();
-    }
-}
 
 //Metodo para hacer la consulta de los usuarios tomando en cuanta los filtros
 function GetUsuario() {
-    const datos = {};
-    let buscar = document.querySelector('#searchInputUsuarios');
-    let estatus = document.getElementById('ValCheEstaUsuarios').checked;
-    let rol = document.getElementById('selectUsuarios');
-    datos.buscar = buscar.value;
-    if (estatus) {
-        datos.estatus = 1;
-    } else {
-        datos.estatus = 0;
-    }
-    datos.rol = rol.value;
-    let json = JSON.stringify(datos)
+    let json = "";
     let url = "../ws/Usuarios/wsGetUsuarios.php";
     $.post(url, json, (responseText, status) => {
         try {
+
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
-                    //Llamar a la función para mostrar los datos en la tabla
-
-                    mostrarDatosEnTablaUsuario(resp.datos, paginaActual, tamanoPagina);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTablaUsuario(resp.mensaje, paginaActual, tamanoPagina);
+                    data = resp.datos;
+                    llenarTablaUsuario();
+                    filterDataUsuario();
                 }
             } else {
                 throw e = status;
@@ -348,97 +305,159 @@ function GetUsuario() {
     });
 }
 
-// metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
-//recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
-function mostrarDatosEnTablaUsuario(datos, paginaActual, tamanoPagina) {
-    let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
-    totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-usuarios").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = "";
-    if (datos == "N") {
-        let fila = document.createElement("tr");
-        fila.innerHTML = `
-        <td colspan="8">Sin resultados</td>
-        `;
-        tbody.appendChild(fila);
+function displayTableUsuario(page) {
+    const tableBody = document.getElementById("table-bodyUsuario");
+    tableBody.innerHTML = "";
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = filteredData.slice(start, end);
 
-        actualizarPaginacionUsuario(datos, paginaActual, tamanoPagina);
-        return;
-    }
-    let startIndex = (paginaActual - 1) * tamanoPagina;
-    let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
-    for (let i = startIndex; i < endIndex; i++) {
-        let usuario = datos[i];
-        let fila = document.createElement("tr");
-        fila.classList.add("fila")
-        fila.addEventListener("mouseover", () => mostrarValores(fila));
-        fila.addEventListener("mouseout", () => ocultarValores(fila));
-        // Agregar las celdas a la fila
-        fila.innerHTML = `
-            <td class="Code">${usuario.idusuario}</td>
-            <td>${(!usuario.nombre == "") ? usuario.nombre : "---"}</td>
-            <td>${(!usuario.usuario == "") ? usuario.usuario : "---"}</td>
-            <td>${(!usuario.rol == "") ? usuario.rol : "---"}</td>
+    if (paginatedData.length > 0) {
+        paginatedData.forEach(record => {
+            const row = `<tr>
+                        <td class="Code">${record.idusuario}</td>
+            <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
+            <td>${(!record.usuario == "") ? record.usuario : "---"}</td>
+            <td>${(!record.rol == "") ? record.rol : "---"}</td>
             <td class="estatus">
                 <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                ${usuario.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${usuario.idusuario},'${usuario.nombre}','${usuario.usuario}','${usuario.rol}')"></i>
+                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${record.idusuario},'${record.nombre}','${record.usuario}','${record.rol}')"></i>
                 `: ``}
-                ${usuario.estatus == 1 ?
-                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1Usuario(); AsignarValores(${usuario.idusuario},${usuario.estatus})"></i>` :
-                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1Usuario(); AsignarValores(${usuario.idusuario},${usuario.estatus})"></i>`
-            }  
+                ${record.estatus == 1 ?
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idusuario},${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idusuario},${record.estatus})"></i>`
+                }  
                 </div>
             </td>   
-        `;
-        // Agregar la fila a la tabla
-        tbody.appendChild(fila);
-
+              
+                     </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } else {
+        const row = `<tr>
+                        <td colspan="6" class="Code">Sin resultados</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
     }
-
-    actualizarPaginacionUsuario(datos.length, paginaActual, tamanoPagina);
 }
-//Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
-//recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
-function actualizarPaginacionUsuario(totalDatos, paginaActual, tamanoPagina) {
-    if (totalDatos == "N") {
-        let paginationList = document.getElementById("pagination-list");
-        paginationList.innerHTML = "";
-        return;
-    }
-    let paginationList = document.getElementById("pagination-list");
-    paginationList.innerHTML = "";
-    let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
-    let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
-    let liPrev = document.createElement("li");
-    liPrev.innerHTML = `<button onclick="paginaAnteriorUsuario()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
-    paginationList.appendChild(liPrev);
-    // Ajuste del rango para mostrar siempre 5 páginas
-    let startPage = Math.max(1, paginaActual - rangoMostrar);
-    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
-    if (endPage - startPage < 4) {
-        if (startPage > 1) {
-            startPage = Math.max(1, endPage - 4);
-        } else if (endPage < totalPaginas) {
-            endPage = Math.min(totalPaginas, startPage + 4);
-        }
-    }
-    // Generar enlaces de página
-    for (let i = startPage; i <= endPage; i++) {
-        let li = document.createElement("li");
-        if (i === paginaActual) {
-            li.classList.add("active");
-            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagUsuario(${i})">${i}</button>`;
+
+function setupPaginationUsuario() {
+    const paginationDiv = document.getElementById("pagination");
+    paginationDiv.innerHTML = "";
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    const maxPagesToShow = 5; // Número máximo de páginas a mostrar
+    let startPage, endPage;
+
+    if (totalPages <= maxPagesToShow) {
+        // Mostrar todas las páginas si son menos o iguales a 5
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        const middle = Math.floor(maxPagesToShow / 2);
+
+        if (currentPage <= middle) {
+            startPage = 1;
+            endPage = maxPagesToShow;
+        } else if (currentPage + middle >= totalPages) {
+            startPage = totalPages - maxPagesToShow + 1;
+            endPage = totalPages;
         } else {
-            li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+            startPage = currentPage - middle;
+            endPage = currentPage + middle;
         }
-        paginationList.appendChild(li);
     }
-    let liNext = document.createElement("li");
-    liNext.innerHTML = `<button onclick="paginaSiguienteUsuario()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
-    paginationList.appendChild(liNext);
+    if (totalPages > 0) {
+        // Botón de "Atrás"
+        const prevButton = document.createElement("button");
+        prevButton.innerHTML = `<i class="fa-solid fa-angles-left"></i>`;
+        prevButton.style.backgroundColor = "#008e5a";
+        prevButton.style.color = "#ffffff";
+        prevButton.style.border = "3px solid #008e5a";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayTableUsuario(currentPage);
+                setupPaginationUsuario();
+            }
+        });
+        paginationDiv.appendChild(prevButton);
+        // Botones de página
+        for (let i = startPage; i <= endPage; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
 
+            if (currentPage === i) {
+                button.className = 'active';
+                button.style.color = "#ffffff";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#008e5a";
+            } else {
+                button.style.color = "#008e5a";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#ffffff";
+            }
+            button.addEventListener("click", () => {
+                currentPage = i;
+                displayTableUsuario(currentPage);
+                setupPaginationUsuario();
+            });
+            paginationDiv.appendChild(button);
+        }
+
+        // Botón de "Adelante"
+        const nextButton = document.createElement("button");
+        nextButton.innerHTML = `<i class="fa-solid fa-angles-right"></i>`;
+        nextButton.style.backgroundColor = "#008e5a";
+        nextButton.style.color = "#ffffff";
+        nextButton.style.border = "3px solid #008e5a";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayTableUsuario(currentPage);
+                setupPaginationUsuario();
+            }
+        });
+        paginationDiv.appendChild(nextButton);
+    }
 }
 
+function filterDataUsuario() {
+    const searchText = document.getElementById("search-inputUsuario").value.toLowerCase();
+    const rolFilter = document.getElementById("selectUsuarios").value;
+    const statusFilter = estatusUsuario;
+    filteredData = data.filter(record => {
+        const matchesSearch = Object.values(record).some(value =>
+            value.toString().toLowerCase().includes(searchText)
+        );
+        const matchesrol = rolFilter ? record.rol === rolFilter : true;
+        const matchesStatus = record.estatus === statusFilter;
+        return matchesSearch && matchesrol && matchesStatus;
+    });
+    currentPage = 1; // Reiniciar a la primera página después de filtrar
+    displayTableUsuario(currentPage);
+    setupPaginationUsuario();
+}
+
+function llenarTablaUsuario() {
+    displayTableUsuario(currentPage);
+    setupPaginationUsuario();
+    const searchInput = document.getElementById("search-inputUsuario");
+    searchInput.addEventListener("input", filterDataUsuario);
+
+    const rolFilter = document.getElementById("selectUsuarios");
+    rolFilter.addEventListener("change", filterDataUsuario);
+
+    const rowsPerPageSelect = document.getElementById("rows-per-page");
+    rowsPerPageSelect.addEventListener("change", function () {
+        rowsPerPage = parseInt(this.value);
+        currentPage = 1;
+        displayTableUsuario(currentPage);
+        setupPaginationUsuario();
+    });
+}
 //Metodo para limpiar el modal de agregar usuario
 function AddlimpiarModalUsuario() {
     let nombreU = document.querySelector('#AddnombreInput');
@@ -467,15 +486,18 @@ function AddlimpiarModalUsuario() {
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre usuarios activos e inactivos
 function valStatusUsuario() {
-    var checkbox = document.getElementById('ValCheEstaUsuarios');
-    var imgcheck = document.getElementById('ValEstatusUsuario');
+    var checkbox = document.getElementById('ValCheEsta');
+    var imgcheck = document.getElementById('ValEstatus');
     // Deseleccionar el checkbox
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
         imgcheck.src = "../img/toggle_on_35px.png"
+        estatusUsuario = 1;
     } else {
         imgcheck.src = "../img/toggle_off_35px.png"
+        estatusUsuario = 0;
     }
+    filterDataUsuario();
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
@@ -507,7 +529,6 @@ function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de da
     usuarioU.classList.remove("inputVacio");
     rolU.classList.remove("inputVacio");
 }
-
 
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1Usuario() {

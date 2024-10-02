@@ -6,25 +6,25 @@ function opcion(op) {
     switch (op) {
         case "materiales":
             url = "Materiales/addmaterialesFrm.php";
-            funcion = cambiarTamano;
+            funcion = GetMateriales;
             break;
         case "usuarios":
             url = "Usuarios/addUsuariosFrm.php";
-            funcion = cambiarTamanoUsuario
+            funcion = GetUsuario;
             break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
-            funcion = cambiarTamanoConcepto;
+            funcion = GetConcepto;
             break;
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";
             break;
         case "ManoObra":
             url = "ManoObra/addManoObraFrm.php";
-            funcion = cambiarTamanoManoObra;
+            funcion = GetManoObra;
             break;
         case "Catalogo":
             url = "Catalogo/viewCatalogoFrm.php";
@@ -32,7 +32,7 @@ function opcion(op) {
             break;
         case "Maquinaria":
             url = "Maquinaria/addMaquinariaFrm.php";
-            funcion = cambiarTamanoMaquinaria;
+            funcion = GetMaquinaria;
             break;
         case "Basicos":
             url = "Basicos/addBasicosFrm.php";
@@ -51,7 +51,9 @@ function opcion(op) {
 
             if (status == "success") {
                 document.getElementById("mainContent").innerHTML = responseText;
+                EstatusEntidades();
                 funcion();
+
             } else {
                 throw e = status;
             }
@@ -60,6 +62,8 @@ function opcion(op) {
         }
     });
 }
+
+
 //Atributos globales
 
 let existe = false;
@@ -71,7 +75,21 @@ let idEliminar;
 let ActivarS;
 
 
+
+// let filteredData = [...data];
+// let rowsPerPage = 10;
+// let currentPage = 1;
+// Para aplicar orden y filtros
+// let currentSortField = null;
+// let currentSortOrder = 'asc'; // ascendente o descendente
 //Funciones globales
+
+function EstatusEntidades() {
+    estatusUsuario = 1;
+    estatusMaquinaria = 1;
+    estatusMano = 1;
+}
+
 
 //Metodo para imprimir un mensaje en pantalla
 //recibe dos valores el mensaje y si el mensaje es positivo se pone true, si es negativo false

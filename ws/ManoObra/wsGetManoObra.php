@@ -13,7 +13,7 @@ require_once("../../scripts/ManoObra.php");
 $c = new Conexion($conData);
 $u = new ManoObra($c->getConnection());
 
-$res = $u->getAllManoObra($datos);
+$res = $u->getAllManoObra();
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
     $resultado['datos'] = $res['datos'];

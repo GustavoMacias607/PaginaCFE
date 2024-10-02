@@ -19,8 +19,8 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
     <div class="label-container-usuarios">
         <form autocomplete="off">
-            <input type="text" placeholder="Buscar" id="searchInputUsuarios" name="no-autocomplete" autocomplete="off"
-                oninput="GetUsuario();EstablecerPag()">
+            <input type="text" placeholder="Buscar" id="search-inputUsuario" placeholder="Buscar" name="no-autocomplete"
+                autocomplete="off">
             <i class="fas fa-search icon-usuarios" id="searchIcon"></i>
         </form>
     </div>
@@ -29,12 +29,9 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- Paginacion  -->
     <div class="pagRegistrosusuarios">
         <nav class="pSeccion">
-
-
             <div class="cantregusuarios">
                 <div class="text">Mostrar</div>
-                <select class="cantregistrosusuarios" name="" id="cantRegistros"
-                    onchange="javascript:cambiarTamanoUsuario()">
+                <select class="cantregistrosmanodeobra" id="rows-per-page">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -43,7 +40,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="text">Registros </div>
             </div>
 
-            <ul class="pagination" id="pagination-list">
+            <ul class="pagination" id="pagination">
                 <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                 <li class="page-item active"></li>
             </ul>
@@ -52,9 +49,8 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="toggle-estatus-usuarios">
             <div class="text">Estatus</div>
             <div class="">
-                <input style="display: none;" type="checkbox" id="ValCheEstaUsuarios" checked>
-                <img id="ValEstatusUsuario" src="../img/toggle_on_35px.png"
-                    onclick="javascript:valStatusUsuario();GetUsuario();">
+                <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusUsuario();">
             </div>
         </div>
     </div>
@@ -81,9 +77,8 @@ if (!isset($_SESSION['idusuario'])) {
                         <div class="d-flex align-items-center">
                             <span>Rol: </span>
                             <select class="form-select form-select-sm ml-2" id="selectUsuarios"
-                                onchange="javacript:GetUsuario();EstablecerPag()"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
+                                <option value="" selected>Todo</option>
                                 <option value="Administrador">Administrador</option>
                                 <option value="Invitado">Invitado</option>
                                 <option value="Constructor">Constructor</option>
@@ -97,8 +92,8 @@ if (!isset($_SESSION['idusuario'])) {
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <td colspan="8">Sin resultados</td>
+            <tbody id="table-bodyUsuario">
+                <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
     </div>
@@ -231,7 +226,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Habilitar este usuario?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
-                    onclick="javascript:ActivarCerrarModalUsuario(); CambioEstatusUsuario();"
+                    onclick="javascript:ActivarCerrarModal(); CambioEstatusUsuario();"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
@@ -249,8 +244,8 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
                     ¿Deshabilitar este usuario?</h5>
-                <button type="button" class="btn" data-bs-dismiss="modal"
-                    onclick="javascript:AbrirModalConfirmUsuario();" id="confirmDeleteButton"
+                <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
+                    id="confirmDeleteButton"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
@@ -268,8 +263,8 @@ if (!isset($_SESSION['idusuario'])) {
                 style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
                     seguro de que desea deshabilitar este usuario?</h5>
-                <button type="button" onclick="javascript:EliminarCerrarModalUsuario(); CambioEstatusUsuario();"
-                    class="btn" id="confirmAdditionalButton"
+                <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusUsuario();" class="btn"
+                    id="confirmAdditionalButton"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
@@ -297,20 +292,20 @@ if (!isset($_SESSION['idusuario'])) {
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script>
-window.addEventListener('resize', function() {
-    const logoImage = document.getElementById('logoImage');
-    const windowWidth = window.innerWidth;
-    const originalWidth = logoImage.naturalWidth;
+    window.addEventListener('resize', function() {
+        const logoImage = document.getElementById('logoImage');
+        const windowWidth = window.innerWidth;
+        const originalWidth = logoImage.naturalWidth;
 
-    if (windowWidth < originalWidth) {
-        logoImage.src =
-            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+        if (windowWidth < originalWidth) {
+            logoImage.src =
+                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-    } else {
-        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-        logoImage.alt = 'Logo'; // Restaura el atributo alt
-    }
-});
+        } else {
+            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+            logoImage.alt = 'Logo'; // Restaura el atributo alt
+        }
+    });
 </script>

@@ -57,26 +57,22 @@ class Maquinaria
     }
 
 
-    function getAllMaquinaria($datos)
+    function getAllMaquinaria()
     {
         /*Método para obtener todos los Materiales*/
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spMaquinariaBuscarTodoUnidad(:Estatus,:Unidad,:Buscar);";
+            $consulta = "SELECT * FROM vstmaquinaria;";
             $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Estatus" => $datos->estatus,
-                "Unidad" => $datos->unidad,
-                "Buscar" => $datos->buscar,
+            $sql->execute(); // Ejecutar la consulta
+            $datos = $sql->fetchAll();
 
-            ));
-
-            $R['filas'] = $sql->rowCount();
+            $R['filas'] = count($datos); // Contar las filas de los resultados
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {
@@ -90,7 +86,7 @@ class Maquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraBuscarId(:Id);";
+            $consulta = "call spMaquinariaBuscarId(:Id);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id

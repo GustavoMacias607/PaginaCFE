@@ -8,6 +8,8 @@ if (!isset($_SESSION['idusuario'])) {
 }
 
 ?>
+
+
 <div class="fondBlancomaquinaria">
     <div class="bottom-rectangle-maquinaria">
         <div class="text-maquinaria">Maquinaria</div>
@@ -18,18 +20,16 @@ if (!isset($_SESSION['idusuario'])) {
         </a>
     </div>
     <div class=" label-container-maquinaria">
-        <input type="text" placeholder="Buscar" id="searchInput" oninput="GetMaquinaria();EstablecerPag()">
+        <input type="text" id="search-inputMaqui" placeholder="Buscar">
         <i class="fas fa-search icon-maquinaria" id="searchIcon"></i>
     </div>
 
     <!-- Paginacion  -->
     <div class="pagRegistrosmaquinaria">
         <nav class="pSeccion">
-
             <div class="cantregmaquinaria">
                 <div class="text">Mostrar</div>
-                <select class="cantregistrosmaquinaria" name="" id="cantRegistros"
-                    onchange="javascript:cambiarTamanoMaquinaria()">
+                <select class="cantregistrosmanodeobra" id="rows-per-page">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -38,7 +38,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="text">Registros </div>
             </div>
 
-            <ul class="pagination" id="pagination-list">
+            <ul class="pagination" id="pagination">
                 <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                 <li class="page-item active"></li>
             </ul>
@@ -48,8 +48,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="text">Estatus</div>
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
-                <img id="ValEstatus" src="../img/toggle_on_35px.png"
-                    onclick="javascript:valStatusMaquinaria(); javascript:GetMaquinaria(); javascript:EstablecerPag()">
+                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusMaquinaria();">
             </div>
         </div>
     </div>
@@ -69,10 +68,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <th class=" col-1" style="width: 200px;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                onchange="javacript:GetMaquinaria();EstablecerPag()"
+                            <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
+                                <option value="" selected>Todo</option>
                                 <option value="HR">HR</option>
                                 <option value="%MO">%MO</option>
                             </select>
@@ -91,8 +89,8 @@ if (!isset($_SESSION['idusuario'])) {
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <td colspan="8">Sin resultados</td>
+            <tbody id="table-bodyMaquinaria">
+                <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
     </div>

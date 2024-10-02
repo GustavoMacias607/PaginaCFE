@@ -62,33 +62,29 @@ class ManoObra
     /** Metodo para obtener las manos de obra existentes
      * recibe un objeto con los datos a filtrar sobre las manos de obras existentes
      */
-    function getAllManoObra($datos)
+    function getAllManoObra()
     {
-
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraMostrar(:Estatus,:Buscar,:Categoria,:Unidad);";
+            $consulta = "SELECT * FROM vstmanoobra;";
             $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Estatus" => $datos->estatus,
-                "Buscar" => $datos->buscar,
-                "Categoria" => $datos->categoria,
-                "Unidad" => $datos->unidad,
+            $sql->execute(); // Ejecutar la consulta
+            $datos = $sql->fetchAll();
 
-            ));
-
-            $R['filas'] = $sql->rowCount();
+            $R['filas'] = count($datos); // Contar las filas de los resultados
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {
             $R['estado'] = "Error: " . $e->getMessage();
         }
         return $R;
+
+        //$consulta = "call spManoObraMostrar(:Estatus,:Buscar,:Categoria,:Unidad);";
     }
     /**Metodo para verificar si una mano de obra ya existe
      * recibe un objeto que contiene el id de la mano de obra

@@ -8,13 +8,10 @@ let msgModificar = "Material modificado";
 let msgPesoMaximo = "Maximo 200kb";
 let msgNoEsImagen = "No es una imagen";
 
-//Metodo para cambiar el tamaño de los registros que se muestran
-function cambiarTamano() {
-    const cantidad = document.getElementById("cantRegistros");
-    tamanoPagina = parseInt(cantidad.value);
-    paginaActual = 1;
-    GetMateriales();
-}
+var estatusMateriales = 1;
+let datosObjetoMateriales = [];
+
+let ExportarExcel = [];
 
 
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
@@ -256,8 +253,6 @@ function checkMaterial(modal) {
 
 //Metodo para cambiar el estatus de los materiales
 function CambioEstatus() {
-    let msgModal = document.getElementById('modalMsgMateriales');
-    let parrafoModal = document.getElementById('modParrafo');
     const datos = {};
     datos.id = idEliminar;
     if (ActivarS == 1) {
@@ -310,59 +305,36 @@ function CambioEstatus() {
 
 }
 
-//Metodo para regresar una pagina en la paginacion
-function paginaAnterior() {
-    if (paginaActual > 1) {
-        paginaActual--;
-        GetMateriales();
-    }
-}
-
-//Metodo para cambiar de pagona dando clic a la paginacion
-//Recobe el numero de pagina al cual se cambiara
-function NoPag(pagi) {
-    paginaActual = pagi;
-    GetMateriales();
-}
-
-//Metodo para cambiar a la pagina siguiente en la paginacion
-function paginaSiguiente() {
-    if (paginaActual < totalPag) {
-        paginaActual++;
-        GetMateriales();
-    }
-}
-
-// Metodo para obtener cuantas paginas tendra la paginacion
-// Recibe el total de datos y el numero de registros a mostrar en la tabla
-function obtenerTotalPaginas(totalDatos, tamanoPagina) {
-    return Math.ceil(totalDatos / tamanoPagina);
-}
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetMateriales() {
-    const datos = {};
-    let buscar = document.querySelector('#searchInput');
-    let estatus = document.getElementById('ValCheEsta').checked;
-    let unidad = document.getElementById('selectUnidad');
-    datos.buscar = buscar.value;
-    datos.estatus = estatus;
-    datos.unidad = unidad.value;
-    let json = JSON.stringify(datos);
+
+    let json = "";
     let url = "../ws/Materiales/wsGetMateriales.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
 
                 let resp = JSON.parse(responseText);
+
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
-
-                    mostrarDatosEnTabla(resp.datos, paginaActual, tamanoPagina);
-
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTabla(resp.mensaje, paginaActual, tamanoPagina);
+                    ExportarExcel = resp.datos.map(obj => {
+                        return {
+                            codigo: obj.codigo,
+                            norma: obj.norma,
+                            descripcion: obj.descripcion,
+                            precio: obj.precio,
+                            fechaprecio: obj.fechaprecio,
+                            unidad: obj[5],
+                            estatus: obj.estatus
+                        };
+                    });
+                    datosObjetoMateriales = resp.datos;
+                    console.log(datosObjetoMateriales);
+                    llenarTablaMateriales();
+                    filterDataMateriales();
+                    document.getElementById('upload').addEventListener('change', handleFile, false);
                 }
             } else {
                 throw e = status;
@@ -373,51 +345,31 @@ function GetMateriales() {
     });
 }
 
-// metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
-//recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
-function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
-    let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
-    totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-materiales").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = "";
-    if (datos == "N") {
-        let fila = document.createElement("tr");
-        fila.innerHTML = `
-        <td colspan="8">Sin resultados</td>
-        `;
-        tbody.appendChild(fila);
 
-        actualizarPaginacion(datos, paginaActual, tamanoPagina);
-        return;
-    }
-    let startIndex = (paginaActual - 1) * tamanoPagina;
-    let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
+function displayTableMateriales(page) {
+    const tableBody = document.getElementById("table-bodyMateriales");
+    tableBody.innerHTML = "";
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = filteredData.slice(start, end);
+    if (paginatedData.length > 0) {
+        paginatedData.forEach(record => {
+            const formatoMXN = new Intl.NumberFormat('es-MX', {
+                style: 'currency',
+                currency: 'MXN'
+            });
 
-
-    for (let i = startIndex; i < endIndex; i++) {
-        let material = datos[i];
-        let fila = document.createElement("tr");
-        fila.classList.add("fila")
-        fila.addEventListener("mouseover", () => mostrarValores(fila));
-        fila.addEventListener("mouseout", () => ocultarValores(fila));
-        const formatoMXN = new Intl.NumberFormat('es-MX', {
-            style: 'currency',
-            currency: 'MXN'
-        });
-
-        // Asegurarse de que el precio se formatee correctamente
-        const precioFormateado = (material.precio !== undefined && material.precio !== "")
-            ? formatoMXN.format(material.precio)
-            : "---";
-        // Agregar las celdas a la fila
-
-        fila.innerHTML = `
-            <td class="Code">${material.codigo}</td>
-            <td>${(!material.norma == "") ? material.norma : "---"}</td>
-            <td>${(!material.descripcion == "") ? material.descripcion : "---"}</td>
+            // Asegurarse de que el precio se formatee correctamente
+            const precioFormateado = (record.precio !== undefined && record.precio !== "")
+                ? formatoMXN.format(record.precio)
+                : "---";
+            const row = `<tr>
+                        <td class="Code">${record.codigo}</td>
+            <td>${(!record.norma == "") ? record.norma : "---"}</td>
+            <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
             <td>${precioFormateado}</td>
-            <td>${(!material.fechaprecio == "") ? material.fechaprecio : "---"}</td>
-            <td>${(!material.unidad == "") ? material.unidad : "---"}</td>
+            <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
+            <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
             <td class="estatus">
                 <div style="display: flex; justify-content: space-around; align-items: center; ">
                     <div class="miDiv imaCuadro">
@@ -426,63 +378,149 @@ function mostrarDatosEnTabla(datos, paginaActual, tamanoPagina) {
                 </div>
                         <div class="" style="display: flex; justify-content: space-around; align-items: center; ">
                             <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
-                            ${material.estatus == 1 ? `                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${material.codigo},'${material.norma}','${material.descripcion}',${material.precio},'${material.fechaprecio}','${material.unidad}')"></i>` : ``}
-                            ${material.estatus == 1 ?
-                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})"></i>` :
-                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${material.codigo},${material.estatus})"></i>`
-            }
+                            ${record.estatus == 1 ? `                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.unidad}')"></i>` : ``}
+                            ${record.estatus == 1 ?
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>`
+                }
 
                         </div>
                 </div>
-            </td>   
-        `;
-        // Agregar la fila a la tabla
-        tbody.appendChild(fila);
-
+            </td>  
+             
+                     </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } else {
+        const row = `<tr>
+                        <td colspan="7" class="Code">Sin resultados</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
     }
-    actualizarPaginacion(datos.length, paginaActual, tamanoPagina);
 }
-//Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
-//recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
-function actualizarPaginacion(totalDatos, paginaActual, tamanoPagina) {
-    if (totalDatos == "N") {
-        let paginationList = document.getElementById("pagination-list");
-        paginationList.innerHTML = "";
-        return;
-    }
-    let paginationList = document.getElementById("pagination-list");
-    paginationList.innerHTML = "";
-    let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
-    let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
-    let liPrev = document.createElement("li");
-    liPrev.innerHTML = `<button onclick="paginaAnterior()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
-    paginationList.appendChild(liPrev);
-    // Ajuste del rango para mostrar siempre 5 páginas
-    let startPage = Math.max(1, paginaActual - rangoMostrar);
-    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
-    if (endPage - startPage < 4) {
-        if (startPage > 1) {
-            startPage = Math.max(1, endPage - 4);
-        } else if (endPage < totalPaginas) {
-            endPage = Math.min(totalPaginas, startPage + 4);
-        }
-    }
-    // Generar enlaces de página
-    for (let i = startPage; i <= endPage; i++) {
-        let li = document.createElement("li");
-        if (i === paginaActual) {
-            li.classList.add("active");
-            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+
+function setupPaginationMateriales() {
+    const paginationDiv = document.getElementById("pagination");
+    paginationDiv.innerHTML = "";
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    const maxPagesToShow = 5; // Número máximo de páginas a mostrar
+    let startPage, endPage;
+
+    if (totalPages <= maxPagesToShow) {
+        // Mostrar todas las páginas si son menos o iguales a 5
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        const middle = Math.floor(maxPagesToShow / 2);
+
+        if (currentPage <= middle) {
+            startPage = 1;
+            endPage = maxPagesToShow;
+        } else if (currentPage + middle >= totalPages) {
+            startPage = totalPages - maxPagesToShow + 1;
+            endPage = totalPages;
         } else {
-            li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
+            startPage = currentPage - middle;
+            endPage = currentPage + middle;
         }
-        paginationList.appendChild(li);
     }
-    let liNext = document.createElement("li");
-    liNext.innerHTML = `<button onclick="paginaSiguiente()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
-    paginationList.appendChild(liNext);
+    if (totalPages > 0) {
+        // Botón de "Atrás"
+        const prevButton = document.createElement("button");
+        prevButton.innerHTML = `<i class="fa-solid fa-angles-left"></i>`;
+        prevButton.style.backgroundColor = "#008e5a";
+        prevButton.style.color = "#ffffff";
+        prevButton.style.border = "3px solid #008e5a";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayTableMateriales(currentPage);
+                setupPaginationMateriales();
+            }
+        });
+        paginationDiv.appendChild(prevButton);
+        // Botones de página
+        for (let i = startPage; i <= endPage; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
 
+            if (currentPage === i) {
+                button.className = 'active';
+                button.style.color = "#ffffff";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#008e5a";
+            } else {
+                button.style.color = "#008e5a";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#ffffff";
+            }
+            button.addEventListener("click", () => {
+                currentPage = i;
+                displayTableMateriales(currentPage);
+                setupPaginationMateriales();
+            });
+            paginationDiv.appendChild(button);
+        }
+
+        // Botón de "Adelante"
+        const nextButton = document.createElement("button");
+        nextButton.innerHTML = `<i class="fa-solid fa-angles-right"></i>`;
+        nextButton.style.backgroundColor = "#008e5a";
+        nextButton.style.color = "#ffffff";
+        nextButton.style.border = "3px solid #008e5a";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayTableMateriales(currentPage);
+                setupPaginationMateriales();
+            }
+        });
+        paginationDiv.appendChild(nextButton);
+    }
 }
+
+function filterDataMateriales() {
+    const searchText = document.getElementById("search-inputMateriales").value.toLowerCase();
+    const unidadFilter = document.getElementById("selectUnidadMateriales").value;
+    const statusFilter = estatusMateriales;
+    filteredData = datosObjetoMateriales.filter(record => {
+        const matchesSearch = Object.values(record).some(value =>
+            value != null && value.toString().toLowerCase().includes(searchText)
+        );
+        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
+        const matchesStatus = record.estatus === statusFilter;
+        return matchesSearch && matchesUnidad && matchesStatus;
+    });
+    currentPage = 1; // Reiniciar a la primera página después de filtrar
+    displayTableMateriales(currentPage);
+    setupPaginationMateriales();
+}
+
+function llenarTablaMateriales() {
+    displayTableMateriales(currentPage);
+    setupPaginationMateriales();
+    const searchInput = document.getElementById("search-inputMateriales");
+    searchInput.addEventListener("input", filterDataMateriales);
+
+    const unidadFilter = document.getElementById("selectUnidadMateriales");
+    unidadFilter.addEventListener("change", filterDataMateriales);
+
+    const rowsPerPageSelect = document.getElementById("rows-per-page");
+    rowsPerPageSelect.addEventListener("change", function () {
+        rowsPerPage = parseInt(this.value);
+        currentPage = 1;
+        displayTableMateriales(currentPage);
+        setupPaginationMateriales();
+    });
+}
+
+
+
+
+
 
 // Muestra el panel donde se muestra la imagen del material
 //Recibe la ubicacion de la fila del cual se mostrara la imagen
@@ -559,6 +597,7 @@ function AddlimpiarModal() {
 function AddAgregarImagen() {
     let id = document.querySelector('#AddidInput').value;
     var inputFile = document.getElementById('AddimagenInput');
+    let idAnterior = id;
     var file = inputFile.files[0];
     // Verificar el tamaño del archivo (en bytes)
     var maxSizeBytes = 200 * 1024;
@@ -568,6 +607,7 @@ function AddAgregarImagen() {
             var formData = new FormData();
             formData.append('imagen', file);
             formData.append('id', id);
+            formData.append('idAnterior', idAnterior);
             // Enviar la imagen al servidor
             $.ajax({
                 url: './js/guardar_imagen.php',
@@ -598,7 +638,6 @@ function UpdAgregarImagen() {
     let idAnterior = document.querySelector('#UpdidAnteriorMaterial').value; // Obtener el ID anterior
     var inputFile = document.getElementById('UpdimagenInput');
     var file = inputFile.files[0];
-    console.log(id, idAnterior)
 
     // Verificar el tamaño del archivo (en bytes)
     var maxSizeBytes = 200 * 1024;
@@ -666,49 +705,36 @@ function AddmostrarImagen(input) {
     }
 }
 
-//Metodo para mostrar la imagen en el modal de Modificar Material, recibe la imagen seleccionada
-function UpdAgregarImagen() {
-    let id = document.querySelector('#UpdidInput').value;
-    let idAnterior = document.querySelector('#UpdidAnteriorMaterial').value; // Obtener el ID anterior
-    var inputFile = document.getElementById('UpdimagenInput');
-    var file = inputFile.files[0];
+function UpdmostrarImagen(input) {
+    const imagenPreview = document.getElementById('UpdimagenPreview');
+    // Verifica que haya un archivo seleccionado
+    if (input.files && input.files[0]) {
 
-    var formData = new FormData();
-    formData.append('id', id);
-    formData.append('idAnterior', idAnterior);
-
-    // Solo añadir la imagen si se ha seleccionado un archivo
-    if (file) {
-        // Verificar el tamaño del archivo (en bytes)
-        var maxSizeBytes = 200 * 1024;
-        if (file.size <= maxSizeBytes) {
-            // Verificar si el archivo es una imagen con formato PNG o JPG
-            if (file.type === 'image/png' || file.type === 'image/jpeg') {
-                formData.append('imagen', file);
-            } else {
-                mensajePantalla('El archivo seleccionado no es una imagen en formato PNG o JPG.', false);
-                return; // Detener la ejecución si el archivo no es válido
-            }
-        } else {
-            mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
-            return; // Detener la ejecución si el archivo es demasiado grande
+        const archivo = input.files[0]; // Obtener el archivo seleccionado
+        // Verifica el tipo MIME del archivo para asegurarse de que es una imagen
+        const tiposImagen = ['image/jpeg', 'image/png', 'image/gif']; // Tipos MIME permitidos para imágenes
+        if (!tiposImagen.includes(archivo.type)) {
+            mensajePantalla(msgNoEsImagen, false);
+            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
+            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            return; // Salir de la función para evitar cargar un archivo no imagen
         }
+        // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
+        if (archivo.size > 204800) {
+            mensajePantalla(msgPesoMaximo, false);
+            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
+            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            return; // Salir de la función para evitar cargar la imagen grande
+        }
+        // Si pasa las validaciones, lee y muestra la imagen
+        const reader = new FileReader(); // Crea un lector de archivos
+        reader.onload = function (e) {
+            imagenPreview.src = e.target.result;
+            imagenPreview.src = e.target.result; // Muestra la imagen en el preview
+        }
+        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(archivo); // Lee el archivo seleccionado
     }
-
-    // Enviar la imagen al servidor
-    $.ajax({
-        url: './js/guardar_imagen.php',
-        type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (response) {
-            console.log('Operación completada:', response);
-        },
-        error: function (error) {
-            console.error('Error al procesar la solicitud:', error);
-        }
-    });
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -718,10 +744,13 @@ function valStatus() {
     // Deseleccionar el checkbox
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
-        imgcheck.src = "../img/toggle_on_35px.png"
+        imgcheck.src = "../img/toggle_on_35px.png";
+        estatusMateriales = 1;
     } else {
-        imgcheck.src = "../img/toggle_off_35px.png"
+        imgcheck.src = "../img/toggle_off_35px.png";
+        estatusMateriales = 0;
     }
+    filterDataMateriales();
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
@@ -879,3 +908,51 @@ function AbrirModalConfirm1() {
 
 }
 
+
+//Exportacion a excel
+
+document.getElementById('remove-row').addEventListener('click', removeLastRow, false);
+// Exportar a Excel a partir de un objeto
+function Exportar() {
+
+    console.log(ExportarExcel);
+    const ws = XLSX.utils.json_to_sheet(ExportarExcel);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
+    XLSX.writeFile(wb, "Reporte.xlsx");
+};
+
+// Función para importar y convertir a objeto, y luego mostrar en la tabla
+function handleFile(e) {
+    console.log("entro ", e);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function async(event) {
+        const datos = new Uint8Array(event.target.result);
+        const workbook = XLSX.read(datos, {
+            type: 'array'
+        });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+
+        // Convertir la hoja de Excel a un objeto JSON
+        const jsonObject = XLSX.utils.sheet_to_json(sheet);
+
+        // Aquí tienes el objeto JSON sin manipular la tabla HTML
+
+        // Puedes retornar el objeto JSON o usarlo como desees
+
+        await = holitas(jsonObject);
+        return jsonObject;
+    };
+    reader.readAsArrayBuffer(file);
+
+}
+
+function holitas(jsonObject) {
+    datosObjetoMateriales = jsonObject;
+    llenarTablaMateriales();
+    filterDataMateriales();
+
+}

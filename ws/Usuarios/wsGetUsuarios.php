@@ -13,7 +13,7 @@ require_once("../../scripts/Usuarios.php");
 $c = new Conexion($conData);
 $u = new Usuario($c->getConnection());
 
-$res = $u->getAllUsers($datos);
+$res = $u->getAllUsers();
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
     $resultado['datos'] = $res['datos'];
@@ -21,4 +21,5 @@ if ($res['estado'] == "OK") {
     $resultado['estado'] = $res['estado'];
     $resultado['mensaje'] = "N";
 }
+
 echo json_encode($resultado);

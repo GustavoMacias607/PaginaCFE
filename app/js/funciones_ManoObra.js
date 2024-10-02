@@ -1,18 +1,10 @@
-
 let msgEliminarObra = "Mano de obra desabilitada";
 let msgActivarObra = "Mano de obra habilitada";
 let msgAgregarObra = "Mano de obra agregada";
 let msgModificarObra = "Mano de obra modificada";
 
-//Metodo para cambiar el tamaño de los registros que se muestran
-function cambiarTamanoManoObra() {
-    const cantidad = document.getElementById("cantRegistros");
-    tamanoPagina = parseInt(cantidad.value);
-    paginaActual = 1;
-    GetManoObra();
-}
-
-
+var estatusMano = 1;
+let data = []
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddManoObraValidar() {
     let vacio = false;
@@ -60,29 +52,9 @@ function AddManoObraValidar() {
     }
     datos.salario = salario.value;
 
-    let cantidad = document.querySelector('#AddcantidadInputManodeobra');
-    if (cantidad.value == "") {
-        cantidad.classList.add("inputVacio");
-        cantidad.placeholder = "Requerida la cantidad"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = cantidad;
-        }
+    datos.cantidad = 10;
 
-    }
-    datos.cantidad = cantidad.value;
-    let rendimiento = document.querySelector('#AddrendimientoInputManodeobra');
-    if (rendimiento.value == "") {
-        rendimiento.classList.add("inputVacio");
-        rendimiento.placeholder = "Requerido el rendimiento"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = rendimiento;
-        }
-
-    }
-
-    datos.rendimiento = rendimiento.value;
+    datos.rendimiento = 10;
 
     if (vacio) {
         PrimerValorVacio.focus();
@@ -95,7 +67,6 @@ function AddManoObraValidar() {
         return;
     }
     let json = JSON.stringify(datos);
-    console.log(json);
 
     let url = "../ws/ManoObra/wsAddManoObra.php";
     $.post(url, json, (responseText, status) => {
@@ -199,13 +170,11 @@ function UpdManoObraValidar() {
         return;
     }
     let json = JSON.stringify(datos);
-    console.log(json);
     let url = "../ws/ManoObra/wsUpdManoObra.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
                     mensajePantalla(msgModificarCon, true);
@@ -265,7 +234,6 @@ function CambioEstatusManoObra() {
         datos.estatus = "Activo";
     }
     let json = JSON.stringify(datos);
-    console.log(json);
     switch (parseInt(ActivarS)) {
         case 0: {
             let url = "../ws/ManoObra/wsCambiarStatus.php";
@@ -308,57 +276,20 @@ function CambioEstatusManoObra() {
 
 }
 
-//Metodo para regresar una pagina en la paginacion
-function paginaAnteriorManoObra() {
-    if (paginaActual > 1) {
-        paginaActual--;
-        GetManoObra();
-    }
-}
-
-//Metodo para cambiar de pagona dando clic a la paginacion
-//Recobe el numero de pagina al cual se cambiara
-function NoPagManoObra(pagi) {
-    paginaActual = pagi;
-    GetManoObra();
-}
-
-//Metodo para cambiar a la pagina siguiente en la paginacion
-function paginaSiguienteManoObra() {
-    if (paginaActual < totalPag) {
-        paginaActual++;
-        GetManoObra();
-    }
-}
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetManoObra() {
-    const datos = {};
-    let buscar = document.querySelector('#searchInput');
-    let estatus = document.getElementById('ValCheEsta').checked;
-    let unidad = document.getElementById('selectUnidad');
-    let categoria = document.getElementById('selectCategoria');
-    datos.buscar = buscar.value;
-    if (estatus) {
-        datos.estatus = 1;
-    } else {
-        datos.estatus = 0;
-    }
-    datos.unidad = unidad.value;
-    datos.categoria = categoria.value;
-    let json = JSON.stringify(datos);
+    let json = ""
     let url = "../ws/ManoObra/wsGetManoObra.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
+                    data = resp.datos;
+                    llenarTabla();
+                    filterData();
 
-                    //Llamar a la función para mostrar los datos en la tabla
-                    mostrarDatosEnTablaManoObra(resp.datos, paginaActual, tamanoPagina);
-                } else {
-                    // Mostrar mensaje de error si el estado no es "OK"
-                    mostrarDatosEnTablaManoObra(resp.mensaje, paginaActual, tamanoPagina);
                 }
             } else {
                 throw e = status;
@@ -368,98 +299,178 @@ function GetManoObra() {
         }
     });
 }
-// metodo para mostrar los datos en la tabla con los datos que salieron de la consulta
-//recibe los datos, la pagina actual y el tamaño de los registros que hay que mostrar a la vez
-function mostrarDatosEnTablaManoObra(datos, paginaActual, tamanoPagina) {
-    let totalPaginas = obtenerTotalPaginas(datos.length, tamanoPagina);
-    totalPag = totalPaginas;
-    let tbody = document.getElementById("tabla-manodeobra").getElementsByTagName("tbody")[0];
-    tbody.innerHTML = "";
-    if (datos == "N") {
-        let fila = document.createElement("tr");
-        fila.innerHTML = `
-        <td colspan="8">Sin resultados</td>
-        `;
-        tbody.appendChild(fila);
+let filteredData = [...data];
+let rowsPerPage = 10;
+let currentPage = 1;
 
-        actualizarPaginacionManoObra(datos, paginaActual, tamanoPagina);
-        return;
+let currentSortField = null;
+let currentSortOrder = 'asc';
+function displayTable(page) {
+    const tableBody = document.getElementById("table-body");
+    tableBody.innerHTML = "";
+
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedData = filteredData.slice(start, end);
+
+    if (paginatedData.length > 0) {
+        paginatedData.forEach(record => {
+            const row = `<tr>
+                        <td class="Code">${record.idmanoobra}</td>
+                        <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
+                        <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                        <td>${(!record.salario == "") ? record.salario : "---"}</td>
+                        <td class="estatus">
+                            <div class="" style="display: flex; justify-content: space-around; align-items: center;">
+                                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${record.idmanoobra},'${record.categoria}','${record.unidad}',${record.salario},${record.cantidad},${record.rendimiento})"></i>` : ``}
+                                ${record.estatus == 1 ?
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>`
+                }
+                            </div>
+                        </td>
+                     </tr>`;
+            tableBody.innerHTML += row;
+        });
+    } else {
+        const row = `<tr>
+                        <td colspan="5" class="Code">Sin resultados</td>
+                     </tr>`;
+        tableBody.innerHTML += row;
     }
-    let startIndex = (paginaActual - 1) * tamanoPagina;
-    let endIndex = Math.min(startIndex + tamanoPagina, datos.length);
-    for (let i = startIndex; i < endIndex; i++) {
-        let manoObra = datos[i];
-        let fila = document.createElement("tr");
-        fila.classList.add("fila")
-        fila.addEventListener("mouseover", () => mostrarValores(fila));
-        fila.addEventListener("mouseout", () => ocultarValores(fila));
-        // Agregar las celdas a la fila
-        fila.innerHTML = `
-            <td class="Code">${manoObra.idmanoobra}</td>
-            <td>${(!manoObra.categoria == "") ? manoObra.categoria : "---"}</td>
-            <td>${(!manoObra.unidad == "") ? manoObra.unidad : "---"}</td>
-            <td>${(!manoObra.salario == "") ? manoObra.salario : "---"}</td>
-            
-            <td class="estatus">
-            <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                        ${manoObra.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${manoObra.idmanoobra},'${manoObra.categoria}','${manoObra.unidad}',${manoObra.salario},${manoObra.cantidad},${manoObra.rendimiento})"></i>
-                        `: ``}
-                        ${manoObra.estatus == 1 ?
-                `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${manoObra.idmanoobra},${manoObra.estatus})"></i>` :
-                `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${manoObra.idmanoobra},${manoObra.estatus})"></i>`
+}
+
+function setupPagination() {
+    const paginationDiv = document.getElementById("pagination");
+    paginationDiv.innerHTML = "";
+
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    const maxPagesToShow = 5; // Número máximo de páginas a mostrar
+    let startPage, endPage;
+
+    if (totalPages <= maxPagesToShow) {
+        // Mostrar todas las páginas si son menos o iguales a 5
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        const middle = Math.floor(maxPagesToShow / 2);
+
+        if (currentPage <= middle) {
+            startPage = 1;
+            endPage = maxPagesToShow;
+        } else if (currentPage + middle >= totalPages) {
+            startPage = totalPages - maxPagesToShow + 1;
+            endPage = totalPages;
+        } else {
+            startPage = currentPage - middle;
+            endPage = currentPage + middle;
+        }
+    }
+    if (totalPages > 0) {
+        // Botón de "Atrás"
+        const prevButton = document.createElement("button");
+        prevButton.innerHTML = `<i class="fa-solid fa-angles-left"></i>`;
+        prevButton.style.backgroundColor = "#008e5a";
+        prevButton.style.color = "#ffffff";
+        prevButton.style.border = "3px solid #008e5a";
+        prevButton.disabled = currentPage === 1;
+        prevButton.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                displayTable(currentPage);
+                setupPagination();
+            }
+        });
+        paginationDiv.appendChild(prevButton);
+
+        // Botones de página
+        for (let i = startPage; i <= endPage; i++) {
+            const button = document.createElement("button");
+            button.innerText = i;
+
+            if (currentPage === i) {
+                button.className = 'active';
+                button.style.color = "#ffffff";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#008e5a";
+            } else {
+                button.style.color = "#008e5a";
+                button.style.border = "3px solid #008e5a";
+                button.style.backgroundColor = "#ffffff";
             }
 
-                        </div>
-        `;
-        // Agregar la fila a la tabla
-        tbody.appendChild(fila);
+            button.addEventListener("click", () => {
+                currentPage = i;
+                displayTable(currentPage);
+                setupPagination();
+            });
 
-    }
-
-    actualizarPaginacionManoObra(datos.length, paginaActual, tamanoPagina);
-}
-//Metodo para actualizar la paginacion, este metodo se ejecuta cuando hay nuevos datos en la tabla
-//recibe la cantidad de datos, la pagina actual y el tamaño de registros a mostrar
-function actualizarPaginacionManoObra(totalDatos, paginaActual, tamanoPagina) {
-    if (totalDatos == "N") {
-        let paginationList = document.getElementById("pagination-list");
-        paginationList.innerHTML = "";
-        return;
-    }
-    let paginationList = document.getElementById("pagination-list");
-    paginationList.innerHTML = "";
-    let totalPaginas = Math.ceil(totalDatos / tamanoPagina);
-    let rangoMostrar = 2; //Rango a mostrar de numeros de pagina
-    let liPrev = document.createElement("li");
-    liPrev.innerHTML = `<button onclick="paginaAnteriorManoObra()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-left"></i></button>`;
-    paginationList.appendChild(liPrev);
-    // Ajuste del rango para mostrar siempre 5 páginas
-    let startPage = Math.max(1, paginaActual - rangoMostrar);
-    let endPage = Math.min(totalPaginas, paginaActual + rangoMostrar);
-    if (endPage - startPage < 4) {
-        if (startPage > 1) {
-            startPage = Math.max(1, endPage - 4);
-        } else if (endPage < totalPaginas) {
-            endPage = Math.min(totalPaginas, startPage + 4);
+            paginationDiv.appendChild(button);
         }
-    }
-    // Generar enlaces de página
-    for (let i = startPage; i <= endPage; i++) {
-        let li = document.createElement("li");
-        if (i === paginaActual) {
-            li.classList.add("active");
-    
-            li.innerHTML = `<button class="active" style="color: #ffffff; border: 3px solid #008e5a;" onclick="NoPagManoObra(${i})">${i}</button>`;
-        } else {
-            li.innerHTML = `<button style="color: #008e5a; border: 3px solid #008e5a;" onclick="NoPag(${i})">${i}</button>`;
-        }
-        paginationList.appendChild(li);
-    }
-    let liNext = document.createElement("li");
-    liNext.innerHTML = `<button onclick="paginaSiguienteManoObra()" style="background-color: #008e5a; color: #ffffff; border: 3px solid #008e5a;"><i class="fa-solid fa-angles-right"></i></button>`;
-    paginationList.appendChild(liNext);
 
+        // Botón de "Adelante"
+        const nextButton = document.createElement("button");
+        nextButton.innerHTML = `<i class="fa-solid fa-angles-right"></i>`;
+        nextButton.style.backgroundColor = "#008e5a";
+        nextButton.style.color = "#ffffff";
+        nextButton.style.border = "3px solid #008e5a";
+        nextButton.disabled = currentPage === totalPages;
+        nextButton.addEventListener("click", () => {
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayTable(currentPage);
+                setupPagination();
+            }
+        });
+        paginationDiv.appendChild(nextButton);
+    }
 }
+
+function filterData() {
+    const searchText = document.getElementById("search-input").value.toLowerCase();
+    const categoriaFilter = document.getElementById("categoria-filter").value;
+    const unidadFilter = document.getElementById("unidad-filter").value;
+    const statusFilter = estatusMano;
+
+    filteredData = data.filter(record => {
+        const matchesSearch = Object.values(record).some(value =>
+            value.toString().toLowerCase().includes(searchText)
+        );
+        const matchesCategoria = categoriaFilter ? record.categoria === categoriaFilter : true;
+        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
+        const matchesStatus = record.estatus === statusFilter;
+        return matchesSearch && matchesCategoria && matchesUnidad && matchesStatus;
+    });
+
+    currentPage = 1; // Reiniciar a la primera página después de filtrar
+    displayTable(currentPage);
+    setupPagination();
+}
+
+function llenarTabla() {
+    displayTable(currentPage);
+    setupPagination();
+
+    const searchInput = document.getElementById("search-input");
+    searchInput.addEventListener("input", filterData);
+
+    const categoriaFilter = document.getElementById("categoria-filter");
+    categoriaFilter.addEventListener("change", filterData);
+
+    const unidadFilter = document.getElementById("unidad-filter");
+    unidadFilter.addEventListener("change", filterData);
+
+    const rowsPerPageSelect = document.getElementById("rows-per-page");
+    rowsPerPageSelect.addEventListener("change", function () {
+        rowsPerPage = parseInt(this.value);
+        currentPage = 1;
+        displayTable(currentPage);
+        setupPagination();
+    });
+}
+
+
+
 
 //Metodo para limpiar el modal de agregar mano de obra
 function AddlimpiarModalManoObra() {
@@ -499,9 +510,12 @@ function valStatusManoObra() {
     checkbox.checked = !checkbox.checked;
     if (checkbox.checked) {
         imgcheck.src = "../img/toggle_on_35px.png"
+        estatusMano = 1;
     } else {
         imgcheck.src = "../img/toggle_off_35px.png"
+        estatusMano = 0;
     }
+    filterData();
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
@@ -518,7 +532,7 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, 
     idAnterior.value = id;
     idMO.value = id;
     salarioMO.value = salario;
- 
+
 
     //llenar el select de tipo
     for (var i = 0; i < categoriaMO.options.length; i++) {
@@ -534,8 +548,6 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, 
             break;
         }
     }
-
-
     idMO.placeholder = "";
     salarioMO.placeholder = "";
 
@@ -544,30 +556,9 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, 
     categoriaMO.classList.remove("inputVacio");
     UnidadMO.classList.remove("inputVacio");
     salarioMO.classList.remove("inputVacio");
-  
+
 }
 
-//Metodo para cerrar el modal de agregar material
-function AddCerrarModal() {
-    $('#AgregarModal').modal('hide');
-}
-//Metodo para cerrar el modal de modificar material
-function UpdateCerrarModal() {
-
-    $('#EditarModal').modal('hide');
-}
-function ActivarCerrarModal() {
-
-    $('#confirmActivationModal').modal('hide');
-}
-function EliminarCerrarModal() {
-
-    $('#confirmAdditionalModal').modal('hide');
-}
-
-function AbrirModalConfirm() {
-    $('#confirmAdditionalModal').modal('show');
-}
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1() {
     let estatus = document.getElementById('ValCheEsta').checked;
@@ -576,6 +567,4 @@ function AbrirModalConfirm1() {
     } else {
         $('#confirmActivationModal').modal('show');
     }
-
 }
-

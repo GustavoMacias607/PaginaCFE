@@ -13,7 +13,7 @@ require_once("../../scripts/Materiales.php");
 $c = new Conexion($conData);
 $u = new Materiales($c->getConnection());
 
-$res = $u->getFiltarEstatusAllMateriales($datos);
+$res = $u->getAllMateriales();
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
     $resultado['datos'] = $res['datos'];

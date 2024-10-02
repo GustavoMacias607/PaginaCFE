@@ -57,28 +57,22 @@ class Conceptos
 
     /*Método para obtener todos los conceptos
  recibe objeto con los datos para filtrar*/
-    function getAllConceptos($datos)
+    function getAllConceptos()
     {
 
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBuscarTipoUnidadNombrePlazo(:Estatus,:Tipo,:Unidad, :Buscar,:OrderId, :OrderNombre);";
+            $consulta = "SELECT * FROM vstconceptos;";
             $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Estatus" => $datos->estatus,
-                "Tipo" => $datos->tipo,
-                "Unidad" => $datos->unidad,
-                "Buscar" => $datos->buscar,
-                "OrderId" => $datos->orderId,
-                "OrderNombre" => $datos->orderNombre,
-            ));
+            $sql->execute(); // Ejecutar la consulta
+            $datos = $sql->fetchAll();
 
-            $R['filas'] = $sql->rowCount();
+            $R['filas'] = count($datos); // Contar las filas de los resultados
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {
