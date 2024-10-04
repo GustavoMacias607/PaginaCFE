@@ -16,16 +16,14 @@ class ManoObra
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraInsertar(:Id,:Categoria,:Unidad,:Salario, :Cantidad,:Rendimiento);";
+            $consulta = "call spManoObraInsertar(:Id,:Categoria,:Unidad,:Salario);";
 
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
                 "Categoria" => $datos->categoria,
                 "Unidad" => $datos->unidad,
-                "Salario" => $datos->salario,
-                "Cantidad" => $datos->cantidad,
-                "Rendimiento" => $datos->rendimiento
+                "Salario" => $datos->salario
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -41,7 +39,7 @@ class ManoObra
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraModificar(:IdAnterior,:Id,:Categoria,:Unidad,:Salario, :Cantidad,:Rendimiento);";
+            $consulta = "call spManoObraModificar(:IdAnterior,:Id,:Categoria,:Unidad,:Salario);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
@@ -49,8 +47,6 @@ class ManoObra
                 "Categoria" => $datos->categoria,
                 "Unidad" => $datos->unidad,
                 "Salario" => $datos->salario,
-                "Cantidad" => $datos->cantidad,
-                "Rendimiento" => $datos->rendimiento
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -67,7 +63,7 @@ class ManoObra
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "SELECT * FROM vstmanoobra;";
+            $consulta = "call spManoObraMostrar();";
             $sql = $c->prepare($consulta);
             $sql->execute(); // Ejecutar la consulta
             $datos = $sql->fetchAll();

@@ -281,6 +281,8 @@ function GetConcepto() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
+                    llenarUnidadTabla();
+                    llenarTablaTipos();
                     data = resp.datos;
                     console.log(resp.datos);
                     document.getElementById("sort-id").addEventListener("click", () => sortData('idconcepto'));
@@ -375,15 +377,15 @@ function displayTableConcepto(page) {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
-
+    console.log(paginatedData);
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
             const row = `
             <td class="Code">${record.idconcepto}</td>
             <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
             <td>${(!record.tipo == "") ? record.tipo : "---"}</td>
-            <td>${(!record.plazo == "") ? record.plazo : "---"}</td>
             <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+            <td>${(!record.total == "") ? record.total : "---"}</td>
             <td class="estatus">
                 <div class="" style="display: flex; justify-content: space-around; align-items: center;">
                 ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${record.idconcepto},'${record.nombre}','${record.tipo}',${record.plazo},'${record.unidad}')"></i>
@@ -630,6 +632,90 @@ function llenarModalModificarConcepto(id, nombre, tipo, plazo, unidad) {
     tipoC.classList.remove("inputVacio");
     plazoC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
+}
+
+function llenarUnidadTabla() {
+    const unidadFilter = document.getElementById("unidad-filterConcepto"); // El select donde agregarás las opciones
+    let json = "";
+    let url = "../ws/Conceptos/wsGetUnidades.php";
+
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+
+                if (resp.estado == "OK") {
+                    // Limpiar las opciones existentes del select (por si hay alguna previamente)
+                    unidadFilter.innerHTML = "";
+
+                    // Crear una opción predeterminada o vacía
+                    const optionDefault = document.createElement("option");
+                    optionDefault.value = "";
+                    optionDefault.textContent = "Todo";
+                    unidadFilter.appendChild(optionDefault);
+
+                    // Iterar sobre las unidades obtenidas
+                    resp.datos.forEach(unidad => {
+                        // Crear un nuevo elemento <option>
+                        const option = document.createElement("option");
+
+                        // Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.unidad;
+                        option.textContent = unidad.unidad;
+
+                        // Añadir la opción al select
+                        unidadFilter.appendChild(option);
+                    });
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+}
+
+function llenarTablaTipos() {
+    const tiposFilter = document.getElementById("tipo-filterConcepto"); // El select donde agregarás las opciones
+    let json = "";
+    let url = "../ws/Conceptos/wsGetTipos.php";
+
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+
+                if (resp.estado == "OK") {
+                    // Limpiar las opciones existentes del select (por si hay alguna previamente)
+                    tiposFilter.innerHTML = "";
+
+                    // Crear una opción predeterminada o vacía
+                    const optionDefault = document.createElement("option");
+                    optionDefault.value = "";
+                    optionDefault.textContent = "Todo";
+                    tiposFilter.appendChild(optionDefault);
+
+                    // Iterar sobre las unidades obtenidas
+                    resp.datos.forEach(unidad => {
+                        // Crear un nuevo elemento <option>
+                        const option = document.createElement("option");
+
+                        // Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.tipo;
+                        option.textContent = unidad.tipo;
+
+                        // Añadir la opción al select
+                        tiposFilter.appendChild(option);
+                    });
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
 }
 
 

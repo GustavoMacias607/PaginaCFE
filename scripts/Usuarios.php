@@ -88,7 +88,7 @@ class Usuario
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "SELECT idusuario, nombre,usuario,rol,estatus from vstusuario;";
+            $consulta = "call spUsuarioMostrar();";
             $sql = $c->prepare($consulta);
             $sql->execute(); // Ejecutar la consulta
             $datos = $sql->fetchAll();

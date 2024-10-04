@@ -18,15 +18,13 @@ class Maquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaquinariaInsertar(:Id,:Descripcion,:Unidad,:PhM, :RhM);";
+            $consulta = "call spMaquinariaInsertar(:Id,:Descripcion,:Unidad);";
 
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
                 "Descripcion" => $datos->descripcion,
-                "Unidad" => $datos->unidad,
-                "PhM" => $datos->phm,
-                "RhM" => $datos->rhm,
+                "Unidad" => $datos->unidad
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -39,15 +37,13 @@ class Maquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaquinariaModificar(:IdAnterior,:Id,:Descripcion,:Unidad,:Phm,:Rhm);";
+            $consulta = "call spMaquinariaModificar(:IdAnterior,:Id,:Descripcion,:Unidad);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
                 "Descripcion" => $datos->descripcion,
-                "Unidad" => $datos->unidad,
-                "Phm" => $datos->phm,
-                "Rhm" => $datos->rhm,
+                "Unidad" => $datos->unidad
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -63,7 +59,7 @@ class Maquinaria
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "SELECT * FROM vstmaquinaria;";
+            $consulta = "call spMaquinariaMostrar();";
             $sql = $c->prepare($consulta);
             $sql->execute(); // Ejecutar la consulta
             $datos = $sql->fetchAll();

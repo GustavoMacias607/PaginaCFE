@@ -909,17 +909,18 @@ function AbrirModalConfirm1() {
 }
 
 
-//Exportacion a excel
-
-document.getElementById('remove-row').addEventListener('click', removeLastRow, false);
 // Exportar a Excel a partir de un objeto
 function Exportar() {
+    const fechaActual = new Date();
 
-    console.log(ExportarExcel);
+    // Obtener el día, mes y año
+    const dia = fechaActual.getDate();        // Día del mes (1-31)
+    const mes = fechaActual.getMonth() + 1;
+    const ano = fechaActual.getFullYear();    // Mes (0-11, por lo que le sumamos 1)
     const ws = XLSX.utils.json_to_sheet(ExportarExcel);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
-    XLSX.writeFile(wb, "Reporte.xlsx");
+    XLSX.writeFile(wb, `Reporte Materiales ${dia}-${mes}-${ano}.xlsx`);
 };
 
 // Función para importar y convertir a objeto, y luego mostrar en la tabla
@@ -943,16 +944,45 @@ function handleFile(e) {
 
         // Puedes retornar el objeto JSON o usarlo como desees
 
-        await = holitas(jsonObject);
+        await = MetodoEspera(jsonObject);
         return jsonObject;
     };
     reader.readAsArrayBuffer(file);
 
 }
 
-function holitas(jsonObject) {
-    datosObjetoMateriales = jsonObject;
+function MetodoEspera(jsonObject) {
+    datosObjetoMateriales = actualizarFechaMateriales(jsonObject, ExportarExcel);
+    console.log(datosObjetoMateriales);
     llenarTablaMateriales();
     filterDataMateriales();
+}
+
+function actualizarFechaMateriales(datosExcel, datosBD) {
+    // Obtener la fecha actual
+    const fechaActual = new Date();
+    const dia = fechaActual.getDate();
+    const mes = fechaActual.getMonth() + 1; // Sumar 1 porque los meses empiezan en 0
+    const año = fechaActual.getFullYear();
+    const fechaHoy = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`; // Formato YYYY-MM-DD
+
+    // Recorrer los datos de Excel
+    datosExcel.forEach((materialExcel) => {
+        // Buscar si hay un material en la base de datos con el mismo codigo
+        const materialBD = datosBD.find(material => material.codigo === materialExcel.codigo);
+
+        if (materialBD) {
+            // Si el código coincide pero el precio es distinto
+            if (materialExcel.precio !== materialBD.precio) {
+                // Actualizar solo la fecha de precio en el material de Excel
+                materialExcel.fechaprecio = fechaHoy;
+            }
+        }
+    });
+    // Retornar el objeto de datosExcel con las fechas actualizadas y precios intactos
+    return datosExcel;
+}
+
+function reemplazar() {
 
 }

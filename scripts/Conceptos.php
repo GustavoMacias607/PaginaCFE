@@ -16,14 +16,19 @@ class Conceptos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptosInsertar(:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
+            $consulta = "call spConceptoInsertar(:Id,:Tipo,:Unidad,:Nombre,:Promedio,:CostoSi,:Financiamiento,:Utilidad,:CargosA,:Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
                 "Tipo" => $datos->tipo,
                 "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
-                "Plazo" => $datos->plazo
+                "Promedio" => $datos->promedio,
+                "CostoSi" => $datos->costoSi,
+                "Financiamiento" => $datos->financiamiento,
+                "Utilidad" => $datos->utilidad,
+                "CargosA" => $datos->cargosA,
+                "Total" => $datos->total
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -38,7 +43,7 @@ class Conceptos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptosModificar(:IdAnterior,:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
+            $consulta = "call spConceptoModificar(:IdAnterior,:Id,:Tipo,:Unidad,:Nombre, :Promedio,:CostoSi,:Financiamiento,:Utilidad,:CargosA,:Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
@@ -46,7 +51,13 @@ class Conceptos
                 "Tipo" => $datos->tipo,
                 "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
-                "Plazo" => $datos->plazo
+                "Promedio" => $datos->promedio,
+                "CostoSi" => $datos->costoSi,
+                "Financiamiento" => $datos->financiamiento,
+                "Utilidad" => $datos->utilidad,
+                "CargosA" => $datos->cargosA,
+                "Total" => $datos->total
+
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -63,7 +74,7 @@ class Conceptos
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "SELECT * FROM vstconceptos;";
+            $consulta = "call spConceptoMostrar();";
             $sql = $c->prepare($consulta);
             $sql->execute(); // Ejecutar la consulta
             $datos = $sql->fetchAll();
@@ -124,6 +135,53 @@ class Conceptos
                 $R['estado'] = "Sin Resultados";
             } else {
                 $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Método para obtener todas las unidades de los conceptos*/
+    function getAllUnidades()
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spConceptoUnidades();";
+            $sql = $c->prepare($consulta);
+            $sql->execute();
+            $datos = $sql->fetchAll();
+
+            $R['filas'] = count($datos);
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $datos;
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    function getAllTipos()
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spConceptoTipos();";
+            $sql = $c->prepare($consulta);
+            $sql->execute();
+            $datos = $sql->fetchAll();
+
+            $R['filas'] = count($datos);
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {
