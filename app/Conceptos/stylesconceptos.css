@@ -71,6 +71,7 @@ body {
   background-color: #ffffff; /* Fondo blanco */
   border: 3px solid #008e5a; /* Contorno de 3px color verde */
   border-radius: 5px; /* Bordes redondeados */
+  transition: all 0.3s ease;
   @media (max-width: 1090px) {
     margin: 4rem auto 0 auto;
   }
@@ -104,6 +105,7 @@ body {
   border-radius: 5; /* Sin bordes redondeados */
   transition: all 0.3s ease; /* Transición suave */
   transform: translate(20px); /* posicion del boton */
+  margin-right: 1rem;
 }
 
 .btn-agregar-conceptos:hover {
@@ -116,6 +118,30 @@ body {
   --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
   --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
   --bs-btn-color: #303030; /* Letra verde al hacer clic */
+}
+
+/*estilos para los botones conceptos y conceptos de basicos*/
+.btn-tiposde-conceptos {
+  font-family: "LatoBold", sans-serif;
+  --bs-btn-font-size: 1.2rem;
+  border: 3px solid #008e5a;
+  background-color: #ffffff;
+  color:#008e5a;
+  border-radius: 5;
+  transition: all 0.3s ease;
+  width: 20rem;
+}
+
+.btn-tiposde-conceptos:hover {
+background-color: #008e5a;
+color: #ffffff;
+border-color: #008e5a;
+}
+
+.btn-tiposde-conceptos:active {
+  --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
+  --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+  --bs-btn-color: #008e5a; /* Letra verde al hacer clic */
 }
 
 /*estilos para el modal agregar conceptos*/
@@ -327,7 +353,7 @@ th {
 
 /* Efecto hover */
 .sort-button:hover {
-  background-color: #006e45;
+  background-color: #008e5a;
 }
 
 /* Efecto para cuando el botón está activo (ascendente o descendente) */
