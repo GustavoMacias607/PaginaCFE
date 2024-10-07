@@ -363,7 +363,7 @@ function displayTableMateriales(page) {
             const precioFormateado = (record.precio !== undefined && record.precio !== "")
                 ? formatoMXN.format(record.precio)
                 : "---";
-            const row = `<tr>
+            const row = `<tr class="fila">
                         <td class="Code">${record.codigo}</td>
             <td>${(!record.norma == "") ? record.norma : "---"}</td>
             <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
@@ -486,14 +486,16 @@ function filterDataMateriales() {
     const searchText = document.getElementById("search-inputMateriales").value.toLowerCase();
     const unidadFilter = document.getElementById("selectUnidadMateriales").value;
     const statusFilter = estatusMateriales;
+    console.log(searchText, unidadFilter, statusFilter)
     filteredData = datosObjetoMateriales.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
-        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
-        const matchesStatus = record.estatus === statusFilter;
+        const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
+        const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesUnidad && matchesStatus;
     });
+    console.log(filteredData);
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableMateriales(currentPage);
     setupPaginationMateriales();

@@ -381,6 +381,7 @@ function displayTableConcepto(page) {
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
             const row = `
+            <tr class="fila">
             <td class="Code">${record.idconcepto}</td>
             <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
             <td>${(!record.tipo == "") ? record.tipo : "---"}</td>
@@ -398,12 +399,13 @@ function displayTableConcepto(page) {
                 }
                    
                 </div>
-            </td>   
+            </td> 
+             </tr>  
         `;
             tableBody.innerHTML += row;
         });
     } else {
-        const row = `<tr>
+        const row = `<tr class="fila">
                         <td colspan="6" class="Code">Sin resultados</td>
                      </tr>`;
         tableBody.innerHTML += row;
@@ -516,8 +518,8 @@ function filterDataConcepto() {
             value != null && value.toString().toLowerCase().includes(searchText)
         );
         const matchesTipo = tipoFilter ? record.tipo === tipoFilter : true;
-        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
-        const matchesStatus = record.estatus === statusFilter;
+        const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
+        const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesUnidad && matchesStatus && matchesTipo;
     });
 

@@ -315,7 +315,7 @@ function displayTable(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const row = `<tr>
+            const row = `<tr class="fila">
                         <td class="Code">${record.idmanoobra}</td>
                         <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
                         <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
@@ -436,9 +436,9 @@ function filterData() {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
         );
-        const matchesCategoria = categoriaFilter ? record.categoria === categoriaFilter : true;
-        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
-        const matchesStatus = record.estatus === statusFilter;
+        const matchesCategoria = categoriaFilter ? record.categoria == categoriaFilter : true;
+        const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
+        const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesCategoria && matchesUnidad && matchesStatus;
     });
 

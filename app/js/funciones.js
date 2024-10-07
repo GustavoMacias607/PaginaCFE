@@ -27,7 +27,7 @@ function opcion(op) {
             funcion = GetManoObra;
             break;
         case "Catalogo":
-            url = "Catalogo/viewCatalogoFrm.php";
+            url = "Catalogo/viewFichabasicosFrm.php";
             funcion = AgregarDatosTablaConceptoCatalogo;
             break;
         case "Maquinaria":

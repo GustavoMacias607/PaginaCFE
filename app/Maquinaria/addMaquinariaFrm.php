@@ -59,7 +59,7 @@ if (!isset($_SESSION['idusuario'])) {
         <table id="tabla-maquinaria">
             <thead class="">
                 <tr>
-                    <th>
+                    <th style="width: 8rem;">
                         ID
                     </th>
                     <th>

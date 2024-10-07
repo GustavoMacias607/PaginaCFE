@@ -317,7 +317,7 @@ function displayTableMaquinaria(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const row = `<tr>
+            const row = `<tr class="fila">
                         <td class="Code">${record.idmaquinaria}</td>
             <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
             <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
@@ -436,8 +436,8 @@ function filterDataMaquinaria() {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
-        const matchesUnidad = unidadFilter ? record.unidad === unidadFilter : true;
-        const matchesStatus = record.estatus === statusFilter;
+        const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
+        const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesUnidad && matchesStatus;
     });
 

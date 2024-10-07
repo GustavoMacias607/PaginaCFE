@@ -314,7 +314,7 @@ function displayTableUsuario(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const row = `<tr>
+            const row = `<tr class="fila">
                         <td class="Code">${record.idusuario}</td>
             <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
             <td>${(!record.usuario == "") ? record.usuario : "---"}</td>
@@ -432,8 +432,8 @@ function filterDataUsuario() {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
         );
-        const matchesrol = rolFilter ? record.rol === rolFilter : true;
-        const matchesStatus = record.estatus === statusFilter;
+        const matchesrol = rolFilter ? record.rol == rolFilter : true;
+        const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesrol && matchesStatus;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar

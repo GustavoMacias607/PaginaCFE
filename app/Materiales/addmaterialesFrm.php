@@ -85,6 +85,31 @@ require("../../scripts/Materiales.php");
                     <th style="width: 100px;">
                         Fecha del precio
                     </th>
+                    <th clas="col-1" style="width: 100px;">
+                    <div class="d-flex align-items-center">
+                            <span>Familia: </span>
+                            <select class="form-select form-select-sm ml-2" id="selectFamiliaMateriales"
+                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                <option value="" selected>Todo</option>
+                                <option value="">Sin clasificación</option>
+                                <option value="">Accesorios</option>
+                                <option value="">Aislamiento</option>
+                                <option value="">Bobedas</option>
+                                <option value="">Conductores</option>
+                                <option value="">Ductos</option>
+                                <option value="">Equipos</option>
+                                <option value="">Herrajes</option>
+                                <option value="">Miselaneos</option>
+                                <option value="">Postes</option>
+                                <option value="">Pozos</option>
+                                <option value="">Protecciones</option>
+                                <option value="">Registros</option>
+                                <option value="">Seccionamiento</option>
+                                <option value="">Transformadores</option>
+                                <option value="">LT</option>
+                            </select>
+                        </div>
+                    </th>
                     <th class=" col-1" style="width: 100px;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
@@ -103,8 +128,6 @@ require("../../scripts/Materiales.php");
                     <th class="col-1" style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
-
-
                         </div>
                     </th>
                 </tr>
@@ -159,6 +182,29 @@ require("../../scripts/Materiales.php");
                     <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddfechaPrecioInput">
+                </div>
+                <div class="mb-3">
+                    <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="AddfamiliaInput">
+                        <option selected value="">Seleccione una familia</option>
+                            <option value="">Sin clasificación</option>
+                            <option value="">Accesorios</option>
+                            <option value="">Aislamiento</option>
+                            <option value="">Bobedas</option>
+                            <option value="">Conductores</option>
+                            <option value="">Ductos</option>
+                            <option value="">Equipos</option>
+                            <option value="">Herrajes</option>
+                            <option value="">Miselaneos</option>
+                            <option value="">Postes</option>
+                            <option value="">Pozos</option>
+                            <option value="">Protecciones</option>
+                            <option value="">Registros</option>
+                            <option value="">Seccionamiento</option>
+                            <option value="">Transformadores</option>
+                            <option value="">LT</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -233,6 +279,29 @@ require("../../scripts/Materiales.php");
                     <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
                     <input type="date" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdfechaPrecioInput">
+                </div>
+                <div class="mb-3">
+                    <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="AddfamiliaInput">
+                        <option selected value="">Seleccione una familia</option>
+                            <option value="">Sin clasificación</option>
+                            <option value="">Accesorios</option>
+                            <option value="">Aislamiento</option>
+                            <option value="">Bobedas</option>
+                            <option value="">Conductores</option>
+                            <option value="">Ductos</option>
+                            <option value="">Equipos</option>
+                            <option value="">Herrajes</option>
+                            <option value="">Miselaneos</option>
+                            <option value="">Postes</option>
+                            <option value="">Pozos</option>
+                            <option value="">Protecciones</option>
+                            <option value="">Registros</option>
+                            <option value="">Seccionamiento</option>
+                            <option value="">Transformadores</option>
+                            <option value="">LT</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
