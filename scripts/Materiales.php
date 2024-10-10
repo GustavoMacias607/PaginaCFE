@@ -97,7 +97,7 @@ class Materiales
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaterialesModificar(:IdA,:Id,:Norma,:Descripcion,:Precio,:FechaPrecio,:Unidad:Familia)";
+            $consulta = "call spMaterialesModificar(:IdA,:Id,:Norma,:Descripcion,:Precio,:FechaPrecio,:Unidad,:Familia)";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,

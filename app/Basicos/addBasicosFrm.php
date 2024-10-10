@@ -13,49 +13,46 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="bottom-rectangle-basicos">
         <div class="text-basicos">Materiales basicos</div>
         <button type="button" class="btn btn-agregar-basicos" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:AddlimpiarModalBasicos();">Agregar material basico</button>
+            onclick="javascript:AddlimpiarModalBasico();">Agregar material basico</button>
         <a href="index.php" class="text-inicio-basicos">
             <div>Ir al inicio</div>
         </a>
     </div>
 
     <div class=" label-container-basicos">
-            <input type="text" placeholder="Buscar" id="searchInput" oninput="GetBasicos();EstablecerPag()">
-            <i class="fas fa-search icon-basicos" id="searchIcon"></i>
-        </div>
+        <input type="text" placeholder="Buscar" id="search-inputBasico">
+        <i class="fas fa-search icon-basicos" id="searchIcon"></i>
+    </div>
 
-        <!-- Paginacion  -->
-        <div class="pagRegistrosbasicos">
-            <nav class="pSeccion">
+    <!-- Paginacion  -->
+    <div class="pagRegistrosbasicos">
+        <nav class="pSeccion">
+            <div class="cantregbasicos">
+                <div class="text">Mostrar</div>
+                <select class="cantregistrosbasicos" name="" id="rows-per-page">
+                    <option value="10" selected>10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+                <div class="text">Registros </div>
+            </div>
 
-                <div class="cantregbasicos">
-                    <div class="text">Mostrar</div>
-                    <select class="cantregistrosbasicos" name="" id="cantRegistros"
-                        onchange="javascript:cambiarTamanoBasicos()">
-                        <option value="10" selected>10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <div class="text">Registros </div>
-                </div>
+            <ul class="pagination" id="pagination">
+                <!-- Aquí se agregarán dinámicamente los enlaces de página -->
+                <li class="page-item active"></li>
+            </ul>
 
-                <ul class="pagination" id="pagination-list">
-                    <!-- Aquí se agregarán dinámicamente los enlaces de página -->
-                    <li class="page-item active"></li>
-                </ul>
-
-            </nav>
-            <div class="toggle-estatus-basicos">
-                <div class="text">Estatus</div>
-                <div class="">
-                    <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
-                    <img id="ValEstatus" src="../img/toggle_on_35px.png"
-                        onclick="javascript:valStatusBasicos(); javascript:GetBasicos(); javascript:EstablecerPag()">
-                </div>
+        </nav>
+        <div class="toggle-estatus-basicos">
+            <div class="text">Estatus</div>
+            <div class="">
+                <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusBasico();">
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <div class="contTabla-basicos">
@@ -72,12 +69,12 @@ if (!isset($_SESSION['idusuario'])) {
                     <th class=" col-1" style="width: 200px;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                onchange="javacript:GetBasicos();EstablecerPag()"
+                            <select class="form-select form-select-sm ml-2" id="unidad-filterBasico"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="todo" selected>Todo</option>
-                                <option value=""></option>
-                                <option value=""></option>
+                                <option value="" selected>Todo</option>
+                                <option value="M3">M3</option>
+                                <option value="Poste">Poste</option>
+                                <option value="ML">ML</option>
                             </select>
                         </div>
                     </th>
@@ -91,8 +88,8 @@ if (!isset($_SESSION['idusuario'])) {
                     </th>
                 </tr>
             </thead>
-            <tbody>
-                <td colspan="8">Sin resultados</td>
+            <tbody id="table-bodyBasico">
+                <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
     </div>
@@ -100,8 +97,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- Modal insertar basicos -->
-<div class="modal modal-basicos" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal modal-basicos" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
@@ -114,7 +110,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno" id="AddidInputBasicos"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkBasicos('Add');">
+                        onblur="javascript:CompruebaTieneAlgoInput(this);checkBasico('Add');">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
@@ -126,8 +122,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AddUnidadInputBasicos">
                         <option value="" selected>Seleccciona una unidad</option>
-                        <option value=""></option>
-                        <option value=""></option>
+                        <option value="M3">M3</option>
+                        <option value="Poste">Poste</option>
+                        <option value="ML">ML</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -136,7 +133,7 @@ if (!isset($_SESSION['idusuario'])) {
                         class="form-control inputLleno" id="AddphmInputBasicos">
                 </div>
                 <div class="modal-footer modal-footer-basicos">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddBasicosValidar();"
+                    <button type="button" class="btn btn-primary" onclick="javascript:AddBasicoValidar();"
                         style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
                 </div>
             </div>
@@ -162,7 +159,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkBasicos('upd');" id="UpdidInput">
+                        onblur="javascript:CompruebaTieneAlgoInput(this);checkBasico('upd');" id="UpdidInput">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
@@ -174,8 +171,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdUnidadInputBasicos">
                         <option value="" selected>Seleccciona una unidad</option>
-                        <option value=""></option>
-                        <option value=""></option>
+                        <option value="M3">M3</option>
+                        <option value="Poste">Poste</option>
+                        <option value="ML">ML</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -186,7 +184,7 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
             <div class=" modal-footer modal-footer-basicos">
                 <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdBasicosValidar()">Guardar</button>
+                    onclick="javascript:UpdBasicoValidar()">Guardar</button>
             </div>
         </div>
     </div>

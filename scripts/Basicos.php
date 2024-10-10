@@ -16,14 +16,13 @@ class Basicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptosInsertar(:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
+            $consulta = "call spBasicosInsertar(:Id,:Descripcion,:Unidad,:Precio);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
-                "Tipo" => $datos->tipo,
+                "Descripcion" => $datos->descripcion,
                 "Unidad" => $datos->unidad,
-                "Nombre" => $datos->nombre,
-                "Plazo" => $datos->plazo
+                "Precio" => $datos->pm
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -39,15 +38,14 @@ class Basicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptosModificar(:IdAnterior,:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
+            $consulta = "call spBasicosModificar(:IdAnterior,:Id,:Descripcion,:Unidad,:Precio);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
-                "Tipo" => $datos->tipo,
+                "Descripcion" => $datos->descripcion,
                 "Unidad" => $datos->unidad,
-                "Nombre" => $datos->nombre,
-                "Plazo" => $datos->plazo
+                "Precio" => $datos->pm
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -65,22 +63,16 @@ class Basicos
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBuscarTipoUnidadNombrePlazo(:Estatus,:Tipo,:Unidad, :Buscar,:OrderId, :OrderNombre);";
+            $consulta = "call spBasicosMostrar();";
             $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Estatus" => $datos->estatus,
-                "Tipo" => $datos->tipo,
-                "Unidad" => $datos->unidad,
-                "Buscar" => $datos->buscar,
-                "OrderId" => $datos->orderId,
-                "OrderNombre" => $datos->orderNombre,
-            ));
+            $sql->execute(); // Ejecutar la consulta
+            $datos = $sql->fetchAll();
 
-            $R['filas'] = $sql->rowCount();
+            $R['filas'] = count($datos); // Contar las filas de los resultados
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {
@@ -96,7 +88,7 @@ class Basicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBuscarId(:Id);";
+            $consulta = "call spBasicosBuscarId(:Id);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id
@@ -124,7 +116,7 @@ class Basicos
         $c = $this->conn;
         try {
 
-            $consulta = "call spConceptoEstatus(:Id, :Estatus);";
+            $consulta = "call spBasicosEstatus(:Id, :Estatus);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,

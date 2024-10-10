@@ -76,12 +76,6 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th>
-                        PhM
-                    </th>
-                    <th>
-                        RhM
-                    </th>
                     <th class="col-1" style="width: 170px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>

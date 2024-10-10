@@ -36,7 +36,7 @@ function opcion(op) {
             break;
         case "Basicos":
             url = "Basicos/addBasicosFrm.php";
-            //funcion = cambiarTamanoMaquinaria;
+            funcion = GetBasico;
             break;
         case "Especificaciones":
             url = "Especificaciones/addEspecificaciones.php";

@@ -1,4 +1,3 @@
-
 //Mensajes
 let msgEliminar = "Materal deshabilitado";
 let msgActivar = "Material habilitado";
@@ -71,6 +70,17 @@ function AddMaterialValidar() {
 
     }
     datos.precioFecha = FormateoFecha(fecha.value);
+
+    let familia = document.querySelector('#AddfamiliaInput');
+    if (familia.value == "") {
+        familia.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = familia;
+        }
+
+    }
+    datos.familia = familia.value;
     let unidad = document.querySelector('#AddunidadInput');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
@@ -81,7 +91,7 @@ function AddMaterialValidar() {
 
     }
     datos.unidad = unidad.value;
-
+    console.log(datos)
     if (vacio) {
         PrimerValorVacio.focus();
         return;
@@ -173,6 +183,17 @@ function UpdMaterialValidar() {
         }
     }
     datos.precioFecha = FormateoFecha(fecha.value);
+
+    let familia = document.querySelector('#UpdfamiliaInput');
+    if (familia.value == "") {
+        familia.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = familia;
+        }
+
+    }
+    datos.familia = familia.value;
     let unidad = document.querySelector('#UpdunidadInput');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
@@ -186,6 +207,7 @@ function UpdMaterialValidar() {
         PrimerValorVacio.focus();
         return;
     }
+    console.log(datos)
     let json = JSON.stringify(datos);
 
     let url = "../ws/Materiales/wsUpdMaterial.php";
@@ -193,7 +215,9 @@ function UpdMaterialValidar() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+
                 if (resp.estado == "OK") {
+
                     var inputFile = document.getElementById('UpdimagenInput');
                     if (inputFile.value || id.value !== idA.value) {
                         UpdAgregarImagen();
@@ -326,12 +350,12 @@ function GetMateriales() {
                             descripcion: obj.descripcion,
                             precio: obj.precio,
                             fechaprecio: obj.fechaprecio,
+                            familia: obj.familia,
                             unidad: obj[5],
                             estatus: obj.estatus
                         };
                     });
                     datosObjetoMateriales = resp.datos;
-                    console.log(datosObjetoMateriales);
                     llenarTablaMateriales();
                     filterDataMateriales();
                     document.getElementById('upload').addEventListener('change', handleFile, false);
@@ -369,6 +393,7 @@ function displayTableMateriales(page) {
             <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
             <td>${precioFormateado}</td>
             <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
+            <td>${(!record.familia == "") ? record.familia : "---"}</td>
             <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
             <td class="estatus">
                 <div style="display: flex; justify-content: space-around; align-items: center; ">
@@ -378,7 +403,7 @@ function displayTableMateriales(page) {
                 </div>
                         <div class="" style="display: flex; justify-content: space-around; align-items: center; ">
                             <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
-                            ${record.estatus == 1 ? `                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.unidad}')"></i>` : ``}
+                            ${record.estatus == 1 ? `                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
                             ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>`
@@ -393,7 +418,7 @@ function displayTableMateriales(page) {
         });
     } else {
         const row = `<tr>
-                        <td colspan="7" class="Code">Sin resultados</td>
+                        <td colspan="8" class="Code">Sin resultados</td>
                      </tr>`;
         tableBody.innerHTML += row;
     }
@@ -485,17 +510,17 @@ function setupPaginationMateriales() {
 function filterDataMateriales() {
     const searchText = document.getElementById("search-inputMateriales").value.toLowerCase();
     const unidadFilter = document.getElementById("selectUnidadMateriales").value;
+    const familiaFilter = document.getElementById("selectFamiliaMateriales").value;
     const statusFilter = estatusMateriales;
-    console.log(searchText, unidadFilter, statusFilter)
     filteredData = datosObjetoMateriales.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
+        const matchesFamilia = familiaFilter ? record.familia == familiaFilter : true;
         const matchesStatus = record.estatus == statusFilter;
-        return matchesSearch && matchesUnidad && matchesStatus;
+        return matchesSearch && matchesUnidad && matchesStatus && matchesFamilia;
     });
-    console.log(filteredData);
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableMateriales(currentPage);
     setupPaginationMateriales();
@@ -509,6 +534,9 @@ function llenarTablaMateriales() {
 
     const unidadFilter = document.getElementById("selectUnidadMateriales");
     unidadFilter.addEventListener("change", filterDataMateriales);
+
+    const familiaFilter = document.getElementById("selectFamiliaMateriales");
+    familiaFilter.addEventListener("change", filterDataMateriales);
 
     const rowsPerPageSelect = document.getElementById("rows-per-page");
     rowsPerPageSelect.addEventListener("change", function () {
@@ -565,6 +593,7 @@ function AddlimpiarModal() {
     let descripcion = document.querySelector('#AdddescripcionInput');
     let precio = document.querySelector('#AddprecioInput');
     let unidad = document.querySelector('#AddunidadInput');
+    let familia = document.querySelector('#AddfamiliaInput');
     let img = document.querySelector('#AddimagenPreview');
     let inputImg = document.querySelector('#AddimagenInput');
     img.src = "img/sinimagen.png";
@@ -582,6 +611,7 @@ function AddlimpiarModal() {
     descripcion.value = "";
     precio.value = "";
     unidad.value = "";
+    familia.value = "";
 
     id.placeholder = "";
     norma.placeholder = "";
@@ -593,6 +623,7 @@ function AddlimpiarModal() {
     descripcion.classList.remove("inputVacio");
     precio.classList.remove("inputVacio");
     unidad.classList.remove("inputVacio");
+    familia.classList.remove("inputVacio");
 }
 
 //Metodo para que se cree la carpeta y se le introduzca la imagen seleccionada a la hora de guardar el material
@@ -757,7 +788,7 @@ function valStatus() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unidad) { //Llenado de datos en el modal
+function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, familia, unidad) { //Llenado de datos en el modal
 
 
     let idM = document.querySelector('#UpdidInput');
@@ -766,6 +797,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
     let descripcionM = document.querySelector('#UpddescripcionInput');
     let precioM = document.querySelector('#UpdprecioInput');
     let unidadM = document.querySelector('#UpdunidadInput');
+    let familiaM = document.querySelector('#UpdfamiliaInput');
     let inputImg = document.querySelector('#UpdimagenInput');
 
     inputImg.value = "";
@@ -775,12 +807,19 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
     descripcionM.value = descripcion;
     precioM.value = precio;
     unidadM.value = unidad;
+    familiaM.value = familia;
     rutaCarpeta = "../Materiales/" + id;
     cargarImagen()
     //llenar el select de responsables
     for (var i = 0; i < unidadM.options.length; i++) {
         if (unidadM.options[i].value === unidad) {
             unidadM.options[i].selected = true;
+            break;
+        }
+    }
+    for (var i = 0; i < familiaM.options.length; i++) {
+        if (familiaM.options[i].value === familia) {
+            familiaM.options[i].selected = true;
             break;
         }
     }
@@ -808,6 +847,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, unida
     descripcionM.classList.remove("inputVacio");
     precioM.classList.remove("inputVacio");
     unidadM.classList.remove("inputVacio");
+    familiaM.classList.remove("inputVacio");
 }
 
 var rutaCarpeta = '../Materiales/1';
@@ -927,7 +967,6 @@ function Exportar() {
 
 // Función para importar y convertir a objeto, y luego mostrar en la tabla
 function handleFile(e) {
-    console.log("entro ", e);
     const file = e.target.files[0];
     const reader = new FileReader();
 
@@ -955,7 +994,6 @@ function handleFile(e) {
 
 function MetodoEspera(jsonObject) {
     datosObjetoMateriales = actualizarFechaMateriales(jsonObject, ExportarExcel);
-    console.log(datosObjetoMateriales);
     llenarTablaMateriales();
     filterDataMateriales();
 }

@@ -86,27 +86,26 @@ require("../../scripts/Materiales.php");
                         Fecha del precio
                     </th>
                     <th clas="col-1" style="width: 100px;">
-                    <div class="d-flex align-items-center">
+                        <div class="d-flex align-items-center">
                             <span>Familia: </span>
                             <select class="form-select form-select-sm ml-2" id="selectFamiliaMateriales"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected>Todo</option>
-                                <option value="">Sin clasificación</option>
-                                <option value="">Accesorios</option>
-                                <option value="">Aislamiento</option>
-                                <option value="">Bobedas</option>
-                                <option value="">Conductores</option>
-                                <option value="">Ductos</option>
-                                <option value="">Equipos</option>
-                                <option value="">Herrajes</option>
-                                <option value="">Miselaneos</option>
-                                <option value="">Postes</option>
-                                <option value="">Pozos</option>
-                                <option value="">Protecciones</option>
-                                <option value="">Registros</option>
-                                <option value="">Seccionamiento</option>
-                                <option value="">Transformadores</option>
-                                <option value="">LT</option>
+                                <option value="Sin Clasificacion">Sin clasificación</option>
+                                <option value="Accesorios">Accesorios</option>
+                                <option value="Aislamiento">Aislamiento</option>
+                                <option value="Bobedas">Bobedas</option>
+                                <option value="Conductores">Conductores</option>
+                                <option value="Ductos">Ductos</option>
+                                <option value="Equipos">Equipos</option>
+                                <option value="Herrajes">Herrajes</option>
+                                <option value="Miselaneos">Miselaneos</option>
+                                <option value="Postes">Postes</option>
+                                <option value="Pozos">Pozos</option>
+                                <option value="Protecciones">Protecciones</option>
+                                <option value="Registros">Registros</option>
+                                <option value="Seccionamiento">Seccionamiento</option>
+                                <option value="Transformadores">Transformadores</option>
                             </select>
                         </div>
                     </th>
@@ -188,22 +187,21 @@ require("../../scripts/Materiales.php");
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AddfamiliaInput">
                         <option selected value="">Seleccione una familia</option>
-                            <option value="">Sin clasificación</option>
-                            <option value="">Accesorios</option>
-                            <option value="">Aislamiento</option>
-                            <option value="">Bobedas</option>
-                            <option value="">Conductores</option>
-                            <option value="">Ductos</option>
-                            <option value="">Equipos</option>
-                            <option value="">Herrajes</option>
-                            <option value="">Miselaneos</option>
-                            <option value="">Postes</option>
-                            <option value="">Pozos</option>
-                            <option value="">Protecciones</option>
-                            <option value="">Registros</option>
-                            <option value="">Seccionamiento</option>
-                            <option value="">Transformadores</option>
-                            <option value="">LT</option>
+                        <option value="Sin Clasificacion">Sin clasificación</option>
+                        <option value="Accesorios">Accesorios</option>
+                        <option value="Aislamiento">Aislamiento</option>
+                        <option value="Bobedas">Bobedas</option>
+                        <option value="Conductores">Conductores</option>
+                        <option value="Ductos">Ductos</option>
+                        <option value="Equipos">Equipos</option>
+                        <option value="Herrajes">Herrajes</option>
+                        <option value="Miselaneos">Miselaneos</option>
+                        <option value="Postes">Postes</option>
+                        <option value="Pozos">Pozos</option>
+                        <option value="Protecciones">Protecciones</option>
+                        <option value="Registros">Registros</option>
+                        <option value="Seccionamiento">Seccionamiento</option>
+                        <option value="Transformadores">Transformadores</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -283,24 +281,23 @@ require("../../scripts/Materiales.php");
                 <div class="mb-3">
                     <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddfamiliaInput">
+                        id="UpdfamiliaInput">
                         <option selected value="">Seleccione una familia</option>
-                            <option value="">Sin clasificación</option>
-                            <option value="">Accesorios</option>
-                            <option value="">Aislamiento</option>
-                            <option value="">Bobedas</option>
-                            <option value="">Conductores</option>
-                            <option value="">Ductos</option>
-                            <option value="">Equipos</option>
-                            <option value="">Herrajes</option>
-                            <option value="">Miselaneos</option>
-                            <option value="">Postes</option>
-                            <option value="">Pozos</option>
-                            <option value="">Protecciones</option>
-                            <option value="">Registros</option>
-                            <option value="">Seccionamiento</option>
-                            <option value="">Transformadores</option>
-                            <option value="">LT</option>
+                        <option value="Sin Clasificacion">Sin clasificación</option>
+                        <option value="Accesorios">Accesorios</option>
+                        <option value="Aislamiento">Aislamiento</option>
+                        <option value="Bobedas">Bobedas</option>
+                        <option value="Conductores">Conductores</option>
+                        <option value="Ductos">Ductos</option>
+                        <option value="Equipos">Equipos</option>
+                        <option value="Herrajes">Herrajes</option>
+                        <option value="Miselaneos">Miselaneos</option>
+                        <option value="Postes">Postes</option>
+                        <option value="Pozos">Pozos</option>
+                        <option value="Protecciones">Protecciones</option>
+                        <option value="Registros">Registros</option>
+                        <option value="Seccionamiento">Seccionamiento</option>
+                        <option value="Transformadores">Transformadores</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -408,20 +405,20 @@ require("../../scripts/Materiales.php");
 </script>
 
 <script>
-    window.addEventListener('resize', function() {
-        const logoImage = document.getElementById('logoImage');
-        const windowWidth = window.innerWidth;
-        const originalWidth = logoImage.naturalWidth;
+window.addEventListener('resize', function() {
+    const logoImage = document.getElementById('logoImage');
+    const windowWidth = window.innerWidth;
+    const originalWidth = logoImage.naturalWidth;
 
-        if (windowWidth < originalWidth) {
-            logoImage.src =
-                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+    if (windowWidth < originalWidth) {
+        logoImage.src =
+            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-        } else {
-            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-            logoImage.alt = 'Logo'; // Restaura el atributo alt
-        }
-    });
+    } else {
+        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+        logoImage.alt = 'Logo'; // Restaura el atributo alt
+    }
+});
 </script>

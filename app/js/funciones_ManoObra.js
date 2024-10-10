@@ -136,30 +136,6 @@ function UpdManoObraValidar() {
         }
     }
     datos.salario = salario.value;
-
-    let cantidad = document.querySelector('#UpdcantidadInput');
-    if (cantidad.value == "") {
-        cantidad.classList.add("inputVacio");
-        cantidad.placeholder = "Requerida la cantidad"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = cantidad;
-        }
-
-    }
-    datos.cantidad = cantidad.value;
-    let rendimiento = document.querySelector('#UpdrendimientoInput');
-    if (rendimiento.value == "") {
-        rendimiento.classList.add("inputVacio");
-        rendimiento.placeholder = "Requerido el rendimiento"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = rendimiento;
-        }
-
-    }
-
-    datos.rendimiento = rendimiento.value;
     if (vacio) {
         PrimerValorVacio.focus();
         return;
@@ -478,28 +454,19 @@ function AddlimpiarModalManoObra() {
     let categoriaMO = document.querySelector('#AddCategoriaInputManodeobra');
     let UnidadMO = document.querySelector('#AddUnidadInputManodeobra');
     let salarioMO = document.querySelector('#AddsalarioInputManodeobra');
-    let cantidadMo = document.querySelector('#AddcantidadInputManodeobra');
-    let rendimientoMo = document.querySelector('#AddrendimientoInputManodeobra');
-
 
     idMO.value = "";
     categoriaMO.value = "";
     UnidadMO.value = "";
     salarioMO.value = "";
-    cantidadMo.value = "";
-    rendimientoMo.value = "";
 
     idMO.placeholder = "";
     salarioMO.placeholder = "";
-    cantidadMo.placeholder = "";
-    rendimientoMo.placeholder = "";
 
     idMO.classList.remove("inputVacio");
     categoriaMO.classList.remove("inputVacio");
     UnidadMO.classList.remove("inputVacio");
     salarioMO.classList.remove("inputVacio");
-    cantidadMo.classList.remove("inputVacio");
-    rendimientoMo.classList.remove("inputVacio");
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -520,7 +487,7 @@ function valStatusManoObra() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificarManoObra(id, categoria, unidad, salario, cantidad, rendimiento) {
+function llenarModalModificarManoObra(id, categoria, unidad, salario) {
 
     //Llenado de datos en el modal
     let idMO = document.querySelector('#UpdidInput');

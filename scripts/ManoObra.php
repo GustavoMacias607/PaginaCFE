@@ -79,8 +79,6 @@ class ManoObra
             $R['estado'] = "Error: " . $e->getMessage();
         }
         return $R;
-
-        //$consulta = "call spManoObraMostrar(:Estatus,:Buscar,:Categoria,:Unidad);";
     }
     /**Metodo para verificar si una mano de obra ya existe
      * recibe un objeto que contiene el id de la mano de obra
