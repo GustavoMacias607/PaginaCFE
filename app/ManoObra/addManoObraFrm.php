@@ -63,11 +63,11 @@ if (!isset($_SESSION['idusuario'])) {
         <table id="tabla-manodeobra">
             <thead>
                 <tr>
-                    <th style="width: 20%;">
+                    <th style="width: 16%;">
                         ID
                     </th>
 
-                    <th class=" col-1" style="width: 20%;">
+                    <th class=" col-1" style="width: 16%;">
                         <div class="d-flex align-items-center">
                             <span>Categoría: </span>
                             <select id="categoria-filter" class="form-select form-select-sm ml-2"
@@ -82,7 +82,7 @@ if (!isset($_SESSION['idusuario'])) {
 
                     </th>
 
-                    <th class=" col-1" style="width: 20%;">
+                    <th class=" col-1" style="width: 16%;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filter"
@@ -93,10 +93,13 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th style="width: 20%;">
+                    <th style="width: 16%;">
                         Salario
                     </th>
-                    <th class="col-1" style="width: 20%;">
+                    <th style="width: 16%;">
+                        Fecha del salario
+                    </th>
+                    <th class="col-1" style="width: 16%;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>
@@ -154,7 +157,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="modal-footer modal-footer-manodeobra">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddManoObraValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                        style="background-color: #008E5A; border: 3px solid #008E5A;">Guardar</button>
                 </div>
             </div>
         </div>
@@ -171,7 +174,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-manodeobra" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-manodeobra">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnteriorMano"
                     style="border: 3px solid #008E5A;">
@@ -206,10 +209,11 @@ if (!isset($_SESSION['idusuario'])) {
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
                 </div>
 
-            </div>
-            <div class=" modal-footer modal-footer-manodeobra">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdManoObraValidar()">Guardar</button>
+            
+                <div class=" modal-footer modal-footer-manodeobra">
+                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border: 3px solid #008E5A;"
+                        onclick="javascript:UpdManoObraValidar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>

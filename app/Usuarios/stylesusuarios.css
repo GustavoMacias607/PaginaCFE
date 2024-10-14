@@ -140,6 +140,7 @@ body {
 
 .modal-footer-usuarios {
   border: none;
+  padding: 0px;
 }
 
 .modal-footer-usuarios .btn-primary:active {

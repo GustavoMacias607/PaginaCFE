@@ -76,6 +76,10 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
+                    <th>PhM
+                    </th>
+                    <th>Fecha del PhM</th>
+                    
                     <th class="col-1" style="width: 170px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
@@ -127,15 +131,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddphmInputMaquinaria">
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">RhM*</label>
-                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddrhmInputMaquinaria">
-                </div>
-
                 <div class="modal-footer modal-footer-maquinaria">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddMaquinariaValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                        style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
                 </div>
             </div>
         </div>
@@ -152,7 +150,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-maquinaria" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-maquinaria">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnteriorMaqui"
                     style="border: 3px solid #008E5A;">
@@ -180,16 +178,11 @@ if (!isset($_SESSION['idusuario'])) {
                     <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
+                </div>        
+                <div class=" modal-footer modal-footer-maquinaria">
+                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                        onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">RhM*</label>
-                    <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdrhmInput">
-                </div>
-            </div>
-            <div class=" modal-footer modal-footer-maquinaria">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
             </div>
         </div>
     </div>

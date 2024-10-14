@@ -140,6 +140,7 @@
   
   .modal-footer-basicos {
     border: none;
+    padding: 0px;
   }
   
   .modal-footer-basicos .btn-primary:active {

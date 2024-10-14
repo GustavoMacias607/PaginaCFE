@@ -140,6 +140,7 @@ body {
 
 .modal-footer-materiales {
   border: none;
+  padding: 0px;
 }
 
 .modal-footer-materiales .btn-primary:active {

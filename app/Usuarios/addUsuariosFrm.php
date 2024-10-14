@@ -111,7 +111,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form name="no-autocomplete" autocomplete="off">
-                <div class="modal-body">
+                <div class="modal-body modal-body-usuarios">
                     <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                     <div class="mb-3">
                         <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
@@ -148,7 +148,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </div>
                     <div class="modal-footer modal-footer-usuarios">
                         <button type="button" class="btn btn-primary"
-                            style="background-color: #008E5A; border-color: #008E5A;"
+                            style="background-color: #008E5A; border: 3px solid #008E5A;"
                             onclick="javascript:AddUsuarioValidar();">Guardar</button>
                     </div>
 
@@ -205,11 +205,12 @@ if (!isset($_SESSION['idusuario'])) {
                         <input type="password" class="form-control inputLleno"
                             onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
                     </div>
-                </div>
-                <div class=" modal-footer modal-footer-usuarios">
-                    <button type="button" class="btn btn-primary"
-                        style="background-color: #008E5A; border-color: #008E5A;"
-                        onclick="javascript:UpdUsuarioValidar()">Guardar</button>
+                
+                    <div class=" modal-footer modal-footer-usuarios">
+                        <button type="button" class="btn btn-primary"
+                            style="background-color: #008E5A; border: 3px solid #008E5A;"
+                            onclick="javascript:UpdUsuarioValidar()">Guardar</button>
+                    </div>
                 </div>
             </form>
         </div>

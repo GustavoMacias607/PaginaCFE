@@ -140,6 +140,7 @@ body {
 
 .modal-footer-manodeobra {
   border: none;
+  padding: 0px;
 }
 
 .modal-footer-manodeobra .btn-primary:active {

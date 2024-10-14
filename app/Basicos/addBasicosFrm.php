@@ -81,6 +81,9 @@ if (!isset($_SESSION['idusuario'])) {
                     <th>
                         Precio
                     </th>
+                    <th>
+                        Fecha del precio
+                    </th>
                     <th class="col-1" style="width: 170px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
@@ -134,7 +137,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="modal-footer modal-footer-basicos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddBasicoValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                        style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
                 </div>
             </div>
         </div>
@@ -151,7 +154,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-basicos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-basicos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnteriorBasicos"
                     style="border: 3px solid #008E5A;">
@@ -181,10 +184,10 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
                 </div>
-            </div>
-            <div class=" modal-footer modal-footer-basicos">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdBasicoValidar()">Guardar</button>
+                <div class=" modal-footer modal-footer-basicos">
+                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                        onclick="javascript:UpdBasicoValidar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>

@@ -63,7 +63,7 @@ body {
   justify-content: space-between;
   padding: 0 2vw 0 2vw;
   align-items: center;
-  margin-top: 0.2rem;
+  margin: 0.2rem 0 1rem 0;
   width: 100%;
 }
 
@@ -298,7 +298,7 @@ th {
 
 .tabla-container-materialescatalogo {
   text-align: center;
-  margin-bottom: 100px;
+  margin-bottom: 1rem;
   /* Altura máxima del contenedor */
   overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
@@ -385,14 +385,14 @@ th {
 .fa-solid-Guardar-catalogo {
   font-family: "LatoBold", sans-serif; /* tipografia */
   --bs-btn-padding-y: 0.3rem;
-  --bs-btn-padding-x: 10px; /* largo del boton */
+  --bs-btn-padding-x: 1rem; /* largo del boton */
   --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
   background-color: #008e5a;
   border: 3px solid #008e5a;
   border-radius: 5;
   transition: all 0.3s ease; /* Transición suave */
   color: #ffffff;
-  margin-top: 0%;
+  
 }
 
 .fa-solid-Guardar-catalogo:hover {
@@ -445,11 +445,6 @@ th {
   margin-top: 1rem;
   display: flex;
   align-items: center;
-}
-
-.buttonguardarcatalogo {
-  padding: 0 2rem 0 2rem;
-  float: right;
 }
 
 .div-card {
@@ -601,7 +596,7 @@ th {
 }
 .tabla-container-materialesmodal_catalogo {
   text-align: center;
-  margin-bottom: 100px;
+  margin-bottom: 1rem;
   /* Altura máxima del contenedor */
   overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
@@ -627,4 +622,67 @@ th {
 .cantidad-materialesencatalogo:focus{
 outline: none;
 border: none;
+}
+
+
+/**/
+.grid-container {
+  display: grid;
+  grid-template-columns: 150px 150px 150px 150px; /* Ajusta el ancho de las columnas según sea necesario */
+  grid-template-rows: auto auto auto; /* Tres filas: una para botones, otra para labels, otra para inputs */
+  gap: 1rem; /* Espacio entre los elementos */
+}
+
+.anexos {
+  font-family: "LatoBold", sans-serif;
+  --bs-btn-padding-y: 0.3rem;
+  --bs-btn-padding-x: 10px;
+  --bs-btn-font-size: 1.2rem;
+  background-color: #008e5a;
+  border: 3px solid #008e5a;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  color: #ffffff;
+}
+
+.subtotales_numeros_top,
+.subtotales_numeros_bottom,
+.subtotales_numeros {
+  font-family: "Lato", sans-serif;
+  font-size: 1.2rem;
+  text-align: right;
+  color: #303030;
+  border: none;
+  width: 11rem;
+}
+
+.subtotales_numeros_top {
+  border-top: 3px solid #008e5a;
+}
+
+.subtotales_numeros_bottom {
+  border-bottom: 3px solid #008e5a;
+}
+
+.costosadicionales {
+  font-family: "LatoBold", sans-serif;
+  font-size: 1.2rem;
+  color: #303030;
+}
+
+/* Reduce el espacio entre columnas */
+div[style*="grid-template-columns"] {
+  gap: 5px; /* Reduce el espacio entre columnas */
+}
+
+/* Asegura que los elementos estén alineados a la derecha */
+div[style*="justify-content: end"] {
+  justify-content: end; /* Alinea todo hacia la derecha */
+}
+
+.subtotales_textos{
+  font-family: "LatoBold", sans-serif;
+  color: #858585;
+  font-size: 1.2rem;
+  float: right;
 }

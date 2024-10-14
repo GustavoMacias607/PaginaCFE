@@ -227,7 +227,7 @@ require("../../scripts/Materiales.php");
             </div>
             <div class="modal-footer modal-footer-materiales">
                 <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();"
-                    style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                    style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
             </div>
         </div>
     </div>
@@ -248,7 +248,7 @@ require("../../scripts/Materiales.php");
                 <button type="button" class="fa-solid fa-xmark btnclose-materiales" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-materiales">
                 <input type="text" class="form-control d-none" id="UpdidAnteriorMaterial"
                     style="border: 3px solid #008E5A;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
@@ -320,11 +320,11 @@ require("../../scripts/Materiales.php");
                 </div>
 
                 <img id="UpdimagenPreview" src="" width="200px"
-                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
-            </div>
-            <div class=" modal-footer modal-footer-materiales">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdMaterialValidar()">Guardar</button>
+                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">           
+                <div class=" modal-footer modal-footer-materiales">
+                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                        onclick="javascript:UpdMaterialValidar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>

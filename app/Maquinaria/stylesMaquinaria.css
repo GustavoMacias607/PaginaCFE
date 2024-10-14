@@ -140,6 +140,7 @@ body {
 
 .modal-footer-maquinaria {
   border: none;
+  padding: 0px;
 }
 
 .modal-footer-maquinaria .btn-primary:active {
