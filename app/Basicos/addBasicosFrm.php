@@ -135,6 +135,11 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddphmInputBasicos">
                 </div>
+                <div class="mb-3">
+                    <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AddfechaPrecioInput">
+                </div>
                 <div class="modal-footer modal-footer-basicos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddBasicoValidar();"
                         style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
@@ -184,8 +189,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
                 </div>
+                <div class="mb-3">
+                    <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="UpdfechaPrecioInput">
+                </div>
                 <div class=" modal-footer modal-footer-basicos">
-                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                    <button type="button" class="btn btn-primary"
+                        style="background-color: #008E5A; border-color: #008E5A;"
                         onclick="javascript:UpdBasicoValidar()">Guardar</button>
                 </div>
             </div>

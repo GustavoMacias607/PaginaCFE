@@ -126,12 +126,6 @@ function AsignarValores(pidEliminar, pActivarS) {
     idEliminar = pidEliminar;
     ActivarS = pActivarS;
 }
-
-//Metodo para establecer la tabla en la pagina 1
-function EstablecerPag() {
-    paginaActual = 1;
-}
-
 // Metodo para obtener cuantas paginas tendra la paginacion
 // Recibe el total de datos y el numero de registros a mostrar en la tabla
 function obtenerTotalPaginas(totalDatos, tamanoPagina) {
@@ -185,4 +179,18 @@ function comprobarExiste(valor, campo) {
         existe = false;
         campo.classList.remove("inputVacio");
     }
+}
+
+// Metodo para dar formato a la fecha
+//Recibe la fecha a la que se le dara el formato
+function FormateoFecha(fecha) {
+    let partesFecha = fecha.split("/");
+    let dia = partesFecha[0];
+    let mes = partesFecha[1];
+    let año = partesFecha[2];
+    let fechaFormateada = new Date(`${año}/${mes}/${dia}`);
+    let añoFormateado = fechaFormateada.getFullYear();
+    let mesFormateado = (fechaFormateada.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
+    let diaFormateado = fechaFormateada.getDate().toString().padStart(2, '0');
+    return fechaFinal = `${añoFormateado}-${mesFormateado}-${diaFormateado}`;
 }

@@ -54,19 +54,15 @@ function AddMaquinariaValidar() {
     }
     datos.phm = phm.value;
 
-
-    let rhm = document.querySelector('#AddrhmInputMaquinaria');
-    if (rhm.value == "") {
-        rhm.classList.add("inputVacio");
-        rhm.placeholder = "Requerido el rhm"
+    let fecha = document.querySelector('#AddfechaPrecioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = rhm;
+            PrimerValorVacio = fecha;
         }
-
     }
-
-    datos.rhm = rhm.value;
+    datos.precioFecha = FormateoFecha(fecha.value);
 
     if (vacio) {
         PrimerValorVacio.focus();
@@ -80,7 +76,6 @@ function AddMaquinariaValidar() {
     }
     let json = JSON.stringify(datos);
     console.log(json);
-
     let url = "../ws/Maquinaria/wsAddMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -150,19 +145,15 @@ function UpdMaquinariaValidar() {
     }
     datos.phm = phm.value;
 
-
-    let rhm = document.querySelector('#UpdrhmInput');
-    if (rhm.value == "") {
-        rhm.classList.add("inputVacio");
-        rhm.placeholder = "Requerido el rhm"
+    let fecha = document.querySelector('#UpdfechaPrecioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = rhm;
+            PrimerValorVacio = fecha;
         }
-
     }
-
-    datos.rhm = rhm.value;
+    datos.precioFecha = FormateoFecha(fecha.value);
 
     if (vacio) {
         PrimerValorVacio.focus();
@@ -321,9 +312,11 @@ function displayTableMaquinaria(page) {
                         <td class="Code">${record.idmaquinaria}</td>
             <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
             <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+            <td>${(!record.phm == "") ? record.phm : "---"}</td>
+            <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
             <td class="estatus">
             <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${record.idmaquinaria},'${record.descripcion}','${record.unidad}',${record.phm},${record.rhm})"></i>
+                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${record.idmaquinaria},'${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
                         `: ``}
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>` :
@@ -470,7 +463,12 @@ function AddlimpiarModalMaquinaria() {
     let UnidadMa = document.querySelector('#AddUnidadInputMaquinaria');
     let phm = document.querySelector('#AddphmInputMaquinaria');
     let rhm = document.querySelector('#AddrhmInputMaquinaria');
-
+    let fechaActual = new Date();
+    let año = fechaActual.getFullYear();
+    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    let dia = fechaActual.getDate().toString().padStart(2, '0');
+    let fechaFormateada = `${año}-${mes}-${dia}`;
+    document.querySelector('#AddfechaPrecioInput').value = fechaFormateada;
 
 
     idMa.value = "";
@@ -509,23 +507,30 @@ function valStatusMaquinaria() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, rhM) {
+function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, fechaPrecio) {
 
     //Llenado de datos en el modal
     let idMa = document.querySelector('#UpdidInput');
     let descripcionMa = document.querySelector('#UpddescripcionInput');
     let UnidadMa = document.querySelector('#UpdUnidadInputMaquinaria');
     let phm = document.querySelector('#UpdphmInput');
-    let rhm = document.querySelector('#UpdrhmInput');
     let idAnterior = document.querySelector('#UpdidAnteriorMaqui');
 
     idAnterior.value = id;
     idMa.value = id;
     descripcionMa.value = descripcion;
     phm.value = phM;
-    rhm.value = rhM;
 
-
+    if (fechaPrecio != "0000-00-00" && fechaPrecio != null) {
+        document.querySelector('#UpdfechaPrecioInput').value = FormateoFecha(fechaPrecio);
+    } else {
+        let fechaActual = new Date();
+        let año = fechaActual.getFullYear();
+        let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
+        let dia = fechaActual.getDate().toString().padStart(2, '0');
+        let fechaFormateada = `${año}-${mes}-${dia}`;
+        document.querySelector('#UpdfechaPrecioInput').value = fechaFormateada;
+    }
     //llenar el select de unidad
     for (var i = 0; i < UnidadMa.options.length; i++) {
         if (UnidadMa.options[i].value === unidad) {
@@ -538,14 +543,12 @@ function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, rhM) {
     idMa.placeholder = "";
     descripcionMa.placeholder = "";
     phm.placeholder = "";
-    rhm.placeholder = "";
 
 
     idMa.classList.remove("inputVacio");
     descripcionMa.classList.remove("inputVacio");
     UnidadMa.classList.remove("inputVacio");
     phm.classList.remove("inputVacio");
-    rhm.classList.remove("inputVacio");
 }
 
 

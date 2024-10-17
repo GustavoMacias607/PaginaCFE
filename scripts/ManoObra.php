@@ -16,14 +16,16 @@ class ManoObra
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraInsertar(:Id,:Categoria,:Unidad,:Salario);";
+            $consulta = "call spManoObraInsertar(:Id,:Categoria,:Unidad,:Salario,:Fecha);";
 
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
                 "Categoria" => $datos->categoria,
                 "Unidad" => $datos->unidad,
-                "Salario" => $datos->salario
+                "Salario" => $datos->salario,
+                "Salario" => $datos->salario,
+                "Fecha" => $datos->precioFecha,
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -39,7 +41,7 @@ class ManoObra
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spManoObraModificar(:IdAnterior,:Id,:Categoria,:Unidad,:Salario);";
+            $consulta = "call spManoObraModificar(:IdAnterior,:Id,:Categoria,:Unidad,:Salario,:Fecha);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
@@ -47,6 +49,7 @@ class ManoObra
                 "Categoria" => $datos->categoria,
                 "Unidad" => $datos->unidad,
                 "Salario" => $datos->salario,
+                "Fecha" => $datos->precioFecha
             ));
             unset($c);
         } catch (PDOException $e) {

@@ -73,10 +73,10 @@ if (!isset($_SESSION['idusuario'])) {
                             <select id="categoria-filter" class="form-select form-select-sm ml-2"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected>Todo</option>
-                                <option value="Ayudante General">Ayudante General</option>
-                                <option value="Oficial Electricista">Oficial Electricista</option>
-                                <option value="Oficial Albanil">Oficial Albañil</option>
-                                <option value="Oficial Pintor">Oficial Pintor</option>
+                                <option value="AYUDANTE GENERAL">Ayudante General</option>
+                                <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
+                                <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
+                                <option value="OFICIAL PINTOR">Oficial Pintor</option>
                                 <!-- Agrega más opciones según sea necesario -->
                             </select>
 
@@ -136,10 +136,10 @@ if (!isset($_SESSION['idusuario'])) {
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this);"
                         id="AddCategoriaInputManodeobra">
                         <option value="" selected>Seleccciona una categoría</option>
-                        <option value="Ayudante General">Ayudante General</option>
-                        <option value="Oficial Electricista">Oficial Electricista</option>
-                        <option value="Oficial Albanil">Oficial Albañil</option>
-                        <option value="Oficial Pintor">Oficial Pintor</option>
+                        <option value="AYUDANTE GENERAL">Ayudante General</option>
+                        <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
+                        <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
+                        <option value="OFICIAL PINTOR">Oficial Pintor</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -154,6 +154,11 @@ if (!isset($_SESSION['idusuario'])) {
                     <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddsalarioInputManodeobra">
+                </div>
+                <div class="mb-3">
+                    <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha salario</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AddfechaSalarioInput">
                 </div>
                 <div class="modal-footer modal-footer-manodeobra">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddManoObraValidar();"
@@ -189,10 +194,10 @@ if (!isset($_SESSION['idusuario'])) {
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdCategoriaInputManodeobra">
                         <option value="" selected>Seleccciona una categoría</option>
-                        <option value="Ayudante General">Ayudante General</option>
-                        <option value="Oficial Electricista">Oficial Electricista</option>
-                        <option value="Oficial Albanil">Oficial Albañil</option>
-                        <option value="Oficial Pintor">Oficial Pintor</option>
+                        <option value="AYUDANTE GENERAL">Ayudante General</option>
+                        <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
+                        <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
+                        <option value="OFICIAL PINTOR">Oficial Pintor</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -208,10 +213,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
                 </div>
-
-            
+                <div class="mb-3">
+                    <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha salario</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="UpdfechaSalarioInput">
+                </div>
                 <div class=" modal-footer modal-footer-manodeobra">
-                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border: 3px solid #008E5A;"
+                    <button type="button" class="btn btn-primary"
+                        style="background-color: #008E5A; border: 3px solid #008E5A;"
                         onclick="javascript:UpdManoObraValidar()">Guardar</button>
                 </div>
             </div>

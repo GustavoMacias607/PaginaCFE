@@ -52,9 +52,15 @@ function AddManoObraValidar() {
     }
     datos.salario = salario.value;
 
-    datos.cantidad = 10;
-
-    datos.rendimiento = 10;
+    let fecha = document.querySelector('#AddfechaSalarioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = fecha;
+        }
+    }
+    datos.precioFecha = FormateoFecha(fecha.value);
 
     if (vacio) {
         PrimerValorVacio.focus();
@@ -136,6 +142,16 @@ function UpdManoObraValidar() {
         }
     }
     datos.salario = salario.value;
+
+    let fecha = document.querySelector('#UpdfechaSalarioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = fecha;
+        }
+    }
+    datos.precioFecha = FormateoFecha(fecha.value);
     if (vacio) {
         PrimerValorVacio.focus();
         return;
@@ -296,9 +312,10 @@ function displayTable(page) {
                         <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
                         <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                         <td>${(!record.salario == "") ? record.salario : "---"}</td>
+                        <td>${(!record.fechasalario == "") ? record.fechasalario : "---"}</td>
                         <td class="estatus">
                             <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${record.idmanoobra},'${record.categoria}','${record.unidad}',${record.salario},${record.cantidad},${record.rendimiento})"></i>` : ``}
+                                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${record.idmanoobra},'${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>` : ``}
                                 ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>`
@@ -454,6 +471,12 @@ function AddlimpiarModalManoObra() {
     let categoriaMO = document.querySelector('#AddCategoriaInputManodeobra');
     let UnidadMO = document.querySelector('#AddUnidadInputManodeobra');
     let salarioMO = document.querySelector('#AddsalarioInputManodeobra');
+    let fechaActual = new Date();
+    let año = fechaActual.getFullYear();
+    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    let dia = fechaActual.getDate().toString().padStart(2, '0');
+    let fechaFormateada = `${año}-${mes}-${dia}`;
+    document.querySelector('#AddfechaSalarioInput').value = fechaFormateada;
 
     idMO.value = "";
     categoriaMO.value = "";
@@ -487,8 +510,8 @@ function valStatusManoObra() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificarManoObra(id, categoria, unidad, salario) {
-
+function llenarModalModificarManoObra(id, categoria, unidad, salario, fechaSalario) {
+    console.log(categoria)
     //Llenado de datos en el modal
     let idMO = document.querySelector('#UpdidInput');
     let categoriaMO = document.querySelector('#UpdCategoriaInputManodeobra');
@@ -515,10 +538,19 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario) {
             break;
         }
     }
+    if (fechaSalario != "0000-00-00" && fechaSalario != null) {
+        document.querySelector('#UpdfechaSalarioInput').value = FormateoFecha(fechaSalario);
+    } else {
+        let fechaActual = new Date();
+        let año = fechaActual.getFullYear();
+        let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
+        let dia = fechaActual.getDate().toString().padStart(2, '0');
+        let fechaFormateada = `${año}-${mes}-${dia}`;
+        document.querySelector('#UpdfechaSalarioInput').value = fechaFormateada;
+    }
+
     idMO.placeholder = "";
     salarioMO.placeholder = "";
-
-
     idMO.classList.remove("inputVacio");
     categoriaMO.classList.remove("inputVacio");
     UnidadMO.classList.remove("inputVacio");

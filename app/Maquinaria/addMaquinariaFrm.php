@@ -79,7 +79,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <th>PhM
                     </th>
                     <th>Fecha del PhM</th>
-                    
+
                     <th class="col-1" style="width: 170px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
@@ -131,6 +131,11 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddphmInputMaquinaria">
                 </div>
+                <div class="mb-3">
+                    <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AddfechaPrecioInput">
+                </div>
                 <div class="modal-footer modal-footer-maquinaria">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddMaquinariaValidar();"
                         style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
@@ -178,9 +183,15 @@ if (!isset($_SESSION['idusuario'])) {
                     <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
                     <input type="number" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
-                </div>        
+                </div>
+                <div class="mb-3">
+                    <label for="UpdfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="UpdfechaPrecioInput">
+                </div>
                 <div class=" modal-footer modal-footer-maquinaria">
-                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                    <button type="button" class="btn btn-primary"
+                        style="background-color: #008E5A; border-color: #008E5A;"
                         onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
                 </div>
             </div>

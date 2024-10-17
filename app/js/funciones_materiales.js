@@ -91,6 +91,7 @@ function AddMaterialValidar() {
 
     }
     datos.unidad = unidad.value;
+
     console.log(datos)
     if (vacio) {
         PrimerValorVacio.focus();
@@ -207,7 +208,6 @@ function UpdMaterialValidar() {
         PrimerValorVacio.focus();
         return;
     }
-    console.log(datos)
     let json = JSON.stringify(datos);
 
     let url = "../ws/Materiales/wsUpdMaterial.php";
@@ -547,11 +547,6 @@ function llenarTablaMateriales() {
     });
 }
 
-
-
-
-
-
 // Muestra el panel donde se muestra la imagen del material
 //Recibe la ubicacion de la fila del cual se mostrara la imagen
 function mostrarDiv(imagen) {
@@ -572,19 +567,6 @@ function ocultarDiv(imagen) {
 }
 
 
-// Metodo para dar formato a la fecha
-//Recibe la fecha a la que se le dara el formato
-function FormateoFecha(fecha) {
-    let partesFecha = fecha.split("/");
-    let dia = partesFecha[0];
-    let mes = partesFecha[1];
-    let año = partesFecha[2];
-    let fechaFormateada = new Date(`${año}/${mes}/${dia}`);
-    let añoFormateado = fechaFormateada.getFullYear();
-    let mesFormateado = (fechaFormateada.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
-    let diaFormateado = fechaFormateada.getDate().toString().padStart(2, '0');
-    return fechaFinal = `${añoFormateado}-${mesFormateado}-${diaFormateado}`;
-}
 
 //Metodo para limpiar el modal de agregar material
 function AddlimpiarModal() {

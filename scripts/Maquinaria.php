@@ -18,13 +18,15 @@ class Maquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaquinariaInsertar(:Id,:Descripcion,:Unidad);";
+            $consulta = "call spMaquinariaInsertar(:Id,:Descripcion,:Unidad,:Phm,:Fecha);";
 
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
                 "Descripcion" => $datos->descripcion,
-                "Unidad" => $datos->unidad
+                "Unidad" => $datos->unidad,
+                "Phm" => $datos->phm,
+                "Fecha" => $datos->precioFecha
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -37,13 +39,15 @@ class Maquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spMaquinariaModificar(:IdAnterior,:Id,:Descripcion,:Unidad);";
+            $consulta = "call spMaquinariaModificar(:IdAnterior,:Id,:Descripcion,:Unidad,:Phm,:Fecha);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
                 "Descripcion" => $datos->descripcion,
-                "Unidad" => $datos->unidad
+                "Unidad" => $datos->unidad,
+                "Phm" => $datos->phm,
+                "Fecha" => $datos->precioFecha
             ));
             unset($c);
         } catch (PDOException $e) {

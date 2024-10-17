@@ -51,6 +51,15 @@ function AddBasicoValidar() {
         }
     }
     datos.pm = pm.value;
+    let fecha = document.querySelector('#AddfechaPrecioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = fecha;
+        }
+    }
+    datos.precioFecha = FormateoFecha(fecha.value);
 
     if (vacio) {
         PrimerValorVacio.focus();
@@ -130,6 +139,15 @@ function UpdBasicoValidar() {
         }
     }
     datos.pm = pm.value;
+    let fecha = document.querySelector('#UpdfechaPrecioInput');
+    if (fecha.value == "") {
+        fecha.classList.add("inputVacio");
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = fecha;
+        }
+    }
+    datos.precioFecha = FormateoFecha(fecha.value);
 
     if (vacio) {
         PrimerValorVacio.focus();
@@ -290,9 +308,10 @@ function displayTableBasico(page) {
             <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
             <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
             <td>${(!record.pm == "") ? record.pm : "---"}</td>
+            <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
             <td class="estatus">
             <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarBasico(${record.idbasicos},'${record.descripcion}','${record.unidad}',${record.pm})"></i>
+                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarBasico(${record.idbasicos},'${record.descripcion}','${record.unidad}',${record.pm},'${record.fechaprecio}')"></i>
                         `: ``}
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idbasicos},${record.estatus})"></i>` :
@@ -438,6 +457,12 @@ function AddlimpiarModalBasico() {
     let descripcionBa = document.querySelector('#AdddescripcionInputBasicos');
     let UnidadBa = document.querySelector('#AddUnidadInputBasicos');
     let phm = document.querySelector('#AddphmInputBasicos');
+    let fechaActual = new Date();
+    let año = fechaActual.getFullYear();
+    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    let dia = fechaActual.getDate().toString().padStart(2, '0');
+    let fechaFormateada = `${año}-${mes}-${dia}`;
+    document.querySelector('#AddfechaPrecioInput').value = fechaFormateada;
 
     idBa.value = "";
     descripcionBa.value = "";
@@ -474,7 +499,7 @@ function valStatusBasico() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
-function llenarModalModificarBasico(id, descripcion, unidad, phM) {
+function llenarModalModificarBasico(id, descripcion, unidad, phM, fechaPrecio) {
 
     //Llenado de datos en el modal
     let idBa = document.querySelector('#UpdidInput');
@@ -482,6 +507,7 @@ function llenarModalModificarBasico(id, descripcion, unidad, phM) {
     let UnidadBa = document.querySelector('#UpdUnidadInputBasicos');
     let phm = document.querySelector('#UpdphmInput');
     let idAnterior = document.querySelector('#UpdidAnteriorBasicos');
+    let precioM = document.querySelector('#UpdprecioInput');
 
     idAnterior.value = id;
     idBa.value = id;
@@ -495,7 +521,16 @@ function llenarModalModificarBasico(id, descripcion, unidad, phM) {
             break;
         }
     }
-
+    if (fechaPrecio != "null") {
+        document.querySelector('#UpdfechaPrecioInput').value = FormateoFecha(fechaPrecio);
+    } else {
+        let fechaActual = new Date();
+        let año = fechaActual.getFullYear();
+        let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses en JavaScript van de 0 a 11
+        let dia = fechaActual.getDate().toString().padStart(2, '0');
+        let fechaFormateada = `${año}-${mes}-${dia}`;
+        document.querySelector('#UpdfechaPrecioInput').value = fechaFormateada;
+    }
     idBa.placeholder = "";
     descripcionBa.placeholder = "";
     phm.placeholder = "";

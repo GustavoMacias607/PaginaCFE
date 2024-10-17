@@ -16,13 +16,14 @@ class Basicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spBasicosInsertar(:Id,:Descripcion,:Unidad,:Precio);";
+            $consulta = "call spBasicosInsertar(:Id,:Descripcion,:Unidad,:Precio,:Fecha);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
                 "Descripcion" => $datos->descripcion,
                 "Unidad" => $datos->unidad,
-                "Precio" => $datos->pm
+                "Precio" => $datos->pm,
+                "Fecha" => $datos->precioFecha,
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -38,14 +39,15 @@ class Basicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spBasicosModificar(:IdAnterior,:Id,:Descripcion,:Unidad,:Precio);";
+            $consulta = "call spBasicosModificar(:IdAnterior,:Id,:Descripcion,:Unidad,:Precio,:Fecha);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
                 "Descripcion" => $datos->descripcion,
                 "Unidad" => $datos->unidad,
-                "Precio" => $datos->pm
+                "Precio" => $datos->pm,
+                "Fecha" => $datos->precioFecha,
             ));
             unset($c);
         } catch (PDOException $e) {
