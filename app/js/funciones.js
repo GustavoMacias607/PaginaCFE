@@ -17,7 +17,7 @@ function opcion(op) {
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
-            funcion = GetConcepto;
+            funcion = PrincipalConcepto;
             break;
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";

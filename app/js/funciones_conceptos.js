@@ -5,6 +5,7 @@ let msgAgregarCon = "Concepto agregado";
 let msgModificarCon = "Concepto modificado";
 
 var estatusConcepto = 1;
+let conceptoTipoSeleccionado;
 
 
 
@@ -34,30 +35,11 @@ function AddConceptoValidar() {
 
     }
     datos.nombre = nombre.value;
-    let tipo = document.querySelector('#AddtipoInputConcepto');
-    if (tipo.value == "") {
-        tipo.classList.add("inputVacio");
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = tipo;
-        }
-    }
-    datos.tipo = tipo.value;
-
-    let plazo = document.querySelector('#AddplazoInputConcepto');
-    if (plazo.value == "") {
-        plazo.classList.add("inputVacio");
-        plazo.placeholder = "Requerido el plazo"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = plazo;
-        }
-    }
-    datos.plazo = plazo.value;
 
     let unidad = document.querySelector('#AddunidadInputConcepto');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
+        nombre.placeholder = "Requerida la unidad"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = unidad;
@@ -65,11 +47,15 @@ function AddConceptoValidar() {
 
     }
     datos.unidad = unidad.value;
+    datos.total = null;
     if (vacio) {
         PrimerValorVacio.focus();
         return;
     }
+    console.log(datos);
+
     let json = JSON.stringify(datos);
+
     checkConcepto("Add");
     if (existe) {
         id.focus();
@@ -123,26 +109,6 @@ function UpdConceptoValidar() {
         }
     }
     datos.nombre = nombre.value;
-    let tipo = document.querySelector('#UpdTipoInput');
-    if (tipo.value == "") {
-        tipo.classList.add("inputVacio");
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = tipo;
-        }
-    }
-    datos.tipo = tipo.value;
-
-    let plazo = document.querySelector('#UpdPlazoInput');
-    if (plazo.value == "") {
-        plazo.classList.add("inputVacio");
-        plazo.placeholder = "Requerido el plazo"
-        vacio = true;
-        if (!PrimerValorVacio) {
-            PrimerValorVacio = plazo;
-        }
-    }
-    datos.plazo = plazo.value;
 
     let unidad = document.querySelector('#UpdunidadInput');
     if (unidad.value == "") {
@@ -273,39 +239,64 @@ function CambioEstatusConcepto() {
 
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
-function GetConcepto() {
-    let json = "";
-    let url = "../ws/Conceptos/wsGetConcepto.php";
-    $.post(url, json, (responseText, status) => {
-        try {
-            if (status == "success") {
-                let resp = JSON.parse(responseText);
-                if (resp.estado == "OK") {
-                    llenarUnidadTabla();
-                    llenarTablaTipos();
-                    data = resp.datos;
-                    console.log(resp.datos);
-                    document.getElementById("sort-id").addEventListener("click", () => sortData('idconcepto'));
-                    document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
-                    // Eventos de clic para los botones
-                    document.getElementById("sort-id").addEventListener("click", function () {
-                        toggleSort(this, 'idconcepto');
-                    });
-
-                    document.getElementById("sort-name").addEventListener("click", function () {
-                        toggleSort(this, 'nombre');
-                    });
-                    llenarTablaConcepto();
-                    filterDataConcepto();
-
-                }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-            console.error(error);
-        }
+function PrincipalConcepto() {
+    document.getElementById("sort-id").addEventListener("click", () => sortData('idconcepto'));
+    document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
+    // Eventos de clic para los botones
+    document.getElementById("sort-id").addEventListener("click", function () {
+        toggleSort(this, 'idconcepto');
     });
+    document.getElementById("sort-name").addEventListener("click", function () {
+        toggleSort(this, 'nombre');
+    });
+    obtenerDatosConceptos(1);
+}
+function obtenerDatosConceptos(btnOpcion) {
+    if (btnOpcion == 1) {
+
+        let json = "";
+        let url = "../ws/Conceptos/wsGetConcepto.php";
+        $.post(url, json, (responseText, status) => {
+            try {
+                if (status == "success") {
+                    let resp = JSON.parse(responseText);
+                    if (resp.estado == "OK") {
+                        llenarUnidadTabla();
+                        data = resp.datos;
+                        console.log(resp.datos);
+                        llenarTablaConcepto();
+                        filterDataConcepto();
+                    }
+                } else {
+                    throw e = status;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    } else {
+        let json = "";
+        let url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
+        $.post(url, json, (responseText, status) => {
+            try {
+                if (status == "success") {
+                    let resp = JSON.parse(responseText);
+                    if (resp.estado == "OK") {
+                        llenarUnidadTabla();
+                        data = resp.datos;
+                        console.log(resp.datos);
+                        llenarTablaConcepto();
+                        filterDataConcepto();
+                    }
+                } else {
+                    throw e = status;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    }
+    conceptoTipoSeleccionado = btnOpcion;
 }
 
 
@@ -373,52 +364,84 @@ function toggleSort(button, field) {
 function displayTableConcepto(page) {
     const tableBody = document.getElementById("table-bodyConceptos");
     tableBody.innerHTML = "";
-
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
-    console.log(paginatedData);
-    if (paginatedData.length > 0) {
-        paginatedData.forEach(record => {
-            const row = `
-            <tr class="fila">
-            <td class="Code">${record.idconcepto}</td>
-            <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
-            <td>${(!record.tipo == "") ? record.tipo : "---"}</td>
-            <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-            <td>${(!record.total == "") ? record.total : "---"}</td>
-            <td class="estatus">
-                <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${record.idconcepto},'${record.nombre}','${record.tipo}',${record.plazo},'${record.unidad}')"></i>
-                `: ``}
-                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;"  alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo(${record.idconcepto},'${record.nombre}','${record.tipo}',${record.plazo},'${record.unidad}')"></i>
-                `: ``}
-                ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>`
-                }
-                   
-                </div>
-            </td> 
-             </tr>  
-        `;
-            tableBody.innerHTML += row;
-        });
-    } else {
-        const row = `<tr class="fila">
+    if (conceptoTipoSeleccionado) {
+        if (paginatedData.length > 0) {
+            paginatedData.forEach(record => {
+                const row = `
+                <tr class="fila">
+                <td class="Code">${record.idconcepto}</td>
+                <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
+                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td>${(!record.total == "") ? record.total : "---"}</td>
+                <td class="estatus">
+                    <div class="" style="display: flex; justify-content: space-around; align-items: center;">
+                    ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${record.idconcepto},'${record.nombre}','${record.unidad}')"></i>
+                    `: ``}
+                    ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;"  alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo(${record.idconcepto},'${record.nombre}','${record.unidad}')"></i>
+                    `: ``}
+                    ${record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>`
+                    }
+                    
+                    </div>
+                </td> 
+                </tr>  
+            `;
+
+                tableBody.innerHTML += row;
+            });
+        } else {
+            const row = `<tr class="fila">
                         <td colspan="6" class="Code">Sin resultados</td>
                      </tr>`;
-        tableBody.innerHTML += row;
+            tableBody.innerHTML += row;
+        }
+    } else {
+        if (paginatedData.length > 0) {
+            paginatedData.forEach(record => {
+
+                const row = `
+                <tr class="fila">
+                <td class="Code">${record.idconbasi}</td>
+                <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
+                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td>${(!record.total == "") ? record.total : "---"}</td>
+                <td class="estatus">
+                    <div class="" style="display: flex; justify-content: space-around; align-items: center;">
+                    ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto(${record.idconcepto},'${record.nombre}','${record.unidad}')"></i>
+                    `: ``}
+                    ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;"  alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo(${record.idconcepto},'${record.nombre}','${record.unidad}')"></i>
+                    `: ``}
+                    ${record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idconcepto},${record.estatus})"></i>`
+                    }
+                    
+                    </div>
+                </td> 
+                </tr>  
+            `;
+
+                tableBody.innerHTML += row;
+            });
+        } else {
+            const row = `<tr class="fila">
+                        <td colspan="6" class="Code">Sin resultados</td>
+                     </tr>`;
+            tableBody.innerHTML += row;
+        }
     }
 }
 //Datos para el catalogo
-function InfoCatalogo(id, nombre, tipo, plazo, unidad) {
+function InfoCatalogo(id, nombre, unidad) {
     listaMateriales = [];
     datosCatalogo = {
         id,
         nombre,
-        tipo,
-        plazo,
         unidad
     }
 
@@ -509,18 +532,15 @@ function setupPaginationConcepto() {
 function filterDataConcepto() {
     const searchText = document.getElementById("search-inputConcepto").value.toLowerCase();
     const unidadFilter = document.getElementById("unidad-filterConcepto").value;
-    const tipoFilter = document.getElementById("tipo-filterConcepto").value;
 
     const statusFilter = estatusConcepto;
-
     filteredData = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
-        const matchesTipo = tipoFilter ? record.tipo === tipoFilter : true;
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
         const matchesStatus = record.estatus == statusFilter;
-        return matchesSearch && matchesUnidad && matchesStatus && matchesTipo;
+        return matchesSearch && matchesUnidad && matchesStatus;
     });
 
     currentPage = 1; // Reiniciar a la primera página después de filtrar
@@ -537,9 +557,6 @@ function llenarTablaConcepto() {
     const unidadFilter = document.getElementById("unidad-filterConcepto");
     unidadFilter.addEventListener("change", filterDataConcepto);
 
-    const tipoFilter = document.getElementById("tipo-filterConcepto");
-    tipoFilter.addEventListener("change", filterDataConcepto);
-
     const rowsPerPageSelect = document.getElementById("rows-per-page");
     rowsPerPageSelect.addEventListener("change", function () {
         rowsPerPage = parseInt(this.value);
@@ -554,25 +571,19 @@ function llenarTablaConcepto() {
 function AddlimpiarModalConcepto() {
     let idC = document.querySelector('#AddidInputConcepto');
     let nombreC = document.querySelector('#AddnombreInputConcepto');
-    let tipoC = document.querySelector('#AddtipoInputConcepto');
-    let plazoC = document.querySelector('#AddplazoInputConcepto');
     let unidadC = document.querySelector('#AddunidadInputConcepto');
 
 
     idC.value = "";
     nombreC.value = "";
-    tipoC.value = "";
-    plazoC.value = "";
     unidadC.value = "";
 
     nombreC.placeholder = "";
     idC.placeholder = "";
-    plazoC.placeholder = "";
+    unidadC.placeholder = "";
 
     idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
-    tipoC.classList.remove("inputVacio");
-    plazoC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
 }
 
@@ -622,12 +633,9 @@ function llenarModalModificarConcepto(id, nombre, tipo, plazo, unidad) {
             break;
         }
     }
-
-
     nombreC.placeholder = "";
     idC.placeholder = "";
     plazoC.placeholder = "";
-
 
     idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
@@ -677,49 +685,6 @@ function llenarUnidadTabla() {
         }
     });
 }
-
-function llenarTablaTipos() {
-    const tiposFilter = document.getElementById("tipo-filterConcepto"); // El select donde agregarás las opciones
-    let json = "";
-    let url = "../ws/Conceptos/wsGetTipos.php";
-
-    $.post(url, json, (responseText, status) => {
-        try {
-            if (status == "success") {
-                let resp = JSON.parse(responseText);
-
-                if (resp.estado == "OK") {
-                    // Limpiar las opciones existentes del select (por si hay alguna previamente)
-                    tiposFilter.innerHTML = "";
-
-                    // Crear una opción predeterminada o vacía
-                    const optionDefault = document.createElement("option");
-                    optionDefault.value = "";
-                    optionDefault.textContent = "Todo";
-                    tiposFilter.appendChild(optionDefault);
-
-                    // Iterar sobre las unidades obtenidas
-                    resp.datos.forEach(unidad => {
-                        // Crear un nuevo elemento <option>
-                        const option = document.createElement("option");
-
-                        // Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
-                        option.value = unidad.tipo;
-                        option.textContent = unidad.tipo;
-
-                        // Añadir la opción al select
-                        tiposFilter.appendChild(option);
-                    });
-                }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    });
-}
-
 
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1() {

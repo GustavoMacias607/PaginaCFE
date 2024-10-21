@@ -1,5 +1,5 @@
 <?php
-class Conceptos
+class ConceptosBasicos
 {
     private $conn;
     public function __construct($conexion)
@@ -11,12 +11,12 @@ class Conceptos
      * recibe objeto datos del concepto
      */
 
-    function addConcepto($datos)
+    function addConceptoBasico($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoInsertar(:Id,:Unidad,:Nombre,:Total);";
+            $consulta = "call spConceptoBasiInsertar(:Id,:Unidad,:Nombre,:Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
@@ -32,12 +32,12 @@ class Conceptos
     }
     /*Método para modificar un concepto
      recibe un objeto con los datos del concepto*/
-    function UpdConcepto($datos)
+    function UpdConceptoBasico($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoModificar(:IdAnterior,:Id,:Unidad,:Nombre, :Total);";
+            $consulta = "call spConceptoBasiModificar(:IdAnterior,:Id,:Unidad,:Nombre, :Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
@@ -45,7 +45,6 @@ class Conceptos
                 "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
                 "Total" => $datos->total
-
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -55,14 +54,13 @@ class Conceptos
     }
 
     /*Método para obtener todos los conceptos
- recibe objeto con los datos para filtrar*/
-    function getAllConceptos()
+    recibe objeto con los datos para filtrar*/
+    function getAllConceptosBasicos()
     {
-
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoMostrar();";
+            $consulta = "call spConceptoBasiMostrar();";
             $sql = $c->prepare($consulta);
             $sql->execute(); // Ejecutar la consulta
             $datos = $sql->fetchAll();
@@ -81,7 +79,7 @@ class Conceptos
     }
     /*Método para hacer una busqueda a la base de datos y verificar si existe el concepto
  recibe objeto con el id del concepto*/
-    function checkConcepto($datos)
+    function checkConceptosBasicos($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
@@ -105,14 +103,13 @@ class Conceptos
     }
     /*Método para cambiar el estatus del concepto
      recibe el id del concepto y el estatus al cual se cambiara*/
-    function CambiarEstatusConcepto($datos)
+    function CambiarEstatusConceptoBasico($datos)
     {
-
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
 
-            $consulta = "call spConceptoEstatus(:Id, :Estatus);";
+            $consulta = "call spConceptoBasiEstatus(:Id, :Estatus);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
@@ -132,7 +129,7 @@ class Conceptos
     }
 
     /*Método para obtener todas las unidades de los conceptos*/
-    function getAllUnidades()
+    function getAllUnidadesBasicas()
     {
         $R['estado'] = 'OK';
         $c = $this->conn;
@@ -155,7 +152,7 @@ class Conceptos
         return $R;
     }
 
-    function getAllTipos()
+    function getAllTiposBasicos()
     {
         $R['estado'] = 'OK';
         $c = $this->conn;
