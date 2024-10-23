@@ -226,6 +226,41 @@ if (!isset($_SESSION['idusuario'])) {
 
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
+            <div>Herramienta y equipo de seguridad</div>
+        </nav>
+    </div>
+
+
+    <div class="contTabla-materialescatalogo">
+        <div class="tabla-container tabla-container-materialescatalogo">
+            <table id="tabla-manodeobra">
+                <thead>
+                    <tr>
+                        <th style="width: 28rem;">
+                            Descripción
+                        </th>
+                        <th style="width: 8rem;">
+                            Kh o Ks
+                        </th>
+                        <th style="width: 8rem;">
+                            Mo
+                        </th>
+                        </th>  
+                        <th style="width: 9rem;">
+                            importe
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <td colspan="8">Sin resultados</td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="titulo-materiales">
+        <nav class="pSeccion-catalogo">
             <div>Maquinaria</div>
             <div><button type="button" onclick="javascript:AbrirModalMateriales();"
                     class="btn fa-solid-agregar-materiales">Agregar</button></div>

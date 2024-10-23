@@ -90,6 +90,10 @@ if (!isset($_SESSION['idusuario'])) {
                     href="javascript:opcion('usuarios');">
                     Usuarios
                 </a>
+                <a class="btnTituloApartado" onclick="javascript:zonas(); EstablecerPag()"
+                    href="javascript:opcion('zonas');">
+                    Zonas
+                </a>
                 <a class="btnTituloApartado" href="index.php?x=1">
                     Cerrar Sesión
                 </a>
@@ -106,10 +110,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Tarjetas');">Tarjetas PU</a>
-            </li>
-            <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('conceptos');">Conceptos</a>
+                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('conceptos');">Conceptos<br>Tarjetas PU</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de obra</a>
@@ -122,7 +123,7 @@ if (!isset($_SESSION['idusuario'])) {
                     href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('Basicos');">Basicos</a>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('conceptos');">Básicos</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick=" preciona(this);"
@@ -144,6 +145,8 @@ if (!isset($_SESSION['idusuario'])) {
                 <ul id="opc" class='MenuOpciones'>
                     <a class="tex opcionesMenu" onclick="javascript:incioUsuario(); EstablecerPag(); preciona(this)"
                         href="javascript:opcion('usuarios');">Usuarios</a>
+                    <a class="tex opcionesMenu" onclick="javascript:zonas(); EstablecerPag(); preciona(this)"
+                        href="javascript:opcion('zonas');">Zonas</a>
                     <a class="tex" href="index.php?x=1">Cerrar sesión</a>
                 </ul>
             </li>

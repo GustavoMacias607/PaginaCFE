@@ -156,7 +156,7 @@ if (!isset($_SESSION['idusuario'])) {
                         class="form-control inputLleno" id="AddsalarioInputManodeobra">
                 </div>
                 <div class="mb-3">
-                    <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha salario</label>
+                    <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddfechaSalarioInput">
                 </div>
@@ -214,7 +214,7 @@ if (!isset($_SESSION['idusuario'])) {
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
                 </div>
                 <div class="mb-3">
-                    <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha salario</label>
+                    <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="UpdfechaSalarioInput">
                 </div>
