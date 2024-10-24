@@ -115,12 +115,11 @@ require("../../scripts/Materiales.php");
                             <select class="form-select form-select-sm ml-2" id="selectUnidadMateriales"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected>Todo</option>
-                                <option value="PZ">PZ</option>
+                                <option value="PZA">PZA</option>
                                 <option value="KG">KG</option>
-                                <option value="MT">MT</option>
                                 <option value="JG">JG</option>
                                 <option value="M">M</option>
-                                <option value="LT">LT</option>
+                                <option value="L">L</option>
                             </select>
                         </div>
                     </th>
@@ -209,12 +208,11 @@ require("../../scripts/Materiales.php");
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AddunidadInput">
                         <option selected value="">Seleccione una unidad</option>
-                        <option value="PZ">PZ</option>
+                        <option value="PZA">PZA</option>
                         <option value="KG">KG</option>
-                        <option value="MT">MT</option>
                         <option value="JG">JG</option>
                         <option value="M">M</option>
-                        <option value="LT">LT</option>
+                        <option value="L">L</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -305,12 +303,11 @@ require("../../scripts/Materiales.php");
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdunidadInput">
                         <option selected value="">Seleccione una unidad</option>
-                        <option value="PZ">PZ</option>
+                        <option value="PZA">PZA</option>
                         <option value="KG">KG</option>
-                        <option value="MT">MT</option>
                         <option value="JG">JG</option>
                         <option value="M">M</option>
-                        <option value="LT">LT</option>
+                        <option value="L">L</option>
                     </select>
                 </div>
                 <div class="mb-3">
@@ -320,9 +317,10 @@ require("../../scripts/Materiales.php");
                 </div>
 
                 <img id="UpdimagenPreview" src="" width="200px"
-                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">           
+                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
                 <div class=" modal-footer modal-footer-materiales">
-                    <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
+                    <button type="button" class="btn btn-primary"
+                        style="background-color: #008E5A; border-color: #008E5A;"
                         onclick="javascript:UpdMaterialValidar()">Guardar</button>
                 </div>
             </div>
@@ -405,20 +403,20 @@ require("../../scripts/Materiales.php");
 </script>
 
 <script>
-window.addEventListener('resize', function() {
-    const logoImage = document.getElementById('logoImage');
-    const windowWidth = window.innerWidth;
-    const originalWidth = logoImage.naturalWidth;
+    window.addEventListener('resize', function() {
+        const logoImage = document.getElementById('logoImage');
+        const windowWidth = window.innerWidth;
+        const originalWidth = logoImage.naturalWidth;
 
-    if (windowWidth < originalWidth) {
-        logoImage.src =
-            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+        if (windowWidth < originalWidth) {
+            logoImage.src =
+                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-    } else {
-        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-        logoImage.alt = 'Logo'; // Restaura el atributo alt
-    }
-});
+        } else {
+            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+            logoImage.alt = 'Logo'; // Restaura el atributo alt
+        }
+    });
 </script>

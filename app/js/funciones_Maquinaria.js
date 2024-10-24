@@ -308,24 +308,36 @@ function displayTableMaquinaria(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const row = `<tr class="fila">
-                        <td class="Code">${record.idmaquinaria}</td>
-            <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
-            <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-            <td>${(!record.phm == "") ? record.phm : "---"}</td>
-            <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
-            <td class="estatus">
-            <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${record.idmaquinaria},'${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
-                        `: ``}
+            // Crear un elemento de fila (tr)
+            const row = document.createElement('tr');
+            row.classList.add('fila');
+
+            // Establecer el contenido HTML de la fila
+            row.innerHTML = `
+                <td class="Code">${record.idmaquinaria}</td>
+                <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
+                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td>${(!record.phm == "") ? record.phm : "---"}</td>
+                <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
+                <td class="estatus">
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        ${record.estatus == 1 ? `
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${record.idmaquinaria},'${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
+                        ` : ``}
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>`
                 }
-                        </div>
-                        </td>    
-                     </tr>`;
-            tableBody.innerHTML += row;
+                    </div>
+                </td>
+            `;
+
+            // Añadir eventos mouseover y mouseout
+            row.addEventListener("mouseover", () => mostrarValores(row));
+            row.addEventListener("mouseout", () => ocultarValores(row));
+
+            // Añadir la fila al tbody
+            tableBody.appendChild(row);
         });
     } else {
         const row = `<tr>

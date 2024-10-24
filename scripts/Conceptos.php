@@ -16,12 +16,12 @@ class Conceptos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoInsertar(:Id,:Unidad,:Nombre,:Total);";
+            $consulta = "call spConceptoInsertar(:Id,:Nombre,:Unidad,:Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
-                "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
+                "Unidad" => $datos->unidad,
                 "Total" => $datos->total
             ));
             unset($c);
@@ -37,13 +37,13 @@ class Conceptos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoModificar(:IdAnterior,:Id,:Unidad,:Nombre, :Total);";
+            $consulta = "call spConceptoModificar(:IdAnterior,:Id,:Nombre,:Unidad, :Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
-                "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
+                "Unidad" => $datos->unidad,
                 "Total" => $datos->total
 
             ));
@@ -107,7 +107,6 @@ class Conceptos
      recibe el id del concepto y el estatus al cual se cambiara*/
     function CambiarEstatusConcepto($datos)
     {
-
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
@@ -138,29 +137,6 @@ class Conceptos
         $c = $this->conn;
         try {
             $consulta = "call spConceptoUnidades();";
-            $sql = $c->prepare($consulta);
-            $sql->execute();
-            $datos = $sql->fetchAll();
-
-            $R['filas'] = count($datos);
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $datos;
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-
-    function getAllTipos()
-    {
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-            $consulta = "call spConceptoTipos();";
             $sql = $c->prepare($consulta);
             $sql->execute();
             $datos = $sql->fetchAll();

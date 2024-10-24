@@ -105,6 +105,7 @@ function AddMaterialValidar() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
+
                     var inputFile = document.getElementById('AddimagenInput');
                     if (inputFile.value) {
                         AddAgregarImagen();
@@ -112,9 +113,6 @@ function AddMaterialValidar() {
                     AddCerrarModal();
                     mensajePantalla(msgAgregar, true)
                     GetMateriales();
-                } else {
-                    id.classList.add("inputVacio");
-                    id.focus();
                 }
             } else {
                 throw e = status;
@@ -225,9 +223,6 @@ function UpdMaterialValidar() {
                     UpdateCerrarModal();
                     GetMateriales();
                     mensajePantalla(msgModificar, true)
-                } else {
-
-                    id.focus();
                 }
             } else {
                 throw e = status;
@@ -263,8 +258,9 @@ function checkMaterial(modal) {
             if (status == "success") {
 
                 let resp = JSON.parse(responseText);
-
+                console.log(resp.estado)
                 comprobarExiste(resp.estado, idVali)
+
             } else {
                 throw e = status;
             }
@@ -387,34 +383,43 @@ function displayTableMateriales(page) {
             const precioFormateado = (record.precio !== undefined && record.precio !== "")
                 ? formatoMXN.format(record.precio)
                 : "---";
-            const row = `<tr class="fila">
-                        <td class="Code">${record.codigo}</td>
-            <td>${(!record.norma == "") ? record.norma : "---"}</td>
-            <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
-            <td>${precioFormateado}</td>
-            <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
-            <td>${(!record.familia == "") ? record.familia : "---"}</td>
-            <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-            <td class="estatus">
-                <div style="display: flex; justify-content: space-around; align-items: center; ">
-                    <div class="miDiv imaCuadro">
-                        <img class="imagenPreview" src="../Materiales/118" >
+
+            // Crear un elemento de fila (tr)
+            const row = document.createElement('tr');
+            row.classList.add('fila');
+
+            // Establecer el contenido HTML de la fila
+            row.innerHTML = `
+                <td class="Code">${record.codigo}</td>
+                <td>${(!record.norma == "") ? record.norma : "Sin norma"}</td>
+                <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
+                <td>${precioFormateado}</td>
+                <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
+                <td>${(!record.familia == "") ? record.familia : "---"}</td>
+                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td class="estatus">
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <div class="miDiv imaCuadro">
+                            <img class="imagenPreview" src="../Materiales/118">
+                        </div>
                     </div>
-                </div>
-                        <div class="" style="display: flex; justify-content: space-around; align-items: center; ">
-                            <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
-                            ${record.estatus == 1 ? `                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
-                            ${record.estatus == 1 ?
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
+                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
+                        ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>`
                 }
+                    </div>
+                </td>
+            `;
 
-                        </div>
-                </div>
-            </td>  
-             
-                     </tr>`;
-            tableBody.innerHTML += row;
+            // Añadir eventos mouseover y mouseout
+            row.addEventListener("mouseover", () => mostrarValores(row));
+            row.addEventListener("mouseout", () => ocultarValores(row));
+
+            // Añadir la fila al tbody
+            tableBody.appendChild(row);
         });
     } else {
         const row = `<tr>
@@ -422,6 +427,7 @@ function displayTableMateriales(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
+
 }
 
 function setupPaginationMateriales() {
@@ -903,6 +909,7 @@ async function obtenerArchivosEnCarpeta(rutaCarpeta) {
 //Metodo para cerrar el modal de agregar material
 function AddCerrarModal() {
     $('#AgregarModal').modal('hide');
+    $('#AgregarModalBasi').modal('hide');
 }
 //Metodo para cerrar el modal de modificar material
 function UpdateCerrarModal() {

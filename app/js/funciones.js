@@ -17,7 +17,9 @@ function opcion(op) {
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
-            funcion = PrincipalConcepto;
+            funcion = function () {
+                PrincipalConcepto(1);
+            };;
             break;
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";
@@ -35,8 +37,10 @@ function opcion(op) {
             funcion = GetMaquinaria;
             break;
         case "Basicos":
-            url = "Basicos/addBasicosFrm.php";
-            funcion = GetBasico;
+            url = "Conceptos/addconceptosFrm.php";
+            funcion = function () {
+                PrincipalConcepto(0);
+            };
             break;
         case "Especificaciones":
             url = "Especificaciones/addEspecificaciones.php";

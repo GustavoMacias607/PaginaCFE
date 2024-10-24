@@ -307,23 +307,36 @@ function displayTable(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const row = `<tr class="fila">
-                        <td class="Code">${record.idmanoobra}</td>
-                        <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
-                        <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                        <td>${(!record.salario == "") ? record.salario : "---"}</td>
-                        <td>${(!record.fechasalario == "") ? record.fechasalario : "---"}</td>
-                        <td class="estatus">
-                            <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${record.idmanoobra},'${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>` : ``}
-                                ${record.estatus == 1 ?
+            // Crear un elemento de fila (tr)
+            const row = document.createElement('tr');
+            row.classList.add('fila');
+
+            // Establecer el contenido HTML de la fila
+            row.innerHTML = `
+                <td class="Code">${record.idmanoobra}</td>
+                <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
+                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td>${(!record.salario == "") ? record.salario : "---"}</td>
+                <td>${(!record.fechasalario == "") ? record.fechasalario : "---"}</td>
+                <td class="estatus">
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        ${record.estatus == 1 ? `
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${record.idmanoobra},'${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>
+                        ` : ``}
+                        ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>`
                 }
-                            </div>
-                        </td>
-                     </tr>`;
-            tableBody.innerHTML += row;
+                    </div>
+                </td>
+            `;
+
+            // Añadir eventos mouseover y mouseout
+            row.addEventListener("mouseover", () => mostrarValores(row));
+            row.addEventListener("mouseout", () => ocultarValores(row));
+
+            // Añadir la fila al tbody
+            tableBody.appendChild(row);
         });
     } else {
         const row = `<tr>
@@ -331,6 +344,7 @@ function displayTable(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
+
 }
 
 function setupPagination() {

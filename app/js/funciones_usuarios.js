@@ -314,24 +314,35 @@ function displayTableUsuario(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const row = `<tr class="fila">
-                        <td class="Code">${record.idusuario}</td>
-            <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
-            <td>${(!record.usuario == "") ? record.usuario : "---"}</td>
-            <td>${(!record.rol == "") ? record.rol : "---"}</td>
-            <td class="estatus">
-                <div class="" style="display: flex; justify-content: space-around; align-items: center;">
-                ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;"  alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${record.idusuario},'${record.nombre}','${record.usuario}','${record.rol}')"></i>
-                `: ``}
-                ${record.estatus == 1 ?
+            // Crear un elemento de fila (tr)
+            const row = document.createElement('tr');
+            row.classList.add('fila');
+
+            // Establecer el contenido HTML de la fila
+            row.innerHTML = `
+                <td class="Code">${record.idusuario}</td>
+                <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
+                <td>${(!record.usuario == "") ? record.usuario : "---"}</td>
+                <td>${(!record.rol == "") ? record.rol : "---"}</td>
+                <td class="estatus">
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        ${record.estatus == 1 ? `
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${record.idusuario},'${record.nombre}','${record.usuario}','${record.rol}')"></i>
+                        ` : ``}
+                        ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idusuario},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idusuario},${record.estatus})"></i>`
-                }  
-                </div>
-            </td>   
-              
-                     </tr>`;
-            tableBody.innerHTML += row;
+                }
+                    </div>
+                </td>   
+            `;
+
+            // Añadir eventos mouseover y mouseout
+            row.addEventListener("mouseover", () => mostrarValores(row));
+            row.addEventListener("mouseout", () => ocultarValores(row));
+
+            // Añadir la fila al tbody
+            tableBody.appendChild(row);
         });
     } else {
         const row = `<tr>
@@ -339,6 +350,7 @@ function displayTableUsuario(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
+
 }
 
 function setupPaginationUsuario() {

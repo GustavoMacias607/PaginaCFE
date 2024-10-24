@@ -126,16 +126,16 @@ body {
   --bs-btn-font-size: 1.2rem;
   border: 3px solid #008e5a;
   background-color: #ffffff;
-  color:#008e5a;
+  color: #008e5a;
   border-radius: 5;
   transition: all 0.3s ease;
   width: 20rem;
 }
 
 .btn-tiposde-conceptos:hover {
-background-color: #008e5a;
-color: #ffffff;
-border-color: #008e5a;
+  background-color: #008e5a;
+  color: #ffffff;
+  border-color: #008e5a;
 }
 
 .btn-tiposde-conceptos:active {
@@ -361,8 +361,119 @@ th {
   transform: rotate(180deg); /* Rota el icono */
 }
 
+.esconderBoton {
+  display: none;
+}
+
 /* Botón deshabilitado */
 .sort-button:disabled {
   background-color: #cccccc;
   cursor: not-allowed;
+}
+
+/* Ocultamos el checkbox original */
+.custom-checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Estilos del diseño del checkbox */
+.checkbox-design {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 4px; /* Bordes redondeados */
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Cambiamos el color del checkbox cuando está marcado */
+.custom-checkbox:checked + .checkbox-design {
+  background-color: #008e5a; /* Color cuando está marcado */
+}
+
+/* Dibujamos la palomita */
+.checkbox-design:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox:checked + .checkbox-design:after {
+  display: block;
+}
+
+/* Definimos la palomita (check) */
+.checkbox-design:after {
+  left: 7px;
+  top: 4px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+/*
+*
+*
+*
+*
+*/
+.sugerencias-box {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  background-color: white;
+  position: absolute;
+  width: 95%;
+  z-index: 1000;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  margin-top: 5px;
+  transition: opacity 0.2s ease-in-out; /* Animación suave */
+  opacity: 0; /* Para la animación de aparición */
+  visibility: hidden;
+}
+
+.sugerencias-box.activado {
+  opacity: 1; /* Hacer visible cuando hay sugerencias */
+  visibility: visible;
+}
+
+.sugerencia-item {
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s ease-in-out; /* Animación suave al pasar sobre una opción */
+}
+
+.sugerencia-item:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.sugerencia-item:active {
+  background-color: #e0e0e0;
+  color: #000;
+}
+
+.sugerencias-box::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sugerencias-box::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.sugerencias-box::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.sugerencias-box::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

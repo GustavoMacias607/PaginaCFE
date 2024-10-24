@@ -16,12 +16,12 @@ class ConceptosBasicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBasiInsertar(:Id,:Unidad,:Nombre,:Total);";
+            $consulta = "call spConceptoBasiInsertar(:Id,:Nombre,:Unidad,:Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
-                "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
+                "Unidad" => $datos->unidad,
                 "Total" => $datos->total
             ));
             unset($c);
@@ -37,13 +37,13 @@ class ConceptosBasicos
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBasiModificar(:IdAnterior,:Id,:Unidad,:Nombre, :Total);";
+            $consulta = "call spConceptoBasiModificar(:IdAnterior,:Id,:Nombre,:Unidad, :Total);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdAnterior" => $datos->idAnterior,
                 "Id" => $datos->id,
-                "Unidad" => $datos->unidad,
                 "Nombre" => $datos->nombre,
+                "Unidad" => $datos->unidad,
                 "Total" => $datos->total
             ));
             unset($c);
@@ -135,29 +135,6 @@ class ConceptosBasicos
         $c = $this->conn;
         try {
             $consulta = "call spConceptoUnidades();";
-            $sql = $c->prepare($consulta);
-            $sql->execute();
-            $datos = $sql->fetchAll();
-
-            $R['filas'] = count($datos);
-            if ($R['filas'] <= 0) {
-                $R['estado'] = "Sin Resultados";
-            } else {
-                $R['datos'] = $datos;
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
-
-    function getAllTiposBasicos()
-    {
-        $R['estado'] = 'OK';
-        $c = $this->conn;
-        try {
-            $consulta = "call spConceptoTipos();";
             $sql = $c->prepare($consulta);
             $sql->execute();
             $datos = $sql->fetchAll();

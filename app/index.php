@@ -110,7 +110,8 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
         <ul class='menu'>
             <li>
-                <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('conceptos');">Conceptos<br>Tarjetas PU</a>
+                <a class="opcionesMenu" onclick="preciona(this);"
+                    href="javascript:opcion('conceptos');">Conceptos<br>Tarjetas PU</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('ManoObra');">Mano de obra</a>
@@ -123,7 +124,7 @@ if (!isset($_SESSION['idusuario'])) {
                     href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('conceptos');">Básicos</a>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('Basicos');">Básicos</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick=" preciona(this);"

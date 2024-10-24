@@ -12,11 +12,12 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancoconceptos">
     <div class="bottom-rectangle-conceptos">
         <div class="text-conceptos">Conceptos</div>
-        <button type="button" class="btn btn-agregar-conceptos" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+        <button type="button" class="btn btn-agregar-conceptos esconderBoton" id="btnConceptoNormal"
+            data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalConcepto();">Agregar
             concepto</button>
-        <button type="button" class="btn btn-agregar-conceptos" data-bs-toggle="modal"
-            data-bs-target="#AgregarModalBasi" onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar
+        <button type="button" class="btn btn-agregar-conceptos esconderBoton" data-bs-toggle="modal"
+            data-bs-target="#AgregarModalBasi" id="btnConceptoBasicos">Agregar
             concepto de básicos</button>
         <a href="index.php" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
@@ -31,7 +32,6 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- Paginacion  -->
     <div class="pagRegistrosconceptos">
         <nav class="pSeccion">
-
             <div class="cantregconceptos">
                 <div class="text">Mostrar</div>
                 <select class="cantregistrosconceptos" name="" id="rows-per-page">
@@ -47,12 +47,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                 <li class="page-item active"></li>
             </ul>
-
         </nav>
-
-        <button type="button" onclick="obtenerDatosConceptos(1);" class="btn btn-tiposde-conceptos">Conceptos</button>
-        <button type="button" onclick="obtenerDatosConceptos(0);" class="btn btn-tiposde-conceptos">Conceptos
-            basicos</button>
 
         <div class="toggle-estatus-conceptos">
             <div class="text">Estatus</div>
@@ -108,6 +103,9 @@ if (!isset($_SESSION['idusuario'])) {
             </tbody>
         </table>
     </div>
+    <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-success">
+        <i class="fas fa-file-excel"></i> Exportar datos a Excel
+    </button>
 </div>
 
 
@@ -125,7 +123,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno" id="AddidInputConcepto"
+                    <input type="text" class="form-control inputLleno" id="AddidInputConcepto"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('Add');">
                 </div>
                 <div class="mb-3">
@@ -135,8 +133,10 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddunidadInputConcepto">
+                    <input type="text" oninput="mostrarSugerencias(this, 'AddUnidad')"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AddunidadInputConcepto" autocomplete="off">
+                    <div id="Addsugerencias" class="sugerencias-box"></div>
                 </div>
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddConceptoValidar();"
@@ -146,6 +146,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
+
 <!-- Modal modificar conceptos-->
 <div class="modal fade modal-conceptos" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -160,10 +161,10 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-body">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
-
+                <input type="text" class="form-control d-none" id="UpdTotal" style="border: 3px solid #008E5A;">
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno"
+                    <input type="text" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
                 </div>
                 <div class="mb-3">
@@ -172,13 +173,11 @@ if (!isset($_SESSION['idusuario'])) {
                         id="UpdnombreInput">
                 </div>
                 <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdunidadInput">
-                        <option value="" selected>Seleccione una unidad</option>
-                        <option value="Estructuras">Estructura</option>
-                        <option value="PZA">PZA</option>
-                    </select>
+                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                    <input type="text" oninput="mostrarSugerencias(this,'UpdUnidad')"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno "
+                        id="UpdunidadInput" autocomplete="off">
+                    <div id="Updsugerencias" class="sugerencias-box"></div>
                 </div>
             </div>
             <div class=" modal-footer modal-footer-conceptos">
@@ -203,23 +202,21 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-body modal-body-conceptos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno" id="AddidInputConcepto"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('Add');">
+                    <label for="idInputConceptoBasico" class="form-label" style="color: #303030;">ID*</label>
+                    <input type="number" class="form-control inputLleno" id="idInputConceptoBasico"
+                        onblur="javascript:CompruebaTieneAlgoInput(this);">
                 </div>
                 <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
+                    <label for="normaInputConceptoBasico" class="form-label" style="color: #303030;">Nombre*</label>
                     <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddnombreInputConcepto">
+                        id="AddnombreInputConceptoBasico">
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddunidadInputConcepto">
-                        <option selected value="">Seleccione una unidad</option>
-                        <option value="Estructuras">Estructuras</option>
-                        <option value="PZA">PZA</option>
-                    </select>
+                    <input type="text" oninput="mostrarSugerencias(this, 'AddUnidadBasico')"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AddunidadInputConceptoBasico" autocomplete="off">
+                    <div id="Addsugerencias" class="sugerencias-box"></div>
                 </div>
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddConceptoBasicoValidar();"
@@ -243,27 +240,20 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
             <div class="modal-body">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
+                <input type="text" class="form-control d-none" id="UpdidAnteriorBasico"
+                    style="border: 3px solid #008E5A;">
 
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
+                        onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInputBasico">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
                     <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdnombreInput">
+                        id="UpdnombreInputBasico">
                 </div>
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdunidadInput">
-                        <option value="" selected>Seleccione una unidad</option>
-                        <option value="Estructuras">Estructura</option>
-                        <option value="PZA">PZA</option>
-                    </select>
-                </div>
+
             </div>
             <div class=" modal-footer modal-footer-conceptos">
                 <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
