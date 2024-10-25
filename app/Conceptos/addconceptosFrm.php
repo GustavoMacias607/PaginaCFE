@@ -17,7 +17,8 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="javascript:AddlimpiarModalConcepto();">Agregar
             concepto</button>
         <button type="button" class="btn btn-agregar-conceptos esconderBoton" data-bs-toggle="modal"
-            data-bs-target="#AgregarModalBasi" id="btnConceptoBasicos">Agregar
+            data-bs-target="#AgregarModalBasi" id="btnConceptoBasicos"
+            onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar
             concepto de básicos</button>
         <a href="index.php" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
@@ -103,7 +104,7 @@ if (!isset($_SESSION['idusuario'])) {
             </tbody>
         </table>
     </div>
-    <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-success">
+    <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-success esconderBoton">
         <i class="fas fa-file-excel"></i> Exportar datos a Excel
     </button>
 </div>
@@ -216,7 +217,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="text" oninput="mostrarSugerencias(this, 'AddUnidadBasico')"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddunidadInputConceptoBasico" autocomplete="off">
-                    <div id="Addsugerencias" class="sugerencias-box"></div>
+                    <div id="AddsugerenciasBasico" class="sugerencias-box"></div>
                 </div>
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddConceptoBasicoValidar();"
@@ -227,7 +228,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 <!-- Modal modificar conceptos de basicos -->
-<div class="modal fade modal-conceptos" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade modal-conceptos" id="EditarModalBasi" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
@@ -242,6 +243,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnteriorBasico"
                     style="border: 3px solid #008E5A;">
+                <input type="text" class="form-control d-none" id="UpdTotalBasicos" style="border: 3px solid #008E5A;">
 
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
@@ -253,7 +255,13 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdnombreInputBasico">
                 </div>
-
+                <div class="mb-3">
+                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                    <input type="text" oninput="mostrarSugerencias(this, 'UpdUnidadBasico')"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="UpdunidadInputConceptoBasico" autocomplete="off">
+                    <div id="UpdsugerenciasBasico" class="sugerencias-box"></div>
+                </div>
             </div>
             <div class=" modal-footer modal-footer-conceptos">
                 <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"

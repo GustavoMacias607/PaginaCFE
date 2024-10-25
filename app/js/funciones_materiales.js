@@ -334,9 +334,7 @@ function GetMateriales() {
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
-
                 let resp = JSON.parse(responseText);
-
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
                     ExportarExcel = resp.datos.map(obj => {
@@ -915,6 +913,7 @@ function AddCerrarModal() {
 function UpdateCerrarModal() {
 
     $('#EditarModal').modal('hide');
+    $('#EditarModalBasi').modal('hide');
 }
 function ActivarCerrarModal() {
 

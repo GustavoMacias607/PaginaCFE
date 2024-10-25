@@ -300,11 +300,9 @@ let currentSortOrder = 'asc';
 function displayTable(page) {
     const tableBody = document.getElementById("table-body");
     tableBody.innerHTML = "";
-
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
-
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
             // Crear un elemento de fila (tr)
@@ -330,7 +328,6 @@ function displayTable(page) {
                     </div>
                 </td>
             `;
-
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
@@ -340,7 +337,7 @@ function displayTable(page) {
         });
     } else {
         const row = `<tr>
-                        <td colspan="5" class="Code">Sin resultados</td>
+                        <td colspan="6" class="Code">Sin resultados</td>
                      </tr>`;
         tableBody.innerHTML += row;
     }

@@ -8,12 +8,12 @@ $resultado['estado'] = "Error";
 
 require_once("../../scripts/connect.php");
 require_once("../../scripts/Conexion.php");
-require_once("../../scripts/Conceptos.php");
+require_once("../../scripts/ConceptosBasicos.php");
 
 $c = new Conexion($conData);
-$u = new Conceptos($c->getConnection());
+$u = new ConceptosBasicos($c->getConnection());
 
-$res = $u->getAllUnidades();
+$res = $u->getAllUnidadesBasicas();
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
     $resultado['datos'] = $res['datos'];

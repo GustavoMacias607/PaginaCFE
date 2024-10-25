@@ -134,7 +134,7 @@ class ConceptosBasicos
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoUnidades();";
+            $consulta = "call spConceptoBasiUnidades();";
             $sql = $c->prepare($consulta);
             $sql->execute();
             $datos = $sql->fetchAll();
