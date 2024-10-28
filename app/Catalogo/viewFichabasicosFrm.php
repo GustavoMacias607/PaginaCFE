@@ -40,6 +40,9 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             Unidad
                         </th>
+                        <th>
+                            Familia
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -104,56 +107,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 
 
-    <div class="titulo-materiales">
-        <nav class="pSeccion-catalogo">
-            <div>Materiales</div>
-            <div><button type="button" onclick="javascript:AbrirModalMateriales();"
-                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
-            <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
 
-        </nav>
-    </div>
-
-    <div class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materialescatalogo">
-            <table id="tabla-basicos">
-                <thead class="">
-                    <tr>
-                        <th style="width: 8rem;">
-                            ID
-                        </th>
-                        <th style="width: 28rem;">
-                            Descripción
-                        </th>
-                        <th class=" col-1" style="width: 8rem;">
-                            <div class="d-flex align-items-center">
-                                <span>Unidad: </span>
-                                <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                    onchange="javacript:GetBasicos();EstablecerPag()"
-                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                    <option value="todo" selected>Todo</option>
-                                    <option value=""></option>
-                                    <option value=""></option>
-                                </select>
-                            </div>
-                        </th>
-                        <th style="width: 8rem;">
-                            Precio U
-                        </th>
-                        <th style="width: 8rem;">
-                            Cantidad
-                        </th>
-                        <th style="width: 9rem;">
-                            Importe
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <td colspan="8">Sin resultados</td>
-                </tbody>
-            </table>
-        </div>
-    </div>
 
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
@@ -309,6 +263,58 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
+
+    <div class="titulo-materiales">
+        <nav class="pSeccion-catalogo">
+            <div>Basicos</div>
+            <div><button type="button" onclick="javascript:AbrirModalMateriales();"
+                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
+            <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
+
+        </nav>
+    </div>
+
+    <div class="contTabla-materialescatalogo">
+        <div class="tabla-container tabla-container-materialescatalogo">
+            <table id="tabla-basicos">
+                <thead class="">
+                    <tr>
+                        <th style="width: 8rem;">
+                            ID
+                        </th>
+                        <th style="width: 28rem;">
+                            Descripción
+                        </th>
+                        <th class=" col-1" style="width: 8rem;">
+                            <div class="d-flex align-items-center">
+                                <span>Unidad: </span>
+                                <select class="form-select form-select-sm ml-2" id="selectUnidad"
+                                    onchange="javacript:GetBasicos();EstablecerPag()"
+                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                    <option value="todo" selected>Todo</option>
+                                    <option value=""></option>
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </th>
+                        <th style="width: 8rem;">
+                            Precio U
+                        </th>
+                        <th style="width: 8rem;">
+                            Cantidad
+                        </th>
+                        <th style="width: 9rem;">
+                            Importe
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <td colspan="8">Sin resultados</td>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <div></div>
 
     <!--<div style="display: grid; grid-template-columns: auto auto auto; gap: 0px; column-gap: 1rem; align-items: center; justify-content: end; margin-bottom: 2rem; margin-right: 2rem;">
@@ -399,8 +405,11 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
     </div> -->
 
-    <button type="button" class="btn fa-solid-Guardar-catalogo"
-    onclick="javascript:AgregarCatalogoConcepto()">Guardar</button>
+    <div class="grid-container">
+        <label class="subtotales_textos">Total:</label>
+        <input type="number" class="subtotales_numeros_top">
+        <button type="button" class="btn fa-solid-Guardar-catalogo" onclick="javascript:AgregarCatalogoConcepto()">Guardar</button>
+    </div>
 
 </div>
 

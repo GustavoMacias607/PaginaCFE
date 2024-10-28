@@ -625,7 +625,7 @@ border: none;
 }
 
 
-/**/
+/*estos son para los costos indirectos, adicionales, utilidad y financiamiento*/
 .grid-container {
   display: grid;
   grid-template-columns: 150px 150px 150px 150px; /* Ajusta el ancho de las columnas según sea necesario */
@@ -685,4 +685,38 @@ div[style*="justify-content: end"] {
   color: #858585;
   font-size: 1.2rem;
   float: right;
+}
+
+/*aqui se terminan los costos indirectos, adicionales, utilidad y financiamiento*/
+
+
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+  grid-template-rows: auto auto;  /* Dos filas automáticas */
+  gap: 10px; /* Espacio entre elementos */
+  margin-right: 2rem;
+  float: right;
+}
+
+.subtotales_textos {
+  grid-column: 1 / 2; /* Primera columna */
+  grid-row: 1; /* Primera fila */
+  font-family: "LatoBold", sans-serif;
+  color: #858585;
+  font-size: 1.2rem;
+  justify-content: end;
+}
+
+.subtotales_numeros_top {
+  font-family: "LatoBold", sans-serif;
+  grid-column: 2 / 2; /* Segunda columna */
+  grid-row: 1; /* Primera fila */
+}
+
+.btn {
+  font-family: "LatoBold", sans-serif;
+  grid-column: 2 / 2; /* Segunda columna */
+  grid-row: 2; /* Segunda fila */
 }
