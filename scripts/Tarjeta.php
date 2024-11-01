@@ -1,0 +1,307 @@
+<?php
+class TarjetaMateriales
+{
+    private $conn;
+    public function __construct($conexion)
+    {
+        $this->conn = $conexion;
+    }
+
+    /** Metodo para agregar un material a un concepto a la base de datos
+     * recibe objeto datos del material y al concepto que se guardara
+     */
+
+    function addMateriales($datos)
+    {
+        $R['estado'] = "OK";
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxMaterialesInsertar(:IdConcepto,:IdMaterial,:Cantidad, :Precio, :Suministrado, :FechaPrecio);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto,
+                "IdMaterial" => $datos->codigo,
+                "Cantidad" => $datos->cantidad,
+                "Precio" => $datos->precio,
+                "Suministrado" => $datos->suministrado,
+                "FechaPrecio" => $datos->fechaprecio,
+            ));
+            unset($c);
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Método para obtener todos los materiales que le corresponden al concepto
+ Recibe el id del concepto para hacer la busqueda*/
+    function getMateriales($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxMaterialesMostrar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Metodo para eliminar los materiales que tiene asignado el concepto
+    recibe el id del concepto*/
+    function DelMateriales($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+
+            $consulta = "call spAuxMaterialesEliminar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+}
+
+/***
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ *Mano de obra 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
+ */
+
+
+
+class TarjetaManoObra
+{
+    private $conn;
+    public function __construct($conexion)
+    {
+        $this->conn = $conexion;
+    }
+
+    /** Metodo para agregar un manoObra a un concepto a la base de datos
+     * recibe objeto datos del manoObra y al concepto que se guardara
+     */
+
+    function addManoObra($datos)
+    {
+        $R['estado'] = "OK";
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxManoObraInsertar(:IdManoObra,:IdConcepto,:Cantidad, :Rendimiento, :Salario, :FechaSalario);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdManoObra" => $datos->idmanoobra,
+                "IdConcepto" => $datos->idConcepto,
+                "Cantidad" => $datos->cantidad,
+                "Rendimiento" => $datos->rendimiento,
+                "Salario" => $datos->salario,
+                "FechaSalario" => $datos->fechasalario,
+            ));
+            unset($c);
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Método para obtener todos los ManoObra que le corresponden al concepto
+ Recibe el id del concepto para hacer la busqueda*/
+    function getManoObras($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxManoObraMostrar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Metodo para eliminar los ManoObra que tiene asignado el concepto
+    recibe el id del concepto*/
+    function DelManoObra($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+
+            $consulta = "call spAuxManoObraEliminar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+}
+
+
+/***
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * Maquinaria
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
+ */
+
+
+
+class TarjetaMaquinaria
+{
+    private $conn;
+    public function __construct($conexion)
+    {
+        $this->conn = $conexion;
+    }
+
+    /** Metodo para agregar un maquinaria a un concepto a la base de datos
+     * recibe objeto datos del maquinaria y al concepto que se guardara
+     */
+
+    function addMaquinaria($datos)
+    {
+        $R['estado'] = "OK";
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxMaquinariaInsertar(:IdConcepto,:IdMaquinaria,:Phm, :Rhm, :FechaPrecio);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto,
+                "IdMaquinaria" => $datos->idmaquinaria,
+                "Phm" => $datos->phm,
+                "Rhm" => $datos->rhm,
+                "FechaPrecio" => $datos->fechaprecio,
+            ));
+            unset($c);
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Método para obtener todos los maquinaria que le corresponden al concepto
+  Recibe el id del concepto para hacer la busqueda*/
+    function getMaquinaria($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxMaquinariaMostrar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Metodo para eliminar los maquinaria que tiene asignado el concepto
+     recibe el id del concepto*/
+    function DelMaquinaria($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+
+            $consulta = "call spAuxMaquinariaEliminar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+}

@@ -28,7 +28,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
     <div class="contTabla-conceptoscatalogo">
         <div class="tabla-container tabla-container-conceptosCatalogo">
-            <table id="tabla-conceptosCatalogo">
+            <table id="tabla-conceptosTarjeta">
                 <thead class="">
                     <tr>
                         <th style="width: 8rem;">
@@ -147,12 +147,8 @@ if (!isset($_SESSION['idusuario'])) {
                             <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                             <li class="page-item active"></li>
                         </ul>
-
                     </nav>
-
-
                 </div>
-
             </div>
             <div class="contTabla-materialesmodal_catalogo">
                 <div class="tabla-container tabla-container-materialesmodal_catalogo">

@@ -53,12 +53,13 @@ function AddConceptoValidar() {
         PrimerValorVacio.focus();
         return;
     }
-    let json = JSON.stringify(datos);
+
     checkConcepto("Add");
     if (existe) {
         id.focus();
         return;
     }
+    let json = JSON.stringify(datos);
     let url = "../ws/Conceptos/wsAddConcepto.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -352,6 +353,7 @@ function displayTableConcepto(page) {
                     <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                    <td>---</td>
                     <td>${record.total !== "" && record.total != null ? record.total : "---"}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
@@ -363,7 +365,7 @@ function displayTableConcepto(page) {
                                 <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto('${record.idconcepto}', '${record.nombre}', '${record.unidad}','${record.total}')"></i>
                             ` : ``}
                             ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo('${record.idconcepto}', '${record.nombre}', '${record.unidad}')"></i>
+                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconcepto}', '${record.nombre}', '${record.unidad}',0)"></i>
                             ` : ``}
                             <i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconcepto}', ${record.estatus})"></i>
                         </div>
@@ -398,6 +400,7 @@ function displayTableConcepto(page) {
                     <td class="Code">${record.idconbasi}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                    <td>---</td>
                     <td>${record.total !== "" && record.total != null ? record.total : "---"}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
@@ -405,7 +408,7 @@ function displayTableConcepto(page) {
                                 <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModalBasi" onclick="llenarModalModificarConceptoBasico('${record.idconbasi}', '${record.nombre}', '${record.unidad}','${record.total}')"></i>
                             ` : ``}
                             ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Catalogo'); InfoCatalogo('${record.idconbasi}', '${record.nombre}', '${record.unidad}')"></i>
+                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconbasi}', '${record.nombre}', '${record.unidad}',1)"></i>
                             ` : ``}
                             <i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconbasi}', ${record.estatus})"></i>
                         </div>
@@ -443,13 +446,14 @@ function toggleRowSelection(idconcepto, nombre, unidad, total, isChecked) {
     }
     console.log(selectedRows); // Muestra las filas seleccionadas
 }
-//Datos para el catalogo
-function InfoCatalogo(id, nombre, unidad) {
-    listaMateriales = [];
+//Datos para la tarjeta
+function InfoTarjeta(id, nombre, unidad, tipoConcp) {
     datosCatalogo = {
         id,
         nombre,
-        unidad
+        unidad,
+        familia: "...",
+        TipoConcepto: tipoConcp
     }
 
 }

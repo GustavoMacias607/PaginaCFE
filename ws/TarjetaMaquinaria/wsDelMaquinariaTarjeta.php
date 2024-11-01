@@ -8,12 +8,12 @@ $resultado['estado'] = "Error";
 
 require_once("../../scripts/connect.php");
 require_once("../../scripts/Conexion.php");
-require_once("../../scripts/Catalogo.php");
+require_once("../../scripts/Tarjeta.php");
 
 $c = new Conexion($conData);
-$u = new Catalogo($c->getConnection());
+$u = new TarjetaMaquinaria($c->getConnection());
 
-$res = $u->addCatalogo($datos);
+$res = $u->DelMaquinaria($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
 } else {

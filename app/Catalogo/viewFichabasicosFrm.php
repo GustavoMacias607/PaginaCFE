@@ -24,7 +24,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div>Concepto</div>
         </nav>
         <div class="btncancelarconcepto"><button type="button" class="btn fa-solid-cancelar"
-                onclick="javascript:opcion('conceptos')">Cancelar</button></div>
+                onclick="javascript:pantallaIr()">Cancelar</button></div>
     </div>
     <div class="contTabla-conceptoscatalogo">
         <div class="tabla-container tabla-container-conceptosCatalogo">
@@ -55,7 +55,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Materiales</div>
-            <div><button type="button" onclick="javascript:AbrirModalMateriales();"
+            <div><button type="button" onclick="javascript:AbrirModalMaterialesTarjeta();"
                     class="btn fa-solid-agregar-materiales">Agregar</button></div>
             <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
 
@@ -66,22 +66,24 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="tabla-container tabla-container-materialescatalogo">
             <table id="tabla-materiales">
                 <thead class="">
-                <tr>
+                    <tr>
                         <th style="width: 8rem;">
                             ID
                         </th>
-                        <th style="width: 28rem;">
+                        <th style="width: 38rem;">
                             Descripción
                         </th>
-                        <th class=" col-1" style="width: 8rem;">
+                        <th class=" col-1" style="width: 10rem">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
-                                <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                    onchange="javacript:GetBasicos();EstablecerPag()"
+                                <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                    <option value="todo" selected>Todo</option>
-                                    <option value=""></option>
-                                    <option value=""></option>
+                                    <option value="" selected>Todo</option>
+                                    <option value="PZA">PZA</option>
+                                    <option value="KG">KG</option>
+                                    <option value="JG">JG</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
                                 </select>
                             </div>
                         </th>
@@ -91,30 +93,34 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             Cantidad
                         </th>
-                        <th>
+                        <th style="width: 11rem;">
                             Suministrado por CFE
                         </th>
-                        <th style="width: 9rem;">
+                        <th style=" width: 9rem;">
                             Importe
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="table-bodyMaterialesTarjetaPrincipal">
                     <td colspan="8">Sin resultados</td>
                 </tbody>
             </table>
         </div>
     </div>
-
-
-
+    <div class="grid-container">
+        <label class="subtotales_textos">Suma:</label>
+        <div>
+            <label id="Suma1" class="subtotales_numeros_top">$0.00</label>
+        </div>
+    </div>
 
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Mano de obra</div>
-            <div><button type="button" onclick="javascript:AbrirModalManodeobra();"
-                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
-            <div id="LecturaMaterial" style="display: none;">Hay una mano de obra inactiva</div>
+            <div><button type="button" onclick="javascript:AbrirModalManoObraTarjeta();"
+                    class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
+                    data-bs-target="#AgregarModalManodeobraesConcepto">Agregar</button></div>
+            <div id="LecturaManoObra" style="display: none;">Hay una mano de obra inactiva</div>
 
         </nav>
     </div>
@@ -124,28 +130,29 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-manodeobra">
                 <thead>
                     <tr>
-                        <th style="width: 8rem;">
+                        <th style="width: 16%;">
                             ID
                         </th>
 
-                        <th class=" col-1" style="width: 10rem;">
+                        <th class=" col-1" style="width: 16%;">
                             <div class="d-flex align-items-center">
                                 <span>Categoría: </span>
-                                <select id="categoria-filter" class="form-select form-select-sm ml-2"
+                                <select id="selectCategoriaManoObraPrincipal" class="form-select form-select-sm ml-2"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                     <option value="" selected>Todo</option>
-                                    <option value="Ayudante General">Ayudante General</option>
-                                    <option value="Oficial Electricista">Oficial Electricista</option>
-                                    <option value="Oficial Albanil">Oficial Albañil</option>
-                                    <option value="Oficial Pintor">Oficial Pintor</option>
+                                    <option value="AYUDANTE GENERAL">Ayudante General</option>
+                                    <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
+                                    <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
+                                    <option value="OFICIAL PINTOR">Oficial Pintor</option>
                                     <!-- Agrega más opciones según sea necesario -->
                                 </select>
+
                         </th>
 
-                        <th class=" col-1" style="width: 8rem;">
+                        <th class=" col-1" style="width: 16%;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
-                                <select class="form-select form-select-sm ml-2" id="unidad-filter"
+                                <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                     <option value="">Todo</option>
                                     <option value="JOR">JOR</option>
@@ -164,29 +171,34 @@ if (!isset($_SESSION['idusuario'])) {
                         </th>
                         <th style="width: 8rem;">
                             Rendimiento
-                        </th>  
-                        <th style="width: 9rem;">
-                            importe
+                        </th>
+                        <th style="width: 8rem;">
+                            Importe
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="table-bodyManoObraTarjetaPrincipal">
                     <td colspan="8">Sin resultados</td>
                 </tbody>
             </table>
         </div>
     </div>
+    <div class="grid-container">
+        <label class="subtotales_textos">Suma:</label>
+        <div>
+            <label id="Suma2" class="subtotales_numeros_top">$0.00</label>
+        </div>
+    </div>
 
-
-    <div class="titulo-materiales">
+    <div class="titulo-materiales" style="display: none;">
         <nav class="pSeccion-catalogo">
             <div>Herramienta y equipo de seguridad</div>
         </nav>
     </div>
 
 
-    <div class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materialescatalogo">
+    <div class="contTabla-materialescatalogo" style="display: none;">
+        <div class=" tabla-container tabla-container-materialescatalogo">
             <table id="tabla-manodeobra">
                 <thead>
                     <tr>
@@ -199,7 +211,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             Mo
                         </th>
-                        </th>  
+                        </th>
                         <th style="width: 9rem;">
                             importe
                         </th>
@@ -216,13 +228,13 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Maquinaria</div>
-            <div><button type="button" onclick="javascript:AbrirModalMateriales();"
-                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
-            <div id="LecturaMaterial" style="display: none;">Hay una maquinaria inactiva</div>
+            <div><button type="button" onclick="javascript:AbrirModalMaquinariaTarjeta();"
+                    class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
+                    data-bs-target="#AgregarModalMaquinariaesConcepto">Agregar</button></div>
+            <div id="LecturaMaquinaria" style="display: none;">Hay una maquinaria inactiva</div>
 
         </nav>
     </div>
-
     <div class="contTabla-materialescatalogo">
         <div class="tabla-container tabla-container-materialescatalogo">
             <table id="tabla-maquinaria">
@@ -237,7 +249,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <th class=" col-1" style="width: 8rem;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
-                                <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
+                                <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                     <option value="" selected>Todo</option>
                                     <option value="HR">HR</option>
@@ -256,15 +268,29 @@ if (!isset($_SESSION['idusuario'])) {
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="table-bodyMaquinariaTarjetaPrincipal">
                     <td colspan="8">Sin resultados</td>
                 </tbody>
             </table>
         </div>
     </div>
 
+    <div class="grid-container">
+        <label class="subtotales_textos">Suma:</label>
+        <div>
+            <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
+        </div>
+    </div>
+    <div style="margin-top: 5rem; margin-bottom: 5rem;">
+        <div class="grid-container">
+            <label class="subtotales_textos">Total:</label>
+            <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
+            <button type="button" class="btn fa-solid-Guardar-catalogo"
+                onclick="javascript:guardarTablasEnBD()">Guardar</button>
+        </div>
+    </div>
 
-    <div class="titulo-materiales">
+    <div class="titulo-materiales" style="display: none;">
         <nav class="pSeccion-catalogo">
             <div>Basicos</div>
             <div><button type="button" onclick="javascript:AbrirModalMateriales();"
@@ -274,7 +300,7 @@ if (!isset($_SESSION['idusuario'])) {
         </nav>
     </div>
 
-    <div class="contTabla-materialescatalogo">
+    <div class="contTabla-materialescatalogo" style="display: none;">
         <div class="tabla-container tabla-container-materialescatalogo">
             <table id="tabla-basicos">
                 <thead class="">
@@ -405,11 +431,7 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
     </div> -->
 
-    <div class="grid-container">
-        <label class="subtotales_textos">Total:</label>
-        <input type="number" class="subtotales_numeros_top">
-        <button type="button" class="btn fa-solid-Guardar-catalogo" onclick="javascript:AgregarCatalogoConcepto()">Guardar</button>
-    </div>
+
 
 </div>
 
@@ -421,30 +443,33 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar materiales</h1>
                 <div class="label-container-materiales_catalogo">
-                    <input type="text" placeholder="Buscar" id="searchInput"
-                        oninput="GetMaterialesCatalogo();EstablecerPag()">
-                    <i class="fas fa-search icon-materiales_catalogo" id="searchIcon"></i>
+                    <input type="text" placeholder="Buscar" id="search-inputMateriales">
+                    <i class="fas fa-search icon-materiales" id="searchIcon"></i>
                 </div>
                 <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            
-            <div class="pagRegistroscatalogo">
+
+            <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
                     <div class="cantregmateriales">
-                        <select class="cantregistrosmateriales" name="" id="cantRegistros"
-                            onchange="javascript:LlenarCatalogoTabla()">
+                        <div class="text">Mostrar</div>
+                        <select class="cantregistrosmanodeobra" id="rows-per-page">
                             <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                         </select>
+                        <div class="text">Registros </div>
                     </div>
 
-                    <ul class="pagination" id="pagination-list">
+                    <ul class="pagination" id="pagination">
                         <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                         <li class="page-item active"></li>
                     </ul>
                 </nav>
             </div>
-            
+
             <div class="contTabla-materialesmodal_catalogo">
                 <div class="tabla-container tabla-container-materialesmodal_catalogo">
                     <table id="tabla-MaterialesCatalogo">
@@ -468,27 +493,25 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th class=" col-1" style="width: 100px;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
-                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                            onchange="javacript:GetMaterialesCatalogo();EstablecerPag()"
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidadMateriales"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                            <option value="todo" selected>Todo</option>
-                                            <option value="PZ">PZ</option>
+                                            <option value="" selected>Todo</option>
+                                            <option value="PZA">PZA</option>
                                             <option value="KG">KG</option>
-                                            <option value="MT">MT</option>
                                             <option value="JG">JG</option>
                                             <option value="M">M</option>
-                                            <option value="LT">LT</option>
+                                            <option value="L">L</option>
                                         </select>
                                     </div>
                                 </th>
-                                <th class="col-1" style="width: 170px;">
+                                <th class="col-1" style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Ver imagen</span>
                                     </div>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table-bodyMaterialesTarjetaModal">
                             <td colspan="8">Sin resultados</td>
                         </tbody>
                     </table>
@@ -496,7 +519,9 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <div class="contTabla-materialesmodal_catalogo">
-                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Materiales seleccionados</label>
+                <label for=""
+                    style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Materiales
+                    seleccionados</label>
                 <div class="tabla-container tabla-container-materialesmodal_catalogo">
                     <table id="tabla-MaterialesCatalogo">
                         <thead class="">
@@ -519,34 +544,40 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th class=" col-1" style="width: 100px;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
-                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                            onchange="javacript:GetMaterialesCatalogo();EstablecerPag()"
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                            <option value="todo" selected>Todo</option>
-                                            <option value="PZ">PZ</option>
+                                            <option value="" selected>Todo</option>
+                                            <option value="PZA">PZA</option>
                                             <option value="KG">KG</option>
-                                            <option value="MT">MT</option>
                                             <option value="JG">JG</option>
                                             <option value="M">M</option>
-                                            <option value="LT">LT</option>
+                                            <option value="L">L</option>
                                         </select>
                                     </div>
                                 </th>
-                                <th class="col-1" style="width: 170px;">
+                                <th class="col-1" style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
                                     </div>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table-bodyMaterialesTarjetaModal2">
                             <td colspan="8">Sin resultados</td>
                         </tbody>
                     </table>
                 </div>
-            </div> 
+                <div style="text-align: end; margin: 1rem"><button type="button"
+                        onclick="javascript:llenarTablaMaterialesSeleccionadosP();"
+                        class="btn fa-solid-agregar-materiales" data-bs-dismiss="modal"
+                        aria-label="Close">Aceptar</button>
+                </div>
+            </div>
+
         </div>
+
     </div>
+
 </div>
 
 
@@ -558,108 +589,64 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra</h1>
-                <div class="label-container-manodeobra_catalogo">
-                    <input type="text" placeholder="Buscar" id="searchInput"
-                        oninput="GetManodeobraCatalogo();EstablecerPag()">
-                    <i class="fas fa-search icon-manodeobra_catalogo" id="searchIcon"></i>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra
+                </h1>
+                <div class="label-container-materiales_catalogo">
+                    <input type="text" placeholder="Buscar" id="search-inputManoObra">
+                    <i class="fas fa-search icon-materiales" id="searchIcon"></i>
                 </div>
-                <button type="button" class="fa-solid fa-xmark btnclose-manodeobra_catalogo" data-bs-dismiss="modal"
+                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            
-            <div class="pagRegistroscatalogo">
+
+            <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
-                    <div class="cantregmanodeobra">
-                        <select class="cantregistrosmanodeobra" name="" id="cantRegistros"
-                            onchange="javascript:LlenarCatalogoTabla()">
+                    <div class="cantregmateriales">
+                        <div class="text">Mostrar</div>
+                        <select class="cantregistrosmanodeobra" id="rows-per-pageManoObra">
                             <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                         </select>
+                        <div class="text">Registros </div>
                     </div>
 
-                    <ul class="pagination" id="pagination-list">
+                    <ul class="pagination" id="paginationManoObra">
                         <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                         <li class="page-item active"></li>
                     </ul>
                 </nav>
             </div>
-            
-            <div class="contTabla-manodeobramodal_catalogo">
-                <div class="tabla-container tabla-container-manodeobramodal_catalogo">
-                    <table id="tabla-ManodeobraCatalogo">
-                        <thead class="">
+
+
+            <div class="contTabla-materialesmodal_catalogo">
+                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                    <table id="tabla-MaterialesCatalogo">
+                        <thead>
                             <tr>
-                            <th style="width: 20%;">
-                                ID
-                            </th>
-
-                            <th class=" col-1" style="width: 20%;">
-                                <div class="d-flex align-items-center">
-                                    <span>Categoría: </span>
-                                    <select id="categoria-filter" class="form-select form-select-sm ml-2"
-                                        style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                        <option value="" selected>Todo</option>
-                                        <option value="Ayudante General">Ayudante General</option>
-                                        <option value="Oficial Electricista">Oficial Electricista</option>
-                                        <option value="Oficial Albanil">Oficial Albañil</option>
-                                        <option value="Oficial Pintor">Oficial Pintor</option>
-                                        <!-- Agrega más opciones según sea necesario -->
-                                    </select>
-
-                            </th>
-
-                            <th class=" col-1" style="width: 20%;">
-                                <div class="d-flex align-items-center">
-                                    <span>Unidad: </span>
-                                    <select class="form-select form-select-sm ml-2" id="unidad-filter"
-                                        style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                        <option value="">Todo</option>
-                                        <option value="JOR">JOR</option>
-                                        <!-- Agrega más opciones según sea necesario -->
-                                    </select>
-                                </div>
-                            </th>
-                            <th style="width: 20%;">
-                                Salario
-                            </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <td colspan="8">Sin resultados</td>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="contTabla-manodeobramodal_catalogo">
-                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de obra seleccionados</label>
-                <div class="tabla-container tabla-container-manodeobramodal_catalogo">
-                    <table id="tabla-ManodeobraCatalogo">
-                        <thead class="">
-                            <tr>
-                                <th style="width: 20%;">
+                                <th style="width: 16%;">
                                     ID
                                 </th>
-
-                                <th class=" col-1" style="width: 20%;">
+                                <th class=" col-1" style="width: 16%;">
                                     <div class="d-flex align-items-center">
                                         <span>Categoría: </span>
-                                        <select id="categoria-filter" class="form-select form-select-sm ml-2"
+                                        <select id="categoria-filterManoObra" class="form-select form-select-sm ml-2"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                             <option value="" selected>Todo</option>
-                                            <option value="Ayudante General">Ayudante General</option>
-                                            <option value="Oficial Electricista">Oficial Electricista</option>
-                                            <option value="Oficial Albanil">Oficial Albañil</option>
-                                            <option value="Oficial Pintor">Oficial Pintor</option>
+                                            <option value="AYUDANTE GENERAL">Ayudante General</option>
+                                            <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
+                                            <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
+                                            <option value="OFICIAL PINTOR">Oficial Pintor</option>
                                             <!-- Agrega más opciones según sea necesario -->
                                         </select>
 
                                 </th>
 
-                                <th class=" col-1" style="width: 20%;">
+                                <th class=" col-1" style="width: 16%;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
-                                        <select class="form-select form-select-sm ml-2" id="unidad-filter"
+                                        <select class="form-select form-select-sm ml-2" id="unidad-filterManoObra"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                             <option value="">Todo</option>
                                             <option value="JOR">JOR</option>
@@ -667,22 +654,79 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th style="width: 20%;">
+                                <th style="width: 16%;">
                                     Salario
                                 </th>
-                                <th class="col-1" style="width: 20%;">
+                            </tr>
+                        </thead>
+                        <tbody id="table-bodyManoObra">
+                            <!-- Aquí se llenará con los registros -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="contTabla-materialesmodal_catalogo">
+                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano
+                    de
+                    obra
+                    seleccionados</label>
+                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                    <table id="tabla-MaterialesCatalogo">
+                        <thead>
+                            <tr>
+                                <th style="width: 16%;">
+                                    ID
+                                </th>
+
+                                <th class=" col-1" style="width: 16%;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Categoría: </span>
+                                        <select id="selectCategoriaManoObraModal"
+                                            class="form-select form-select-sm ml-2"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="" selected>Todo</option>
+                                            <option value="AYUDANTE GENERAL">Ayudante General</option>
+                                            <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
+                                            <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
+                                            <option value="OFICIAL PINTOR">Oficial Pintor</option>
+                                            <!-- Agrega más opciones según sea necesario -->
+                                        </select>
+
+                                </th>
+
+                                <th class=" col-1" style="width: 16%;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Unidad: </span>
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraModal"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="">Todo</option>
+                                            <option value="JOR">JOR</option>
+                                            <!-- Agrega más opciones según sea necesario -->
+                                        </select>
+                                    </div>
+                                </th>
+                                <th style="width: 16%;">
+                                    Salario
+                                </th>
+                                <th class="col-1" style="width: 16%;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
                                     </div>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <td colspan="8">Sin resultados</td>
+                        <tbody id="table-bodyManoObraTarjetaModal2">
+                            <!-- Aquí se llenará con los registros -->
                         </tbody>
                     </table>
                 </div>
-            </div> 
+                <div style="text-align: end; margin: 1rem"><button type="button"
+                        onclick="javascript:llenarTablaManoObraSeleccionadosP(); guardarDatosManoObra();"
+                        class="btn fa-solid-agregar-materiales" data-bs-dismiss="modal"
+                        aria-label="Close">Aceptar</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -698,104 +742,114 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar maquinaria</h1>
-                <div class="label-container-maquinaria_catalogo">
-                    <input type="text" placeholder="Buscar" id="searchInput"
-                        oninput="GetMaquinariaCatalogo();EstablecerPag()">
-                    <i class="fas fa-search icon-maquinaria_catalogo" id="searchIcon"></i>
+                <div class="label-container-materiales_catalogo">
+                    <input type="text" placeholder="Buscar" id="search-inputMaquinaria">
+                    <i class="fas fa-search icon-materiales" id="searchIcon"></i>
                 </div>
-                <button type="button" class="fa-solid fa-xmark btnclose-maquinaria_catalogo" data-bs-dismiss="modal"
+                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            
-            <div class="pagRegistroscatalogo">
+
+            <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
-                    <div class="cantregmaquinaria">
-                        <select class="cantregistrosmaquinaria" name="" id="cantRegistros"
-                            onchange="javascript:LlenarCatalogoTabla()">
+                    <div class="cantregmateriales">
+                        <div class="text">Mostrar</div>
+                        <select class="cantregistrosmanodeobra" id="rows-per-pageMaquinaria">
                             <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                         </select>
+                        <div class="text">Registros </div>
                     </div>
 
-                    <ul class="pagination" id="pagination-list">
+                    <ul class="pagination" id="paginationMaquinaria">
                         <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                         <li class="page-item active"></li>
                     </ul>
                 </nav>
             </div>
-            
-            <div class="contTabla-maquinariamodal_catalogo">
-                <div class="tabla-container tabla-container-maquinariamodal_catalogo">
-                    <table id="tabla-MaquinariaCatalogo">
+
+
+            <div class="contTabla-materialesmodal_catalogo">
+                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                    <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
-                            <th style="width: 8rem;">
-                                ID
-                            </th>
-                            <th>
-                                Descripción
-                            </th>
-                            <th class=" col-1" style="width: 200px;">
-                                <div class="d-flex align-items-center">
-                                    <span>Unidad: </span>
-                                    <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
-                                        style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                        <option value="" selected>Todo</option>
-                                        <option value="HR">HR</option>
-                                        <option value="%MO">%MO</option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th>
-                                PhM
-                            </th>
+                                <th style="width: 8rem;">
+                                    ID
+                                </th>
+                                <th>
+                                    Descripción
+                                </th>
+                                <th class=" col-1" style="width: 200px;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Unidad: </span>
+                                        <select class="form-select form-select-sm ml-2" id="unidad-filterMaquinaria"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="" selected>Todo</option>
+                                            <option value="HR">HR</option>
+                                            <option value="%MO">%MO</option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th>PhM
+                                </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table-bodyMaquinaria">
                             <td colspan="8">Sin resultados</td>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="contTabla-maquinariamodal_catalogo">
-                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de obra seleccionados</label>
-                <div class="tabla-container tabla-container-maquinariamodal_catalogo">
-                    <table id="tabla-MaquinariaCatalogo">
-                        <thead class="">
+            <div class="contTabla-materialesmodal_catalogo">
+                <label for=""
+                    style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Maquinarias
+                    seleccionadas</label>
+                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                    <table id="tabla-MaterialesCatalogo">
+                        <thead>
                             <tr>
-                            <th style="width: 8rem;">
-                                ID
-                            </th>
-                            <th>
-                                Descripción
-                            </th>
-                            <th class=" col-1" style="width: 200px;">
-                                <div class="d-flex align-items-center">
-                                    <span>Unidad: </span>
-                                    <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
-                                        style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                        <option value="" selected>Todo</option>
-                                        <option value="HR">HR</option>
-                                        <option value="%MO">%MO</option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th>
-                                PhM
-                            </th>
-                            <th class="col-1" style="width: 170px;">
-                                <div style="display: flex; min-width: 144px; justify-content: space-between;">
-                                    <span>Acciones</span>
-                                </div>
-                            </th>
+                                <th style="width: 16%;">
+                                    ID
+                                </th>
+                                <th>
+                                    Descripción
+                                </th>
+                                <th class=" col-1" style="width: 16%;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Unidad: </span>
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaModal"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="">Todo</option>
+                                            <option value="JOR">JOR</option>
+                                            <!-- Agrega más opciones según sea necesario -->
+                                        </select>
+                                    </div>
+                                </th>
+                                <th style="width: 16%;">
+                                    Salario
+                                </th>
+                                <th class="col-1" style="width: 16%;">
+                                    <div style="display: flex; min-width: 144px; justify-content: space-between;">
+                                        <span>Acciones</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <td colspan="8">Sin resultados</td>
+                        <tbody id="table-bodyMaquinariaTarjetaModal2">
+                            <!-- Aquí se llenará con los registros -->
                         </tbody>
                     </table>
                 </div>
-            </div> 
+                <div style="text-align: end; margin: 1rem"><button type="button"
+                        onclick="javascript:llenarTablaMaquinariaSeleccionadosP(); guardarDatosMaquinaria()"
+                        class="btn fa-solid-agregar-materiales" data-bs-dismiss="modal"
+                        aria-label="Close">Aceptar</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -812,7 +866,8 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra
+                </h1>
                 <div class="label-container-basicos_catalogo">
                     <input type="text" placeholder="Buscar" id="searchInput"
                         oninput="GetBasicosCatalogo();EstablecerPag()">
@@ -821,7 +876,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-basicos_catalogo" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            
+
             <div class="pagRegistroscatalogo">
                 <nav class="pSeccion">
                     <div class="cantregbasicos">
@@ -837,33 +892,33 @@ if (!isset($_SESSION['idusuario'])) {
                     </ul>
                 </nav>
             </div>
-            
+
             <div class="contTabla-basicosmodal_catalogo">
                 <div class="tabla-container tabla-container-basicosmodal_catalogo">
                     <table id="tabla-BasicosCatalogo">
                         <thead class="">
                             <tr>
-                            <th>
-                                ID
-                            </th>
-                            <th>
-                                Descripción
-                            </th>
-                            <th class=" col-1" style="width: 200px;">
-                                <div class="d-flex align-items-center">
-                                    <span>Unidad: </span>
-                                    <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                        onchange="javacript:GetBasicos();EstablecerPag()"
-                                        style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                        <option value="todo" selected>Todo</option>
-                                        <option value=""></option>
-                                        <option value=""></option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th>
-                                Precio
-                            </th>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Descripción
+                                </th>
+                                <th class=" col-1" style="width: 200px;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Unidad: </span>
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
+                                            onchange="javacript:GetBasicos();EstablecerPag()"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="todo" selected>Todo</option>
+                                            <option value=""></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th>
+                                    Precio
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -874,37 +929,39 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <div class="contTabla-basicosmodal_catalogo">
-                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de obra seleccionados</label>
+                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano
+                    de
+                    obra seleccionados</label>
                 <div class="tabla-container tabla-container-basicosmodal_catalogo">
                     <table id="tabla-BasicosCatalogo">
                         <thead class="">
                             <tr>
-                            <th>
-                                ID
-                            </th>
-                            <th>
-                                Descripción
-                            </th>
-                            <th class=" col-1" style="width: 200px;">
-                                <div class="d-flex align-items-center">
-                                    <span>Unidad: </span>
-                                    <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                        onchange="javacript:GetBasicos();EstablecerPag()"
-                                        style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                        <option value="todo" selected>Todo</option>
-                                        <option value=""></option>
-                                        <option value=""></option>
-                                    </select>
-                                </div>
-                            </th>
-                            <th>
-                                Precio
-                            </th>
-                            <th class="col-1" style="width: 170px;">
-                                <div style="display: flex; min-width: 144px; justify-content: space-between;">
-                                    <span>Acciones</span>
-                                </div>
-                            </th>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Descripción
+                                </th>
+                                <th class=" col-1" style="width: 200px;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Unidad: </span>
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
+                                            onchange="javacript:GetBasicos();EstablecerPag()"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="todo" selected>Todo</option>
+                                            <option value=""></option>
+                                            <option value=""></option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th>
+                                    Precio
+                                </th>
+                                <th class="col-1" style="width: 170px;">
+                                    <div style="display: flex; min-width: 144px; justify-content: space-between;">
+                                        <span>Acciones</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -912,7 +969,7 @@ if (!isset($_SESSION['idusuario'])) {
                         </tbody>
                     </table>
                 </div>
-            </div> 
+            </div>
         </div>
     </div>
 </div>

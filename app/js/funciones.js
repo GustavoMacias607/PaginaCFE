@@ -28,9 +28,9 @@ function opcion(op) {
             url = "ManoObra/addManoObraFrm.php";
             funcion = GetManoObra;
             break;
-        case "Catalogo":
+        case "Tarjeta":
             url = "Catalogo/viewFichabasicosFrm.php";
-            funcion = AgregarDatosTablaConceptoCatalogo;
+            funcion = LlenarTablaConceptoTarjeta;
             break;
         case "Maquinaria":
             url = "Maquinaria/addMaquinariaFrm.php";

@@ -161,9 +161,9 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
     <!-- Final del contenido principal -->
 
-    <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
-    <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
-    <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
+    <!-- <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script> -->
     <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <script src="../bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/code.jquery.com_jquery-3.7.1.min.js"></script>
@@ -173,10 +173,14 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/funciones_conceptos.js"></script>
     <script src="js/funciones_ManoObra.js"></script>
     <script src="js/funciones_Maquinaria.js"></script>
-    <script src="js/funciones_Catalogo.js"></script>
+    <script src="js/funciones_Tarjeta.js"></script>
     <script src="js/funciones_Basicos.js"></script>
     <script src="js/funciones_Especificaciones.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
+
+    <script src="js/SubCarpetaTarjeta/TarjetaMateriales.js"></script>
+    <script src="js/SubCarpetaTarjeta/TarjetaManoObra.js"></script>
+    <script src="js/SubCarpetaTarjeta/TarjetaMaquinaria.js"></script>
     <script>
         window.onload = function() {
             opcion('proyecto');
