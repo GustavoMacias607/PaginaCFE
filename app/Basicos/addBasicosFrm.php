@@ -92,6 +92,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </tr>
             </thead>
             <tbody id="table-bodyBasico">
+                <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>

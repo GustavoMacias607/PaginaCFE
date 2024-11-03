@@ -1,4 +1,4 @@
-let msgEliminarObra = "Mano de obra desabilitada";
+let msgEliminarObra = "Mano de obra deshabilitada";
 let msgActivarObra = "Mano de obra habilitada";
 let msgAgregarObra = "Mano de obra agregada";
 let msgModificarObra = "Mano de obra modificada";

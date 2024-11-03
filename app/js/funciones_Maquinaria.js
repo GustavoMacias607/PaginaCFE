@@ -1,4 +1,4 @@
-let msgEliminarMaqui = "Maquinaria desabilitada";
+let msgEliminarMaqui = "Maquinaria deshabilitada";
 let msgActivarMaqui = "Maquinaria habilitada";
 let msgAgregarMaqui = "Maquinaria agregada";
 let msgModificarMaqui = "Maquinaria modificada";

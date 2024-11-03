@@ -28,14 +28,14 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="pagRegistrosmaquinaria">
         <nav class="pSeccion">
             <div class="cantregmaquinaria">
-                <div class="text">Mostrar</div>
+                <div class="text1">Mostrar</div>
                 <select class="cantregistrosmanodeobra" id="rows-per-page">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
-                <div class="text">Registros </div>
+                <div class="text2">Registros </div>
             </div>
 
             <ul class="pagination" id="pagination">
@@ -65,7 +65,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <th>
                         Descripción
                     </th>
-                    <th class=" col-1" style="width: 200px;">
+                    <th  style="width: 9.5rem;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
@@ -76,11 +76,13 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th>PhM
+                    <th style="width: 8rem;">
+                        PhM
                     </th>
-                    <th>Fecha del PhM</th>
+                    <th style="width: 8rem;">
+                        Fecha del PhM</th>
 
-                    <th class="col-1" style="width: 170px;">
+                    <th style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>
@@ -88,6 +90,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </tr>
             </thead>
             <tbody id="table-bodyMaquinaria">
+            <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
@@ -100,7 +103,7 @@ if (!isset($_SESSION['idusuario'])) {
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar maquinaria</h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-maquinaria" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -109,13 +112,13 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno" id="AddidInputMaquinaria"
+                    <input type="text" class="form-control inputLleno" id="AddidInputMaquinaria"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkMaquinaria('Add');">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AdddescripcionInputMaquinaria">
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AdddescripcionInputMaquinaria" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -136,9 +139,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddfechaPrecioInput">
                 </div>
+                <div class="mb-3">
+                    <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
+                    <input type="file" class="form-control inputLleno" id="AddpdfInput"
+                        onchange="AddmostrarPDF(this)" style="border: 3px solid #008E5A;">
+                </div>
                 <div class="modal-footer modal-footer-maquinaria">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddMaquinariaValidar();"
-                        style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
+                        >Guardar</button>
                 </div>
             </div>
         </div>
@@ -149,7 +157,7 @@ if (!isset($_SESSION['idusuario'])) {
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar maquinaria
                 </h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-maquinaria" data-bs-dismiss="modal"
@@ -162,13 +170,13 @@ if (!isset($_SESSION['idusuario'])) {
 
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno"
+                    <input type="text" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkMaquinaria('upd');" id="UpdidInput">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
-                    <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpddescripcionInput">
+                    <textarea type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="UpddescripcionInput" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -189,10 +197,13 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="UpdfechaPrecioInput">
                 </div>
+                <div class="mb-3">
+                    <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
+                    <input type="file" class="form-control inputLleno" id="UpdpdfInput"
+                        onchange="AddmostrarPDF(this)" style="border: 3px solid #008E5A;">
+                </div>
                 <div class=" modal-footer modal-footer-maquinaria">
-                    <button type="button" class="btn btn-primary"
-                        style="background-color: #008E5A; border-color: #008E5A;"
-                        onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
+                    <button type="button" class="btn btn-primary" onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
                 </div>
             </div>
         </div>
@@ -209,7 +220,7 @@ if (!isset($_SESSION['idusuario'])) {
                     ¿Habilitar ésta maquinaria?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
                     onclick="javascript:ActivarCerrarModal(); CambioEstatusMaquinaria();"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -228,7 +239,7 @@ if (!isset($_SESSION['idusuario'])) {
                     ¿Deshabilitar ésta maquinaria?</h5>
                 <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
                     id="confirmDeleteButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Deshabilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -248,7 +259,7 @@ if (!isset($_SESSION['idusuario'])) {
                     seguro de que desea deshabilitar ésta maquinaria?</h5>
                 <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusMaquinaria();" class="btn"
                     id="confirmAdditionalButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>

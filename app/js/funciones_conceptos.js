@@ -244,7 +244,9 @@ function PrincipalConcepto(tipoConcepto) {
 
 function obtenerDatosConceptos(btnOpcion) {
     let btnNormal = document.getElementById("btnConceptoNormal");
+    let txtNormal = document.getElementById("textoConceptoNormal");
     let btnBasico = document.getElementById("btnConceptoBasicos");
+    let Basico = document.getElementById("textoConceptoBasicos");
     let btnExportar = document.getElementById("btnExportar");
     let json = "";
     let url = "";
@@ -252,9 +254,11 @@ function obtenerDatosConceptos(btnOpcion) {
         url = "../ws/Conceptos/wsGetConcepto.php";
         btnNormal.classList.remove("esconderBoton")
         btnExportar.classList.remove("esconderBoton")
+        txtNormal.classList.remove("esconderBoton")
     } else {
         url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
         btnBasico.classList.remove("esconderBoton")
+        txtBasico.classList.remove("esconderBoton")
     }
     $.post(url, json, (responseText, status) => {
         try {

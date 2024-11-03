@@ -133,9 +133,11 @@ body {
 
 /* Estilos para el botón Guardar del modal */
 .modal-footer-maquinaria .btn-primary {
+  font-family: "LatoBold", sans-serif; /* tipografia */
   background-color: #008e5a; /* Color verde */
-  border-color: #008e5a; /* Color del borde */
+  border-color: 3px solid #008e5a; /* Color del borde */
   color: #ffffff;
+  margin: 0;
 }
 
 .modal-footer-maquinaria {
@@ -185,6 +187,7 @@ body {
 .tabla-container-maquinaria {
   text-align: center;
   margin-bottom: 100px;
+  overflow-y: auto;
   /* Altura máxima del contenedor */
   /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
@@ -192,9 +195,9 @@ body {
   border-top-width: 0px;
   margin-top: 0px;
 
-  position: relative;
-  height: calc(400px); /* Ajusta esta altura según tus necesidades */
-  overflow-y: auto;
+  /*position: relative;*/
+  /*height: calc(400px); Ajusta esta altura según tus necesidades */
+ 
 }
 
 #tabla-maquinaria {
@@ -251,7 +254,7 @@ th {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 0 2vw 0 2vw;
+  padding: 0 2rem 0 2rem;
   align-items: center;
   margin-top: 0.2rem;
   width: 100%;
@@ -274,7 +277,12 @@ th {
   display: flex;
   flex-wrap: wrap;
 }
-.text {
+.text1 {
+  color: #008e5a;
+  font-family: "LatoBold", sans-serif;
+  padding-right: 10px;
+}
+.text2 {
   color: #008e5a;
   font-family: "LatoBold", sans-serif;
   padding-left: 10px;
@@ -289,7 +297,6 @@ th {
   margin-top: 1rem;
   display: flex;
   align-items: center;
-  padding-right: 2rem;
 }
 
 .inputLleno {

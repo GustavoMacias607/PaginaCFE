@@ -34,13 +34,13 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             ID
                         </th>
-                        <th style="width: 28rem;">
+                        <th>
                             Nombre
                         </th>
-                        <th style="width: 8rem;">
+                        <th style="width: 10rem;">
                             Unidad
                         </th>
-                        <th>
+                        <th style="width: 8rem;">
                             Familia
                         </th>
                     </tr>
@@ -70,10 +70,10 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             ID
                         </th>
-                        <th style="width: 38rem;">
+                        <th>
                             Descripción
                         </th>
-                        <th class=" col-1" style="width: 10rem">
+                        <th style="width: 10rem">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesPrincipal"
@@ -108,7 +108,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
     <div class="grid-container">
-        <label class="subtotales_textos">Suma:</label>
+        <label class="subtotales_textos">Suma 1:</label>
         <div>
             <label id="Suma1" class="subtotales_numeros_top">$0.00</label>
         </div>
@@ -130,11 +130,11 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-manodeobra">
                 <thead>
                     <tr>
-                        <th style="width: 16%;">
+                        <th style="width: 8rem;">
                             ID
                         </th>
 
-                        <th class=" col-1" style="width: 16%;">
+                        <th>
                             <div class="d-flex align-items-center">
                                 <span>Categoría: </span>
                                 <select id="selectCategoriaManoObraPrincipal" class="form-select form-select-sm ml-2"
@@ -149,7 +149,7 @@ if (!isset($_SESSION['idusuario'])) {
 
                         </th>
 
-                        <th class=" col-1" style="width: 16%;">
+                        <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraPrincipal"
@@ -172,7 +172,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             Rendimiento
                         </th>
-                        <th style="width: 8rem;">
+                        <th style="width: 9rem;">
                             Importe
                         </th>
                     </tr>
@@ -184,7 +184,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
     <div class="grid-container">
-        <label class="subtotales_textos">Suma:</label>
+        <label class="subtotales_textos">Suma 2:</label>
         <div>
             <label id="Suma2" class="subtotales_numeros_top">$0.00</label>
         </div>
@@ -202,7 +202,7 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-manodeobra">
                 <thead>
                     <tr>
-                        <th style="width: 28rem;">
+                        <th>
                             Descripción
                         </th>
                         <th style="width: 8rem;">
@@ -243,10 +243,10 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             ID
                         </th>
-                        <th style="width: 8rem;">
+                        <th>
                             Descripción
                         </th>
-                        <th class=" col-1" style="width: 8rem;">
+                        <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaPrincipal"
@@ -276,7 +276,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 
     <div class="grid-container">
-        <label class="subtotales_textos">Suma:</label>
+        <label class="subtotales_textos">Suma 3:</label>
         <div>
             <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
         </div>
@@ -453,14 +453,14 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
                     <div class="cantregmateriales">
-                        <div class="text">Mostrar</div>
+                        <div class="text1">Mostrar</div>
                         <select class="cantregistrosmanodeobra" id="rows-per-page">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <div class="text">Registros </div>
+                        <div class="text2">Registros </div>
                     </div>
 
                     <ul class="pagination" id="pagination">
@@ -478,19 +478,23 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th style="width: 8rem;">
                                     ID
                                 </th>
-                                <th style="width: 12rem;">
+                                <th style="width: 8rem;">
                                     Norma
                                 </th>
-                                <th style="width: 28rem;">
+                                <th>
                                     Descripción
                                 </th>
                                 <th style="width: 8rem;">
                                     Precio
                                 </th>
-                                <th style="width: 100px;">
+                                <th style="width: 9rem;">
                                     Fecha del precio
                                 </th>
-                                <th class=" col-1" style="width: 100px;">
+
+
+
+
+                                <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMateriales"
@@ -504,7 +508,7 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th class="col-1" style="width: 100px;">
+                                <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Ver imagen</span>
                                     </div>
@@ -518,7 +522,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
             </div>
 
-            <div class="contTabla-materialesmodal_catalogo">
+            <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
                 <label for=""
                     style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Materiales
                     seleccionados</label>
@@ -529,19 +533,23 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th style="width: 8rem;">
                                     ID
                                 </th>
-                                <th style="width: 12rem;">
+                                <th style="width: 8rem;">
                                     Norma
                                 </th>
-                                <th style="width: 28rem;">
+                                <th>
                                     Descripción
                                 </th>
                                 <th style="width: 8rem;">
                                     Precio
                                 </th>
-                                <th style="width: 100px;">
+                                <th style="width: 9rem;">
                                     Fecha del precio
                                 </th>
-                                <th class=" col-1" style="width: 100px;">
+                                
+
+
+                                
+                                <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesModal"
@@ -555,7 +563,7 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th class="col-1" style="width: 100px;">
+                                <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
                                     </div>
@@ -567,17 +575,14 @@ if (!isset($_SESSION['idusuario'])) {
                         </tbody>
                     </table>
                 </div>
-                <div style="text-align: end; margin: 1rem"><button type="button"
+                <div style="text-align: end;"><button type="button"
                         onclick="javascript:llenarTablaMaterialesSeleccionadosP();"
-                        class="btn fa-solid-agregar-materiales" data-bs-dismiss="modal"
+                        class="btn fa-solid-agregar-materiales" style="margin: 0 0 1rem 0" data-bs-dismiss="modal"
                         aria-label="Close">Aceptar</button>
                 </div>
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 
@@ -602,14 +607,14 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
                     <div class="cantregmateriales">
-                        <div class="text">Mostrar</div>
+                        <div class="text1">Mostrar</div>
                         <select class="cantregistrosmanodeobra" id="rows-per-pageManoObra">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <div class="text">Registros </div>
+                        <div class="text2">Registros </div>
                     </div>
 
                     <ul class="pagination" id="paginationManoObra">
@@ -625,10 +630,10 @@ if (!isset($_SESSION['idusuario'])) {
                     <table id="tabla-MaterialesCatalogo">
                         <thead>
                             <tr>
-                                <th style="width: 16%;">
+                                <th style="width: 8rem;">
                                     ID
                                 </th>
-                                <th class=" col-1" style="width: 16%;">
+                                <th>
                                     <div class="d-flex align-items-center">
                                         <span>Categoría: </span>
                                         <select id="categoria-filterManoObra" class="form-select form-select-sm ml-2"
@@ -640,10 +645,9 @@ if (!isset($_SESSION['idusuario'])) {
                                             <option value="OFICIAL PINTOR">Oficial Pintor</option>
                                             <!-- Agrega más opciones según sea necesario -->
                                         </select>
-
                                 </th>
 
-                                <th class=" col-1" style="width: 16%;">
+                                <th style="width: 9rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="unidad-filterManoObra"
@@ -654,7 +658,7 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th style="width: 16%;">
+                                <th style="width: 8rem;">
                                     Salario
                                 </th>
                             </tr>
@@ -666,20 +670,17 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
             </div>
 
-            <div class="contTabla-materialesmodal_catalogo">
-                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano
-                    de
-                    obra
-                    seleccionados</label>
+            <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
+                <label for="" style="font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de obra seleccionados</label>
                 <div class="tabla-container tabla-container-materialesmodal_catalogo">
                     <table id="tabla-MaterialesCatalogo">
                         <thead>
                             <tr>
-                                <th style="width: 16%;">
+                                <th style="width: 8rem;">
                                     ID
                                 </th>
 
-                                <th class=" col-1" style="width: 16%;">
+                                <th>
                                     <div class="d-flex align-items-center">
                                         <span>Categoría: </span>
                                         <select id="selectCategoriaManoObraModal"
@@ -692,10 +693,9 @@ if (!isset($_SESSION['idusuario'])) {
                                             <option value="OFICIAL PINTOR">Oficial Pintor</option>
                                             <!-- Agrega más opciones según sea necesario -->
                                         </select>
-
                                 </th>
 
-                                <th class=" col-1" style="width: 16%;">
+                                <th style="width: 9rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraModal"
@@ -706,10 +706,10 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th style="width: 16%;">
+                                <th style="width: 8rem;">
                                     Salario
                                 </th>
-                                <th class="col-1" style="width: 16%;">
+                                <th class="col-1" style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
                                     </div>
@@ -721,9 +721,9 @@ if (!isset($_SESSION['idusuario'])) {
                         </tbody>
                     </table>
                 </div>
-                <div style="text-align: end; margin: 1rem"><button type="button"
+                <div style="text-align: end;"><button type="button"
                         onclick="javascript:llenarTablaManoObraSeleccionadosP(); guardarDatosManoObra();"
-                        class="btn fa-solid-agregar-materiales" data-bs-dismiss="modal"
+                        class="btn fa-solid-agregar-materiales" style=" margin: 0 0 1rem 0" data-bs-dismiss="modal"
                         aria-label="Close">Aceptar</button>
                 </div>
             </div>
@@ -753,14 +753,14 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
                     <div class="cantregmateriales">
-                        <div class="text">Mostrar</div>
+                        <div class="text1">Mostrar</div>
                         <select class="cantregistrosmanodeobra" id="rows-per-pageMaquinaria">
                             <option value="10" selected>10</option>
                             <option value="25">25</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
-                        <div class="text">Registros </div>
+                        <div class="text2">Registros </div>
                     </div>
 
                     <ul class="pagination" id="paginationMaquinaria">
@@ -782,7 +782,7 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th>
                                     Descripción
                                 </th>
-                                <th class=" col-1" style="width: 200px;">
+                                <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="unidad-filterMaquinaria"
@@ -793,7 +793,8 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th>PhM
+                                <th style="width: 8rem">
+                                    PhM
                                 </th>
                             </tr>
                         </thead>
@@ -804,7 +805,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
             </div>
 
-            <div class="contTabla-materialesmodal_catalogo">
+            <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
                 <label for=""
                     style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Maquinarias
                     seleccionadas</label>
@@ -812,13 +813,13 @@ if (!isset($_SESSION['idusuario'])) {
                     <table id="tabla-MaterialesCatalogo">
                         <thead>
                             <tr>
-                                <th style="width: 16%;">
+                                <th style="width: 8rem;">
                                     ID
                                 </th>
                                 <th>
                                     Descripción
                                 </th>
-                                <th class=" col-1" style="width: 16%;">
+                                <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaModal"
@@ -829,10 +830,10 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th style="width: 16%;">
-                                    Salario
+                                <th style="width: 8rem">
+                                    PhM
                                 </th>
-                                <th class="col-1" style="width: 16%;">
+                                <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
                                     </div>
@@ -844,9 +845,9 @@ if (!isset($_SESSION['idusuario'])) {
                         </tbody>
                     </table>
                 </div>
-                <div style="text-align: end; margin: 1rem"><button type="button"
+                <div style="text-align: end;"><button type="button"
                         onclick="javascript:llenarTablaMaquinariaSeleccionadosP(); guardarDatosMaquinaria()"
-                        class="btn fa-solid-agregar-materiales" data-bs-dismiss="modal"
+                        class="btn fa-solid-agregar-materiales" style=" margin: 0 0 1rem 0" data-bs-dismiss="modal"
                         aria-label="Close">Aceptar</button>
                 </div>
             </div>

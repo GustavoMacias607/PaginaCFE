@@ -20,6 +20,13 @@ require("../../scripts/Materiales.php");
         <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModal();">Agregar material</button>
 
+        
+        <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-agregar-material">
+            Exportar a Excel
+        </button>
+
+        <input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls"/>
+
         <a href="index.php" class="text-inicio-materiales">
             <div>Ir al inicio</div>
         </a>
@@ -35,14 +42,14 @@ require("../../scripts/Materiales.php");
     <div class="pagRegistrosmateriales">
         <nav class="pSeccion">
             <div class="cantregmateriales">
-                <div class="text">Mostrar</div>
+                <div class="text1">Mostrar</div>
                 <select class="cantregistrosmanodeobra" id="rows-per-page">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
-                <div class="text">Registros </div>
+                <div class="text2">Registros </div>
             </div>
 
             <ul class="pagination" id="pagination">
@@ -73,19 +80,19 @@ require("../../scripts/Materiales.php");
                     <th style="width: 8rem;">
                         ID
                     </th>
-                    <th style="width: 12rem;">
+                    <th style="width: 8rem;">
                         Norma
                     </th>
-                    <th style="width: 28rem;">
+                    <th>
                         Descripción
                     </th>
                     <th style="width: 8rem;">
                         Precio
                     </th>
-                    <th style="width: 100px;">
+                    <th style="width: 9rem;">
                         Fecha del precio
                     </th>
-                    <th clas="col-1" style="width: 100px;">
+                    <th style="width: 14rem;">
                         <div class="d-flex align-items-center">
                             <span>Familia: </span>
                             <select class="form-select form-select-sm ml-2" id="selectFamiliaMateriales"
@@ -109,7 +116,7 @@ require("../../scripts/Materiales.php");
                             </select>
                         </div>
                     </th>
-                    <th class=" col-1" style="width: 100px;">
+                    <th style="width: 9.5rem;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="selectUnidadMateriales"
@@ -123,7 +130,7 @@ require("../../scripts/Materiales.php");
                             </select>
                         </div>
                     </th>
-                    <th class="col-1" style="width: 100px;">
+                    <th style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>
@@ -131,14 +138,13 @@ require("../../scripts/Materiales.php");
                 </tr>
             </thead>
             <tbody id="table-bodyMateriales">
+            <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
-
         </table>
-        <input type="file" id="upload" accept=".xlsx, .xls" />
-        <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-success">
-            <i class="fas fa-file-excel"></i> Exportar datos a Excel
-        </button>
+
+        
+
     </div>
 
 </div>
@@ -149,7 +155,7 @@ require("../../scripts/Materiales.php");
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar material</h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-materiales" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -222,10 +228,11 @@ require("../../scripts/Materiales.php");
                 </div>
                 <img id="AddimagenPreview" src="" alt="Imagen" width="200px"
                     style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
-            </div>
-            <div class="modal-footer modal-footer-materiales">
-                <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();"
-                    style="background-color: #008E5A; border-color: 3px solid #008E5A;">Guardar</button>
+            
+                <div class="modal-footer modal-footer-materiales">
+                    <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();"
+                    >Guardar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -241,7 +248,7 @@ require("../../scripts/Materiales.php");
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar material</h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-materiales" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -320,7 +327,6 @@ require("../../scripts/Materiales.php");
                     style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
                 <div class=" modal-footer modal-footer-materiales">
                     <button type="button" class="btn btn-primary"
-                        style="background-color: #008E5A; border-color: #008E5A;"
                         onclick="javascript:UpdMaterialValidar()">Guardar</button>
                 </div>
             </div>
@@ -339,7 +345,7 @@ require("../../scripts/Materiales.php");
                     ¿Habilitar este material?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
                     onclick="javascript:ActivarCerrarModal(); CambioEstatus();"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -358,7 +364,7 @@ require("../../scripts/Materiales.php");
                     ¿Deshabilitar este material?</h5>
                 <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
                     id="confirmDeleteButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Deshabilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -377,7 +383,7 @@ require("../../scripts/Materiales.php");
                     seguro de que desea deshabilitar este material?</h5>
                 <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatus();" class="btn"
                     id="confirmAdditionalButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>

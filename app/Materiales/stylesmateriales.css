@@ -104,6 +104,7 @@ body {
   border-radius: 5; /* Sin bordes redondeados */
   transition: all 0.3s ease; /* Transición suave */
   transform: translate(20px); /* posicion del boton */
+  margin-right: 1rem;
 }
 
 .btn-agregar-material:hover {
@@ -133,9 +134,11 @@ body {
 
 /* Estilos para el botón Guardar del modal */
 .modal-footer-materiales .btn-primary {
+  font-family: "LatoBold", sans-serif; /* tipografia */
   background-color: #008e5a; /* Color verde */
-  border-color: #008e5a; /* Color del borde */
+  border-color: 3px solid #008e5a; /* Color del borde */
   color: #ffffff;
+  margin: 0;
 }
 
 .modal-footer-materiales {
@@ -295,7 +298,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 0 2vw 0 2vw;
+  padding: 0 2rem 0 2rem;
   align-items: center;
   margin-top: 0.2rem;
   width: 100%;
@@ -318,7 +321,12 @@ body {
   display: flex;
   flex-wrap: wrap;
 }
-.text {
+.text1 {
+  color: #008e5a;
+  font-family: "LatoBold", sans-serif;
+  padding-right: 10px;
+}
+.text2 {
   color: #008e5a;
   font-family: "LatoBold", sans-serif;
   padding-left: 10px;
@@ -333,7 +341,6 @@ body {
   margin-top: 1rem;
   display: flex;
   align-items: center;
-  padding-right: 2rem;
 }
 
 .inputLleno {
@@ -347,4 +354,10 @@ body {
 }
 .inputVacio:focus {
   border: 3px solid red;
+}
+
+.btn-success{
+  background-color: #ffffff;
+  color: #303030;
+  border-color: 3px solid #303030;
 }

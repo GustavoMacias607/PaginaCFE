@@ -11,15 +11,17 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlancoconceptos">
     <div class="bottom-rectangle-conceptos">
-        <div class="text-conceptos">Conceptos</div>
+        <div class="text-conceptos esconderBoton" id="textoConceptoNormal" >Conceptos</div>
+        <div class="text-conceptos esconderBoton" id="textoConceptoBasicos" >Básicos</div>  
         <button type="button" class="btn btn-agregar-conceptos esconderBoton" id="btnConceptoNormal"
             data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalConcepto();">Agregar
-            concepto</button>
+            concepto</button>  
         <button type="button" class="btn btn-agregar-conceptos esconderBoton" data-bs-toggle="modal"
             data-bs-target="#AgregarModalBasi" id="btnConceptoBasicos"
-            onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar
-            concepto de básicos</button>
+            onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar básico</button>
+            <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-agregar-conceptos esconderBoton"> Exportar datos a Excel
+    </button>
         <a href="index.php" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
@@ -34,14 +36,14 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="pagRegistrosconceptos">
         <nav class="pSeccion">
             <div class="cantregconceptos">
-                <div class="text">Mostrar</div>
+                <div class="text1">Mostrar</div>
                 <select class="cantregistrosconceptos" name="" id="rows-per-page">
                     <option value="10" selected>10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
                     <option value="100">100</option>
                 </select>
-                <div class="text">Registros </div>
+                <div class="text2">Registros </div>
             </div>
 
             <ul class="pagination" id="pagination">
@@ -73,12 +75,12 @@ if (!isset($_SESSION['idusuario'])) {
                             ID <i class="fa-solid fa-arrow-up-wide-short"></i>
                         </button>
                     </th>
-                    <th style="width: 28rem;">
+                    <th>
                         <button id="sort-name" class="sort-button">
                             Nombre <i class="fa-solid fa-arrow-up-wide-short"></i>
                         </button>
                     </th>
-                    <th class=" col-1" style="width: 8rem;">
+                    <th style="width: 10rem;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filterConcepto"
@@ -89,13 +91,13 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th>
+                    <th style="width: 8rem;">
                         Familia
                     </th>
                     <th style="width: 8rem;">
                         Precio unitario
                     </th>
-                    <th class="col-1" style="width: 100px;">
+                    <th style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>
@@ -104,24 +106,21 @@ if (!isset($_SESSION['idusuario'])) {
             </thead>
             <tbody id="table-bodyConceptos">
                 <!-- Aquí se llenará con los registros -->
+                <td colspan="8">Sin resultados</td>
             </tbody>
         </table>
     </div>
-    <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-success esconderBoton">
-        <i class="fas fa-file-excel"></i> Exportar datos a Excel
-    </button>
+    
 </div>
 
 
 <!-- Modal insertar conceptos -->
-<div class="modal modal-conceptos" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal modal-conceptos" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar concepto</h1>
-                <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
+                <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-conceptos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
@@ -132,8 +131,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddnombreInputConcepto">
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" id="AddnombreInputConcepto" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -141,10 +139,10 @@ if (!isset($_SESSION['idusuario'])) {
                         onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddunidadInputConcepto" autocomplete="off">
                     <div id="Addsugerencias" class="sugerencias-box"></div>
-                </div>
+                </div>   
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddConceptoValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                        >Guardar</button>
                 </div>
             </div>
         </div>
@@ -156,13 +154,13 @@ if (!isset($_SESSION['idusuario'])) {
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar concepto
                 </h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-conceptos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
                 <input type="text" class="form-control d-none" id="UpdTotal" style="border: 3px solid #008E5A;">
@@ -173,8 +171,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdnombreInput">
+                    <textarea type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="UpdnombreInput" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -183,10 +181,9 @@ if (!isset($_SESSION['idusuario'])) {
                         id="UpdunidadInput" autocomplete="off">
                     <div id="Updsugerencias" class="sugerencias-box"></div>
                 </div>
-            </div>
-            <div class=" modal-footer modal-footer-conceptos">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdConceptoValidar()">Guardar</button>
+                <div class=" modal-footer modal-footer-conceptos">
+                    <button type="button" class="btn btn-primary" onclick="javascript:UpdConceptoValidar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -197,8 +194,8 @@ if (!isset($_SESSION['idusuario'])) {
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar concepto de básicos
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar básico
                 </h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
@@ -212,8 +209,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="normaInputConceptoBasico" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddnombreInputConceptoBasico">
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        id="AddnombreInputConceptoBasico" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -224,7 +221,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddConceptoBasicoValidar();"
-                        style="background-color: #008E5A; border-color: #008E5A;">Guardar</button>
+                        >Guardar</button>
                 </div>
             </div>
         </div>
@@ -235,14 +232,14 @@ if (!isset($_SESSION['idusuario'])) {
     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
-            <div class="modal-header" style="border-bottom: none;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar concepto de
-                    básicos
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar
+                    básico
                 </h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body modal-body-conceptos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnteriorBasico"
                     style="border: 3px solid #008E5A;">
@@ -255,8 +252,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdnombreInputBasico">
+                    <textarea type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="UpdnombreInputBasico" rows="3"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -265,10 +262,10 @@ if (!isset($_SESSION['idusuario'])) {
                         id="UpdunidadInputConceptoBasico" autocomplete="off">
                     <div id="UpdsugerenciasBasico" class="sugerencias-box"></div>
                 </div>
-            </div>
-            <div class=" modal-footer modal-footer-conceptos">
-                <button type="button" class="btn btn-primary" style="background-color: #008E5A; border-color: #008E5A;"
-                    onclick="javascript:UpdConceptoBasicoValidar()">Guardar</button>
+                <div class=" modal-footer modal-footer-conceptos">
+                    <button type="button" class="btn btn-primary"
+                        onclick="javascript:UpdConceptoBasicoValidar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -284,7 +281,7 @@ if (!isset($_SESSION['idusuario'])) {
                     ¿Habilitar este concepto?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
                     onclick="javascript:ActivarCerrarModal(); CambioEstatusConcepto();"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -303,7 +300,7 @@ if (!isset($_SESSION['idusuario'])) {
                     ¿Deshabilitar este concepto?</h5>
                 <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
                     id="confirmDeleteButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Deshabilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -323,7 +320,7 @@ if (!isset($_SESSION['idusuario'])) {
                     seguro de que desea deshabilitar este concepto?</h5>
                 <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusConcepto();" class="btn"
                     id="confirmAdditionalButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
