@@ -193,7 +193,7 @@ function displayTableMaterialesTarjetaP(page) {
                 const cantidad = parseFloat(cantidadCell.innerText) || 0;
 
                 // Actualizar objeto correspondiente
-                const item = objTabla2ModalMaterialesPrincipal.find(obj => obj.codigo === record.codigo);
+                const item = objTabla2ModalMaterialesPrincipal.find(obj => obj.codigo == record.codigo);
                 if (item) {
                     item.cantidad = cantidad;
                     item.suministrado = checkbox.checked;
@@ -284,7 +284,7 @@ function hayCantidad0() {
     cantidad0 = false; // Restablece el valor a false antes de verificar
     cantidadCells.forEach(cell => {
         const value = parseFloat(cell.textContent) || 0;
-        if (value === 0) {
+        if (value == 0) {
             cantidad0 = true;
         }
     });
@@ -357,7 +357,7 @@ function displayTableManoObraTarjetaP(page) {
                 const rendimiento = parseFloat(rendimientoCell.innerText) || 0;
 
                 // Actualizar arreglo de objetos
-                const item = objTabla2ModalManoObraiaPrincipal.find(obj => obj.idmanoobra === record.idmanoobra);
+                const item = objTabla2ModalManoObraiaPrincipal.find(obj => obj.idmanoobra == record.idmanoobra);
                 if (item) {
                     item.cantidad = cantidad;
                     item.rendimiento = rendimiento;
@@ -475,7 +475,7 @@ function hayCantidadRendimientoManoObra() {
     cantidadManoObra = false; // Restablece el valor a false antes de verificar
     cantidadCells.forEach(cell => {
         const value = parseFloat(cell.textContent) || 0;
-        if (value === 0) {
+        if (value == 0) {
             cantidadManoObra = true;
         }
     });
@@ -483,7 +483,7 @@ function hayCantidadRendimientoManoObra() {
     rendimientoManoObra = false; // Restablece el valor a false antes de verificar
     rendimientoCells.forEach(cell => {
         const value = parseFloat(cell.textContent) || 0;
-        if (value === 0) {
+        if (value == 0) {
             rendimientoManoObra = true;
         }
     });
@@ -550,7 +550,7 @@ function displayTableMaquinariaTarjetaP(page) {
 
                 // Actualizar arreglo de objetos
 
-                const item = objTabla2ModalMaquinariaPrincipal.find(obj => obj.idmaquinaria === record.idmaquinaria);
+                const item = objTabla2ModalMaquinariaPrincipal.find(obj => obj.idmaquinaria == record.idmaquinaria);
 
                 if (item) {
                     item.rhm = rhm;
@@ -616,7 +616,7 @@ function actualizarSumaMaquinaria() {
     }).format(sumaTotal);
 
     // Actualizar el label de suma con el valor formateado
-    const sumaLabel = document.getElementById("Suma3");
+    const sumaLabel = document.getElementById("Suma4");
     sumaLabel.innerText = formattedSuma;
     calcularTotal();
 }
@@ -644,7 +644,7 @@ function hayCantidadRendimientoMaquinaria() {
     RhmMquinaria = false; // Restablece el valor a false antes de verificar
     cantidadCells.forEach(cell => {
         const value = parseFloat(cell.textContent) || 0;
-        if (value === 0) {
+        if (value == 0) {
             RhmMquinaria = true;
         }
     });
@@ -662,7 +662,7 @@ function llenarTablaBasicosSeleccionadosP() {
     llenarTablaBasicosTarjetaP();
     filterDataBasicosTarjetaP();
     actualizarSumaBasicos();
-    llenarUnidadTabla();
+    llenarUnidadTablaTarjeta();
 }
 
 // Método para llenar la tabla
@@ -693,8 +693,8 @@ function displayTableBasicosTarjetaP(page) {
 
             row.innerHTML = `
                 <td class="Code">${record.idconbasi}</td>
-                <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                <td>${record.nombre != "" ? record.nombre : "---"}</td>
+                <td>${record.unidad != "" ? record.unidad : "---"}</td>
                 <td>${precioFormateado}</td>
                 <td contenteditable="true" class="editable-cantidadBasi" style="background-color: ${record.cantconbasi > 0 ? 'transparent' : 'red'};">
                     ${record.cantconbasi || 0}
@@ -710,7 +710,7 @@ function displayTableBasicosTarjetaP(page) {
 
                 // Actualizar arreglo de objetos
 
-                const item = objTabla2ModalBasicosPrincipal.find(obj => obj.idconbasi === record.idconbasi);
+                const item = objTabla2ModalBasicosPrincipal.find(obj => obj.idconbasi == record.idconbasi);
 
                 if (item) {
                     item.cantconbasi = cantidad;
@@ -776,7 +776,7 @@ function actualizarSumaBasicos() {
     }).format(sumaTotal);
 
     // Actualizar el label de suma con el valor formateado
-    const sumaLabel = document.getElementById("Suma4");
+    const sumaLabel = document.getElementById("Suma5");
     sumaLabel.innerText = formattedSuma;
     calcularTotal();
 }
@@ -803,7 +803,7 @@ function hayCantidadBasicos() {
     cantidadBasicos = false; // Restablece el valor a false antes de verificar
     cantidadCells.forEach(cell => {
         const value = parseFloat(cell.textContent) || 0;
-        if (value === 0) {
+        if (value == 0) {
             cantidadBasicos = true;
         }
     });
@@ -1203,14 +1203,14 @@ function calcularTotal() {
     const suma2 = document.getElementById('Suma2').innerHTML;
     const suma3 = document.getElementById('Suma3').innerHTML;
     const suma4 = document.getElementById('Suma4').innerHTML;
-
+    const suma5 = document.getElementById('Suma5').innerHTML;
     // Función para convertir el formato de moneda a número
     const convertirAMoneda = (valor) => {
         return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
     }
 
     // Sumar las cantidades
-    const total = convertirAMoneda(suma1) + convertirAMoneda(suma2) + convertirAMoneda(suma3) + convertirAMoneda(suma4);
+    const total = convertirAMoneda(suma1) + convertirAMoneda(suma2) + convertirAMoneda(suma3) + convertirAMoneda(suma4) + convertirAMoneda(suma5);
 
     // Formatear el total como moneda
     document.getElementById('TotalSumas').innerHTML = `$${total.toFixed(2)}`;
@@ -1240,7 +1240,7 @@ function mostrarCosasBasicos() {
 }
 
 
-function llenarUnidadTabla() {
+function llenarUnidadTablaTarjeta() {
     const unidadFilter = document.getElementById("selectUnidadBasicosPrincipal"); // El select donde agregarás las opciones
     let json = "";
     let url = "../ws/ConceptosBasicos/wsGetUnidadesBasico.php";

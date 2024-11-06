@@ -162,7 +162,7 @@ require("../../scripts/Materiales.php");
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         id="AddnormaInput">
                 </div>
                 <div class="mb-3">
@@ -258,7 +258,7 @@ require("../../scripts/Materiales.php");
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                    <input type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdnormaInput">
                 </div>
                 <div class="mb-3">
@@ -280,7 +280,7 @@ require("../../scripts/Materiales.php");
                     <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
                     <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpdfamiliaInput">
-                        <option selected value="">Seleccione una familia</option>
+                        <option value="" selected>Seleccione una familia</option>
                         <option value="Sin Clasificacion">Sin clasificación</option>
                         <option value="Accesorios">Accesorios</option>
                         <option value="Aislamiento">Aislamiento</option>

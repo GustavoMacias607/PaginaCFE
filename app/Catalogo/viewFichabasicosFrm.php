@@ -24,7 +24,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div>Concepto</div>
         </nav>
         <div class="btncancelarconcepto"><button type="button" class="btn fa-solid-cancelar"
-                onclick="javascript:pantallaIr()">Cancelar</button></div>
+                onclick="javascript:pantallaIr()">Regresar</button></div>
     </div>
     <div class="contTabla-conceptoscatalogo">
         <div class="tabla-container tabla-container-conceptosCatalogo">
@@ -223,6 +223,12 @@ if (!isset($_SESSION['idusuario'])) {
             </table>
         </div>
     </div>
+    <div class="grid-container">
+        <label class="subtotales_textos">Suma 3:</label>
+        <div>
+            <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
+        </div>
+    </div>
 
 
     <div class="titulo-materiales">
@@ -278,7 +284,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="grid-container">
         <label class="subtotales_textos">Suma 4:</label>
         <div>
-            <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
+            <label id="Suma4" class="subtotales_numeros_top">$0.00</label>
         </div>
     </div>
 
@@ -333,10 +339,10 @@ if (!isset($_SESSION['idusuario'])) {
             </table>
         </div>
     </div>
-    <div class="grid-container" id="TotalAgregarBasicos" style="display: none;">
+    <div class="grid-container" id="TotalAgregarBasicos">
         <label class="subtotales_textos">Suma 5:</label>
         <div>
-            <label id="Suma4" class="subtotales_numeros_top">$0.00</label>
+            <label id="Suma5" class="subtotales_numeros_top">$0.00</label>
         </div>
     </div>
 
@@ -616,7 +622,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar mano de obra
                 </h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputManoObra">
@@ -763,7 +769,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar maquinaria</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar maquinaria</h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputMaquinaria">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>

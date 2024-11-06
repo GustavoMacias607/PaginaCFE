@@ -118,7 +118,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno" id="AddidInputManodeobra"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddidInputManodeobra"
                         onblur="javascript:CompruebaTieneAlgoInput(this); checkManoObra('Add')">
                 </div>
                 <div class="mb-3">
@@ -176,7 +176,7 @@ if (!isset($_SESSION['idusuario'])) {
 
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         onblur="javascript:CompruebaTieneAlgoInput(this); checkManoObra('upd')" id="UpdidInput">
                 </div>
                 <div class="mb-3">

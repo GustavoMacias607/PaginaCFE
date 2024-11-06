@@ -118,3 +118,44 @@
     --bs-btn-border-color: #ffffff; /* Contorno verde al pasar el mouse */
     --bs-btn-color: #303030; /* Letra verde al hacer clic */
   }
+
+  .pagRegistrosespecificaciones {
+    font-family: "LatoBold", sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 2rem 0 2rem;
+    align-items: center;
+    margin-top: 0.2rem;
+    width: 100%;
+  }
+
+  /*estilos para los botones conceptos y conceptos de basicos*/
+.btn-tiposde-especificaciones {
+    font-family: "LatoBold", sans-serif;
+    --bs-btn-font-size: 1.2rem;
+    border: 3px solid #008e5a;
+    background-color: #ffffff;
+    color: #008e5a;
+    border-radius: 5;
+    transition: all 0.3s ease;
+    width: 20rem;
+  }
+  
+  .btn-tiposde-especificaciones:hover {
+    background-color: #008e5a;
+    color: #ffffff;
+    border-color: #008e5a;
+  }
+  
+  .btn-tiposde-especificaciones:active {
+    --bs-btn-background-color: #ffffff; /* Fondo blanco al hacer clic */
+    --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+    --bs-btn-color: #008e5a; /* Letra verde al hacer clic */
+  }
+
+  .toggle-estatus-especificaciones {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+  }

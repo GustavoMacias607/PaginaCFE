@@ -129,7 +129,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno" id="AddidInputConcepto"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddidInputConcepto"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('Add');">
                 </div>
                 <div class="mb-3">
@@ -140,9 +140,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <input type="text" oninput="mostrarSugerencias(this, 'AddUnidad')"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         id="AddunidadInputConcepto" autocomplete="off">
-                    <div id="Addsugerencias" class="sugerencias-box"></div>
+                    <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
                 </div>
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary"
@@ -170,7 +170,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <input type="text" class="form-control d-none" id="UpdTotal" style="border: 3px solid #008E5A;">
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
                 </div>
                 <div class="mb-3">
@@ -181,9 +181,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <input type="text" oninput="mostrarSugerencias(this,'UpdUnidad')"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno "
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         id="UpdunidadInput" autocomplete="off">
-                    <div id="Updsugerencias" class="sugerencias-box"></div>
+                    <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
                 </div>
                 <div class=" modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary"
@@ -220,9 +220,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <input type="text" oninput="mostrarSugerencias(this, 'AddUnidadBasico')"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         id="AddunidadInputConceptoBasico" autocomplete="off">
-                    <div id="AddsugerenciasBasico" class="sugerencias-box"></div>
+                    <div id="AddsugerenciasBasico" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
                 </div>
                 <div class="modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary"
@@ -263,9 +263,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <input type="text" oninput="mostrarSugerencias(this, 'UpdUnidadBasico')"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
                         id="UpdunidadInputConceptoBasico" autocomplete="off">
-                    <div id="UpdsugerenciasBasico" class="sugerencias-box"></div>
+                    <div id="UpdsugerenciasBasico" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
                 </div>
                 <div class=" modal-footer modal-footer-conceptos">
                     <button type="button" class="btn btn-primary"

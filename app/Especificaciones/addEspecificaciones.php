@@ -9,7 +9,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 ?>
 
-<div class="fondBlancoconceptos">
+<div class="fondBlanco">
     <div class="bottom-rectangle-especificaciones">
         <div class="text-especificaciones">Especificaciones</div>
         <button type="button" class="btn btn-agregar-especificaciones" data-bs-toggle="modal" data-bs-target="#AgregarModal"
@@ -24,14 +24,14 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 
     <!-- Paginacion  -->
-    <div class="pagRegistrosconceptos">
+    <div class="pagRegistrosespecificaciones">
         
 
-        <button type="button" class="btn btn-tiposde-conceptos">Redes áereas</button>
-        <button type="button" class="btn btn-tiposde-conceptos">Obra civíl</button>
-        <button type="button" class="btn btn-tiposde-conceptos">Obra electromecánica</button>
+        <button type="button" class="btn btn-tiposde-especificaciones">Redes áereas</button>
+        <button type="button" class="btn btn-tiposde-especificaciones">Obra civíl</button>
+        <button type="button" class="btn btn-tiposde-especificaciones">Obra electromecánica</button>
 
-        <div class="toggle-estatus-conceptos">
+        <div class="toggle-estatus-especificaciones">
             <div class="text">Estatus</div>
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEsta" checked>

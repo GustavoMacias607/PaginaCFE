@@ -251,7 +251,7 @@ function obtenerDatosConceptos(btnOpcion) {
     let btnNormal = document.getElementById("btnConceptoNormal");
     let txtNormal = document.getElementById("textoConceptoNormal");
     let btnBasico = document.getElementById("btnConceptoBasicos");
-    let Basico = document.getElementById("textoConceptoBasicos");
+    let txtBasico = document.getElementById("textoConceptoBasicos");
     let btnExportar = document.getElementById("btnExportar");
     let json = "";
     let url = "";
@@ -263,7 +263,7 @@ function obtenerDatosConceptos(btnOpcion) {
     } else {
         url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
         btnBasico.classList.remove("esconderBoton")
-        Basico.classList.remove("esconderBoton")
+        txtBasico.classList.remove("esconderBoton")
     }
     $.post(url, json, (responseText, status) => {
         try {

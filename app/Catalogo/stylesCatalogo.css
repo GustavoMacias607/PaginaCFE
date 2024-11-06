@@ -578,24 +578,22 @@ th {
   width: calc(100% - 0.2rem);
   margin-left: 0.2rem;
   margin-right: 0.2rem;
-  padding-top: 1px;
   margin-top: 2rem;
   @media (min-width: 393px) {
-    padding-top: 8rem;
     margin-left: 0.2rem;
     margin-right: 0.2rem;
     width: calc(100% - 0.2rem);
   }
   @media (min-width: 508px) {
-    padding-top: 7rem;
+    margin-top: 7rem;
     margin-left: 0.2rem;
     margin-right: 0.2rem;
     width: calc(100% - 0.2rem);
   }
   @media (min-width: 1090px) {
-    padding-top: 1px;
-    margin-left: 2rem;
-    margin-right: 2rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
     width: calc(100% - 4rem);
   }
 }
