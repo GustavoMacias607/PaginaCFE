@@ -940,7 +940,7 @@ function AbrirModalConfirm1() {
 
 
 // Exportar a Excel a partir de un objeto
-function Exportar() {
+function ExportarMateriales() {
     const fechaActual = new Date();
 
     // Obtener el día, mes y año

@@ -20,12 +20,11 @@ require("../../scripts/Materiales.php");
         <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModal();">Agregar material</button>
 
-        
-        <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-agregar-material">
+        <button id="btnExportar" onclick="javascript:ExportarMateriales()" class="btn btn-agregar-material">
             Exportar a Excel
         </button>
 
-        <input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls"/>
+        <input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls" />
 
         <a href="index.php" class="text-inicio-materiales">
             <div>Ir al inicio</div>
@@ -67,9 +66,7 @@ require("../../scripts/Materiales.php");
             </div>
         </div>
     </div>
-
 </div>
-
 
 
 <div class="contTabla-materiales">
@@ -138,15 +135,11 @@ require("../../scripts/Materiales.php");
                 </tr>
             </thead>
             <tbody id="table-bodyMateriales">
-            <td colspan="8">Sin resultados</td>
+                <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
-
-        
-
     </div>
-
 </div>
 
 
@@ -228,10 +221,10 @@ require("../../scripts/Materiales.php");
                 </div>
                 <img id="AddimagenPreview" src="" alt="Imagen" width="200px"
                     style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
-            
+
                 <div class="modal-footer modal-footer-materiales">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddMaterialValidar();"
-                    >Guardar</button>
+                    <button type="button" class="btn btn-primary"
+                        onclick="javascript:AddMaterialValidar();">Guardar</button>
                 </div>
             </div>
         </div>

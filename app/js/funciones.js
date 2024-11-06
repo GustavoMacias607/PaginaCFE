@@ -55,6 +55,7 @@ function opcion(op) {
 
             if (status == "success") {
                 document.getElementById("mainContent").innerHTML = responseText;
+                rowsPerPage = 10;
                 EstatusEntidades();
                 funcion();
 
@@ -70,10 +71,8 @@ function opcion(op) {
 
 //Atributos globales
 
+
 let existe = false;
-let paginaActual = 1;
-let tamanoPagina = 10;
-var totalPag = 1;
 
 let idEliminar;
 let ActivarS;

@@ -277,7 +277,6 @@ function CambioEstatusMaquinaria() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetMaquinaria() {
-    console.log(estatusMaquinaria)
     let json = "";
     let url = "../ws/Maquinaria/wsGetMaquinaria.php";
     $.post(url, json, (responseText, status) => {
@@ -322,11 +321,11 @@ function displayTableMaquinaria(page) {
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `
-                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria(${record.idmaquinaria},'${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria('${record.idmaquinaria}','${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
                         ` : ``}
                         ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmaquinaria},${record.estatus})"></i>`
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>`
                 }
                     </div>
                 </td>

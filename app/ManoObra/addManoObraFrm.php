@@ -68,7 +68,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </th>
 
                     <th>
-                       Categoría
+                        Categoría
                     </th>
 
                     <th style="width: 9.5rem;">
@@ -96,7 +96,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </tr>
             </thead>
             <tbody id="table-body">
-            <td colspan="8">Sin resultados</td>
+                <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
@@ -123,8 +123,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="categoriaInput" class="form-label" style="color: #303030;">Categoría*</label>
-                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AdddescripcionInputManodeobra" rows="2"></textarea>
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        class="form-control inputLleno" id="AddCategoriaInputManodeobra" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -140,18 +140,19 @@ if (!isset($_SESSION['idusuario'])) {
                         class="form-control inputLleno" id="AddsalarioInputManodeobra">
                 </div>
                 <div class="mb-3">
-                    <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
+                    <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del
+                        salario</label>
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="AddfechaSalarioInput">
                 </div>
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
-                    <input type="file" class="form-control inputLleno" id="AddpdfInput"
-                        onchange="AddmostrarPDF(this)" style="border: 3px solid #008E5A;">
+                    <input type="file" class="form-control inputLleno" id="AddpdfInput" onchange="AddmostrarPDF(this)"
+                        style="border: 3px solid #008E5A;">
                 </div>
                 <div class="modal-footer modal-footer-manodeobra">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddManoObraValidar();"
-                        >Guardar</button>
+                    <button type="button" class="btn btn-primary"
+                        onclick="javascript:AddManoObraValidar();">Guardar</button>
                 </div>
             </div>
         </div>
@@ -180,8 +181,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="categoriaInput" class="form-label" style="color: #303030;">Categoría*</label>
-                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="upddescripcionInputManodeobra" rows="2"></textarea>
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        class="form-control inputLleno" id="UpdCategoriaInputManodeobra" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -197,14 +198,15 @@ if (!isset($_SESSION['idusuario'])) {
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
                 </div>
                 <div class="mb-3">
-                    <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
+                    <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del
+                        salario</label>
                     <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
                         id="UpdfechaSalarioInput">
                 </div>
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
-                    <input type="file" class="form-control inputLleno" id="UpdpdfInput"
-                        onchange="AddmostrarPDF(this)" style="border: 3px solid #008E5A;">
+                    <input type="file" class="form-control inputLleno" id="UpdpdfInput" onchange="AddmostrarPDF(this)"
+                        style="border: 3px solid #008E5A;">
                 </div>
                 <div class=" modal-footer modal-footer-manodeobra">
                     <button type="button" class="btn btn-primary"

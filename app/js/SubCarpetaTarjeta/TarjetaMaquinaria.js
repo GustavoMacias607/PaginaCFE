@@ -215,24 +215,21 @@ function AbrirModalMaquinariaTarjeta() {
     $('#AgregarModalMaquinariaesConcepto').modal('show');
     const unidadFilter = document.getElementById("unidad-filterMaquinaria");
     unidadFilter.value = "";
-    console.log(objTabla2ModalMaquinaria)
-    console.log(objTabla2ModalMaquinariaPrincipal)
-    objTabla2ModalMaquinaria = objTabla2ModalMaquinariaPrincipal;
+    rowsPerPage = 10;
+    llenarTablaMaquinariaSeleccionadosP();
+    objTabla2ModalMaquinaria = filteredDataMaquinaria;
     llenarTablaMaquinariaSeleccionados();
     GetMaquinariaTarjeta();
 }
 
-
+function guardarMaquinariaSeleccionados() {
+    objTabla2ModalMaquinariaPrincipal = objTabla2ModalMaquinaria;
+}
 
 //Metodo para llenar tabla
 function llenarTablaMaquinariaSeleccionados() {
     llenarTablaMaquinariaTarjetaModal();
     filterDataMaquinariaTarjetaModal();
-}
-
-function guardarDatosMaquinaria() {
-    objTabla2ModalMaquinariaPrincipal = objTabla2ModalMaquinaria;
-    llenarTablaMaquinariaSeleccionadosP();
 }
 
 
@@ -258,6 +255,9 @@ function displayTableMaquinariaTarjetaModal(page) {
 
             const row = document.createElement('tr');
             row.classList.add('fila');
+            if (!record.estatus) {
+                row.classList.add('DatoInactivo')
+            }
             row.innerHTML = `
                  <td class="Code">${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>

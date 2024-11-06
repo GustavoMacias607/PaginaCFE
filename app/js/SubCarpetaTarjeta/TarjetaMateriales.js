@@ -53,6 +53,7 @@ function displayTableMaterialesTarjeta(page) {
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${precioFormateado}</td>
                 <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
+                <td>${(!record.familia == "") ? record.familia : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
@@ -80,6 +81,7 @@ function displayTableMaterialesTarjeta(page) {
                         precio: record.precio,
                         fechaprecio: record.fechaprecio,
                         unidad: record.unidad,
+                        familia: record.familia,
                         cantidad: 0,
                         suministrado: false,
                         estatus: true,
@@ -192,14 +194,16 @@ function setupPaginationMaterialesTarjeta() {
 function filterDataMaterialesTarjeta() {
     const searchText = document.getElementById("search-inputMateriales").value.toLowerCase();
     const unidadFilter = document.getElementById("selectUnidadMateriales").value;
+    const familiaFilter = document.getElementById("selectFamiliaMateriales").value;
     const statusFilter = 1;
     filteredData = datosObjetoMateriales.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
+        const matchesFamilia = familiaFilter ? record.familia == familiaFilter : true;
         const matchesStatus = record.estatus == statusFilter;
-        return matchesSearch && matchesUnidad && matchesStatus;
+        return matchesSearch && matchesUnidad && matchesStatus && matchesFamilia;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableMaterialesTarjeta(currentPage);
@@ -214,6 +218,9 @@ function llenarTablaMaterialesTarjeta() {
 
     const unidadFilter = document.getElementById("selectUnidadMateriales");
     unidadFilter.addEventListener("change", filterDataMaterialesTarjeta);
+
+    const familiaFilter = document.getElementById("selectFamiliaMateriales");
+    familiaFilter.addEventListener("change", filterDataMaterialesTarjeta);
 
     const rowsPerPageSelect = document.getElementById("rows-per-page");
     rowsPerPageSelect.addEventListener("change", function () {
@@ -248,18 +255,21 @@ function AbrirModalMaterialesTarjeta() {
     $('#AgregarModalMaterialesConcepto').modal('show');
     const unidadFilter = document.getElementById("selectUnidadMaterialesModal");
     unidadFilter.value = "";
+    rowsPerPage = 10;
+    llenarTablaMaterialesSeleccionadosP();
+    objTabla2Modal = filteredData2;
     llenarTablaMaterialesSeleccionados();
     GetMaterialesTarjeta();
 }
-
-
+function guardarMaterialesSeleccionados() {
+    objTabla2ModalMaterialesPrincipal = objTabla2Modal;
+}
 
 //Metodo para llenar tabla
 function llenarTablaMaterialesSeleccionados() {
     llenarTablaMaterialesTarjetaModal();
     filterDataMaterialesTarjetaModal();
 }
-
 
 
 //Método para el llenado de la tabla
@@ -269,7 +279,6 @@ function displayTableMaterialesTarjetaModal(page) {
     const start = (page - 1) * cantidadFilasTabla;
     const end = start + cantidadFilasTabla;
     const paginatedData2 = filteredData2.slice(start, end);
-
     if (paginatedData2.length > 0) {
         paginatedData2.forEach(record => {
             const formatoMXN = new Intl.NumberFormat('es-MX', {
@@ -283,6 +292,9 @@ function displayTableMaterialesTarjetaModal(page) {
 
             const row = document.createElement('tr');
             row.classList.add('fila');
+            if (!record.estatus) {
+                row.classList.add('DatoInactivo')
+            }
             row.innerHTML = `
                 <td class="Code">${record.codigo}</td>
                 <td>${(!record.norma == "") ? record.norma : "Sin norma"}</td>
@@ -331,6 +343,7 @@ function eliminarFilaDelObjeto(codigo) {
 //Metodo para los filtros de la tabla
 function filterDataMaterialesTarjetaModal() {
     const unidadFilter = document.getElementById("selectUnidadMaterialesModal").value;
+    console.log(objTabla2Modal)
     filteredData2 = objTabla2Modal.filter(record => {
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
         return matchesUnidad;

@@ -11,6 +11,10 @@ let conceptoTipoSeleccionado;
 let selectedRows = [];
 
 let unidades;
+
+
+let currentSortField = null;
+let currentSortOrder = 'asc';
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddConceptoValidar() {
     let vacio = false;
@@ -230,6 +234,7 @@ function CambioEstatusConcepto() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function PrincipalConcepto(tipoConcepto) {
+    estatusConcepto = 1;
     document.getElementById("sort-id").addEventListener("click", () => sortData('idconcepto'));
     document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
     // Eventos de clic para los botones
@@ -258,7 +263,7 @@ function obtenerDatosConceptos(btnOpcion) {
     } else {
         url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
         btnBasico.classList.remove("esconderBoton")
-        txtBasico.classList.remove("esconderBoton")
+        Basico.classList.remove("esconderBoton")
     }
     $.post(url, json, (responseText, status) => {
         try {
@@ -349,7 +354,12 @@ function displayTableConcepto(page) {
     if (conceptoTipoSeleccionado) {
         if (paginatedData.length > 0) {
             paginatedData.forEach(record => {
-                // Crear un elemento de fila (tr)
+                const formatoMXN = new Intl.NumberFormat('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN'
+                });
+                const total = record.total || 0;
+                const precioFormateado = total ? formatoMXN.format(total) : "---";
                 const row = document.createElement('tr');
                 row.classList.add('fila');
                 // Establecer el contenido HTML de la fila
@@ -358,7 +368,7 @@ function displayTableConcepto(page) {
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
                     <td>---</td>
-                    <td>${record.total !== "" && record.total != null ? record.total : "---"}</td>
+                    <td>${precioFormateado}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
                             ${record.estatus == 1 ? `
@@ -386,7 +396,7 @@ function displayTableConcepto(page) {
         } else {
             const row = `
                 <tr class="fila">
-                    <td colspan="5" class="Code">Sin resultados</td>
+                    <td colspan="6" class="Code">Sin resultados</td>
                 </tr>
             `;
             tableBody.innerHTML += row;
@@ -396,7 +406,12 @@ function displayTableConcepto(page) {
     } else {
         if (paginatedData.length > 0) {
             paginatedData.forEach(record => {
-                // Crear un elemento de fila (tr)
+                const formatoMXN = new Intl.NumberFormat('es-MX', {
+                    style: 'currency',
+                    currency: 'MXN'
+                });
+                const total = record.total || 0;
+                const precioFormateado = total ? formatoMXN.format(total) : "---";
                 const row = document.createElement('tr');
                 row.classList.add('fila');
                 // Establecer el contenido HTML de la fila
@@ -405,7 +420,7 @@ function displayTableConcepto(page) {
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
                     <td>---</td>
-                    <td>${record.total !== "" && record.total != null ? record.total : "---"}</td>
+                    <td>${precioFormateado}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
                             ${record.estatus == 1 ? `

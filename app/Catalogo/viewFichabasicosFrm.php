@@ -190,14 +190,14 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
-    <div class="titulo-materiales" style="display: none;">
+    <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Herramienta y equipo de seguridad</div>
         </nav>
     </div>
 
 
-    <div class="contTabla-materialescatalogo" style="display: none;">
+    <div class="contTabla-materialescatalogo">
         <div class=" tabla-container tabla-container-materialescatalogo">
             <table id="tabla-manodeobra">
                 <thead>
@@ -276,31 +276,25 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 
     <div class="grid-container">
-        <label class="subtotales_textos">Suma 3:</label>
+        <label class="subtotales_textos">Suma 4:</label>
         <div>
             <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
         </div>
     </div>
-    <div style="margin-top: 5rem; margin-bottom: 5rem;">
-        <div class="grid-container">
-            <label class="subtotales_textos">Total:</label>
-            <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
-            <button type="button" class="btn fa-solid-Guardar-catalogo"
-                onclick="javascript:guardarTablasEnBD()">Guardar</button>
-        </div>
-    </div>
 
-    <div class="titulo-materiales" style="display: none;">
+
+    <div id="btnAgregarBasicos" class="titulo-materiales" style="display: none;">
         <nav class="pSeccion-catalogo">
             <div>Basicos</div>
-            <div><button type="button" onclick="javascript:AbrirModalMateriales();"
-                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
-            <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
+            <div><button type="button" onclick="javascript:AbrirModalBasicosTarjeta();"
+                    class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
+                    data-bs-target="#AgregarModalBasicosesConcepto">Agregar</button></div>
+            <div id="LecturaBasicos">Hay un concepto basico Inactivo</div>
 
         </nav>
     </div>
 
-    <div class="contTabla-materialescatalogo" style="display: none;">
+    <div id="tablaAgregarBasicos" style="display: none;" class="contTabla-materialescatalogo">
         <div class="tabla-container tabla-container-materialescatalogo">
             <table id="tabla-basicos">
                 <thead class="">
@@ -311,15 +305,14 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 28rem;">
                             Descripción
                         </th>
-                        <th class=" col-1" style="width: 8rem;">
+                        <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
-                                <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                    onchange="javacript:GetBasicos();EstablecerPag()"
+                                <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                    <option value="todo" selected>Todo</option>
-                                    <option value=""></option>
-                                    <option value=""></option>
+                                    <option value="" selected>Todo</option>
+                                    <option value="Estructuras">Estructura</option>
+                                    <option value="PZA">PZA</option>
                                 </select>
                             </div>
                         </th>
@@ -334,14 +327,27 @@ if (!isset($_SESSION['idusuario'])) {
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="table-bodyBasicosTarjetaPrincipal">
                     <td colspan="8">Sin resultados</td>
                 </tbody>
             </table>
         </div>
     </div>
+    <div class="grid-container" id="TotalAgregarBasicos" style="display: none;">
+        <label class="subtotales_textos">Suma 5:</label>
+        <div>
+            <label id="Suma4" class="subtotales_numeros_top">$0.00</label>
+        </div>
+    </div>
 
-    <div></div>
+    <div style="margin-top: 7rem; margin-bottom: 5rem; padding-bottom: 3rem;">
+        <div class="grid-container">
+            <label class="subtotales_textos">Total:</label>
+            <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
+            <button type="button" class="btn fa-solid-Guardar-catalogo"
+                onclick="javascript:guardarTablasEnBD()">Guardar</button>
+        </div>
+    </div>
 
     <!--<div style="display: grid; grid-template-columns: auto auto auto; gap: 0px; column-gap: 1rem; align-items: center; justify-content: end; margin-bottom: 2rem; margin-right: 2rem;">
         <div style="grid-column: 1;">
@@ -490,10 +496,30 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th style="width: 9rem;">
                                     Fecha del precio
                                 </th>
-
-
-
-
+                                <th style="width: 14rem;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Familia: </span>
+                                        <select class="form-select form-select-sm ml-2" id="selectFamiliaMateriales"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="" selected>Todo</option>
+                                            <option value="Sin Clasificacion">Sin clasificación</option>
+                                            <option value="Accesorios">Accesorios</option>
+                                            <option value="Aislamiento">Aislamiento</option>
+                                            <option value="Bobedas">Bobedas</option>
+                                            <option value="Conductores">Conductores</option>
+                                            <option value="Ductos">Ductos</option>
+                                            <option value="Equipos">Equipos</option>
+                                            <option value="Herrajes">Herrajes</option>
+                                            <option value="Miselaneos">Miselaneos</option>
+                                            <option value="Postes">Postes</option>
+                                            <option value="Pozos">Pozos</option>
+                                            <option value="Protecciones">Protecciones</option>
+                                            <option value="Registros">Registros</option>
+                                            <option value="Seccionamiento">Seccionamiento</option>
+                                            <option value="Transformadores">Transformadores</option>
+                                        </select>
+                                    </div>
+                                </th>
                                 <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
@@ -545,10 +571,6 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th style="width: 9rem;">
                                     Fecha del precio
                                 </th>
-                                
-
-
-                                
                                 <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
@@ -576,7 +598,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </table>
                 </div>
                 <div style="text-align: end;"><button type="button"
-                        onclick="javascript:llenarTablaMaterialesSeleccionadosP();"
+                        onclick="javascript:guardarMaterialesSeleccionados();llenarTablaMaterialesSeleccionadosP();"
                         class="btn fa-solid-agregar-materiales" style="margin: 0 0 1rem 0" data-bs-dismiss="modal"
                         aria-label="Close">Aceptar</button>
                 </div>
@@ -616,7 +638,6 @@ if (!isset($_SESSION['idusuario'])) {
                         </select>
                         <div class="text2">Registros </div>
                     </div>
-
                     <ul class="pagination" id="paginationManoObra">
                         <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                         <li class="page-item active"></li>
@@ -671,7 +692,8 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
-                <label for="" style="font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de obra seleccionados</label>
+                <label for="" style="font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de
+                    obra seleccionados</label>
                 <div class="tabla-container tabla-container-materialesmodal_catalogo">
                     <table id="tabla-MaterialesCatalogo">
                         <thead>
@@ -722,7 +744,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </table>
                 </div>
                 <div style="text-align: end;"><button type="button"
-                        onclick="javascript:llenarTablaManoObraSeleccionadosP(); guardarDatosManoObra();"
+                        onclick="javascript: guardarManosObrasSeleccionadas(); llenarTablaManoObraSeleccionadosP();"
                         class="btn fa-solid-agregar-materiales" style=" margin: 0 0 1rem 0" data-bs-dismiss="modal"
                         aria-label="Close">Aceptar</button>
                 </div>
@@ -846,7 +868,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </table>
                 </div>
                 <div style="text-align: end;"><button type="button"
-                        onclick="javascript:llenarTablaMaquinariaSeleccionadosP(); guardarDatosMaquinaria()"
+                        onclick="javascript:guardarMaquinariaSeleccionados(); llenarTablaMaquinariaSeleccionadosP();"
                         class="btn fa-solid-agregar-materiales" style=" margin: 0 0 1rem 0" data-bs-dismiss="modal"
                         aria-label="Close">Aceptar</button>
                 </div>
@@ -867,116 +889,126 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra
-                </h1>
-                <div class="label-container-basicos_catalogo">
-                    <input type="text" placeholder="Buscar" id="searchInput"
-                        oninput="GetBasicosCatalogo();EstablecerPag()">
-                    <i class="fas fa-search icon-basicos_catalogo" id="searchIcon"></i>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar concepto Basico</h1>
+                <div class="label-container-materiales_catalogo">
+                    <input type="text" placeholder="Buscar" id="search-inputBasicos">
+                    <i class="fas fa-search icon-materiales" id="searchIcon"></i>
                 </div>
-                <button type="button" class="fa-solid fa-xmark btnclose-basicos_catalogo" data-bs-dismiss="modal"
+                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
 
-            <div class="pagRegistroscatalogo">
+            <div class="pagRegistrosmateriales">
                 <nav class="pSeccion">
-                    <div class="cantregbasicos">
-                        <select class="cantregistrosbasicos" name="" id="cantRegistros"
-                            onchange="javascript:LlenarCatalogoTabla()">
+                    <div class="cantregmateriales">
+                        <div class="text1">Mostrar</div>
+                        <select class="cantregistrosmanodeobra" id="rows-per-pageBasicos">
                             <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
                         </select>
+                        <div class="text2">Registros </div>
                     </div>
 
-                    <ul class="pagination" id="pagination-list">
+                    <ul class="pagination" id="paginationBasicos">
                         <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                         <li class="page-item active"></li>
                     </ul>
                 </nav>
             </div>
-
-            <div class="contTabla-basicosmodal_catalogo">
-                <div class="tabla-container tabla-container-basicosmodal_catalogo">
-                    <table id="tabla-BasicosCatalogo">
+            <div class="contTabla-materialesmodal_catalogo">
+                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                    <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
-                                <th>
+                                <th style="width: 8rem; ">
                                     ID
                                 </th>
                                 <th>
-                                    Descripción
+                                    Descripcion
                                 </th>
-                                <th class=" col-1" style="width: 200px;">
+                                <th style="width: 10rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
-                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                            onchange="javacript:GetBasicos();EstablecerPag()"
+                                        <select class="form-select form-select-sm ml-2" id="unidad-filterBasicos"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                            <option value="todo" selected>Todo</option>
-                                            <option value=""></option>
-                                            <option value=""></option>
+                                            <option value="" selected>Todo</option>
+                                            <option value="Estructuras">Estructura</option>
+                                            <option value="PZA">PZA</option>
                                         </select>
                                     </div>
                                 </th>
-                                <th>
-                                    Precio
+                                <th style="width: 8rem;">
+                                    Familia
+                                </th>
+                                <th style="width: 8rem;">
+                                    Precio U
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table-bodyBasicos">
+                            <!-- Aquí se llenará con los registros -->
                             <td colspan="8">Sin resultados</td>
                         </tbody>
                     </table>
+
                 </div>
             </div>
 
-            <div class="contTabla-basicosmodal_catalogo">
-                <label for="" style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano
-                    de
-                    obra seleccionados</label>
-                <div class="tabla-container tabla-container-basicosmodal_catalogo">
-                    <table id="tabla-BasicosCatalogo">
+            <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
+                <label for=""
+                    style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Conceptos basicos
+                    seleccionados</label>
+                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                    <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
-                                <th>
+                                <th style="width: 8rem; ">
                                     ID
                                 </th>
                                 <th>
-                                    Descripción
+                                    Descripcion
                                 </th>
-                                <th class=" col-1" style="width: 200px;">
+                                <th style="width: 10rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
-                                        <select class="form-select form-select-sm ml-2" id="selectUnidad"
-                                            onchange="javacript:GetBasicos();EstablecerPag()"
+                                        <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                            <option value="todo" selected>Todo</option>
-                                            <option value=""></option>
-                                            <option value=""></option>
+                                            <option value="" selected>Todo</option>
+                                            <option value="Estructuras">Estructura</option>
+                                            <option value="PZA">PZA</option>
                                         </select>
                                     </div>
                                 </th>
-                                <th>
-                                    Precio
+                                <th style="width: 8rem;">
+                                    Familia
                                 </th>
-                                <th class="col-1" style="width: 170px;">
+                                <th style="width: 8rem;">
+                                    Precio U
+                                </th>
+                                <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
                                     </div>
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="table-bodyBasicosTarjetaModal2">
+                            <!-- Aquí se llenará con los registros -->
                             <td colspan="8">Sin resultados</td>
                         </tbody>
                     </table>
+                </div>
+                <div style="text-align: end;"><button type="button"
+                        onclick="javascript:guardarBasicosSeleccionados(); llenarTablaBasicosSeleccionadosP();"
+                        class="btn fa-solid-agregar-materiales" style=" margin: 0 0 1rem 0" data-bs-dismiss="modal"
+                        aria-label="Close">Aceptar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-
 
 
 

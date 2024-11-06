@@ -1,12 +1,11 @@
-let objTabla2ModalManoObra = [];
-let msgYaAgregadoManoObra = "Mano de obra ya agregada";
+let objTabla2ModalBasicos = [];
+let msgYaAgregadoBasicos = "Basico ya agregado";
+var datosObjetoBasicos = [];
 
-let datosObjetoManoObra = [];
-
-//Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
-function GetManoObraTarjeta() {
+//Metodo para hacer la consulta de los Basicos tomando en cuanta los filtros
+function GetBasicosTarjeta() {
     let json = "";
-    let url = "../ws/ManoObra/wsGetManoObra.php";
+    url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -14,9 +13,9 @@ function GetManoObraTarjeta() {
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
 
-                    datosObjetoManoObra = resp.datos;
-                    llenarTablaManoObraTarjeta();
-                    filterDataManoObraTarjeta();
+                    datosObjetoBasicos = resp.datos;
+                    llenarTablaBasicosTarjeta();
+                    filterDataBasicosTarjeta();
                 }
             } else {
                 throw e = status;
@@ -28,8 +27,8 @@ function GetManoObraTarjeta() {
 }
 
 //Método para el llenado de la tabla
-function displayTableManoObraTarjeta(page) {
-    const tableBody = document.getElementById("table-bodyManoObra");
+function displayTableBasicosTarjeta(page) {
+    const tableBody = document.getElementById("table-bodyBasicos");
     tableBody.innerHTML = "";
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -41,17 +40,18 @@ function displayTableManoObraTarjeta(page) {
                 currency: 'MXN'
             });
 
-            const precioFormateado = (record.salario !== undefined && record.salario !== "")
-                ? formatoMXN.format(record.salario)
+            const precioFormateado = (record.total !== undefined && record.total !== "")
+                ? formatoMXN.format(record.total)
                 : "---";
 
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.style.cursor = 'pointer';
             row.innerHTML = `
-                <td class="Code">${record.idmanoobra}</td>
-                <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
-                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td class="Code">${record.idconbasi}</td>
+                <td>${record.nombre !== "" ? record.nombre : "---"}</td>
+                <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                <td>---</td>
                 <td>${precioFormateado}</td>
                
             `;
@@ -59,24 +59,21 @@ function displayTableManoObraTarjeta(page) {
             // Evento para doble clic
             row.addEventListener("dblclick", () => {
                 // Verificar si el material ya fue agregado
-                const existe = objTabla2ModalManoObra.some(manoobra => manoobra.idmanoobra === record.idmanoobra);
+                const existe = objTabla2ModalBasicos.some(Basicos => Basicos.idconbasi === record.idconbasi);
 
                 // Si no existe, lo añadimos al arreglo
                 if (!existe) {
-                    objTabla2ModalManoObra.push({
-                        idmanoobra: record.idmanoobra,
-                        salario: record.salario,
-                        fechasalario: record.fechasalario,
+                    objTabla2ModalBasicos.push({
+                        idconbasi: record.idconbasi,
+                        nombre: record.nombre,
+                        cantconbasi: record.cantconbasi,
+                        total: record.total,
                         unidad: record.unidad,
-                        categoria: record.categoria,
-                        cantidad: 0,
-                        rendimiento: 0,
                         estatus: true,
                     });
-
-                    llenarTablaManoObraSeleccionados();
+                    llenarTablaBasicosSeleccionados();
                 } else {
-                    mensajePantalla(msgYaAgregadoManoObra, false);
+                    mensajePantalla(msgYaAgregadoBasicos, false);
                 }
             });
 
@@ -94,8 +91,8 @@ function displayTableManoObraTarjeta(page) {
 
 
 //Metodo para la paginacion de la tabla
-function setupPaginationManoObraTarjeta() {
-    const paginationDiv = document.getElementById("paginationManoObra");
+function setupPaginationBasicosTarjeta() {
+    const paginationDiv = document.getElementById("paginationBasicos");
     paginationDiv.innerHTML = "";
 
     const totalPages = Math.ceil(filteredData.length / rowsPerPage);
@@ -131,8 +128,8 @@ function setupPaginationManoObraTarjeta() {
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
-                displayTableManoObraTarjeta(currentPage);
-                setupPaginationManoObraTarjeta();
+                displayTableBasicosTarjeta(currentPage);
+                setupPaginationBasicosTarjeta();
             }
         });
         paginationDiv.appendChild(prevButton);
@@ -153,8 +150,8 @@ function setupPaginationManoObraTarjeta() {
             }
             button.addEventListener("click", () => {
                 currentPage = i;
-                displayTableManoObraTarjeta(currentPage);
-                setupPaginationManoObraTarjeta();
+                displayTableBasicosTarjeta(currentPage);
+                setupPaginationBasicosTarjeta();
             });
             paginationDiv.appendChild(button);
         }
@@ -169,8 +166,8 @@ function setupPaginationManoObraTarjeta() {
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
-                displayTableManoObraTarjeta(currentPage);
-                setupPaginationManoObraTarjeta();
+                displayTableBasicosTarjeta(currentPage);
+                setupPaginationBasicosTarjeta();
             }
         });
         paginationDiv.appendChild(nextButton);
@@ -178,75 +175,68 @@ function setupPaginationManoObraTarjeta() {
 }
 
 //Metodo para los filtros de la tabla
-function filterDataManoObraTarjeta() {
-    const searchText = document.getElementById("search-inputManoObra").value.toLowerCase();
-    const unidadFilter = document.getElementById("unidad-filterManoObra").value;
-    const categoriaFilter = document.getElementById("categoria-filterManoObra").value;
+function filterDataBasicosTarjeta() {
+    const searchText = document.getElementById("search-inputBasicos").value.toLowerCase();
+    const unidadFilter = document.getElementById("unidad-filterBasicos").value;
     const statusFilter = 1;
-    filteredData = datosObjetoManoObra.filter(record => {
+    filteredData = datosObjetoBasicos.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
-        const matchesCategoria = categoriaFilter ? record.categoria == categoriaFilter : true;
         const matchesStatus = record.estatus == statusFilter;
-        return matchesSearch && matchesUnidad && matchesStatus && matchesCategoria;
+        return matchesSearch && matchesUnidad && matchesStatus;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar
-    displayTableManoObraTarjeta(currentPage);
-    setupPaginationManoObraTarjeta();
+    displayTableBasicosTarjeta(currentPage);
+    setupPaginationBasicosTarjeta();
 }
 
-function llenarTablaManoObraTarjeta() {
-    displayTableManoObraTarjeta(currentPage);
-    setupPaginationManoObraTarjeta();
-    const searchInput = document.getElementById("search-inputManoObra");
-    searchInput.addEventListener("input", filterDataManoObraTarjeta);
+function llenarTablaBasicosTarjeta() {
+    displayTableBasicosTarjeta(currentPage);
+    setupPaginationBasicosTarjeta();
+    const searchInput = document.getElementById("search-inputBasicos");
+    searchInput.addEventListener("input", filterDataBasicosTarjeta);
 
-    const unidadFilter = document.getElementById("unidad-filterManoObra");
-    unidadFilter.addEventListener("change", filterDataManoObraTarjeta);
+    const unidadFilter = document.getElementById("unidad-filterBasicos");
+    unidadFilter.addEventListener("change", filterDataBasicosTarjeta);
 
-    const categoriaFilter = document.getElementById("categoria-filterManoObra");
-    categoriaFilter.addEventListener("change", filterDataManoObraTarjeta);
-
-    const rowsPerPageSelect = document.getElementById("rows-per-pageManoObra");
+    const rowsPerPageSelect = document.getElementById("rows-per-pageBasicos");
     rowsPerPageSelect.addEventListener("change", function () {
         rowsPerPage = parseInt(this.value);
         currentPage = 1;
-        displayTableManoObraTarjeta(currentPage);
-        setupPaginationManoObraTarjeta();
+        displayTableBasicosTarjeta(currentPage);
+        setupPaginationBasicosTarjeta();
     });
 }
 
 
-function AbrirModalManoObraTarjeta() {
-    $('#AgregarModalManodeobraesConcepto').modal('show');
-    const unidadFilter = document.getElementById("unidad-filterManoObra");
+function AbrirModalBasicosTarjeta() {
+    $('#AgregarModalBasicosesConcepto').modal('show');
+    const unidadFilter = document.getElementById("unidad-filterBasicos");
     unidadFilter.value = "";
-    const CategoriaFilter = document.getElementById("categoria-filterManoObra");
-    CategoriaFilter.value = "";
     rowsPerPage = 10;
-    llenarTablaManoObraSeleccionadosP();
-    objTabla2ModalManoObra = filteredDataManoObra
-    llenarTablaManoObraSeleccionados();
-    GetManoObraTarjeta();
+    llenarTablaBasicosSeleccionadosP();
+    objTabla2ModalBasicos = filteredDataBasicos;
+    llenarTablaBasicosSeleccionados();
+    GetBasicosTarjeta();
 }
 
-function guardarManosObrasSeleccionadas() {
-    objTabla2ModalManoObraiaPrincipal = objTabla2ModalManoObra;
+function guardarBasicosSeleccionados() {
+    objTabla2ModalBasicosPrincipal = objTabla2ModalBasicos;
 }
-
 
 //Metodo para llenar tabla
-function llenarTablaManoObraSeleccionados() {
-    llenarTablaManoObraTarjetaModal();
-    filterDataManoObraTarjetaModal();
+function llenarTablaBasicosSeleccionados() {
+    llenarTablaBasicosTarjetaModal();
+    filterDataBasicosTarjetaModal();
 }
+
 
 
 //Método para el llenado de la tabla
-function displayTableManoObraTarjetaModal(page) {
-    const tableBody = document.getElementById("table-bodyManoObraTarjetaModal2");
+function displayTableBasicosTarjetaModal(page) {
+    const tableBody = document.getElementById("table-bodyBasicosTarjetaModal2");
     tableBody.innerHTML = "";
     const start = (page - 1) * cantidadFilasTabla;
     const end = start + cantidadFilasTabla;
@@ -259,8 +249,8 @@ function displayTableManoObraTarjetaModal(page) {
                 currency: 'MXN'
             });
 
-            const precioFormateado = (record.salario !== undefined && record.salario !== "")
-                ? formatoMXN.format(record.salario)
+            const precioFormateado = (record.total !== undefined && record.total !== "")
+                ? formatoMXN.format(record.total)
                 : "---";
 
             const row = document.createElement('tr');
@@ -269,13 +259,14 @@ function displayTableManoObraTarjetaModal(page) {
                 row.classList.add('DatoInactivo')
             }
             row.innerHTML = `
-                 <td class="Code">${record.idmanoobra}</td>
-                <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
-                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+               <td class="Code">${record.idconbasi}</td>
+                <td>${record.nombre !== "" ? record.nombre : "---"}</td>
+                <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                <td>---</td>
                 <td>${precioFormateado}</td>
                  <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">
-                        <i class="coloresIcono fa-solid fa-x" style="cursor: pointer;" alt="Eliminar" onclick="eliminarFilaDelObjetoManoObra('${record.idmanoobra}')"></i>
+                        <i class="coloresIcono fa-solid fa-x" style="cursor: pointer;" alt="Eliminar" onclick="eliminarFilaDelObjetoBasicos('${record.idconbasi}')"></i>
                     </div>
                      </td>
             `;
@@ -293,37 +284,31 @@ function displayTableManoObraTarjetaModal(page) {
 }
 
 // Función para eliminar el material solo del objeto
-function eliminarFilaDelObjetoManoObra(codigo) {
+function eliminarFilaDelObjetoBasicos(codigo) {
     // Eliminar el material de objMaterialesSeleccionados usando su código
-    objTabla2ModalManoObra.forEach((valor, index) => {
-        if (codigo == valor.idmanoobra) {
-            objTabla2ModalManoObra.splice(index, 1);
+    objTabla2ModalBasicos.forEach((valor, index) => {
+        if (codigo == valor.idconbasi) {
+            objTabla2ModalBasicos.splice(index, 1);
         }
     });
-    llenarTablaManoObraSeleccionados();
-
-
+    llenarTablaBasicosSeleccionados();
 }
 
 //Metodo para los filtros de la tabla
-function filterDataManoObraTarjetaModal() {
-    const unidadFilter = document.getElementById("selectUnidadManoObraModal").value;
-    const cateogiriaFilter = document.getElementById("selectCategoriaManoObraModal").value;
-    filteredData2 = objTabla2ModalManoObra.filter(record => {
+function filterDataBasicosTarjetaModal() {
+    const unidadFilter = document.getElementById("selectUnidadBasicosModal").value;
+    filteredData2 = objTabla2ModalBasicos.filter(record => {
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
-        const matchesCategoria = cateogiriaFilter ? record.categoria == cateogiriaFilter : true;
-        return matchesUnidad && matchesCategoria;
+        return matchesUnidad;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar
-    displayTableManoObraTarjetaModal(currentPage);
+    displayTableBasicosTarjetaModal(currentPage);
 }
 
-function llenarTablaManoObraTarjetaModal() {
-    displayTableManoObraTarjetaModal(currentPage);
-    const unidadFilter = document.getElementById("selectUnidadManoObraModal");
-    unidadFilter.addEventListener("change", filterDataManoObraTarjetaModal);
-    const cateogiriaFilter = document.getElementById("selectCategoriaManoObraModal");
-    cateogiriaFilter.addEventListener("change", filterDataManoObraTarjetaModal);
+function llenarTablaBasicosTarjetaModal() {
+    displayTableBasicosTarjetaModal(currentPage);
+    const unidadFilter = document.getElementById("selectUnidadBasicosModal");
+    unidadFilter.addEventListener("change", filterDataBasicosTarjetaModal);
 }
 
 

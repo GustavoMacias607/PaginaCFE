@@ -305,3 +305,113 @@ class TarjetaMaquinaria
         return $R;
     }
 }
+
+
+
+
+/***
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * Basicos Tarjeta
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+
+ */
+
+
+
+class TarjetaBasicos
+{
+    private $conn;
+    public function __construct($conexion)
+    {
+        $this->conn = $conexion;
+    }
+
+    /** Metodo para agregar un basicos a un concepto a la base de datos
+     * recibe objeto datos del basicos y al concepto que se guardara
+     */
+
+    function addBasicos($datos)
+    {
+        $R['estado'] = "OK";
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxConceptosInsertar(:IdConcepto,:IdConceptoBasi,:Cantidad);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto,
+                "IdConceptoBasi" => $datos->idconbasi,
+                "Cantidad" => $datos->cantconbasi,
+            ));
+            unset($c);
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Método para obtener todos los basicos que le corresponden al concepto
+   Recibe el id del concepto para hacer la busqueda*/
+    function getBasicos($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spAuxConceptosMostrar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    /*Metodo para eliminar los basicos que tiene asignado el concepto
+      recibe el id del concepto*/
+    function DelBasicos($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+
+            $consulta = "call spAuxConceptosEliminar(:IdConcepto);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdConcepto" => $datos->idConcepto
+            ));
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+}

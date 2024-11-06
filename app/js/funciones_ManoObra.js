@@ -24,6 +24,7 @@ function AddManoObraValidar() {
     let categoria = document.querySelector('#AddCategoriaInputManodeobra');
     if (categoria.value == "") {
         categoria.classList.add("inputVacio");
+        categoria.placeholder = "Requerida la categoria"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = categoria;
@@ -115,6 +116,7 @@ function UpdManoObraValidar() {
     let categoria = document.querySelector('#UpdCategoriaInputManodeobra');
     if (categoria.value == "") {
         categoria.classList.add("inputVacio");
+        categoria.placeholder = "Requerida la categoria"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = categoria;
@@ -279,9 +281,8 @@ function GetManoObra() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     data = resp.datos;
-                    llenarTabla();
-                    filterData();
-
+                    llenarTablaManoObra();
+                    filterDataManoObra();
                 }
             } else {
                 throw e = status;
@@ -291,13 +292,10 @@ function GetManoObra() {
         }
     });
 }
-let filteredData = [...data];
-let rowsPerPage = 10;
-let currentPage = 1;
 
-let currentSortField = null;
-let currentSortOrder = 'asc';
-function displayTable(page) {
+
+
+function displayTableManoObra(page) {
     const tableBody = document.getElementById("table-body");
     tableBody.innerHTML = "";
     const start = (page - 1) * rowsPerPage;
@@ -319,11 +317,11 @@ function displayTable(page) {
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `
-                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra(${record.idmanoobra},'${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra('${record.idmanoobra}','${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>
                         ` : ``}
                         ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idmanoobra},${record.estatus})"></i>`
+                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>` :
+                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>`
                 }
                     </div>
                 </td>
@@ -344,7 +342,7 @@ function displayTable(page) {
 
 }
 
-function setupPagination() {
+function setupPaginationManoObra() {
     const paginationDiv = document.getElementById("pagination");
     paginationDiv.innerHTML = "";
 
@@ -381,8 +379,8 @@ function setupPagination() {
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
-                displayTable(currentPage);
-                setupPagination();
+                displayTableManoObra(currentPage);
+                setupPaginationManoObra();
             }
         });
         paginationDiv.appendChild(prevButton);
@@ -405,8 +403,8 @@ function setupPagination() {
 
             button.addEventListener("click", () => {
                 currentPage = i;
-                displayTable(currentPage);
-                setupPagination();
+                displayTableManoObra(currentPage);
+                setupPaginationManoObra();
             });
 
             paginationDiv.appendChild(button);
@@ -422,17 +420,16 @@ function setupPagination() {
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
-                displayTable(currentPage);
-                setupPagination();
+                displayTableManoObra(currentPage);
+                setupPaginationManoObra();
             }
         });
         paginationDiv.appendChild(nextButton);
     }
 }
 
-function filterData() {
+function filterDataManoObra() {
     const searchText = document.getElementById("search-input").value.toLowerCase();
-    const categoriaFilter = document.getElementById("categoria-filter").value;
     const unidadFilter = document.getElementById("unidad-filter").value;
     const statusFilter = estatusMano;
 
@@ -440,36 +437,32 @@ function filterData() {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
         );
-        const matchesCategoria = categoriaFilter ? record.categoria == categoriaFilter : true;
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
         const matchesStatus = record.estatus == statusFilter;
-        return matchesSearch && matchesCategoria && matchesUnidad && matchesStatus;
+        return matchesSearch && matchesUnidad && matchesStatus;
     });
 
     currentPage = 1; // Reiniciar a la primera página después de filtrar
-    displayTable(currentPage);
-    setupPagination();
+    displayTableManoObra(currentPage);
+    setupPaginationManoObra();
 }
 
-function llenarTabla() {
-    displayTable(currentPage);
-    setupPagination();
+function llenarTablaManoObra() {
+    displayTableManoObra(currentPage);
+    setupPaginationManoObra();
 
     const searchInput = document.getElementById("search-input");
-    searchInput.addEventListener("input", filterData);
-
-    const categoriaFilter = document.getElementById("categoria-filter");
-    categoriaFilter.addEventListener("change", filterData);
+    searchInput.addEventListener("input", filterDataManoObra);
 
     const unidadFilter = document.getElementById("unidad-filter");
-    unidadFilter.addEventListener("change", filterData);
+    unidadFilter.addEventListener("change", filterDataManoObra);
 
     const rowsPerPageSelect = document.getElementById("rows-per-page");
     rowsPerPageSelect.addEventListener("change", function () {
         rowsPerPage = parseInt(this.value);
         currentPage = 1;
-        displayTable(currentPage);
-        setupPagination();
+        displayTableManoObra(currentPage);
+        setupPaginationManoObra();
     });
 }
 
@@ -516,7 +509,7 @@ function valStatusManoObra() {
         imgcheck.src = "../img/toggle_off_35px.png"
         estatusMano = 0;
     }
-    filterData();
+    filterDataManoObra();
 }
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
@@ -533,15 +526,9 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, fechaSalar
     idAnterior.value = id;
     idMO.value = id;
     salarioMO.value = salario;
+    categoriaMO.value = categoria;
 
 
-    //llenar el select de tipo
-    for (var i = 0; i < categoriaMO.options.length; i++) {
-        if (categoriaMO.options[i].value === categoria) {
-            categoriaMO.options[i].selected = true;
-            break;
-        }
-    }
     //llenar el select de unidad
     for (var i = 0; i < UnidadMO.options.length; i++) {
         if (UnidadMO.options[i].value === unidad) {
