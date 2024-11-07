@@ -489,8 +489,63 @@ function hayCantidadRendimientoManoObra() {
     });
 }
 
+/***
+ * 
+ * 
+ *  Metodos sobre la tabla de Herramientas y equipo de seguridad
+ * 
+ * 
+ */
+
+function llenarColumnaMo() {
+
+    const formatoMXN = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+    });
+
+    let convertirAMoneda = (valor) => {
+        return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
+    }
+    let totalColumnaManoObra = document.getElementById('Suma2');
+    let totalColumnaHerramientasEquipo = document.getElementById('Suma3');
+
+    const MOHerramientas = document.getElementById("ActualizarPrecioMoHerramientas");
+    let khHerramientas = document.getElementById("KhHerramientas")
+    const MOEquipo = document.getElementById("ActualizarPrecioMoEquipo");
+    let khEquipo = document.getElementById("KhEquipo")
 
 
+    let importeHerramientas = document.getElementById("importeHerramientas")
+    let importeEquipo = document.getElementById("importeEquipo")
+
+
+    MOHerramientas.innerHTML = totalColumnaManoObra.innerHTML;
+    MOEquipo.innerHTML = totalColumnaManoObra.innerHTML;
+
+    const precioHerramientas = (parseFloat(khHerramientas.innerHTML) * convertirAMoneda(MOHerramientas.innerHTML)) !== undefined && ((parseFloat(khHerramientas.innerHTML) * convertirAMoneda(MOHerramientas.innerHTML)) !== "")
+        ? formatoMXN.format(parseFloat(khHerramientas.innerHTML) * convertirAMoneda(MOHerramientas.innerHTML))
+        : "---";
+
+    const precioEquipo = (parseFloat(khEquipo.innerHTML) * convertirAMoneda(MOEquipo.innerHTML) !== undefined && (parseFloat(khEquipo.innerHTML) * convertirAMoneda(MOEquipo.innerHTML)) !== "")
+        ? formatoMXN.format(parseFloat(khEquipo.innerHTML) * convertirAMoneda(MOEquipo.innerHTML))
+        : "---";
+
+
+    importeHerramientas.innerHTML = precioHerramientas;
+    importeEquipo.innerHTML = precioEquipo;
+
+
+    const TotalSuma = (convertirAMoneda(precioHerramientas) + convertirAMoneda(precioEquipo)) !== undefined && (convertirAMoneda(precioHerramientas) + convertirAMoneda(precioEquipo)) !== ""
+        ? formatoMXN.format(convertirAMoneda(precioHerramientas) + convertirAMoneda(precioEquipo))
+        : "---";
+    totalColumnaHerramientasEquipo.innerHTML = TotalSuma;
+
+
+
+
+
+}
 
 /***
  * 
@@ -1198,7 +1253,13 @@ function AgregarTotalConcepto() {
 
 function calcularTotal() {
 
+    const formatoMXN = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+    });
+
     // Obtener los elementos de los labels
+    llenarColumnaMo();
     const suma1 = document.getElementById('Suma1').innerHTML;
     const suma2 = document.getElementById('Suma2').innerHTML;
     const suma3 = document.getElementById('Suma3').innerHTML;
@@ -1212,8 +1273,13 @@ function calcularTotal() {
     // Sumar las cantidades
     const total = convertirAMoneda(suma1) + convertirAMoneda(suma2) + convertirAMoneda(suma3) + convertirAMoneda(suma4) + convertirAMoneda(suma5);
 
+    const totalFormateado = total !== undefined && total !== ""
+        ? formatoMXN.format(total)
+        : "---";
+
     // Formatear el total como moneda
-    document.getElementById('TotalSumas').innerHTML = `$${total.toFixed(2)}`;
+    document.getElementById('TotalSumas').innerHTML = totalFormateado
+    llenarColumnaMo();
 }
 
 function pantallaIr() {
@@ -1239,12 +1305,12 @@ function mostrarCosasBasicos() {
     }
 }
 
-
 function llenarUnidadTablaTarjeta() {
     const unidadFilter = document.getElementById("selectUnidadBasicosPrincipal"); // El select donde agregarás las opciones
+    const unidadTablaModalFilter = document.getElementById("unidad-filterBasicos"); // El select donde agregarás las opciones
+    const unidadTablaSeleccionadosFilter = document.getElementById("selectUnidadBasicosModal"); // El select donde agregarás las opciones
     let json = "";
     let url = "../ws/ConceptosBasicos/wsGetUnidadesBasico.php";
-
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -1253,7 +1319,6 @@ function llenarUnidadTablaTarjeta() {
                     // Limpiar las opciones existentes del select (por si hay alguna previamente)
                     unidadFilter.innerHTML = "";
                     unidades = resp.datos;
-
                     // Crear una opción predeterminada o vacía
                     const optionDefault = document.createElement("option");
                     optionDefault.value = "";
@@ -1277,6 +1342,61 @@ function llenarUnidadTablaTarjeta() {
                         // Añadir la opción al select
                         unidadFilter.appendChild(option);
                     });
+
+                    /*
+                     * 
+                     *
+                     * 
+                     *  
+                    */
+
+                    // Limpiar las opciones existentes del select (por si hay alguna previamente)
+                    unidadTablaModalFilter.innerHTML = "";
+                    // Crear una opción predeterminada o vacía
+                    const TablaModal = document.createElement("option");
+                    TablaModal.value = "";
+                    TablaModal.textContent = "Todo";
+                    unidadTablaModalFilter.appendChild(TablaModal);
+                    // Iterar sobre las unidades obtenidas y añadirlas al select
+                    unidades.forEach(unidad => {
+                        // Crear un nuevo elemento <option>
+                        const option = document.createElement("option");
+
+                        // Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.unidad;
+                        option.textContent = unidad.unidad;
+
+                        // Añadir la opción al select
+                        unidadTablaModalFilter.appendChild(option);
+                    });
+
+
+                    /*
+                     * 
+                     *
+                     * 
+                     *  
+                    */
+
+                    // Limpiar las opciones existentes del select (por si hay alguna previamente)
+                    unidadTablaSeleccionadosFilter.innerHTML = "";
+                    // Crear una opción predeterminada o vacía
+                    const TablaSeleccionados = document.createElement("option");
+                    TablaSeleccionados.value = "";
+                    TablaSeleccionados.textContent = "Todo";
+                    unidadTablaSeleccionadosFilter.appendChild(TablaSeleccionados);
+                    // Iterar sobre las unidades obtenidas y añadirlas al select
+                    unidades.forEach(unidad => {
+                        // Crear un nuevo elemento <option>
+                        const option = document.createElement("option");
+                        // Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.unidad;
+                        option.textContent = unidad.unidad;
+
+                        // Añadir la opción al select
+                        unidadTablaSeleccionadosFilter.appendChild(option);
+                    });
+
                 }
             } else {
                 throw e = status;

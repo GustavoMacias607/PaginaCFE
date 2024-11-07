@@ -33,7 +33,7 @@ if (!isset($_SESSION['idusuario'])) {
     <link rel="stylesheet" href="./ManoObra/stylesManoObra.css">
     <link rel="stylesheet" href="./Maquinaria/stylesMaquinaria.css">
     <link rel="stylesheet" href="./Especificaciones/stylesEspecificaciones.css">
-    <link rel="stylesheet" href="./Basicos/stylesBasicos.css">
+    <link rel="stylesheet" href="./Catalogo/stylesBasicos.css">
     <link rel="stylesheet" href="./Proyectos/stylesproyecto.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 

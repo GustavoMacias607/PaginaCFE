@@ -218,7 +218,18 @@ if (!isset($_SESSION['idusuario'])) {
                     </tr>
                 </thead>
                 <tbody>
-                    <td colspan="8">Sin resultados</td>
+                    <tr class="fila">
+                        <td class="Code">Herramientas de Mano</td>
+                        <td id="KhHerramientas">0.03</td>
+                        <td id="ActualizarPrecioMoHerramientas">0</td>
+                        <td id="importeHerramientas">0</td>
+                    </tr>
+                    <tr class="fila">
+                        <td class="Code">Equipo de Seguridad</td>
+                        <td id="KhEquipo">0.02</td>
+                        <td id="ActualizarPrecioMoEquipo">0</td>
+                        <td id="importeEquipo">0</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -295,7 +306,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div><button type="button" onclick="javascript:AbrirModalBasicosTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
                     data-bs-target="#AgregarModalBasicosesConcepto">Agregar</button></div>
-            <div id="LecturaBasicos">Hay un concepto basico Inactivo</div>
+            <div id="LecturaBasicos" style="display: none;">Hay un concepto basico Inactivo</div>
 
         </nav>
     </div>
@@ -316,9 +327,7 @@ if (!isset($_SESSION['idusuario'])) {
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                    <option value="" selected>Todo</option>
-                                    <option value="Estructuras">Estructura</option>
-                                    <option value="PZA">PZA</option>
+
                                 </select>
                             </div>
                         </th>
@@ -339,7 +348,7 @@ if (!isset($_SESSION['idusuario'])) {
             </table>
         </div>
     </div>
-    <div class="grid-container" id="TotalAgregarBasicos">
+    <div class="grid-container" id="TotalAgregarBasicos" style="display: none;">
         <label class="subtotales_textos">Suma 5:</label>
         <div>
             <label id="Suma5" class="subtotales_numeros_top">$0.00</label>
@@ -622,7 +631,8 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar mano de obra
+                <h1 class="modal-title fs-5" id="exampleModalLabel"
+                    style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar mano de obra
                 </h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputManoObra">
@@ -769,7 +779,8 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar maquinaria</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel"
+                    style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar maquinaria</h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputMaquinaria">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
