@@ -884,6 +884,7 @@ function AgregartablaMaterialesTarjeta() {
             material.suministrado = 0;
         }
         let json = JSON.stringify(material);
+        console.log(material)
         let url = "../ws/TarjetaMateriales/wsAddMaterialesTarjeta.php";
         $.post(url, json, (responseText, status) => {
             try {
@@ -1077,6 +1078,7 @@ function MostrartablaMaterialesTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
+                console.log(resp.datos)
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalMaterialesPrincipal.push({
@@ -1087,7 +1089,7 @@ function MostrartablaMaterialesTarjeta() {
                             fechaprecio: datos.fechaprecio,
                             unidad: datos.unidad,
                             cantidad: datos.cantmaterial,
-                            suministrado: datos.suministrado,
+                            suministrado: datos.suministrado == 1 ? true : false,
                             estatus: datos.estatus
                         });
                     })
@@ -1182,7 +1184,7 @@ function MostrartablaBasicosTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                console.log(datosBd)
+                
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalBasicosPrincipal.push({
