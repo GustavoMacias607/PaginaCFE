@@ -164,13 +164,13 @@ if (!isset($_SESSION['idusuario'])) {
                             Salario
                         </th>
                         <th style="width: 8rem;">
+                            Rendimiento
+                        </th>
+                        <th style="width: 8rem;">
                             Cantidad
                         </th>
                         <th style="width: 8rem;">
                             Sr
-                        </th>
-                        <th style="width: 8rem;">
-                            Rendimiento
                         </th>
                         <th style="width: 9rem;">
                             Importe
@@ -219,13 +219,13 @@ if (!isset($_SESSION['idusuario'])) {
                 </thead>
                 <tbody>
                     <tr class="fila">
-                        <td class="Code">Herramientas de Mano</td>
+                        <td class="Code">HERRAMIENTAS DE MANO</td>
                         <td id="KhHerramientas">0.03</td>
                         <td id="ActualizarPrecioMoHerramientas">0</td>
                         <td id="importeHerramientas">0</td>
                     </tr>
                     <tr class="fila">
-                        <td class="Code">Equipo de Seguridad</td>
+                        <td class="Code">EQUIPO Y SEGURIDAD</td>
                         <td id="KhEquipo">0.02</td>
                         <td id="ActualizarPrecioMoEquipo">0</td>
                         <td id="importeEquipo">0</td>

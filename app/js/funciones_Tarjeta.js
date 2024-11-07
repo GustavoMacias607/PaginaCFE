@@ -8,7 +8,6 @@ let TipoConcepto;
 
 // Variables donde se almacena si hay valores con 0 en las tablas
 let cantidad0 = false;
-let cantidadManoObra = true;
 let rendimientoManoObra = true;
 let RhmMquinaria = true;
 let cantidadBasicos = true;
@@ -79,10 +78,6 @@ function guardarTablasEnBD() {
         return;
     }
     hayCantidadRendimientoManoObra();
-    if (cantidadManoObra) {
-        mensajePantalla("Mano de obra sin cantidad", false);
-        return;
-    }
     if (rendimientoManoObra) {
         mensajePantalla("Mano de obra sin rendimiento", false);
         return;
@@ -304,7 +299,6 @@ function llenarTablaManoObraSeleccionadosP() {
     actualizarSumaManoObra();
 }
 
-// Método para llenar la tabla
 function displayTableManoObraTarjetaP(page) {
     manoObraInactivo = false;
     const tableBody = document.getElementById("table-bodyManoObraTarjetaPrincipal");
@@ -337,60 +331,45 @@ function displayTableManoObraTarjetaP(page) {
                 <td>${record.categoria || "---"}</td>
                 <td>${record.unidad || "---"}</td>
                 <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-cantidad" style="background-color: ${record.cantidad > 0 ? 'transparent' : 'red'};">
-                    ${record.cantidad || 0}
-                </td>
-                <td class="multiplicacion">---</td>
                 <td contenteditable="true" class="editable-rendimiento" style="background-color: ${record.rendimiento > 0 ? 'transparent' : 'red'};">
                     ${record.rendimiento || 0}
                 </td>
+                <td class="cantidad">---</td>
+                <td class="multiplicacion">---</td>
                 <td class="resultadoMano">---</td>
             `;
 
-            const cantidadCell = row.querySelector('.editable-cantidad');
             const rendimientoCell = row.querySelector('.editable-rendimiento');
+            const cantidadCell = row.querySelector('.cantidad');
             const multiplicacionCell = row.querySelector('.multiplicacion');
             const resultadoCell = row.querySelector('.resultadoMano');
 
             function actualizarCalculos() {
-                const cantidad = parseFloat(cantidadCell.innerText) || 0;
                 const rendimiento = parseFloat(rendimientoCell.innerText) || 0;
+                const cantidad = rendimiento > 0 ? 1 / rendimiento : 0;
 
-                // Actualizar arreglo de objetos
+                // Actualizar arreglo de objetos con el valor exacto
                 const item = objTabla2ModalManoObraiaPrincipal.find(obj => obj.idmanoobra == record.idmanoobra);
                 if (item) {
                     item.cantidad = cantidad;
                     item.rendimiento = rendimiento;
                 }
 
-                // Actualizar color de fondo basado en valor
-                cantidadCell.style.backgroundColor = cantidad > 0 ? 'transparent' : 'red';
-                rendimientoCell.style.backgroundColor = rendimiento > 0 ? 'transparent' : 'red';
+                // Mostrar `cantidad` con dos decimales
+                cantidadCell.textContent = cantidad.toFixed(2);
 
-                // Cálculo de multiplicación y resultado
+                // Cálculo preciso de multiplicación y resultado
                 const multiplicacion = salario * cantidad;
                 multiplicacionCell.textContent = formatoMXN.format(multiplicacion);
+
                 const resultado = rendimiento > 0 ? multiplicacion / rendimiento : 0;
                 resultadoCell.textContent = formatoMXN.format(resultado);
+
+                // Color de fondo del rendimiento
+                rendimientoCell.style.backgroundColor = rendimiento > 0 ? 'transparent' : 'red';
+
                 actualizarSumaManoObra();
             }
-
-            // Eventos para cantidad
-            cantidadCell.addEventListener('input', () => {
-                const valor = cantidadCell.innerText;
-                if (!/^\d*\.?\d*$/.test(valor)) {
-                    cantidadCell.innerText = valor.slice(0, -1);
-                }
-                actualizarCalculos();
-            });
-
-            cantidadCell.addEventListener('blur', () => {
-                const valor = parseFloat(cantidadCell.innerText);
-                if (isNaN(valor) || valor < 0) {
-                    cantidadCell.innerText = "0";
-                }
-                actualizarCalculos();
-            });
 
             // Eventos para rendimiento
             rendimientoCell.addEventListener('input', () => {
@@ -403,7 +382,7 @@ function displayTableManoObraTarjetaP(page) {
 
             rendimientoCell.addEventListener('blur', () => {
                 const valor = parseFloat(rendimientoCell.innerText);
-                if (isNaN(valor) || valor < 0) {
+                if (isNaN(valor) || valor <= 0) {
                     rendimientoCell.innerText = "0";
                 }
                 actualizarCalculos();
@@ -412,6 +391,7 @@ function displayTableManoObraTarjetaP(page) {
             tableBody.appendChild(row);
             actualizarCalculos();
         });
+
         const LecturaManoObra = document.querySelector('#LecturaManoObra');
         if (manoObraInactivo) {
             LecturaManoObra.style.display = 'flex';
@@ -471,14 +451,6 @@ function llenarTablaManoObraTarjetaP() {
 }
 
 function hayCantidadRendimientoManoObra() {
-    const cantidadCells = document.querySelectorAll('.editable-cantidad');
-    cantidadManoObra = false; // Restablece el valor a false antes de verificar
-    cantidadCells.forEach(cell => {
-        const value = parseFloat(cell.textContent) || 0;
-        if (value == 0) {
-            cantidadManoObra = true;
-        }
-    });
     const rendimientoCells = document.querySelectorAll('.editable-rendimiento');
     rendimientoManoObra = false; // Restablece el valor a false antes de verificar
     rendimientoCells.forEach(cell => {
@@ -884,7 +856,6 @@ function AgregartablaMaterialesTarjeta() {
             material.suministrado = 0;
         }
         let json = JSON.stringify(material);
-        console.log(material)
         let url = "../ws/TarjetaMateriales/wsAddMaterialesTarjeta.php";
         $.post(url, json, (responseText, status) => {
             try {
@@ -1078,7 +1049,6 @@ function MostrartablaMaterialesTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                console.log(resp.datos)
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalMaterialesPrincipal.push({
@@ -1089,7 +1059,7 @@ function MostrartablaMaterialesTarjeta() {
                             fechaprecio: datos.fechaprecio,
                             unidad: datos.unidad,
                             cantidad: datos.cantmaterial,
-                            suministrado: datos.suministrado == 1 ? true : false,
+                            suministrado: datos.suministrado,
                             estatus: datos.estatus
                         });
                     })
@@ -1184,7 +1154,7 @@ function MostrartablaBasicosTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                
+                console.log(datosBd)
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalBasicosPrincipal.push({
