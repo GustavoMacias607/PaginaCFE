@@ -118,7 +118,8 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddidInputManodeobra"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                        id="AddidInputManodeobra"
                         onblur="javascript:CompruebaTieneAlgoInput(this); checkManoObra('Add')">
                 </div>
                 <div class="mb-3">
@@ -147,7 +148,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
-                    <input type="file" class="form-control inputLleno" id="AddpdfInput" onchange="AddmostrarPDF(this)"
+                    <input type="file" class="form-control inputLleno" id="AddpdfInput"
                         style="border: 3px solid #008E5A;">
                 </div>
                 <div class="modal-footer modal-footer-manodeobra">
@@ -205,7 +206,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
-                    <input type="file" class="form-control inputLleno" id="UpdpdfInput" onchange="AddmostrarPDF(this)"
+                    <input type="file" class="form-control inputLleno" id="UpdpdfInput"
                         style="border: 3px solid #008E5A;">
                 </div>
                 <div class=" modal-footer modal-footer-manodeobra">

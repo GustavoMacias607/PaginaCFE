@@ -5,7 +5,6 @@ let msgModificarMaqui = "Maquinaria modificada";
 
 var estatusMaquinaria = 1;
 data = []
-
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaquinariaValidar() {
     let vacio = false;
@@ -74,8 +73,17 @@ function AddMaquinariaValidar() {
         id.focus();
         return;
     }
+    guardo = true;
+    let inputFile = document.getElementById('AddpdfInput');
+    if (inputFile.value) {
+        AddAgregarPDFMaquinaria()
+        if (!guardo) {
+            return;
+        }
+    }
+
     let json = JSON.stringify(datos);
-    console.log(json);
+    console.log(datos)
     let url = "../ws/Maquinaria/wsAddMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -164,8 +172,15 @@ function UpdMaquinariaValidar() {
         id.focus();
         return;
     }
+    guardo = true;
+    let inputFile = document.getElementById('UpdpdfInput');
+    if (inputFile.value) {
+        UpdAgregarPDFMaquinaria()
+        if (!guardo) {
+            return;
+        }
+    }
     let json = JSON.stringify(datos);
-    console.log(json);
     let url = "../ws/Maquinaria/wsUpdMaquinaria.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -323,6 +338,9 @@ function displayTableMaquinaria(page) {
                         ${record.estatus == 1 ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria('${record.idmaquinaria}','${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
                         ` : ``}
+                          <!-- Ícono para ver PDF, llamando a la función verPDF -->
+                        <i class="coloresIcono fa-regular fa-file-pdf" style="cursor: pointer;" alt="Ver PDF" onclick="verPDFMaquinaria('${record.idmaquinaria}')"></i>
+
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>`
@@ -345,7 +363,34 @@ function displayTableMaquinaria(page) {
         tableBody.innerHTML += row;
     }
 }
+function verPDFMaquinaria(idMaquinaria) {
+    // Construir la ruta del directorio donde se encuentra el archivo PDF
+    const pdfDirectory = `../PDFMaquinaria/${idMaquinaria}/`;
 
+    // Llamar al servidor para obtener la lista de archivos en la carpeta
+    fetch(pdfDirectory)
+        .then(response => {
+            if (response.ok) {
+                // Si la carpeta existe, buscar el primer archivo PDF
+                return response.text();
+            } else {
+                mensajePantalla("Maquinaria sin PDF");
+            }
+        })
+        .then(data => {
+            // Buscar el primer archivo PDF en la respuesta
+            const pdfFileMatch = data.match(/href="([^"]+\.pdf)"/);
+            if (pdfFileMatch) {
+                // Si encontramos un archivo PDF, construir la URL completa
+                const pdfPath = pdfDirectory + pdfFileMatch[1];
+                // Abrir el PDF en una nueva pestaña
+                window.open(pdfPath, '_blank');
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar el archivo:', error);
+        });
+}
 function setupPaginationMaquinaria() {
     const paginationDiv = document.getElementById("pagination");
     paginationDiv.innerHTML = "";
@@ -473,7 +518,8 @@ function AddlimpiarModalMaquinaria() {
     let descripcionMa = document.querySelector('#AdddescripcionInputMaquinaria');
     let UnidadMa = document.querySelector('#AddUnidadInputMaquinaria');
     let phm = document.querySelector('#AddphmInputMaquinaria');
-    let rhm = document.querySelector('#AddrhmInputMaquinaria');
+    let InputPDF = document.querySelector('#AddpdfInput');
+    InputPDF.value = "";
     let fechaActual = new Date();
     let año = fechaActual.getFullYear();
     let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
@@ -486,18 +532,15 @@ function AddlimpiarModalMaquinaria() {
     descripcionMa.value = "";
     UnidadMa.value = "";
     phm.value = "";
-    rhm.value = "";
 
     idMa.placeholder = "";
     descripcionMa.placeholder = "";
-    rhm.placeholder = "";
     phm.placeholder = "";
 
     idMa.classList.remove("inputVacio");
     descripcionMa.classList.remove("inputVacio");
     UnidadMa.classList.remove("inputVacio");
     phm.classList.remove("inputVacio");
-    rhm.classList.remove("inputVacio");
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -526,7 +569,8 @@ function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, fechaPreci
     let UnidadMa = document.querySelector('#UpdUnidadInputMaquinaria');
     let phm = document.querySelector('#UpdphmInput');
     let idAnterior = document.querySelector('#UpdidAnteriorMaqui');
-
+    let InputPDF = document.querySelector('#UpdpdfInput');
+    InputPDF.value = "";
     idAnterior.value = id;
     idMa.value = id;
     descripcionMa.value = descripcion;
@@ -573,4 +617,86 @@ function AbrirModalConfirm1() {
     }
 
 }
+function UpdAgregarPDFMaquinaria() {
+    let id = document.querySelector('#UpdidInput').value;
+    let idAnterior = document.querySelector('#UpdidAnteriorMaqui').value; // Obtener el ID anterior
+    var inputFile = document.getElementById('UpdpdfInput');
+    var file = inputFile.files[0];
+
+    // Verificar el tamaño máximo del archivo (5 MB)
+    var maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size <= maxSizeBytes) {
+        // Verificar si el archivo es un PDF
+        if (file.type === 'application/pdf') {
+            var formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('id', id);
+            formData.append('idAnterior', idAnterior); // Añadir el ID anterior al FormData
+
+            // Enviar el archivo al servidor
+            $.ajax({
+                url: './js/guardar_pdfMaquinaria.php', // Asegúrate de que la ruta es correcta
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log('PDF guardado:', response);
+                    guardo = true;
+                },
+                error: function (error) {
+                    console.error('Error al guardar el PDF:', error);
+                    guardo = false;
+                }
+            });
+        } else {
+            mensajePantalla('El archivo seleccionado no es un PDF.', false);
+            guardo = false;
+        }
+    } else {
+        mensajePantalla('El tamaño del archivo excede el límite de 5 MB.', false);
+        guardo = false;
+    }
+}
+function AddAgregarPDFMaquinaria() {
+    let id = document.querySelector('#AddidInputMaquinaria').value;
+    let inputFile = document.getElementById('AddpdfInput');
+    let idAnterior = id;
+    var file = inputFile.files[0];
+    // Verificar el tamaño máximo del archivo (5 MB)
+    var maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size <= maxSizeBytes) {
+        // Verificar si el archivo es un PDF
+        if (file.type === 'application/pdf') {
+            var formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('id', id);
+            formData.append('idAnterior', idAnterior);
+            // Enviar el archivo al servidor
+            $.ajax({
+                url: './js/guardar_pdfMaquinaria.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log('PDF guardado:', response);
+                    guardo = true;
+                },
+                error: function (error) {
+                    console.error('Error al guardar el PDF:', error);
+                    guardo = false;
+                }
+            });
+        } else {
+            mensajePantalla('El archivo no es un PDF.', false);
+            guardo = false;
+        }
+    } else {
+        mensajePantalla('El tamaño del archivo excede el límite de 5 MB.', false);
+        guardo = false;
+    }
+}
+
+
 

@@ -65,7 +65,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <th>
                         Descripción
                     </th>
-                    <th  style="width: 9.5rem;">
+                    <th style="width: 9.5rem;">
                         <div class="d-flex align-items-center">
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
@@ -90,7 +90,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </tr>
             </thead>
             <tbody id="table-bodyMaquinaria">
-            <td colspan="8">Sin resultados</td>
+                <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
@@ -112,13 +112,14 @@ if (!isset($_SESSION['idusuario'])) {
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddidInputMaquinaria"
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                        id="AddidInputMaquinaria"
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkMaquinaria('Add');">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
-                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AdddescripcionInputMaquinaria" rows="2"></textarea>
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        class="form-control inputLleno" id="AdddescripcionInputMaquinaria" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -142,11 +143,11 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                     <input type="file" class="form-control inputLleno" id="AddpdfInput"
-                        onchange="AddmostrarPDF(this)" style="border: 3px solid #008E5A;">
+                        style="border: 3px solid #008E5A;">
                 </div>
                 <div class="modal-footer modal-footer-maquinaria">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddMaquinariaValidar();"
-                        >Guardar</button>
+                    <button type="button" class="btn btn-primary"
+                        onclick="javascript:AddMaquinariaValidar();">Guardar</button>
                 </div>
             </div>
         </div>
@@ -175,8 +176,8 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
-                    <textarea type="text" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpddescripcionInput" rows="2"></textarea>
+                    <textarea type="text" class="form-control inputLleno"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpddescripcionInput" rows="2"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -200,10 +201,11 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                     <input type="file" class="form-control inputLleno" id="UpdpdfInput"
-                        onchange="AddmostrarPDF(this)" style="border: 3px solid #008E5A;">
+                        style="border: 3px solid #008E5A;">
                 </div>
                 <div class=" modal-footer modal-footer-maquinaria">
-                    <button type="button" class="btn btn-primary" onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
+                    <button type="button" class="btn btn-primary"
+                        onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
                 </div>
             </div>
         </div>

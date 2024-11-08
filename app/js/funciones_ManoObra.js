@@ -5,8 +5,12 @@ let msgModificarObra = "Mano de obra modificada";
 
 var estatusMano = 1;
 let data = []
+
+let guardo;
+
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddManoObraValidar() {
+    guardo = true;
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
@@ -73,8 +77,14 @@ function AddManoObraValidar() {
         id.focus();
         return;
     }
+    let inputFile = document.getElementById('AddpdfInput');
+    if (inputFile.value) {
+        AddAgregarPDF()
+        if (!guardo) {
+            return;
+        }
+    }
     let json = JSON.stringify(datos);
-
     let url = "../ws/ManoObra/wsAddManoObra.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -158,10 +168,18 @@ function UpdManoObraValidar() {
         PrimerValorVacio.focus();
         return;
     }
-    checkManoObra("Upd");
+
     if (existe) {
         id.focus();
         return;
+    }
+
+    let inputFile = document.getElementById('UpdpdfInput');
+    if (inputFile.value) {
+        UpdAgregarPDF();
+        if (!guardo) {
+            return;
+        }
     }
     let json = JSON.stringify(datos);
     let url = "../ws/ManoObra/wsUpdManoObra.php";
@@ -181,6 +199,86 @@ function UpdManoObraValidar() {
             alert("Error: " + error)
         }
     });
+}
+function UpdAgregarPDF() {
+    let id = document.querySelector('#UpdidInput').value;
+    let idAnterior = document.querySelector('#UpdidAnteriorMano').value; // Obtener el ID anterior
+    var inputFile = document.getElementById('UpdpdfInput');
+    var file = inputFile.files[0];
+
+    // Verificar el tamaño máximo del archivo (5 MB)
+    var maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size <= maxSizeBytes) {
+        // Verificar si el archivo es un PDF
+        if (file.type === 'application/pdf') {
+            var formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('id', id);
+            formData.append('idAnterior', idAnterior); // Añadir el ID anterior al FormData
+
+            // Enviar el archivo al servidor
+            $.ajax({
+                url: './js/guardar_pdfManoObra.php', // Asegúrate de que la ruta es correcta
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log('PDF guardado:', response);
+                    guardo = true;
+                },
+                error: function (error) {
+                    console.error('Error al guardar el PDF:', error);
+                    guardo = false;
+                }
+            });
+        } else {
+            mensajePantalla('El archivo seleccionado no es un PDF.', false);
+            guardo = false;
+        }
+    } else {
+        mensajePantalla('El tamaño del archivo excede el límite de 5 MB.', false);
+        guardo = false;
+    }
+}
+function AddAgregarPDF() {
+    let id = document.querySelector('#AddidInputManodeobra').value;
+    let inputFile = document.getElementById('AddpdfInput');
+    let idAnterior = id;
+    var file = inputFile.files[0];
+    // Verificar el tamaño máximo del archivo (5 MB)
+    var maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size <= maxSizeBytes) {
+        // Verificar si el archivo es un PDF
+        if (file.type === 'application/pdf') {
+            var formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('id', id);
+            formData.append('idAnterior', idAnterior);
+            // Enviar el archivo al servidor
+            $.ajax({
+                url: './js/guardar_pdfManoObra.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log('PDF guardado:', response);
+                    guardo = true;
+                },
+                error: function (error) {
+                    console.error('Error al guardar el PDF:', error);
+                    guardo = false;
+                }
+            });
+        } else {
+            mensajePantalla('El archivo no es un PDF.', false);
+            guardo = false;
+        }
+    } else {
+        mensajePantalla('El tamaño del archivo excede el límite de 5 MB.', false);
+        guardo = false;
+    }
 }
 
 function checkManoObra(modal) {
@@ -294,7 +392,6 @@ function GetManoObra() {
 }
 
 
-
 function displayTableManoObra(page) {
     const tableBody = document.getElementById("table-body");
     tableBody.innerHTML = "";
@@ -319,6 +416,10 @@ function displayTableManoObra(page) {
                         ${record.estatus == 1 ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra('${record.idmanoobra}','${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>
                         ` : ``}
+                        
+                        <!-- Ícono para ver PDF, llamando a la función verPDF -->
+                        <i class="coloresIcono fa-regular fa-file-pdf" style="cursor: pointer;" alt="Ver PDF" onclick="verPDF('${record.idmanoobra}')"></i>
+
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>`
@@ -339,7 +440,36 @@ function displayTableManoObra(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
+}
 
+// Función para abrir el PDF en una nueva pestaña
+function verPDF(idmanoobra) {
+    // Construir la ruta del directorio donde se encuentra el archivo PDF
+    const pdfDirectory = `../PDFManoObra/${idmanoobra}/`;
+
+    // Llamar al servidor para obtener la lista de archivos en la carpeta
+    fetch(pdfDirectory)
+        .then(response => {
+            if (response.ok) {
+                // Si la carpeta existe, buscar el primer archivo PDF
+                return response.text();
+            } else {
+                mensajePantalla("Mano de obra sin PDF");
+            }
+        })
+        .then(data => {
+            // Buscar el primer archivo PDF en la respuesta
+            const pdfFileMatch = data.match(/href="([^"]+\.pdf)"/);
+            if (pdfFileMatch) {
+                // Si encontramos un archivo PDF, construir la URL completa
+                const pdfPath = pdfDirectory + pdfFileMatch[1];
+                // Abrir el PDF en una nueva pestaña
+                window.open(pdfPath, '_blank');
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar el archivo:', error);
+        });
 }
 
 function setupPaginationManoObra() {
@@ -475,6 +605,8 @@ function AddlimpiarModalManoObra() {
     let categoriaMO = document.querySelector('#AddCategoriaInputManodeobra');
     let UnidadMO = document.querySelector('#AddUnidadInputManodeobra');
     let salarioMO = document.querySelector('#AddsalarioInputManodeobra');
+    let InputPdf = document.querySelector('#AddpdfInput');
+    InputPdf.value = "";
     let fechaActual = new Date();
     let año = fechaActual.getFullYear();
     let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
@@ -522,6 +654,8 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, fechaSalar
     let UnidadMO = document.querySelector('#updUnidadInputManodeobra');
     let salarioMO = document.querySelector('#UpdsalarioInput');
     let idAnterior = document.querySelector('#UpdidAnteriorMano');
+    let inputFile = document.getElementById('UpdpdfInput');
+    inputFile.value = "";
 
     idAnterior.value = id;
     idMO.value = id;
