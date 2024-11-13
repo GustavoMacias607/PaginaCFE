@@ -12,7 +12,6 @@ let selectedRows = [];
 
 let unidades;
 
-
 let currentSortField = null;
 let currentSortOrder = 'asc';
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
@@ -235,11 +234,11 @@ function CambioEstatusConcepto() {
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function PrincipalConcepto(tipoConcepto) {
     estatusConcepto = 1;
-    document.getElementById("sort-id").addEventListener("click", () => sortData('idconcepto'));
+    document.getElementById("sort-id").addEventListener("click", () => sortData('idconbasi'));
     document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
     // Eventos de clic para los botones
     document.getElementById("sort-id").addEventListener("click", function () {
-        toggleSort(this, 'idconcepto');
+        toggleSort(this, 'idconbasi');
     });
     document.getElementById("sort-name").addEventListener("click", function () {
         toggleSort(this, 'nombre');
@@ -285,38 +284,37 @@ function obtenerDatosConceptos(btnOpcion) {
     });
 }
 
-
 function sortData(field) {
     if (currentSortField === field) {
-        // Si el campo de ordenación actual ya está seleccionado, alterna el orden
         currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
     } else {
-        // Si es un nuevo campo de ordenación, resetea la dirección a ascendente
         currentSortField = field;
         currentSortOrder = 'asc';
     }
 
     filteredData.sort((a, b) => {
-        // Manejo de valores nulos o vacíos para que no causen problemas
         const valA = a[field] !== null && a[field] !== undefined ? a[field] : '';
         const valB = b[field] !== null && b[field] !== undefined ? b[field] : '';
 
-        // Si el valor es numérico, lo comparamos como números, de lo contrario como strings
-        if (typeof valA === 'number' && typeof valB === 'number') {
+        if (field === 'idconbasi') {
+            // Extraer la parte numérica después de 'ba' y convertirla en número
+            const numA = parseInt(valA.replace('ba', ''), 10);
+            const numB = parseInt(valB.replace('ba', ''), 10);
+            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+        } else if (typeof valA === 'number' && typeof valB === 'number') {
             return currentSortOrder === 'asc' ? valA - valB : valB - valA;
         } else {
-            // Si son cadenas de texto, las comparamos en forma case-insensitive
             return currentSortOrder === 'asc'
                 ? valA.toString().localeCompare(valB.toString(), undefined, { sensitivity: 'base' })
                 : valB.toString().localeCompare(valA.toString(), undefined, { sensitivity: 'base' });
         }
     });
 
-    // Reinicia la página a la primera después de ordenar
     currentPage = 1;
     displayTableConcepto(currentPage);
     setupPaginationConcepto();
 }
+
 function toggleSort(button, field) {
     // Desactiva los otros botones de ordenación
     document.querySelectorAll('.sort-button').forEach(btn => btn.classList.remove('active'));
@@ -790,6 +788,8 @@ function seleccionarSugerencia(unidad, inputUnidad, sugerenciasDiv) {
     sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro
 }
 
+
+
 /*
 *
 *
@@ -838,7 +838,6 @@ function AddConceptoBasicoValidar() {
     let PrimerValorVacio;
     const datos = {};
     let id = document.querySelector('#idInputConceptoBasico');
-    console.log(id)
     if (id.value == "") {
         id.classList.add("inputVacio");
         id.placeholder = "Requerido el ID"
@@ -887,6 +886,7 @@ function AddConceptoBasicoValidar() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+                console.log(resp)
                 if (resp.estado == "OK") {
                     AddCerrarModal();
                     PrincipalConcepto(0);
@@ -982,18 +982,16 @@ function AddlimpiarModalConceptoBasico() {
     let nombreC = document.querySelector('#AddnombreInputConceptoBasico');
     let unidadC = document.querySelector('#AddunidadInputConceptoBasico');
 
-
-    idC.value = "";
+    idC.value = idConceptoBasicoAutomatico();
     nombreC.value = "";
     unidadC.value = "";
 
     nombreC.placeholder = "";
-    idC.placeholder = "";
     unidadC.placeholder = "";
 
-    idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
+
 }
 
 
@@ -1020,4 +1018,21 @@ function llenarModalModificarConceptoBasico(id, nombre, unidad, total) {
     idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
+}
+
+function idConceptoBasicoAutomatico() {
+    if (data.length === 0) {
+        return "ba001";
+    }
+    // Extrae el último número de idconbasi en el arreglo de data
+    let maxIdNumber = data.reduce((max, item) => {
+        // Obtiene el número después de "ba" y lo convierte en un entero
+        const idNumber = parseInt(item.idconbasi.replace("ba", ""), 10);
+        return Math.max(max, idNumber);
+    }, 0);
+
+    // Incrementa el número más alto encontrado y genera el nuevo id
+    const newId = `ba${String(maxIdNumber + 1).padStart(3, '0')}`;
+
+    return newId;
 }

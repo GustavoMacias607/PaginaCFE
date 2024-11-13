@@ -215,10 +215,7 @@ class TarjetaManoObra
  * 
  * 
  * 
-
  */
-
-
 
 class TarjetaMaquinaria
 {

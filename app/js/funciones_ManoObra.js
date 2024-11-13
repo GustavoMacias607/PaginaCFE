@@ -10,7 +10,6 @@ let guardo;
 
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddManoObraValidar() {
-    guardo = true;
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
@@ -77,6 +76,7 @@ function AddManoObraValidar() {
         id.focus();
         return;
     }
+    guardo = true;
     let inputFile = document.getElementById('AddpdfInput');
     if (inputFile.value) {
         AddAgregarPDF()
@@ -173,7 +173,7 @@ function UpdManoObraValidar() {
         id.focus();
         return;
     }
-
+    guardo = true;
     let inputFile = document.getElementById('UpdpdfInput');
     if (inputFile.value) {
         UpdAgregarPDF();
@@ -601,6 +601,7 @@ function llenarTablaManoObra() {
 
 //Metodo para limpiar el modal de agregar mano de obra
 function AddlimpiarModalManoObra() {
+    console.log(idManoObraAutomatico())
     let idMO = document.querySelector('#AddidInputManodeobra');
     let categoriaMO = document.querySelector('#AddCategoriaInputManodeobra');
     let UnidadMO = document.querySelector('#AddUnidadInputManodeobra');
@@ -614,15 +615,14 @@ function AddlimpiarModalManoObra() {
     let fechaFormateada = `${año}-${mes}-${dia}`;
     document.querySelector('#AddfechaSalarioInput').value = fechaFormateada;
 
-    idMO.value = "";
+    idMO.value = idManoObraAutomatico();
+
     categoriaMO.value = "";
     UnidadMO.value = "";
     salarioMO.value = "";
 
-    idMO.placeholder = "";
     salarioMO.placeholder = "";
 
-    idMO.classList.remove("inputVacio");
     categoriaMO.classList.remove("inputVacio");
     UnidadMO.classList.remove("inputVacio");
     salarioMO.classList.remove("inputVacio");
@@ -698,4 +698,22 @@ function AbrirModalConfirm1() {
     } else {
         $('#confirmActivationModal').modal('show');
     }
+}
+
+
+function idManoObraAutomatico() {
+    if (data.length === 0) {
+        return "Mano01";
+    }
+    // Extrae el último número de idconbasi en el arreglo de data
+    let maxIdNumber = data.reduce((max, item) => {
+        // Obtiene el número después de "ba" y lo convierte en un entero
+        const idNumber = parseInt(item.idmanoobra.replace("Mano", ""), 10);
+        return Math.max(max, idNumber);
+    }, 0);
+
+    // Incrementa el número más alto encontrado y genera el nuevo id
+    const newId = `Mano${String(maxIdNumber + 1).padStart(2, '0')}`;
+
+    return newId;
 }

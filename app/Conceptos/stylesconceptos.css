@@ -221,9 +221,10 @@ body {
   border-top-width: 0px;
   margin-top: 0px;
 
-  /*position: relative;*/
-  /*height: calc(400px);  Ajusta esta altura según tus necesidades */
+  position: fixed;
   overflow-y: auto;
+  height: 60%;
+  width: 96%;
 }
 
 #tabla-conceptos {

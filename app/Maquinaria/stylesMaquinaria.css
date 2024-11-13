@@ -188,7 +188,6 @@ body {
 .tabla-container-maquinaria {
   text-align: center;
   margin-bottom: 100px;
-  overflow-y: auto;
   /* Altura máxima del contenedor */
   /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
@@ -196,9 +195,10 @@ body {
   border-top-width: 0px;
   margin-top: 0px;
 
-  /*position: relative;*/
-  /*height: calc(400px); Ajusta esta altura según tus necesidades */
- 
+  position: fixed;
+  overflow-y: auto;
+  height: 60%;
+  width: 96%;
 }
 
 #tabla-maquinaria {

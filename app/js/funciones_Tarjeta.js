@@ -168,7 +168,7 @@ function displayTableMaterialesTarjetaP(page) {
                 <td>${record.descripcion || "---"}</td>
                 <td>${record.unidad || "---"}</td>
                 <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable" style="background-color: ${record.cantidad > 0 ? 'transparent' : 'red'};">
+                <td contenteditable="true" class="editable" style="background-color: ${record.cantidad > 0 ? '#82f75780' : 'red'};">
                     ${record.cantidad || 0}
                 </td>
                 <td>
@@ -195,7 +195,7 @@ function displayTableMaterialesTarjetaP(page) {
                 }
 
                 // Actualizar colores y resultado
-                cantidadCell.style.backgroundColor = cantidad > 0 ? 'transparent' : 'red';
+                cantidadCell.style.backgroundColor = cantidad > 0 ? '#82f75780' : 'red';
                 const resultado = checkbox.checked ? 0 : cantidad * record.precio;
                 resultadoCell.textContent = formatoMXN.format(resultado);
 
@@ -331,7 +331,7 @@ function displayTableManoObraTarjetaP(page) {
                 <td>${record.categoria || "---"}</td>
                 <td>${record.unidad || "---"}</td>
                 <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-rendimiento" style="background-color: ${record.rendimiento > 0 ? 'transparent' : 'red'};">
+                <td contenteditable="true" class="editable-rendimiento" style="background-color: ${record.rendimiento > 0 ? '#82f75780' : 'red'};">
                     ${record.rendimiento || 0}
                 </td>
                 <td class="cantidad">---</td>
@@ -366,7 +366,7 @@ function displayTableManoObraTarjetaP(page) {
                 resultadoCell.textContent = formatoMXN.format(resultado);
 
                 // Color de fondo del rendimiento
-                rendimientoCell.style.backgroundColor = rendimiento > 0 ? 'transparent' : 'red';
+                rendimientoCell.style.backgroundColor = rendimiento > 0 ? '#82f75780' : 'red';
 
                 actualizarSumaManoObra();
             }
@@ -563,7 +563,7 @@ function displayTableMaquinariaTarjetaP(page) {
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-Rhm" style="background-color: ${record.rhm > 0 ? 'transparent' : 'red'};">
+                <td contenteditable="true" class="editable-Rhm" style="background-color: ${record.rhm > 0 ? '#82f75780' : 'red'};">
                     ${record.rhm || 0}
                 </td>
                 <td class="resultadoMaqui">---</td>
@@ -584,7 +584,7 @@ function displayTableMaquinariaTarjetaP(page) {
                 }
 
                 // Actualizar color de fondo basado en valor
-                rhmCell.style.backgroundColor = rhm > 0 ? 'transparent' : 'red';
+                rhmCell.style.backgroundColor = rhm > 0 ? '#82f75780' : 'red';
 
 
                 let resultado = phm * rhm;
@@ -723,7 +723,7 @@ function displayTableBasicosTarjetaP(page) {
                 <td>${record.nombre != "" ? record.nombre : "---"}</td>
                 <td>${record.unidad != "" ? record.unidad : "---"}</td>
                 <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-cantidadBasi" style="background-color: ${record.cantconbasi > 0 ? 'transparent' : 'red'};">
+                <td contenteditable="true" class="editable-cantidadBasi" style="background-color: ${record.cantconbasi > 0 ? '#82f75780' : 'red'};">
                     ${record.cantconbasi || 0}
                 </td>
                 <td class="resultadoBasi">---</td>
@@ -744,7 +744,7 @@ function displayTableBasicosTarjetaP(page) {
                 }
 
                 // Actualizar color de fondo basado en valor
-                cantidadCell.style.backgroundColor = cantidad > 0 ? 'transparent' : 'red';
+                cantidadCell.style.backgroundColor = cantidad > 0 ? '#82f75780' : 'red';
 
 
                 let resultado = total * cantidad;

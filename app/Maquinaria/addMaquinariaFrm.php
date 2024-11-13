@@ -113,7 +113,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddidInputMaquinaria"
+                        id="AddidInputMaquinaria" disabled
                         onblur="javascript:CompruebaTieneAlgoInput(this);checkMaquinaria('Add');">
                 </div>
                 <div class="mb-3">
@@ -172,7 +172,8 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkMaquinaria('upd');" id="UpdidInput">
+                        onblur="javascript:CompruebaTieneAlgoInput(this);checkMaquinaria('upd');" disabled
+                        id="UpdidInput">
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>

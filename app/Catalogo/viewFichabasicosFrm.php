@@ -26,10 +26,10 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="btncancelarconcepto"><button type="button" class="btn fa-solid-cancelar"
                 onclick="javascript:pantallaIr()">Regresar</button></div>
     </div>
-    <div class="contTabla-conceptoscatalogo">
-        <div class="tabla-container tabla-container-conceptosCatalogo">
+    <div class="contTabla-materialesmodal_catalogo">
+        <div class="tabla-container-tablaTarjeta">
             <table id="tabla-conceptosCatalogo">
-                <thead class="">
+                <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
                             ID
@@ -62,10 +62,10 @@ if (!isset($_SESSION['idusuario'])) {
         </nav>
     </div>
 
-    <div class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materialescatalogo">
-            <table id="tabla-materiales">
-                <thead class="">
+    <div class="contTabla-materialesmodal_catalogo">
+        <div class="tabla-container-tablaTarjeta">
+            <table id="tabla-MaterialesCatalogo">
+                <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
                             ID
@@ -125,10 +125,10 @@ if (!isset($_SESSION['idusuario'])) {
         </nav>
     </div>
 
-    <div class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materialescatalogo">
-            <table id="tabla-manodeobra">
-                <thead>
+    <div class="contTabla-materialesmodal_catalogo">
+        <div class="tabla-container-tablaTarjeta">
+            <table id="tabla-MaterialesCatalogo">
+                <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
                             ID
@@ -197,10 +197,10 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 
 
-    <div class="contTabla-materialescatalogo">
-        <div class=" tabla-container tabla-container-materialescatalogo">
+    <div class="contTabla-materialesmodal_catalogo">
+        <div class="tabla-container-tablaTarjeta">
             <table id="tabla-manodeobra">
-                <thead>
+                <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th>
                             Descripción
@@ -252,10 +252,10 @@ if (!isset($_SESSION['idusuario'])) {
 
         </nav>
     </div>
-    <div class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materialescatalogo">
+    <div class="contTabla-materialesmodal_catalogo">
+        <div class="tabla-container-tablaTarjeta">
             <table id="tabla-maquinaria">
-                <thead class="">
+                <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
                             ID
@@ -311,10 +311,10 @@ if (!isset($_SESSION['idusuario'])) {
         </nav>
     </div>
 
-    <div id="tablaAgregarBasicos" style="display: none;" class="contTabla-materialescatalogo">
-        <div class="tabla-container tabla-container-materialescatalogo">
+    <div id="tablaAgregarBasicos" style="display: none;" class="contTabla-materialesmodal_catalogo">
+        <div class="tabla-container-tablaTarjeta">
             <table id="tabla-basicos">
-                <thead class="">
+                <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
                             ID
@@ -492,7 +492,7 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <div class="contTabla-materialesmodal_catalogo">
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModal">
                     <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
@@ -563,11 +563,11 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
             </div>
 
-            <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
+            <div class="contTabla-materialesmodal_catalogo" style="margin-top: auto;">
                 <label for=""
                     style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Materiales
                     seleccionados</label>
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModalSegunda">
                     <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
@@ -663,8 +663,8 @@ if (!isset($_SESSION['idusuario'])) {
 
 
             <div class="contTabla-materialesmodal_catalogo">
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
-                    <table id="tabla-MaterialesCatalogo">
+                <div class="tabla-container-tablaModal">
+                    <table id="tabla-manodeobra">
                         <thead>
                             <tr>
                                 <th style="width: 8rem;">
@@ -707,10 +707,10 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
             </div>
 
-            <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
+            <div class="contTabla-materialesmodal_catalogo">
                 <label for="" style="font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Mano de
                     obra seleccionados</label>
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModalSegunda">
                     <table id="tabla-MaterialesCatalogo">
                         <thead>
                             <tr>
@@ -811,7 +811,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 
             <div class="contTabla-materialesmodal_catalogo">
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModal">
                     <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
@@ -848,7 +848,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <label for=""
                     style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Maquinarias
                     seleccionadas</label>
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModalSegunda">
                     <table id="tabla-MaterialesCatalogo">
                         <thead>
                             <tr>
@@ -935,7 +935,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </nav>
             </div>
             <div class="contTabla-materialesmodal_catalogo">
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModal">
                     <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>
@@ -977,7 +977,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <label for=""
                     style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Conceptos basicos
                     seleccionados</label>
-                <div class="tabla-container tabla-container-materialesmodal_catalogo">
+                <div class="tabla-container-tablaModalSegunda">
                     <table id="tabla-MaterialesCatalogo">
                         <thead class="">
                             <tr>

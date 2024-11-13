@@ -70,7 +70,7 @@ require("../../scripts/Materiales.php");
 
 
 <div class="contTabla-materiales">
-    <div class="tabla-container tabla-container-materiales">
+    <div class="tabla-container-materiales">
         <table id="tabla-materiales">
             <thead class="">
                 <tr>
@@ -162,8 +162,8 @@ require("../../scripts/Materiales.php");
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddnormaInput">
+                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                        style="font-family: 'latoBold', sans-serif;" id="AddnormaInput">
                 </div>
                 <div class="mb-3">
                     <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción*</label>
@@ -258,8 +258,8 @@ require("../../scripts/Materiales.php");
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdnormaInput">
+                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnormaInput">
                 </div>
                 <div class="mb-3">
                     <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción*</label>

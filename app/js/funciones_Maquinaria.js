@@ -528,16 +528,14 @@ function AddlimpiarModalMaquinaria() {
     document.querySelector('#AddfechaPrecioInput').value = fechaFormateada;
 
 
-    idMa.value = "";
+    idMa.value = idMaquinariaAutomatico();
     descripcionMa.value = "";
     UnidadMa.value = "";
     phm.value = "";
 
-    idMa.placeholder = "";
     descripcionMa.placeholder = "";
     phm.placeholder = "";
 
-    idMa.classList.remove("inputVacio");
     descripcionMa.classList.remove("inputVacio");
     UnidadMa.classList.remove("inputVacio");
     phm.classList.remove("inputVacio");
@@ -699,4 +697,19 @@ function AddAgregarPDFMaquinaria() {
 }
 
 
+function idMaquinariaAutomatico() {
+    if (data.length === 0) {
+        return "Maq01";
+    }
+    // Extrae el último número de idconbasi en el arreglo de data
+    let maxIdNumber = data.reduce((max, item) => {
+        // Obtiene el número después de "ba" y lo convierte en un entero
+        const idNumber = parseInt(item.idmaquinaria.replace("Maq", ""), 10);
+        return Math.max(max, idNumber);
+    }, 0);
 
+    // Incrementa el número más alto encontrado y genera el nuevo id
+    const newId = `Maq${String(maxIdNumber + 1).padStart(2, '0')}`;
+
+    return newId;
+}

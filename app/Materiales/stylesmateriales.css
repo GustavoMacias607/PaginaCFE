@@ -190,11 +190,15 @@ body {
   text-align: center;
   margin-bottom: 100px;
   /* Altura máxima del contenedor */
-  overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
   border-top: #008e5a solid 3px;
   border-top-width: 0px;
   margin-top: 0px;
+  position: absolute;
+  overflow-y: auto;
+  height: 60%;
+  width: 95%;
 }
 
 #tabla-materiales {
@@ -209,7 +213,7 @@ body {
 }
 
 #tabla-materiales th,
-#tabla-materiales td:focus{
+#tabla-materiales td:focus {
   outline: none;
   border: 3px solid #008e5a;
 }
@@ -272,7 +276,7 @@ body {
     93% 100%,
     0 100%
   );
-  z-index: 1000;
+  z-index: 3000;
   position: absolute;
   @media (max-width: 700px) {
     transform: translate(0, 9%);
@@ -357,7 +361,7 @@ body {
   border: 3px solid red;
 }
 
-.btn-success{
+.btn-success {
   background-color: #ffffff;
   color: #303030;
   border-color: 3px solid #303030;

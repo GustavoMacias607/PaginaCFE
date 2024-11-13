@@ -59,7 +59,7 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <div class="contTabla-manodeobra">
-    <div class="tabla-container tabla-container-manodeobra">
+    <div class="tabla-container-manodeobra">
         <table id="tabla-manodeobra">
             <thead>
                 <tr>
@@ -119,7 +119,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddidInputManodeobra"
+                        id="AddidInputManodeobra" disabled
                         onblur="javascript:CompruebaTieneAlgoInput(this); checkManoObra('Add')">
                 </div>
                 <div class="mb-3">
@@ -178,7 +178,8 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
                     <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        onblur="javascript:CompruebaTieneAlgoInput(this); checkManoObra('upd')" id="UpdidInput">
+                        onblur="javascript:CompruebaTieneAlgoInput(this); checkManoObra('upd')" disabled
+                        id="UpdidInput">
                 </div>
                 <div class="mb-3">
                     <label for="categoriaInput" class="form-label" style="color: #303030;">Categoría*</label>
