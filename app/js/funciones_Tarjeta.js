@@ -35,6 +35,23 @@ let filteredData2 = [...data];
 let filteredDataManoObra = [...data];
 let filteredDataMaquinaria = [...data];
 let filteredDataBasicos = [...data];
+
+
+
+//Resultado de sumas con decimales
+let suma1 = 0;
+let suma2 = 0;
+let suma3 = 0;
+let suma4 = 0;
+let suma5 = 0;
+
+//Resultado importes con decimales
+let importeMateriales = 0;
+let importeManoObra = 0;
+let importeMaquinaria = 0;
+let importeBasicos = 0;
+
+
 //Metodo para llenar la tabla con el catalogo
 function LlenarTablaConceptoTarjeta() {
     //Llena tabla concepto de la pagina catalogo
@@ -55,6 +72,11 @@ function LlenarTablaConceptoTarjeta() {
     filteredDataMaquinaria = [];
     filteredDataBasicos = [];
     filteredData2 = [];
+    suma1 = 0;
+    suma2 = 0;
+    suma3 = 0;
+    suma4 = 0;
+    suma5 = 0;
     obtenerDatosTablas();
     mostrarCosasBasicos();
 }
@@ -136,8 +158,8 @@ function llenarTablaMaterialesSeleccionadosP() {
 
 // Método para llenar la tabla
 function displayTableMaterialesTarjetaP(page) {
+    importeMateriales = 0; // Inicializar antes de calcular
     materialInactivo = false; // Inicializar la variable
-
     const tableBody = document.getElementById("table-bodyMaterialesTarjetaPrincipal");
     tableBody.innerHTML = "";
     const start = (page - 1) * cantidadFilasTabla;
@@ -199,6 +221,17 @@ function displayTableMaterialesTarjetaP(page) {
                 const resultado = checkbox.checked ? 0 : cantidad * record.precio;
                 resultadoCell.textContent = formatoMXN.format(resultado);
 
+                // Recalcula el total
+                calcularImporteMateriales();
+            }
+
+            // Función para recalcular el importeMateriales total
+            function calcularImporteMateriales() {
+                importeMateriales = Array.from(document.querySelectorAll('.resultadoMaterial'))
+                    .reduce((total, cell) => {
+                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                        return total + value;
+                    }, 0);
                 actualizarSumaMateriales();
             }
 
@@ -225,33 +258,23 @@ function displayTableMaterialesTarjetaP(page) {
             tableBody.appendChild(row);
             actualizarCalculos();
         });
+
         const lecturaMaterial = document.querySelector('#LecturaMaterial');
-        if (materialInactivo) {
-            lecturaMaterial.style.display = 'flex';
-        } else {
-            lecturaMaterial.style.display = 'none';
-        }
+        lecturaMaterial.style.display = materialInactivo ? 'flex' : 'none';
+
     } else {
         tableBody.innerHTML += `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
     }
 }
 
-
 function actualizarSumaMateriales() {
-    const rows = document.querySelectorAll("#table-bodyMaterialesTarjetaPrincipal .fila");
-    let sumaTotal = 0;
-
-    rows.forEach(row => {
-        const resultadoText = row.querySelector('.resultadoMaterial').innerText;
-        const resultadoValue = parseFloat(resultadoText.replace(/[$,]/g, '')) || 0;
-        sumaTotal += resultadoValue;
-    });
-
-    sumaTotal = Math.round(sumaTotal * 100) / 100;
+    suma1 = 0;
+    suma1 = importeMateriales;
+    console.log(suma1, importeMateriales)
     const formattedSuma = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
-    }).format(sumaTotal);
+    }).format(suma1);
 
     document.getElementById("Suma1").innerText = formattedSuma;
     calcularTotal();
@@ -300,6 +323,7 @@ function llenarTablaManoObraSeleccionadosP() {
 }
 
 function displayTableManoObraTarjetaP(page) {
+    importeManoObra = 0;
     manoObraInactivo = false;
     const tableBody = document.getElementById("table-bodyManoObraTarjetaPrincipal");
     tableBody.innerHTML = "";
@@ -368,6 +392,17 @@ function displayTableManoObraTarjetaP(page) {
                 // Color de fondo del rendimiento
                 rendimientoCell.style.backgroundColor = rendimiento > 0 ? '#82f75780' : 'red';
 
+                // Recalcula el total
+                calcularImporteManoObra();
+            }
+
+            // Función para recalcular el importeManoObra total
+            function calcularImporteManoObra() {
+                importeManoObra = Array.from(document.querySelectorAll('.resultadoMano'))
+                    .reduce((total, cell) => {
+                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                        return total + value;
+                    }, 0);
                 actualizarSumaManoObra();
             }
 
@@ -393,35 +428,24 @@ function displayTableManoObraTarjetaP(page) {
         });
 
         const LecturaManoObra = document.querySelector('#LecturaManoObra');
-        if (manoObraInactivo) {
-            LecturaManoObra.style.display = 'flex';
-        } else {
-            LecturaManoObra.style.display = 'none';
-        }
+        LecturaManoObra.style.display = manoObraInactivo ? 'flex' : 'none';
+
     } else {
         const row = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
         tableBody.innerHTML += row;
     }
 }
 
+
 function actualizarSumaManoObra() {
-    const rows = document.querySelectorAll("#table-bodyManoObraTarjetaPrincipal .fila");
-    let sumaTotal = 0;
-
-    rows.forEach(row => {
-        const resultadoText = row.querySelector('.resultadoMano').innerText;
-        const resultadoValue = parseFloat(resultadoText.replace(/[$,]/g, '')) || 0; // Convertir el texto a número
-        sumaTotal += resultadoValue;
-    });
-
-    // Redondear a dos decimales
-    sumaTotal = Math.round(sumaTotal * 100) / 100;
+    suma2 = 0;
+    suma2 = importeManoObra
 
     // Formatear sumaTotal como moneda
     const formattedSuma = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
-    }).format(sumaTotal);
+    }).format(suma2);
 
     // Actualizar el label de suma con el valor formateado
     const sumaLabel = document.getElementById("Suma2");
@@ -470,48 +494,57 @@ function hayCantidadRendimientoManoObra() {
  */
 
 function llenarColumnaMo() {
-
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
     });
-
+    suma3 = 0;
     let convertirAMoneda = (valor) => {
         return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
     }
-    let totalColumnaManoObra = document.getElementById('Suma2');
-    let totalColumnaHerramientasEquipo = document.getElementById('Suma3');
+    let totalColumnaManoObra = suma2;
+    let totalColumnaHerramientasEquipo = document.getElementById('Suma3')
 
-    const MOHerramientas = document.getElementById("ActualizarPrecioMoHerramientas");
+    const MOHerramientas = document.getElementById("ActualizarPrecioMoHerramientas")
     let khHerramientas = document.getElementById("KhHerramientas")
-    const MOEquipo = document.getElementById("ActualizarPrecioMoEquipo");
+    const MOEquipo = document.getElementById("ActualizarPrecioMoEquipo")
     let khEquipo = document.getElementById("KhEquipo")
 
 
     let importeHerramientas = document.getElementById("importeHerramientas")
     let importeEquipo = document.getElementById("importeEquipo")
 
-
-    MOHerramientas.innerHTML = totalColumnaManoObra.innerHTML;
-    MOEquipo.innerHTML = totalColumnaManoObra.innerHTML;
-
-    const precioHerramientas = (parseFloat(khHerramientas.innerHTML) * convertirAMoneda(MOHerramientas.innerHTML)) !== undefined && ((parseFloat(khHerramientas.innerHTML) * convertirAMoneda(MOHerramientas.innerHTML)) !== "")
-        ? formatoMXN.format(parseFloat(khHerramientas.innerHTML) * convertirAMoneda(MOHerramientas.innerHTML))
-        : "---";
-
-    const precioEquipo = (parseFloat(khEquipo.innerHTML) * convertirAMoneda(MOEquipo.innerHTML) !== undefined && (parseFloat(khEquipo.innerHTML) * convertirAMoneda(MOEquipo.innerHTML)) !== "")
-        ? formatoMXN.format(parseFloat(khEquipo.innerHTML) * convertirAMoneda(MOEquipo.innerHTML))
+    const TotalManoObra = totalColumnaManoObra !== undefined && (totalColumnaManoObra !== "")
+        ? formatoMXN.format(totalColumnaManoObra)
         : "---";
 
 
-    importeHerramientas.innerHTML = precioHerramientas;
-    importeEquipo.innerHTML = precioEquipo;
+    MOHerramientas.innerHTML = TotalManoObra;
+    MOEquipo.innerHTML = TotalManoObra;
 
+    let multiplicacion1 = totalColumnaManoObra * convertirAMoneda(khHerramientas.innerHTML);
+    let multiplicacion2 = totalColumnaManoObra * convertirAMoneda(khEquipo.innerHTML);
+    let totalSumMult = multiplicacion1 + multiplicacion2;
+    suma3 = totalSumMult;
 
-    const TotalSuma = (convertirAMoneda(precioHerramientas) + convertirAMoneda(precioEquipo)) !== undefined && (convertirAMoneda(precioHerramientas) + convertirAMoneda(precioEquipo)) !== ""
-        ? formatoMXN.format(convertirAMoneda(precioHerramientas) + convertirAMoneda(precioEquipo))
+    const totalSumaImporte = totalSumMult !== undefined && (totalSumMult !== "")
+        ? formatoMXN.format(totalSumMult)
         : "---";
-    totalColumnaHerramientasEquipo.innerHTML = TotalSuma;
+
+    const totalHerramientas = multiplicacion1 !== undefined && (multiplicacion1 !== "")
+        ? formatoMXN.format(multiplicacion1)
+        : "---";
+    const totalEquipo = multiplicacion2 !== undefined && (multiplicacion2 !== "")
+        ? formatoMXN.format(multiplicacion2)
+        : "---";
+
+
+    importeHerramientas.innerHTML = totalHerramientas;
+    importeEquipo.innerHTML = totalEquipo;
+
+
+
+    totalColumnaHerramientasEquipo.innerHTML = totalSumaImporte;
 
 
 
@@ -534,18 +567,21 @@ function llenarTablaMaquinariaSeleccionadosP() {
 
 // Método para llenar la tabla
 function displayTableMaquinariaTarjetaP(page) {
+    importeMaquinaria = 0;
     maquinariaInactivo = false;
     const tableBody = document.getElementById("table-bodyMaquinariaTarjetaPrincipal");
     tableBody.innerHTML = "";
     const start = (page - 1) * cantidadFilasTabla;
     const end = start + cantidadFilasTabla;
     const paginatedData2 = filteredDataMaquinaria.slice(start, end);
+
     if (paginatedData2.length > 0) {
         paginatedData2.forEach((record, index) => {
             const formatoMXN = new Intl.NumberFormat('es-MX', {
                 style: 'currency',
                 currency: 'MXN'
             });
+
             if (!record.estatus) {
                 maquinariaInactivo = true;
             }
@@ -559,7 +595,7 @@ function displayTableMaquinariaTarjetaP(page) {
             }
 
             row.innerHTML = `
-               <td class="Code">${record.idmaquinaria}</td>
+                <td class="Code">${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td>${precioFormateado}</td>
@@ -570,29 +606,39 @@ function displayTableMaquinariaTarjetaP(page) {
             `;
 
             const rhmCell = row.querySelector('.editable-Rhm');
-            const resultadoCellMano = row.querySelector('.resultadoMaqui');
+            const resultadoCellMaqui = row.querySelector('.resultadoMaqui');
 
             function actualizarCalculosMaquinaria() {
                 const rhm = parseFloat(rhmCell.innerText) || 0;
 
-                // Actualizar arreglo de objetos
-
+                // Actualizar el objeto en el arreglo
                 const item = objTabla2ModalMaquinariaPrincipal.find(obj => obj.idmaquinaria == record.idmaquinaria);
-
                 if (item) {
                     item.rhm = rhm;
                 }
 
-                // Actualizar color de fondo basado en valor
+                // Color de fondo de la celda basado en el valor
                 rhmCell.style.backgroundColor = rhm > 0 ? '#82f75780' : 'red';
 
+                // Calcular el resultado y actualizar celdas
+                const resultado = phm * rhm;
+                resultadoCellMaqui.textContent = formatoMXN.format(resultado);
 
-                let resultado = phm * rhm;
-                resultadoCellMano.textContent = formatoMXN.format(resultado);
+                // Recalcular el importe total
+                calcularImporteMaquinaria();
+            }
+
+            // Función para recalcular el importe total de maquinaria
+            function calcularImporteMaquinaria() {
+                importeMaquinaria = Array.from(document.querySelectorAll('.resultadoMaqui'))
+                    .reduce((total, cell) => {
+                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                        return total + value;
+                    }, 0);
                 actualizarSumaMaquinaria();
             }
 
-            // Eventos para cantidad
+            // Eventos para rhm
             rhmCell.addEventListener('input', () => {
                 const valor = rhmCell.innerText;
                 if (!/^\d*\.?\d*$/.test(valor)) {
@@ -608,39 +654,30 @@ function displayTableMaquinariaTarjetaP(page) {
                 }
                 actualizarCalculosMaquinaria();
             });
+
             tableBody.appendChild(row);
             actualizarCalculosMaquinaria();
         });
+
         const LecturaMaquinaria = document.querySelector('#LecturaMaquinaria');
-        if (maquinariaInactivo) {
-            LecturaMaquinaria.style.display = 'flex';
-        } else {
-            LecturaMaquinaria.style.display = 'none';
-        }
+        LecturaMaquinaria.style.display = maquinariaInactivo ? 'flex' : 'none';
+
     } else {
         const row = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
         tableBody.innerHTML += row;
     }
 }
 
+
 function actualizarSumaMaquinaria() {
-    const rows = document.querySelectorAll("#table-bodyMaquinariaTarjetaPrincipal .fila");
-    let sumaTotal = 0;
-
-    rows.forEach(row => {
-        const resultadoText = row.querySelector('.resultadoMaqui').innerText;
-        const resultadoValue = parseFloat(resultadoText.replace(/[$,]/g, '')) || 0; // Convertir el texto a número
-        sumaTotal += resultadoValue;
-    });
-
-    // Redondear a dos decimales
-    sumaTotal = Math.round(sumaTotal * 100) / 100;
+    suma4 = 0;
+    suma4 = importeMaquinaria
 
     // Formatear sumaTotal como moneda
     const formattedSuma = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
-    }).format(sumaTotal);
+    }).format(suma4);
 
     // Actualizar el label de suma con el valor formateado
     const sumaLabel = document.getElementById("Suma4");
@@ -694,6 +731,7 @@ function llenarTablaBasicosSeleccionadosP() {
 
 // Método para llenar la tabla
 function displayTableBasicosTarjetaP(page) {
+    importeBasicos = 0;
     basicosInactivo = false;
     const tableBody = document.getElementById("table-bodyBasicosTarjetaPrincipal");
     tableBody.innerHTML = "";
@@ -748,6 +786,7 @@ function displayTableBasicosTarjetaP(page) {
 
 
                 let resultado = total * cantidad;
+                importeBasicos += resultado;
                 resultadoCell.textContent = formatoMXN.format(resultado);
                 actualizarSumaBasicos();
             }
@@ -784,23 +823,14 @@ function displayTableBasicosTarjetaP(page) {
 }
 
 function actualizarSumaBasicos() {
-    const rows = document.querySelectorAll("#table-bodyBasicosTarjetaPrincipal .fila");
-    let sumaTotal = 0;
-
-    rows.forEach(row => {
-        const resultadoText = row.querySelector('.resultadoBasi').innerText;
-        const resultadoValue = parseFloat(resultadoText.replace(/[$,]/g, '')) || 0; // Convertir el texto a número
-        sumaTotal += resultadoValue;
-    });
-
-    // Redondear a dos decimales
-    sumaTotal = Math.round(sumaTotal * 100) / 100;
+    suma5 = 0;
+    suma5 = importeBasicos
 
     // Formatear sumaTotal como moneda
     const formattedSuma = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
-    }).format(sumaTotal);
+    }).format(suma5);
 
     // Actualizar el label de suma con el valor formateado
     const sumaLabel = document.getElementById("Suma5");
@@ -935,7 +965,6 @@ function AgregartablaBasicosTarjeta() {
             try {
                 if (status == "success") {
                     let resp = JSON.parse(responseText);
-                    console.log(resp)
                 } else {
                     throw e = status;
                 }
@@ -1085,6 +1114,7 @@ function MostrartablaManoObraTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
+                console.log(datosBd);
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalManoObraiaPrincipal.push({
@@ -1224,7 +1254,7 @@ function AgregarTotalConcepto() {
 }
 
 function calcularTotal() {
-
+    total = 0;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -1232,19 +1262,9 @@ function calcularTotal() {
 
     // Obtener los elementos de los labels
     llenarColumnaMo();
-    const suma1 = document.getElementById('Suma1').innerHTML;
-    const suma2 = document.getElementById('Suma2').innerHTML;
-    const suma3 = document.getElementById('Suma3').innerHTML;
-    const suma4 = document.getElementById('Suma4').innerHTML;
-    const suma5 = document.getElementById('Suma5').innerHTML;
-    // Función para convertir el formato de moneda a número
-    const convertirAMoneda = (valor) => {
-        return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
-    }
-
     // Sumar las cantidades
-    const total = convertirAMoneda(suma1) + convertirAMoneda(suma2) + convertirAMoneda(suma3) + convertirAMoneda(suma4) + convertirAMoneda(suma5);
-
+    total = suma1 + suma2 + suma3 + suma4 + suma5
+    console.log(suma1 + " " + suma2 + " " + suma3 + " " + suma4 + " " + suma5, total);
     const totalFormateado = total !== undefined && total !== ""
         ? formatoMXN.format(total)
         : "---";

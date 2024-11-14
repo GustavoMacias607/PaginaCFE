@@ -118,12 +118,7 @@ require("../../scripts/Materiales.php");
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="selectUnidadMateriales"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="" selected>Todo</option>
-                                <option value="PZA">PZA</option>
-                                <option value="KG">KG</option>
-                                <option value="JG">JG</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
+
                             </select>
                         </div>
                     </th>
@@ -202,17 +197,15 @@ require("../../scripts/Materiales.php");
                         <option value="Transformadores">Transformadores</option>
                     </select>
                 </div>
+
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddunidadInput">
-                        <option selected value="">Seleccione una unidad</option>
-                        <option value="PZA">PZA</option>
-                        <option value="KG">KG</option>
-                        <option value="JG">JG</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                    </select>
+                    <input type="text" oninput="mostrarSugerenciasMateriales(this, 'AddUnidad')"
+                        onfocus="mostrarSugerenciasMateriales(this, 'AddUnidad')"
+                        onblur="ocultarSugerenciasMateriales('AddUnidad');CompruebaTieneAlgoInput(this)"
+                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddunidadInput"
+                        autocomplete="off">
+                    <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
                 </div>
                 <div class="mb-3">
                     <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
@@ -299,16 +292,13 @@ require("../../scripts/Materiales.php");
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdunidadInput">
-                        <option selected value="">Seleccione una unidad</option>
-                        <option value="PZA">PZA</option>
-                        <option value="KG">KG</option>
-                        <option value="JG">JG</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                    </select>
+                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                    <input type="text" oninput="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
+                        onfocus="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
+                        onblur="ocultarSugerenciasMateriales('UpdUnidad');CompruebaTieneAlgoInput(this)"
+                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="UpdunidadInput"
+                        autocomplete="off">
+                    <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
                 </div>
                 <div class="mb-3">
                     <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>

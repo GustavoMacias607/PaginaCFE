@@ -162,10 +162,10 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
     <!-- Final del contenido principal -->
 
-    <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
+    <!-- <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/file-saverjs@latest/FileSaver.min.js"></script>
     <script src="https://unpkg.com/tableexport@latest/dist/js/tableexport.min.js"></script>
-    <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script> -->
     <script src="../bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/code.jquery.com_jquery-3.7.1.min.js"></script>
     <script src="js/funciones.js"></script>

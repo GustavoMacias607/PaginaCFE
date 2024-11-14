@@ -79,6 +79,7 @@ class Conceptos
         }
         return $R;
     }
+
     /*Método para hacer una busqueda a la base de datos y verificar si existe el concepto
  recibe objeto con el id del concepto*/
     function checkConcepto($datos)
@@ -137,6 +138,29 @@ class Conceptos
         $c = $this->conn;
         try {
             $consulta = "call spConceptoUnidades();";
+            $sql = $c->prepare($consulta);
+            $sql->execute();
+            $datos = $sql->fetchAll();
+
+            $R['filas'] = count($datos);
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $datos;
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+    /*Método para actualizar los totales de los conceptos*/
+    function updateTotales()
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spConceptoCalculoTotal();";
             $sql = $c->prepare($consulta);
             $sql->execute();
             $datos = $sql->fetchAll();

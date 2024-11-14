@@ -246,7 +246,13 @@ function PrincipalConcepto(tipoConcepto) {
     obtenerDatosConceptos(tipoConcepto);
 }
 
-function obtenerDatosConceptos(btnOpcion) {
+async function obtenerDatosConceptos(btnOpcion) {
+    // Selecciona el elemento del spinner
+    const spinner = document.querySelector(".sk-circle");
+
+    // Muestra el spinner
+    spinner.style.display = "block";
+
     let btnNormal = document.getElementById("btnConceptoNormal");
     let txtNormal = document.getElementById("textoConceptoNormal");
     let btnBasico = document.getElementById("btnConceptoBasicos");
@@ -254,21 +260,43 @@ function obtenerDatosConceptos(btnOpcion) {
     let btnExportar = document.getElementById("btnExportar");
     let json = "";
     let url = "";
-    if (btnOpcion == 1) {
+
+    if (btnOpcion === 1) {
         url = "../ws/Conceptos/wsGetConcepto.php";
-        btnNormal.classList.remove("esconderBoton")
-        btnExportar.classList.remove("esconderBoton")
-        txtNormal.classList.remove("esconderBoton")
+        btnNormal.classList.remove("esconderBoton");
+        btnExportar.classList.remove("esconderBoton");
+        txtNormal.classList.remove("esconderBoton");
+        try {
+            // Espera a que termine `ActualizarTotalesConcepto`
+            await ActualizarTotalesConcepto();
+        } catch (error) {
+            console.error("Error en ActualizarTotalesConcepto:", error);
+            spinner.style.display = "none"; // Oculta el spinner en caso de error
+            return; // Sale de la función si hay un error
+        }
+
     } else {
         url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
-        btnBasico.classList.remove("esconderBoton")
-        txtBasico.classList.remove("esconderBoton")
+        btnBasico.classList.remove("esconderBoton");
+        txtBasico.classList.remove("esconderBoton");
+        try {
+            // Espera a que termine `ActualizarTotalesConcepto`
+            await ActualizarTotalesConceptoBasico();
+        } catch (error) {
+            console.error("Error en ActualizarTotalesConcepto:", error);
+            spinner.style.display = "none"; // Oculta el spinner en caso de error
+            return; // Sale de la función si hay un error
+        }
+
     }
+
+
+    // Realiza la solicitud POST y oculta el spinner al finalizar
     $.post(url, json, (responseText, status) => {
         try {
-            if (status == "success") {
+            if (status === "success") {
                 let resp = JSON.parse(responseText);
-                if (resp.estado == "OK") {
+                if (resp.estado === "OK") {
                     conceptoTipoSeleccionado = btnOpcion;
                     llenarUnidadTabla(btnOpcion);
                     data = resp.datos;
@@ -276,13 +304,17 @@ function obtenerDatosConceptos(btnOpcion) {
                     filterDataConcepto();
                 }
             } else {
-                throw e = status;
+                throw status;
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            // Oculta el spinner al finalizar
+            spinner.style.display = "none";
         }
     });
 }
+
 
 function sortData(field) {
     if (currentSortField === field) {
@@ -451,6 +483,7 @@ function displayTableConcepto(page) {
     }
 }
 
+//Se agrega o quita del arreglo los conceptos seleccionados para su exportacion
 function toggleRowSelection(idconcepto, nombre, unidad, total, isChecked) {
     if (isChecked) {
         // Agregar la fila seleccionada al array
@@ -613,6 +646,7 @@ function AddlimpiarModalConcepto() {
     idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
+    const input = document.getElementById('AddunidadInputConcepto');
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -654,7 +688,35 @@ function llenarModalModificarConcepto(id, nombre, unidad, total) {
     idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
+    const input = document.getElementById('UpdunidadInput');
 }
+
+//Metodo para abrir el modal dependiendo si se abre para activar o eliminar
+function AbrirModalConfirm1() {
+    let estatus = document.getElementById('ValCheEsta').checked;
+    if (estatus) {
+        $('#confirmDeleteModal').modal('show');
+    } else {
+        $('#confirmActivationModal').modal('show');
+    }
+}
+
+function Exportar() {
+
+    if (selectedRows.length == 0) {
+        mensajePantalla(msgSeleccion, false)
+        return;
+    }
+    const fechaActual = new Date();
+    // Obtener el día, mes y año
+    const dia = fechaActual.getDate();        // Día del mes (1-31)
+    const mes = fechaActual.getMonth() + 1;
+    const ano = fechaActual.getFullYear();    // Mes (0-11, por lo que le sumamos 1)
+    const ws = XLSX.utils.json_to_sheet(selectedRows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
+    XLSX.writeFile(wb, `Conceptos Seleccionados ${dia}-${mes}-${ano}.xlsx`);
+};
 
 function llenarUnidadTabla(btnOpcion) {
     const unidadFilter = document.getElementById("unidad-filterConcepto"); // El select donde agregarás las opciones
@@ -708,33 +770,6 @@ function llenarUnidadTabla(btnOpcion) {
     });
 }
 
-//Metodo para abrir el modal dependiendo si se abre para activar o eliminar
-function AbrirModalConfirm1() {
-    let estatus = document.getElementById('ValCheEsta').checked;
-    if (estatus) {
-        $('#confirmDeleteModal').modal('show');
-    } else {
-        $('#confirmActivationModal').modal('show');
-    }
-}
-
-function Exportar() {
-
-    if (selectedRows.length == 0) {
-        mensajePantalla(msgSeleccion, false)
-        return;
-    }
-    const fechaActual = new Date();
-    // Obtener el día, mes y año
-    const dia = fechaActual.getDate();        // Día del mes (1-31)
-    const mes = fechaActual.getMonth() + 1;
-    const ano = fechaActual.getFullYear();    // Mes (0-11, por lo que le sumamos 1)
-    const ws = XLSX.utils.json_to_sheet(selectedRows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
-    XLSX.writeFile(wb, `Conceptos Seleccionados ${dia}-${mes}-${ano}.xlsx`);
-};
-
 function mostrarSugerencias(input, inputUnidad) {
     let sugerenciasDiv;
     if (inputUnidad == "AddUnidad") {
@@ -746,23 +781,23 @@ function mostrarSugerencias(input, inputUnidad) {
     } else if (inputUnidad == "UpdUnidadBasico") {
         sugerenciasDiv = document.getElementById('UpdsugerenciasBasico');
     }
+
     sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
+
     const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
-    if (filtro === '') {
-        sugerenciasDiv.classList.remove('active'); // Ocultar cuando no hay nada
-        return;
-    }
-    console.log(unidades)
-    const sugerenciasFiltradas = unidades.filter(unidad =>
+    const sugerenciasFiltradas = filtro === '' ? unidades : unidades.filter(unidad =>
         unidad.unidad.toLowerCase().includes(filtro)
     );
 
-    if (sugerenciasFiltradas.length > 0) {
-        sugerenciasDiv.classList.add('activado'); // Mostrar las sugerencias
+    // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
+    if (sugerenciasFiltradas.length === 0 || (sugerenciasFiltradas.length === 1 && sugerenciasFiltradas[0].unidad.toLowerCase() === filtro)) {
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+        return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
     } else {
-        sugerenciasDiv.classList.remove('activado'); // Ocultar si no hay sugerencias
+        sugerenciasDiv.classList.add('activado'); // Mostrar el cuadro de sugerencias si hay coincidencias
     }
 
+    // Crear los elementos de sugerencia y agregarlos al cuadro
     sugerenciasFiltradas.forEach(unidad => {
         const div = document.createElement('div');
         div.classList.add('sugerencia-item');
@@ -770,6 +805,23 @@ function mostrarSugerencias(input, inputUnidad) {
         div.onclick = () => seleccionarSugerencia(unidad.unidad, inputUnidad, sugerenciasDiv);
         sugerenciasDiv.appendChild(div);
     });
+}
+
+// Función para ocultar el cuadro de sugerencias al perder el foco
+function ocultarSugerencias(inputUnidad) {
+    setTimeout(() => {
+        let sugerenciasDiv;
+        if (inputUnidad == "AddUnidad") {
+            sugerenciasDiv = document.getElementById('Addsugerencias');
+        } else if (inputUnidad == "UpdUnidad") {
+            sugerenciasDiv = document.getElementById('Updsugerencias');
+        } else if (inputUnidad == "AddUnidadBasico") {
+            sugerenciasDiv = document.getElementById('AddsugerenciasBasico');
+        } else if (inputUnidad == "UpdUnidadBasico") {
+            sugerenciasDiv = document.getElementById('UpdsugerenciasBasico');
+        }
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+    }, 200);
 }
 
 function seleccionarSugerencia(unidad, inputUnidad, sugerenciasDiv) {
@@ -788,7 +840,52 @@ function seleccionarSugerencia(unidad, inputUnidad, sugerenciasDiv) {
     sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro
 }
 
+function ActualizarTotalesConcepto() {
+    return new Promise((resolve, reject) => {
+        const url = "../ws/Conceptos/wsUpdateTotales.php";
+        const json = "";
 
+        $.post(url, json, (responseText, status) => {
+            try {
+                if (status === "success") {
+                    let resp = JSON.parse(responseText);
+                    console.log(resp);
+
+                    resolve(); // La promesa se resuelve exitosamente
+
+                } else {
+                    reject(status); // La promesa se rechaza si el estado no es "success"
+                }
+            } catch (error) {
+                reject(error); // La promesa se rechaza en caso de error
+            }
+        });
+    });
+}
+
+
+function ActualizarTotalesConceptoBasico() {
+    return new Promise((resolve, reject) => {
+        const url = "../ws/ConceptosBasicos/wsUpdateTotales.php";
+        const json = "";
+
+        $.post(url, json, (responseText, status) => {
+            try {
+                if (status === "success") {
+                    let resp = JSON.parse(responseText);
+                    console.log(resp);
+
+                    resolve(); // La promesa se resuelve exitosamente
+
+                } else {
+                    reject(status); // La promesa se rechaza si el estado no es "success"
+                }
+            } catch (error) {
+                reject(error); // La promesa se rechaza en caso de error
+            }
+        });
+    });
+}
 
 /*
 *

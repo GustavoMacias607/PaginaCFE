@@ -12,7 +12,7 @@ let datosObjetoMateriales = [];
 
 let ExportarExcel = [];
 
-
+let unidadMateriales;
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaterialValidar() {
     let vacio = false;
@@ -84,6 +84,7 @@ function AddMaterialValidar() {
     let unidad = document.querySelector('#AddunidadInput');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
+        unidad.placeholder = "Requerida la unidad"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = unidad;
@@ -196,6 +197,7 @@ function UpdMaterialValidar() {
     let unidad = document.querySelector('#UpdunidadInput');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
+        unidad.placeholder = "Requerida la unidad"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = unidad;
@@ -352,6 +354,7 @@ function GetMateriales() {
                     datosObjetoMateriales = resp.datos;
                     llenarTablaMateriales();
                     filterDataMateriales();
+                    llenarUnidadTablaMateriales();
                     document.getElementById('upload').addEventListener('change', handleFile, false);
                 }
             } else {
@@ -796,13 +799,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, famil
     familiaM.value = familia;
     rutaCarpeta = "../Materiales/" + id;
     cargarImagen()
-    //llenar el select de responsables
-    for (var i = 0; i < unidadM.options.length; i++) {
-        if (unidadM.options[i].value === unidad) {
-            unidadM.options[i].selected = true;
-            break;
-        }
-    }
+
     for (var i = 0; i < familiaM.options.length; i++) {
         if (familiaM.options[i].value === familia) {
             familiaM.options[i].selected = true;
@@ -826,6 +823,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, famil
     idM.placeholder = "";
     normaM.placeholder = "";
     descripcionM.placeholder = "";
+    unidadM.placeholder = "";
     precioM.placeholder = "";
 
     idM.classList.remove("inputVacio");
@@ -1011,6 +1009,119 @@ function actualizarFechaMateriales(datosExcel, datosBD) {
     return datosExcel;
 }
 
-function reemplazar() {
 
+
+
+
+
+
+function llenarUnidadTablaMateriales() {
+    const unidadFilter = document.getElementById("selectUnidadMateriales"); // El select donde agregarás las opciones
+    let json = "";
+    let url = "";
+    url = "../ws/Materiales/wsGetUnidades.php";
+
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                if (resp.estado == "OK") {
+                    //Limpiar las opciones existentes del select(por si hay alguna previamente)
+                    unidadFilter.innerHTML = "";
+                    unidadMateriales = resp.datos;
+
+                    //Crear una opción predeterminada o vacía
+                    const optionDefault = document.createElement("option");
+                    optionDefault.value = "";
+                    optionDefault.textContent = "Todo";
+                    unidadFilter.appendChild(optionDefault);
+
+                    //Ordenar las unidadMateriales alfabéticamente, asegurando que se eliminen los espacios innecesarios
+                    unidadMateriales.sort((a, b) =>
+                        a.unidad.trim().localeCompare(b.unidad.trim(), 'es', { sensitivity: 'base' })
+                    );
+
+                    //Iterar sobre las unidadMateriales obtenidas y añadirlas al select
+                    unidadMateriales.forEach(unidad => {
+                        //Crear un nuevo elemento < option >
+                        const option = document.createElement("option");
+
+                        //Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.unidad;
+                        option.textContent = unidad.unidad;
+
+                        //Añadir la opción al select
+                        unidadFilter.appendChild(option);
+                    });
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
 }
+
+function mostrarSugerenciasMateriales(input, inputUnidad) {
+    let sugerenciasDiv;
+    if (inputUnidad == "AddUnidad") {
+        sugerenciasDiv = document.getElementById('Addsugerencias');
+    } else if (inputUnidad == "UpdUnidad") {
+        sugerenciasDiv = document.getElementById('Updsugerencias');
+    }
+
+    sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
+
+    const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
+    const sugerenciasFiltradas = filtro === '' ? unidadMateriales : unidadMateriales.filter(unidad =>
+        unidad.unidad.toLowerCase().includes(filtro)
+    );
+
+    // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
+    if (sugerenciasFiltradas.length === 0 || (sugerenciasFiltradas.length === 1 && sugerenciasFiltradas[0].unidad.toLowerCase() === filtro)) {
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+        return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
+    } else {
+        sugerenciasDiv.classList.add('activado'); // Mostrar el cuadro de sugerencias si hay coincidencias
+    }
+
+    // Crear los elementos de sugerencia y agregarlos al cuadro
+    sugerenciasFiltradas.forEach(unidad => {
+        const div = document.createElement('div');
+        div.classList.add('sugerencia-item');
+        div.textContent = unidad.unidad;
+        div.onclick = () => seleccionarSugerenciaMateriales(unidad.unidad, inputUnidad, sugerenciasDiv);
+        sugerenciasDiv.appendChild(div);
+    });
+}
+
+// Función para ocultar el cuadro de sugerencias al perder el foco
+function ocultarSugerenciasMateriales(inputUnidad) {
+    setTimeout(() => {
+        let sugerenciasDiv;
+        if (inputUnidad == "AddUnidad") {
+            sugerenciasDiv = document.getElementById('Addsugerencias');
+        } else if (inputUnidad == "UpdUnidad") {
+            sugerenciasDiv = document.getElementById('Updsugerencias');
+        }
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+    }, 200);
+}
+
+function seleccionarSugerenciaMateriales(unidad, inputUnidad, sugerenciasDiv) {
+    console.log(unidad, inputUnidad, sugerenciasDiv);
+    let input;
+    if (inputUnidad == "AddUnidad") {
+        input = document.getElementById('AddunidadInput');
+    } else if (inputUnidad == "UpdUnidad") {
+        input = document.getElementById('UpdunidadInput');
+    }
+    input.value = unidad; // Colocar la unidad seleccionada en el input
+    sugerenciasDiv.innerHTML = ''; // Limpiar las sugerencias
+    sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro
+}
+
+
+
+

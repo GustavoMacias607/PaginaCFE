@@ -7,7 +7,7 @@ var estatusMano = 1;
 let data = []
 
 let guardo;
-
+let unidadManoObra;
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddManoObraValidar() {
     let vacio = false;
@@ -38,6 +38,7 @@ function AddManoObraValidar() {
     let unidad = document.querySelector('#AddUnidadInputManodeobra');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
+        unidad.placeholder = "Requerida la unidad"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = unidad;
@@ -94,7 +95,6 @@ function AddManoObraValidar() {
                     AddCerrarModal();
                     GetManoObra();
                     mensajePantalla(msgAgregarObra, true);
-
                 }
             } else {
                 throw e = status;
@@ -381,6 +381,7 @@ function GetManoObra() {
                     data = resp.datos;
                     llenarTablaManoObra();
                     filterDataManoObra();
+                    llenarUnidadTablaManoObra();
                 }
             } else {
                 throw e = status;
@@ -661,15 +662,10 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, fechaSalar
     idMO.value = id;
     salarioMO.value = salario;
     categoriaMO.value = categoria;
+    UnidadMO.value = unidad;
 
 
-    //llenar el select de unidad
-    for (var i = 0; i < UnidadMO.options.length; i++) {
-        if (UnidadMO.options[i].value === unidad) {
-            UnidadMO.options[i].selected = true;
-            break;
-        }
-    }
+
     if (fechaSalario != "0000-00-00" && fechaSalario != null) {
         document.querySelector('#UpdfechaSalarioInput').value = FormateoFecha(fechaSalario);
     } else {
@@ -683,6 +679,7 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, fechaSalar
 
     idMO.placeholder = "";
     salarioMO.placeholder = "";
+    UnidadMO.placeholder = "";
     idMO.classList.remove("inputVacio");
     categoriaMO.classList.remove("inputVacio");
     UnidadMO.classList.remove("inputVacio");
@@ -716,4 +713,111 @@ function idManoObraAutomatico() {
     const newId = `Mano${String(maxIdNumber + 1).padStart(2, '0')}`;
 
     return newId;
+}
+
+function llenarUnidadTablaManoObra() {
+    const unidadFilter = document.getElementById("unidad-filter"); // El select donde agregarás las opciones
+    let json = "";
+    let url = "";
+    url = "../ws/ManoObra/wsGetUnidades.php";
+
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                if (resp.estado == "OK") {
+                    //Limpiar las opciones existentes del select(por si hay alguna previamente)
+                    unidadFilter.innerHTML = "";
+                    unidadManoObra = resp.datos;
+
+                    //Crear una opción predeterminada o vacía
+                    const optionDefault = document.createElement("option");
+                    optionDefault.value = "";
+                    optionDefault.textContent = "Todo";
+                    unidadFilter.appendChild(optionDefault);
+
+                    //Ordenar las unidadManoObra alfabéticamente, asegurando que se eliminen los espacios innecesarios
+                    unidadManoObra.sort((a, b) =>
+                        a.unidad.trim().localeCompare(b.unidad.trim(), 'es', { sensitivity: 'base' })
+                    );
+
+                    //Iterar sobre las unidadManoObra obtenidas y añadirlas al select
+                    unidadManoObra.forEach(unidad => {
+                        //Crear un nuevo elemento < option >
+                        const option = document.createElement("option");
+
+                        //Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.unidad;
+                        option.textContent = unidad.unidad;
+
+                        //Añadir la opción al select
+                        unidadFilter.appendChild(option);
+                    });
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+}
+
+function mostrarSugerenciasManoObra(input, inputUnidad) {
+    let sugerenciasDiv;
+    if (inputUnidad == "AddUnidad") {
+        sugerenciasDiv = document.getElementById('Addsugerencias');
+    } else if (inputUnidad == "UpdUnidad") {
+        sugerenciasDiv = document.getElementById('Updsugerencias');
+    }
+
+    sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
+
+    const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
+    const sugerenciasFiltradas = filtro === '' ? unidadManoObra : unidadManoObra.filter(unidad =>
+        unidad.unidad.toLowerCase().includes(filtro)
+    );
+
+    // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
+    if (sugerenciasFiltradas.length === 0 || (sugerenciasFiltradas.length === 1 && sugerenciasFiltradas[0].unidad.toLowerCase() === filtro)) {
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+        return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
+    } else {
+        sugerenciasDiv.classList.add('activado'); // Mostrar el cuadro de sugerencias si hay coincidencias
+    }
+
+    // Crear los elementos de sugerencia y agregarlos al cuadro
+    sugerenciasFiltradas.forEach(unidad => {
+        const div = document.createElement('div');
+        div.classList.add('sugerencia-item');
+        div.textContent = unidad.unidad;
+        div.onclick = () => seleccionarSugerenciaManoObra(unidad.unidad, inputUnidad, sugerenciasDiv);
+        sugerenciasDiv.appendChild(div);
+    });
+}
+
+// Función para ocultar el cuadro de sugerencias al perder el foco
+function ocultarSugerenciasManoObra(inputUnidad) {
+    setTimeout(() => {
+        let sugerenciasDiv;
+        if (inputUnidad == "AddUnidad") {
+            sugerenciasDiv = document.getElementById('Addsugerencias');
+        } else if (inputUnidad == "UpdUnidad") {
+            sugerenciasDiv = document.getElementById('Updsugerencias');
+        }
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+    }, 200);
+}
+
+
+function seleccionarSugerenciaManoObra(unidad, inputUnidad, sugerenciasDiv) {
+    let input;
+    if (inputUnidad == "AddUnidad") {
+        input = document.getElementById('AddUnidadInputManodeobra');
+    } else if (inputUnidad == "UpdUnidad") {
+        input = document.getElementById('updUnidadInputManodeobra');
+    }
+    input.value = unidad; // Colocar la unidad seleccionada en el input
+    sugerenciasDiv.innerHTML = ''; // Limpiar las sugerencias
+    sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro
 }

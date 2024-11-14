@@ -128,4 +128,29 @@ class Maquinaria
         }
         return $R;
     }
+
+
+    /*Método para obtener todas las unidades de las maquinarias*/
+    function getAllUnidadesMaquinaria()
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spMaquinariaUnidades();";
+            $sql = $c->prepare($consulta);
+            $sql->execute();
+            $datos = $sql->fetchAll();
+
+            $R['filas'] = count($datos);
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $datos;
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
 }

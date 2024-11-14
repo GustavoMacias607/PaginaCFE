@@ -16,15 +16,13 @@ class TarjetaMateriales
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spAuxMaterialesInsertar(:IdConcepto,:IdMaterial,:Cantidad, :Precio, :Suministrado, :FechaPrecio);";
+            $consulta = "call spAuxMaterialesInsertar(:IdConcepto,:IdMaterial,:Cantidad,:Suministrado);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdConcepto" => $datos->idConcepto,
                 "IdMaterial" => $datos->codigo,
                 "Cantidad" => $datos->cantidad,
-                "Precio" => $datos->precio,
                 "Suministrado" => $datos->suministrado,
-                "FechaPrecio" => $datos->fechaprecio,
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -126,15 +124,12 @@ class TarjetaManoObra
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spAuxManoObraInsertar(:IdManoObra,:IdConcepto,:Cantidad, :Rendimiento, :Salario, :FechaSalario);";
+            $consulta = "call spAuxManoObraInsertar(:IdManoObra,:IdConcepto,:Rendimiento);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdManoObra" => $datos->idmanoobra,
                 "IdConcepto" => $datos->idConcepto,
-                "Cantidad" => $datos->cantidad,
-                "Rendimiento" => $datos->rendimiento,
-                "Salario" => $datos->salario,
-                "FechaSalario" => $datos->fechasalario,
+                "Rendimiento" => $datos->rendimiento
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -234,14 +229,12 @@ class TarjetaMaquinaria
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spAuxMaquinariaInsertar(:IdConcepto,:IdMaquinaria,:Phm, :Rhm, :FechaPrecio);";
+            $consulta = "call spAuxMaquinariaInsertar(:IdConcepto,:IdMaquinaria,:Rhm);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdConcepto" => $datos->idConcepto,
                 "IdMaquinaria" => $datos->idmaquinaria,
-                "Phm" => $datos->phm,
-                "Rhm" => $datos->rhm,
-                "FechaPrecio" => $datos->fechaprecio,
+                "Rhm" => $datos->rhm
             ));
             unset($c);
         } catch (PDOException $e) {

@@ -5,6 +5,7 @@ let msgModificarMaqui = "Maquinaria modificada";
 
 var estatusMaquinaria = 1;
 data = []
+let unidadMaquinaria;
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaquinariaValidar() {
     let vacio = false;
@@ -35,6 +36,7 @@ function AddMaquinariaValidar() {
     let unidad = document.querySelector('#AddUnidadInputMaquinaria');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
+        unidad.placeholder = "Requerida la unidad"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = unidad;
@@ -135,6 +137,7 @@ function UpdMaquinariaValidar() {
     let unidad = document.querySelector('#UpdUnidadInputMaquinaria');
     if (unidad.value == "") {
         unidad.classList.add("inputVacio");
+        unidad.placeholder = "Requerida la unidad"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = unidad;
@@ -303,6 +306,7 @@ function GetMaquinaria() {
                     data = resp.datos;
                     llenarTablaMaquinaria();
                     filterDataMaquinaria();
+                    llenarUnidadTablaMaquinaria();
                 }
             } else {
                 throw e = status;
@@ -573,6 +577,7 @@ function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, fechaPreci
     idMa.value = id;
     descripcionMa.value = descripcion;
     phm.value = phM;
+    UnidadMa.value = unidad;
 
     if (fechaPrecio != "0000-00-00" && fechaPrecio != null) {
         document.querySelector('#UpdfechaPrecioInput').value = FormateoFecha(fechaPrecio);
@@ -584,24 +589,18 @@ function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, fechaPreci
         let fechaFormateada = `${año}-${mes}-${dia}`;
         document.querySelector('#UpdfechaPrecioInput').value = fechaFormateada;
     }
-    //llenar el select de unidad
-    for (var i = 0; i < UnidadMa.options.length; i++) {
-        if (UnidadMa.options[i].value === unidad) {
-            UnidadMa.options[i].selected = true;
-            break;
-        }
-    }
-
 
     idMa.placeholder = "";
     descripcionMa.placeholder = "";
     phm.placeholder = "";
+    UnidadMa.placeholder = "";
 
 
     idMa.classList.remove("inputVacio");
     descripcionMa.classList.remove("inputVacio");
     UnidadMa.classList.remove("inputVacio");
     phm.classList.remove("inputVacio");
+    UnidadMa.classList.remove("inputVacio");
 }
 
 
@@ -712,4 +711,113 @@ function idMaquinariaAutomatico() {
     const newId = `Maq${String(maxIdNumber + 1).padStart(2, '0')}`;
 
     return newId;
+}
+
+
+
+function llenarUnidadTablaMaquinaria() {
+    const unidadFilter = document.getElementById("unidad-filterMaqui"); // El select donde agregarás las opciones
+    let json = "";
+    let url = "";
+    url = "../ws/Maquinaria/wsGetUnidades.php";
+
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                if (resp.estado == "OK") {
+                    //Limpiar las opciones existentes del select(por si hay alguna previamente)
+                    unidadFilter.innerHTML = "";
+                    unidadMaquinaria = resp.datos;
+
+                    //Crear una opción predeterminada o vacía
+                    const optionDefault = document.createElement("option");
+                    optionDefault.value = "";
+                    optionDefault.textContent = "Todo";
+                    unidadFilter.appendChild(optionDefault);
+
+                    //Ordenar las unidadMaquinaria alfabéticamente, asegurando que se eliminen los espacios innecesarios
+                    unidadMaquinaria.sort((a, b) =>
+                        a.unidad.trim().localeCompare(b.unidad.trim(), 'es', { sensitivity: 'base' })
+                    );
+
+                    //Iterar sobre las unidadMaquinaria obtenidas y añadirlas al select
+                    unidadMaquinaria.forEach(unidad => {
+                        //Crear un nuevo elemento < option >
+                        const option = document.createElement("option");
+
+                        //Usar el valor de la unidad para el atributo 'value' y el texto visible de la opción
+                        option.value = unidad.unidad;
+                        option.textContent = unidad.unidad;
+
+                        //Añadir la opción al select
+                        unidadFilter.appendChild(option);
+                    });
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    });
+}
+
+function mostrarSugerenciasMaquinaria(input, inputUnidad) {
+    let sugerenciasDiv;
+    if (inputUnidad == "AddUnidad") {
+        sugerenciasDiv = document.getElementById('Addsugerencias');
+    } else if (inputUnidad == "UpdUnidad") {
+        sugerenciasDiv = document.getElementById('Updsugerencias');
+    }
+
+    sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
+
+    const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
+    const sugerenciasFiltradas = filtro === '' ? unidadMaquinaria : unidadMaquinaria.filter(unidad =>
+        unidad.unidad.toLowerCase().includes(filtro)
+    );
+
+    // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
+    if (sugerenciasFiltradas.length === 0 || (sugerenciasFiltradas.length === 1 && sugerenciasFiltradas[0].unidad.toLowerCase() === filtro)) {
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+        return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
+    } else {
+        sugerenciasDiv.classList.add('activado'); // Mostrar el cuadro de sugerencias si hay coincidencias
+    }
+
+    // Crear los elementos de sugerencia y agregarlos al cuadro
+    sugerenciasFiltradas.forEach(unidad => {
+        const div = document.createElement('div');
+        div.classList.add('sugerencia-item');
+        div.textContent = unidad.unidad;
+        div.onclick = () => seleccionarSugerenciaMaquinaria(unidad.unidad, inputUnidad, sugerenciasDiv);
+        sugerenciasDiv.appendChild(div);
+    });
+}
+
+// Función para ocultar el cuadro de sugerencias al perder el foco
+function ocultarSugerenciasMaquinaria(inputUnidad) {
+    setTimeout(() => {
+        let sugerenciasDiv;
+        if (inputUnidad == "AddUnidad") {
+            sugerenciasDiv = document.getElementById('Addsugerencias');
+        } else if (inputUnidad == "UpdUnidad") {
+            sugerenciasDiv = document.getElementById('Updsugerencias');
+        }
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+    }, 200);
+}
+
+function seleccionarSugerenciaMaquinaria(unidad, inputUnidad, sugerenciasDiv) {
+    console.log(unidad, inputUnidad, sugerenciasDiv);
+    let input;
+    if (inputUnidad == "AddUnidad") {
+        input = document.getElementById('AddUnidadInputMaquinaria');
+    } else if (inputUnidad == "UpdUnidad") {
+        input = document.getElementById('UpdUnidadInputMaquinaria');
+    }
+    input.value = unidad; // Colocar la unidad seleccionada en el input
+    sugerenciasDiv.innerHTML = ''; // Limpiar las sugerencias
+    sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro
 }
