@@ -22,6 +22,7 @@ if (!isset($_SESSION['idusuario'])) {
         <label for="" class="titulos-tiposde-proyecto">En proceso</label>
         <label for="" class="titulos-tiposde-proyecto">Terminados</label>
     </div>
+    
 
 </div>
 

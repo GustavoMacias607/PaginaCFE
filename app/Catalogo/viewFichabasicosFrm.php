@@ -10,7 +10,7 @@ if (!isset($_SESSION['idusuario'])) {
 ?>
 <div class="fondBlancoCatalogo">
     <div class="bottom-rectangle-Catalogo">
-        <div class="text-Catalogo">Agregar catálogo</div>
+        <div class="text-Catalogo">Agregar tarjeta</div>
         <a href="index.php" class="text-inicio-Catalogo">
             <div>Ir al inicio</div>
         </a>

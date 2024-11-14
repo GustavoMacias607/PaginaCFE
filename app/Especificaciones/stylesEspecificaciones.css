@@ -139,7 +139,7 @@
     color: #008e5a;
     border-radius: 5;
     transition: all 0.3s ease;
-    width: 20rem;
+    width: 53rem;
   }
   
   .btn-tiposde-especificaciones:hover {
@@ -158,4 +158,137 @@
     margin-top: 1rem;
     display: flex;
     align-items: center;
+  }
+
+  .contTabla-especificaciones {
+    width: calc(100% - 0.2rem);
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    
+    @media (min-width: 393px) {
+      
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+      width: calc(100% - 0.2rem);
+    }
+    @media (min-width: 508px) {
+      
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+      width: calc(100% - 0.2rem);
+    }
+    @media (min-width: 1090px) {
+      
+      margin-left: 2rem;
+      margin-right: 2rem;
+      width: calc(100% - 4rem);
+    }
+  }
+  /* Estilos personalizados para la tabla */
+  .tabla-container-especificaciones {
+    text-align: center;
+    margin-bottom: 100px;
+    /* Altura máxima del contenedor */
+    overflow-y: auto; /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+    /* Centrado horizontal */
+    border-top: #008e5a solid 3px;
+    border-top-width: 0px;
+    margin-top: 0px;
+  }
+  
+  #tabla-especificaciones {
+    width: 100%;
+  }
+  
+  #tabla-especificaciones th,
+  #tabla-especificaciones td {
+    border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+    padding: 8px;
+    text-align: left;
+  }
+  
+  #tabla-especificaciones th,
+  #tabla-especificaciones td:focus{
+    outline: none;
+    border: 3px solid #008e5a;
+  }
+  
+  #tabla-especificaciones th {
+    background-color: #008e5a; /* Encabezados con fondo verde */
+    color: white; /* Letras blancas en los encabezados */
+  }
+  
+  #tabla-especificaciones tbody td {
+    color: #303030; /* Texto de las filas en color #303030 */
+  }
+
+  .modal-especificaciones {
+    z-index: 5000;
+    font-family: "LatoBold", sans-serif;
+  }
+  
+  .btnclose-especificaciones {
+    background-color: #ffffff;
+    color: #008e5a;
+    border: none;
+    font-size: 30px;
+  }
+
+  .titulo-especificaciones {
+    font-family: "LatoBold", sans-serif;
+    font-size: 1.2rem;
+    padding-top: 1rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  .fa-solid-agregar-especificaciones {
+    font-family: "LatoBold", sans-serif; /* tipografia */
+    --bs-btn-padding-y: 0.3rem;
+    --bs-btn-padding-x: 10px; /* largo del boton */
+    --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
+    margin-left: 10px;
+    background-color: #008e5a;
+    border: 3px solid #008e5a;
+    border-radius: 5;
+    transition: all 0.3s ease; /* Transición suave */
+    color: #ffffff;
+  }
+  
+  .fa-solid-agregar-especificaciones:hover {
+    background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+    border-color: #008e5a; /* Contorno verde al pasar el mouse */
+    color: #008e5a; /* Letra verde al pasar el mouse */
+  }
+  
+  .fa-solid-agregar-especificaciones:active {
+    --bs-btn-background-color: #008e5a; /* Fondo blanco al hacer clic */
+    --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+    --bs-btn-color: #ffffff; /* Letra verde al hacer clic */
+  }
+
+  .pagRegistrosespecificaciones {
+    font-family: "LatoBold", sans-serif;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 0 2rem 0 2rem;
+    align-items: center;
+    margin-top: 0.2rem;
+    width: 100%;
+  }
+  .cantregespecificaciones {
+    margin-top: 1.2rem;
+    display: flex;
+    align-items: start;
+  }
+  .cantregistrosespecificaciones {
+    font-family: "LatoBold", sans-serif;
+    color: #008e5a;
+    border: 3px solid #008e5a;
+  }
+
+  .seccion-fami-espe-id{
+    display: flex;
+    justify-content: space-between;
   }

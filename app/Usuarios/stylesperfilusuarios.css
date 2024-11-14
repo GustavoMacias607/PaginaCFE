@@ -230,4 +230,41 @@
   }
 
 
+  /*estilos para el modal cambiar contraseña*/
+.modal-perfil {
+  z-index: 5000;
+  font-family: "LatoBold", sans-serif;
+}
+
+.btnclose-perfil {
+  background-color: #ffffff;
+  color: #008e5a;
+  border: none;
+  padding: 0px;
+  font-size: 30px;
+}
+
+/* Estilos para el botón Guardar del modal */
+.modal-footer-perfil .btn-primary {
+  font-family: "LatoBold", sans-serif; /* tipografia */
+  background-color: #008e5a; /* Color verde */
+  border-color: 3px solid #008e5a; /* Color del borde */
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-footer-perfil {
+  border: none;
+  padding: 0px;
+}
+
+.modal-footer-perfil .btn-primary:active {
+  background-color: #008e5a; /* Color verde al hacer clic */
+  border-color: #008e5a; /* Color del borde al hacer clic */
+  color: #000000; /* Color negro al hacer clic */
+}
+.modal-body-perfil input[type="text"] {
+  font-family: "Lato", sans-serif;
+}
+
 
