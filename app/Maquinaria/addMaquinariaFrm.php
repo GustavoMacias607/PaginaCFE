@@ -70,9 +70,9 @@ if (!isset($_SESSION['idusuario'])) {
                             <span>Unidad: </span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filterMaqui"
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="">Todo</option>
-                                <option value="JOR">JOR</option>
-                                <!-- Agrega más opciones según sea necesario -->
+                                <option value="" selected>Todo</option>
+                                <option value="HR">HR</option>
+                                <option value="%MO">%MO</option>
                             </select>
                         </div>
                     </th>
@@ -121,15 +121,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AdddescripcionInputMaquinaria" rows="2"></textarea>
                 </div>
-
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerenciasMaquinaria(this, 'AddUnidad')"
-                        onfocus="mostrarSugerenciasMaquinaria(this, 'AddUnidad')"
-                        onblur="ocultarSugerenciasMaquinaria('AddUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddUnidadInputMaquinaria" autocomplete="off">
-                    <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="AddUnidadInputMaquinaria">
+                        <option value="" selected>Seleccciona una unidad</option>
+                        <option value="HR">HR</option>
+                        <option value="%MO">%MO</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
@@ -183,12 +182,12 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerenciasMaquinaria(this, 'UpdUnidad')"
-                        onfocus="mostrarSugerenciasMaquinaria(this, 'UpdUnidad')"
-                        onblur="ocultarSugerenciasMaquinaria('UpdUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="UpdUnidadInputMaquinaria" autocomplete="off">
-                    <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="UpdUnidadInputMaquinaria">
+                        <option value="" selected>Seleccciona una unidad</option>
+                        <option value="HR">HR</option>
+                        <option value="%MO">%MO</option>
+                    </select>
                 </div>
                 <div class="mb-3">
                     <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>

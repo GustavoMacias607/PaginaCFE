@@ -456,11 +456,9 @@ function actualizarSumaManoObra() {
 // Método para los filtros de la tabla
 function filterDataManoObraTarjetaP() {
     const unidadFilter = document.getElementById("selectUnidadManoObraPrincipal").value;
-    const categoriaFilter = document.getElementById("selectCategoriaManoObraPrincipal").value;
     filteredDataManoObra = objTabla2ModalManoObraiaPrincipal.filter(record => {
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
-        const matchesCategoria = categoriaFilter ? record.categoria == categoriaFilter : true;
-        return matchesUnidad && matchesCategoria;
+        return matchesUnidad;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableManoObraTarjetaP(currentPage);
@@ -470,8 +468,6 @@ function llenarTablaManoObraTarjetaP() {
     displayTableManoObraTarjetaP(currentPage);
     const unidadFilter = document.getElementById("selectUnidadManoObraPrincipal");
     unidadFilter.addEventListener("change", filterDataManoObraTarjetaP);
-    const categoriaFilter = document.getElementById("selectCategoriaManoObraPrincipal");
-    categoriaFilter.addEventListener("change", filterDataManoObraTarjetaP);
 }
 
 function hayCantidadRendimientoManoObra() {
@@ -738,12 +734,14 @@ function displayTableBasicosTarjetaP(page) {
     const start = (page - 1) * cantidadFilasTabla;
     const end = start + cantidadFilasTabla;
     const paginatedData2 = filteredDataBasicos.slice(start, end);
+
     if (paginatedData2.length > 0) {
         paginatedData2.forEach((record, index) => {
             const formatoMXN = new Intl.NumberFormat('es-MX', {
                 style: 'currency',
                 currency: 'MXN'
             });
+
             if (!record.estatus) {
                 basicosInactivo = true;
             }
@@ -773,21 +771,30 @@ function displayTableBasicosTarjetaP(page) {
             function actualizarCalculosBasicos() {
                 const cantidad = parseFloat(cantidadCell.innerText) || 0;
 
-                // Actualizar arreglo de objetos
-
+                // Actualizar el objeto en el arreglo
                 const item = objTabla2ModalBasicosPrincipal.find(obj => obj.idconbasi == record.idconbasi);
-
                 if (item) {
                     item.cantconbasi = cantidad;
                 }
 
-                // Actualizar color de fondo basado en valor
+                // Color de fondo de la celda basado en el valor
                 cantidadCell.style.backgroundColor = cantidad > 0 ? '#82f75780' : 'red';
 
-
-                let resultado = total * cantidad;
-                importeBasicos += resultado;
+                // Calcular el resultado y actualizar celdas
+                const resultado = total * cantidad;
                 resultadoCell.textContent = formatoMXN.format(resultado);
+
+                // Recalcular el importe total
+                calcularImporteBasicos();
+            }
+
+            // Función para recalcular el importe total de básicos
+            function calcularImporteBasicos() {
+                importeBasicos = Array.from(document.querySelectorAll('.resultadoBasi'))
+                    .reduce((total, cell) => {
+                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+                        return total + value;
+                    }, 0);
                 actualizarSumaBasicos();
             }
 
@@ -807,15 +814,14 @@ function displayTableBasicosTarjetaP(page) {
                 }
                 actualizarCalculosBasicos();
             });
+
             tableBody.appendChild(row);
             actualizarCalculosBasicos();
         });
+
         const LecturaBasicos = document.querySelector('#LecturaBasicos');
-        if (basicosInactivo) {
-            LecturaBasicos.style.display = 'flex';
-        } else {
-            LecturaBasicos.style.display = 'none';
-        }
+        LecturaBasicos.style.display = basicosInactivo ? 'flex' : 'none';
+
     } else {
         const row = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
         tableBody.innerHTML += row;
@@ -1264,7 +1270,6 @@ function calcularTotal() {
     llenarColumnaMo();
     // Sumar las cantidades
     total = suma1 + suma2 + suma3 + suma4 + suma5
-    console.log(suma1 + " " + suma2 + " " + suma3 + " " + suma4 + " " + suma5, total);
     const totalFormateado = total !== undefined && total !== ""
         ? formatoMXN.format(total)
         : "---";

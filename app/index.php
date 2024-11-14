@@ -170,6 +170,7 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="../js/code.jquery.com_jquery-3.7.1.min.js"></script>
     <script src="js/funciones.js"></script>
     <script src="js/funciones_usuarios.js"></script>
+    <script src="js/funciones_PerfilUsuario.js"></script>
     <script src="js/funciones_materiales.js"></script>
     <script src="js/funciones_conceptos.js"></script>
     <script src="js/funciones_ManoObra.js"></script>

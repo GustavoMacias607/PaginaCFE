@@ -205,7 +205,7 @@ if (!isset($_SESSION['idusuario'])) {
                         <input type="password" class="form-control inputLleno"
                             onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
                     </div>
-                
+
                     <div class=" modal-footer modal-footer-usuarios">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"

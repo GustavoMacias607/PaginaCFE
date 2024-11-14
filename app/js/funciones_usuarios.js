@@ -108,7 +108,6 @@ function ComprobarContrasenas() {
         passConfir.classList.remove('inputVacio');
         return true;
     }
-
 }
 //Metodo para validar el modal para modificar un usuario y al mismo tiempo valida los datos
 function UpdUsuarioValidar() {

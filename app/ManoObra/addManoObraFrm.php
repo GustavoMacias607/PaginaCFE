@@ -82,7 +82,6 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-
                     <th style="width: 8rem;">
                         Salario
                     </th>
@@ -128,17 +127,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddCategoriaInputManodeobra" rows="2"></textarea>
                 </div>
-
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerenciasManoObra(this, 'AddUnidad')"
-                        onfocus="mostrarSugerenciasManoObra(this, 'AddUnidad')"
-                        onblur="ocultarSugerenciasManoObra('AddUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddUnidadInputManodeobra" autocomplete="off">
-                    <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="AddUnidadInputManodeobra">
+                        <option value="" selected>Seleccciona una unidad</option>
+                        <option value="JOR">JOR</option>
+                    </select>
                 </div>
-
                 <div class="mb-3">
                     <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
                     <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
@@ -192,15 +188,12 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerenciasManoObra(this, 'UpdUnidad')"
-                        onfocus="mostrarSugerenciasManoObra(this, 'UpdUnidad')"
-                        onblur="ocultarSugerenciasManoObra('UpdUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="updUnidadInputManodeobra" autocomplete="off">
-                    <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        id="updUnidadInputManodeobra">
+                        <option value="" selected>Seleccciona una unidad</option>
+                        <option value="JOR">JOR</option>
+                    </select>
                 </div>
-
-
                 <div class="mb-3">
                     <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
                     <input type="number" class="form-control inputLleno"

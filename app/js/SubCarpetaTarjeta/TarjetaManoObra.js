@@ -181,16 +181,14 @@ function setupPaginationManoObraTarjeta() {
 function filterDataManoObraTarjeta() {
     const searchText = document.getElementById("search-inputManoObra").value.toLowerCase();
     const unidadFilter = document.getElementById("unidad-filterManoObra").value;
-    const categoriaFilter = document.getElementById("categoria-filterManoObra").value;
     const statusFilter = 1;
     filteredData = datosObjetoManoObra.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
         );
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
-        const matchesCategoria = categoriaFilter ? record.categoria == categoriaFilter : true;
         const matchesStatus = record.estatus == statusFilter;
-        return matchesSearch && matchesUnidad && matchesStatus && matchesCategoria;
+        return matchesSearch && matchesUnidad && matchesStatus;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableManoObraTarjeta(currentPage);
@@ -206,9 +204,6 @@ function llenarTablaManoObraTarjeta() {
     const unidadFilter = document.getElementById("unidad-filterManoObra");
     unidadFilter.addEventListener("change", filterDataManoObraTarjeta);
 
-    const categoriaFilter = document.getElementById("categoria-filterManoObra");
-    categoriaFilter.addEventListener("change", filterDataManoObraTarjeta);
-
     const rowsPerPageSelect = document.getElementById("rows-per-pageManoObra");
     rowsPerPageSelect.addEventListener("change", function () {
         rowsPerPage = parseInt(this.value);
@@ -223,8 +218,6 @@ function AbrirModalManoObraTarjeta() {
     $('#AgregarModalManodeobraesConcepto').modal('show');
     const unidadFilter = document.getElementById("unidad-filterManoObra");
     unidadFilter.value = "";
-    const CategoriaFilter = document.getElementById("categoria-filterManoObra");
-    CategoriaFilter.value = "";
     rowsPerPage = 10;
     llenarTablaManoObraSeleccionadosP();
     objTabla2ModalManoObra = filteredDataManoObra
@@ -308,11 +301,9 @@ function eliminarFilaDelObjetoManoObra(codigo) {
 //Metodo para los filtros de la tabla
 function filterDataManoObraTarjetaModal() {
     const unidadFilter = document.getElementById("selectUnidadManoObraModal").value;
-    const cateogiriaFilter = document.getElementById("selectCategoriaManoObraModal").value;
     filteredData2 = objTabla2ModalManoObra.filter(record => {
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
-        const matchesCategoria = cateogiriaFilter ? record.categoria == cateogiriaFilter : true;
-        return matchesUnidad && matchesCategoria;
+        return matchesUnidad;
     });
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableManoObraTarjetaModal(currentPage);
@@ -322,8 +313,6 @@ function llenarTablaManoObraTarjetaModal() {
     displayTableManoObraTarjetaModal(currentPage);
     const unidadFilter = document.getElementById("selectUnidadManoObraModal");
     unidadFilter.addEventListener("change", filterDataManoObraTarjetaModal);
-    const cateogiriaFilter = document.getElementById("selectCategoriaManoObraModal");
-    cateogiriaFilter.addEventListener("change", filterDataManoObraTarjetaModal);
 }
 
 
