@@ -75,9 +75,9 @@ if (!isset($_SESSION['idusuario'])) {
                         </th>
                         <th style="width: 10rem">
                             <div class="d-flex align-items-center">
-                                <span>Unidad: </span>
+                                <span>Unidad </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesPrincipal"
-                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                     <option value="" selected>Todo</option>
                                     <option value="PZA">PZA</option>
                                     <option value="KG">KG</option>
@@ -135,25 +135,14 @@ if (!isset($_SESSION['idusuario'])) {
                         </th>
 
                         <th>
-                            <div class="d-flex align-items-center">
-                                <span>Categoría: </span>
-                                <select id="selectCategoriaManoObraPrincipal" class="form-select form-select-sm ml-2"
-                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                    <option value="" selected>Todo</option>
-                                    <option value="AYUDANTE GENERAL">Ayudante General</option>
-                                    <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
-                                    <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
-                                    <option value="OFICIAL PINTOR">Oficial Pintor</option>
-                                    <!-- Agrega más opciones según sea necesario -->
-                                </select>
-
+                           Categoría
                         </th>
 
                         <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraPrincipal"
-                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                     <option value="">Todo</option>
                                     <option value="JOR">JOR</option>
                                     <!-- Agrega más opciones según sea necesario -->
@@ -267,7 +256,7 @@ if (!isset($_SESSION['idusuario'])) {
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaPrincipal"
-                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                     <option value="" selected>Todo</option>
                                     <option value="HR">HR</option>
                                     <option value="%MO">%MO</option>
@@ -326,7 +315,7 @@ if (!isset($_SESSION['idusuario'])) {
                             <div class="d-flex align-items-center">
                                 <span>Unidad: </span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosPrincipal"
-                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                    style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
 
                                 </select>
                             </div>
@@ -590,7 +579,7 @@ if (!isset($_SESSION['idusuario'])) {
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesModal"
-                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="" selected>Todo</option>
                                             <option value="PZA">PZA</option>
                                             <option value="KG">KG</option>
@@ -671,19 +660,8 @@ if (!isset($_SESSION['idusuario'])) {
                                     ID
                                 </th>
                                 <th>
-                                    <div class="d-flex align-items-center">
-                                        <span>Categoría: </span>
-                                        <select id="categoria-filterManoObra" class="form-select form-select-sm ml-2"
-                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                            <option value="" selected>Todo</option>
-                                            <option value="AYUDANTE GENERAL">Ayudante General</option>
-                                            <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
-                                            <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
-                                            <option value="OFICIAL PINTOR">Oficial Pintor</option>
-                                            <!-- Agrega más opciones según sea necesario -->
-                                        </select>
-                                </th>
-
+                                    Categoría
+                                </th> 
                                 <th style="width: 9rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
@@ -719,25 +697,14 @@ if (!isset($_SESSION['idusuario'])) {
                                 </th>
 
                                 <th>
-                                    <div class="d-flex align-items-center">
-                                        <span>Categoría: </span>
-                                        <select id="selectCategoriaManoObraModal"
-                                            class="form-select form-select-sm ml-2"
-                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                            <option value="" selected>Todo</option>
-                                            <option value="AYUDANTE GENERAL">Ayudante General</option>
-                                            <option value="OFICIAL ELECTRICISTA">Oficial Electricista</option>
-                                            <option value="OFICIAL ALBAÑIL">Oficial Albañil</option>
-                                            <option value="OFICIAL PINTOR">Oficial Pintor</option>
-                                            <!-- Agrega más opciones según sea necesario -->
-                                        </select>
+                                    Categoría
                                 </th>
 
                                 <th style="width: 9rem;">
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraModal"
-                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="">Todo</option>
                                             <option value="JOR">JOR</option>
                                             <!-- Agrega más opciones según sea necesario -->
@@ -862,9 +829,9 @@ if (!isset($_SESSION['idusuario'])) {
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaModal"
-                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="">Todo</option>
-                                            <option value="JOR">JOR</option>
+                                            
                                             <!-- Agrega más opciones según sea necesario -->
                                         </select>
                                     </div>
@@ -991,7 +958,7 @@ if (!isset($_SESSION['idusuario'])) {
                                     <div class="d-flex align-items-center">
                                         <span>Unidad: </span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosModal"
-                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="" selected>Todo</option>
                                             <option value="Estructuras">Estructura</option>
                                             <option value="PZA">PZA</option>
