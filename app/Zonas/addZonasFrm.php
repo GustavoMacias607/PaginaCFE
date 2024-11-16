@@ -11,7 +11,7 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco">
     <div class="bottom-rectangle-zonas">
         <div class="text-zonas">Zonas</div>
-        <button type="button" class="btn btn-agregar-zona" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+        <button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalZona();">Agregar zona</button>
         <a href="index.php" class="text-inicio-zonas">
             <div>Ir al inicio</div>
@@ -70,7 +70,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <th>
                         Zona
                     </th>
-                    <th style="width: 8rem;">
+                    <th style="width: 18rem;">
                         Obra
                     </th>
                     <th style="width: 8rem;">
@@ -93,6 +93,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </tr>
             </thead>
             <tbody id="table-bodyZona">
+            <td colspan="8">Sin resultados</td>
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
@@ -108,7 +109,8 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar zona</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="fa-solid fa-xmark btnclose-zonas" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <form name="no-autocomplete" autocomplete="off">
                 <div class="modal-body modal-body-zonas">

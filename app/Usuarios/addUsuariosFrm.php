@@ -108,7 +108,8 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar usuario</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="fa-solid fa-xmark btnclose-usuarios" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
             </div>
             <form name="no-autocomplete" autocomplete="off">
                 <div class="modal-body modal-body-usuarios">
@@ -165,7 +166,6 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar usuario</h1>
-
                 <button type="button" class="fa-solid fa-xmark btnclose-usuarios" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>

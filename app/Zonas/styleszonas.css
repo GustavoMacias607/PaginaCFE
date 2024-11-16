@@ -128,29 +128,32 @@
     background-color: #ffffff;
     color: #008e5a;
     border: none;
+    padding: 0px;
     font-size: 30px;
   }
   
-  /* Estilos para el botón Guardar del modal */
-  .modal-footer-zonas .btn-primary {
-    background-color: #008e5a; /* Color verde */
-    border-color: #008e5a; /* Color del borde */
-    color: #ffffff;
-  }
-  
-  .modal-footer-zonas {
-    border: none;
-    padding: 0px;
-  }
-  
-  .modal-footer-zonas .btn-primary:active {
-    background-color: #008e5a; /* Color verde al hacer clic */
-    border-color: #008e5a; /* Color del borde al hacer clic */
-    color: #000000; /* Color negro al hacer clic */
-  }
-  .modal-body-zonas input[type="text"] {
-    font-family: "Lato", sans-serif;
-  }
+/* Estilos para el botón Guardar del modal */
+.modal-footer-zonas .btn-primary {
+  font-family: "LatoBold", sans-serif; /* tipografia */
+  background-color: #008e5a; /* Color verde */
+  border-color: 3px solid #008e5a; /* Color del borde */
+  color: #ffffff;
+  margin: 0;
+}
+
+.modal-footer-zonas {
+  border: none;
+  padding: 0px;
+}
+
+.modal-footer-zonas .btn-primary:active {
+  background-color: #008e5a; /* Color verde al hacer clic */
+  border-color: #008e5a; /* Color del borde al hacer clic */
+  color: #000000; /* Color negro al hacer clic */
+}
+.modal-body-zonas input[type="text"] {
+  font-family: "Lato", sans-serif;
+}
   
   .form-select-zonas {
     background-color: #ffffff;
