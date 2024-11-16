@@ -121,7 +121,8 @@ if (!isset($_SESSION['idusuario'])) {
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('materiales');">Materiales</a>
+                <a class="opcionesMenu" onclick=" preciona(this);"
+                    href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('Basicos');">Básicos</a>

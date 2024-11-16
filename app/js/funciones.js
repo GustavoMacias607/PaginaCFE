@@ -14,7 +14,6 @@ function opcion(op) {
             break;
         case "zonas":
             url = "Zonas/addZonasFrm.php";
-            funcion = GetZona;
             break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
