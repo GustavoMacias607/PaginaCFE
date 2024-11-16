@@ -149,7 +149,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddnombreInputConcepto" rows="3"></textarea>
+                        class="form-control inputLleno" id="AddnombreInputConcepto" rows="4"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -192,7 +192,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
                     <textarea type="text" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnombreInput" rows="3"></textarea>
+                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnombreInput" rows="4"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>

@@ -9,27 +9,27 @@ if (!isset($_SESSION['idusuario'])) {
 ?>
 
 <div class="fondBlanco">
-    <div class="bottom-rectangle-usuarios">
-        <div class="text-usuarios">Usuarios</div>
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:AddlimpiarModalUsuario();">Agregar usuario</button>
-        <a href="index.php" class="text-inicio-usuarios">
+    <div class="bottom-rectangle-zonas">
+        <div class="text-zonas">Zonas</div>
+        <button type="button" class="btn btn-agregar-zona" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModalZona();">Agregar zona</button>
+        <a href="index.php" class="text-inicio-zonas">
             <div>Ir al inicio</div>
         </a>
     </div>
-    <div class="label-container-usuarios">
+    <div class="label-container-zonas">
         <form autocomplete="off">
-            <input type="text" placeholder="Buscar" id="search-inputUsuario" placeholder="Buscar" name="no-autocomplete"
+            <input type="text" placeholder="Buscar" id="search-inputZona" placeholder="Buscar" name="no-autocomplete"
                 autocomplete="off">
-            <i class="fas fa-search icon-usuarios" id="searchIcon"></i>
+            <i class="fas fa-search icon-zonas" id="searchIcon"></i>
         </form>
     </div>
 
 
     <!-- Paginacion  -->
-    <div class="pagRegistrosusuarios">
+    <div class="pagRegistroszonas">
         <nav class="pSeccion">
-            <div class="cantregusuarios">
+            <div class="cantregzonas">
                 <div class="text1">Mostrar</div>
                 <select class="cantregistrosmanodeobra" id="rows-per-page">
                     <option value="10" selected>10</option>
@@ -46,11 +46,11 @@ if (!isset($_SESSION['idusuario'])) {
             </ul>
 
         </nav>
-        <div class="toggle-estatus-usuarios">
+        <div class="toggle-estatus-zonas">
             <div class="text">Estatus</div>
             <div class="">
                 <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
-                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusUsuario();">
+                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusZona();">
             </div>
         </div>
     </div>
@@ -59,31 +59,31 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 
-<div class="contTabla-usuarios">
-    <div class="tabla-container tabla-container-usuarios">
-        <table id="tabla-usuarios">
+<div class="contTabla-zonas">
+    <div class="tabla-container tabla-container-zonas">
+        <table id="tabla-zonas">
             <thead class="">
                 <tr>
                     <th style="width: 8rem;">
                         ID
                     </th>
                     <th>
-                        Nombre
+                        Zona
                     </th>
-                    <th style="width: 14rem;">
-                        Usuario
+                    <th style="width: 8rem;">
+                        Obra
                     </th>
-                    <th style="width: 11.5rem;">
-                        <div class="d-flex align-items-center">
-                            <span>Rol: </span>
-                            <select class="form-select form-select-sm ml-2" id="selectUsuarios"
-                                style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="" selected>Todo</option>
-                                <option value="Administrador">Administrador</option>
-                                <option value="Invitado">Invitado</option>
-                                <option value="Constructor">Constructor</option>
-                            </select>
-                        </div>
+                    <th style="width: 8rem;">
+                        C. indirecto
+                    </th>
+                    <th style="width: 8rem;">
+                        Financiamiento
+                    </th>
+                    <th style="width: 8rem;">
+                        Utilidad
+                    </th>
+                    <th style="width: 8rem;">
+                        C. adicionales
                     </th>
                     <th style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
@@ -92,7 +92,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </th>
                 </tr>
             </thead>
-            <tbody id="table-bodyUsuario">
+            <tbody id="table-bodyZona">
                 <!-- Aquí se llenará con los registros -->
             </tbody>
         </table>
@@ -101,76 +101,82 @@ if (!isset($_SESSION['idusuario'])) {
 
 </div>
 
-<!-- Modal insertar usuario -->
-<div class="modal modal-usuarios fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
+<!-- Modal insertar zonas -->
+<div class="modal modal-zonas fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar usuario</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar zona</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form name="no-autocomplete" autocomplete="off">
-                <div class="modal-body modal-body-usuarios">
+                <div class="modal-body modal-body-zonas">
                     <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                     <div class="mb-3">
-                        <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
+                        <label for="idInput" class="form-label" style="color: #303030;">ID</label>
+                        <input type="number" class="form-control inputLleno" id="AddidInput"
+                        onblur="javascript:CompruebaTieneAlgoInput(this); checkZona('Add');">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
                         <input type="text" class="form-control inputLleno"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddnombreInput">
+                            onblur="javascript:CompruebaTieneAlgoInputZona(this)" id="AddnombreInput">
                     </div>
                     <div class="mb-3">
-                        <label for="AddusuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
-                        <input class="form-control inputLleno"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('Add');"
-                            id="AddusuarioInput" rows="3">
-                    </div>
-                    <div class="mb-3">
-                        <label for="AddpassInput" class="form-label" style="color: #303030;">Contraseña*</label>
-                        <input type="password" class="form-control inputLleno"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddpassInput" rows="3">
-                    </div>
-                    <div class="mb-3">
-                        <label for="passconfirmInput" class="form-label" style="color: #303030;">Confirme su
-                            contraseña*</label>
-                        <input type="password" class="form-control inputLleno" id="AddConfirpassInput"
-                            onblur="javascript:ComprobarContrasenas();javascript:CompruebaTieneAlgoInputUsuario(this)"
-                            rows="3">
-                    </div>
-                    <div class="mb-3">
-                        <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
-                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
+                        <label for="rolInput" class="form-label" style="color: #303030;">Obra*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputZona(this)"
                             id="AddrolInput">
                             <option selected value="">Selecciona una opción</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Invitado">Invitado</option>
-                            <option value="Constructor">Constructor</option>
+                            <option value="Nueva">Nueva</option>
+                            <option value="Mejoradered">Mejora de red</option>
+                            <option value="Solicitud">Solicitud</option>
                         </select>
                     </div>
-                    <div class="modal-footer modal-footer-usuarios">
+                    <div class="mb-3">
+                        <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
+                        <input type="number" class="form-control inputLleno" id="AddidInput"
+                        onblur="javascript:CompruebaTieneAlgoInput(this); checkZona('Add');">
+                    </div>
+                    <div class="mb-3">
+                        <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
+                        <input type="number" class="form-control inputLleno" id="AddidInput"
+                        onblur="javascript:CompruebaTieneAlgoInput(this); checkZona('Add');">
+                    </div>
+                    <div class="mb-3">
+                        <label for="idInput" class="form-label" style="color: #303030;">utilidad*</label>
+                        <input type="number" class="form-control inputLleno" id="AddidInput"
+                        onblur="javascript:CompruebaTieneAlgoInput(this); checkZona('Add');">
+                    </div>
+                    <div class="mb-3">
+                        <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
+                        <input type="number" class="form-control inputLleno" id="AddidInput"
+                        onblur="javascript:CompruebaTieneAlgoInput(this); checkZona('Add');">
+                    </div>
+                    
+                    <div class="modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
-                            onclick="javascript:AddUsuarioValidar();">Guardar</button>
+                            onclick="javascript:AddZonaValidar();">Guardar</button>
                     </div>
-
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal modificar Usuario-->
-<div class="modal modal-usuarios fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+<!-- Modal modificar zonas-->
+<div class="modal modal-zonas fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar usuario</h1>
-
-                <button type="button" class="fa-solid fa-xmark btnclose-usuarios" data-bs-dismiss="modal"
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar zona</h1>
+                <button type="button" class="fa-solid fa-xmark btnclose-zonas" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
             <form autocomplete="off">
-                <div class="modal-body modal-body-usuarios">
+                <div class="modal-body modal-body-zonas">
                     <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                     <input type="text" class="form-control d-none" id="UpUsuAnterior"
                         style="border: 3px solid #008E5A;">
@@ -179,37 +185,40 @@ if (!isset($_SESSION['idusuario'])) {
                         <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
                     </div>
                     <div class="mb-3">
-                        <label for="nombreInput" class="form-label" style="color: #303030;">Nombre*</label>
+                        <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
                         <input type="text" class="form-control inputLleno" id="UpdnombreInput"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                            onblur="javascript:CompruebaTieneAlgoInputZona(this)">
                     </div>
                     <div class="mb-3">
-                        <label for="usuarioInput" class="form-label" style="color: #303030;">Usuario*</label>
-                        <input class="form-control inputLleno" id="UpdusuarioInput" rows="3"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('upd');">
-                    </div>
-                    <div class="mb-3">
-                        <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
+                        <label for="urolInput" class="form-label" style="color: #303030;">Obra*</label>
                         <select class="form-select inputLleno" id="UpdrolInput"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                            onblur="javascript:CompruebaTieneAlgoInputZona(this)">
                             <option selected value="">Selecciona una opción</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Invitado">Invitado</option>
-                            <option value="Constructor">Constructor</option>
+                            <option value="Nueva">Nueva</option>
+                            <option value="Mejoradered">Mejora de red</option>
+                            <option value="Solicitud">Solicitud</option>
                         </select>
                     </div>
-                    <hr>
-                    <div class="mb-3">
-                        <label for="passInput" class="form-label" style="color: #303030;">Nueva contraseña para el
-                            usuario</label>
-                        <input type="password" class="form-control inputLleno"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
+                    <div class="mb-3 d-none">
+                        <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
+                        <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
                     </div>
-
-                    <div class=" modal-footer modal-footer-usuarios">
+                    <div class="mb-3 d-none">
+                        <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
+                        <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
+                    </div>
+                    <div class="mb-3 d-none">
+                        <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
+                        <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
+                    </div>
+                    <div class="mb-3 d-none">
+                        <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
+                        <input type="text" class="form-control" id="UpdidInput" style="border: 3px solid #008E5A;">
+                    </div>
+                    <div class=" modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
-                            onclick="javascript:UpdUsuarioValidar()">Guardar</button>
+                            onclick="javascript:UpdZonaValidar()">Guardar</button>
                     </div>
                 </div>
             </form>
@@ -218,16 +227,16 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 
-<!-- modal para activar el registro de usuarios -->
+<!-- modal para activar el registro de zonas -->
 <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
     style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                    ¿Habilitar este usuario?</h5>
+                    ¿Habilitar esta zona?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
-                    onclick="javascript:ActivarCerrarModal(); CambioEstatusUsuario();"
+                    onclick="javascript:ActivarCerrarModal(); CambioEstatusZona();"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
@@ -244,7 +253,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content">
             <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                    ¿Deshabilitar este usuario?</h5>
+                    ¿Deshabilitar esta zona?</h5>
                 <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
                     id="confirmDeleteButton"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
@@ -263,8 +272,8 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-header"
                 style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
-                    seguro de que desea deshabilitar este usuario?</h5>
-                <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusUsuario();" class="btn"
+                    seguro de que desea deshabilitar esta zona?</h5>
+                <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusZona();" class="btn"
                     id="confirmAdditionalButton"
                     style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
@@ -275,7 +284,7 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <!-- Modal Mensaje -->
-<div class="centrarMsg modMsgEsconder" id="modalMsgUsuarios">
+<div class="centrarMsg modMsgEsconder" id="modalMsgZonas">
     <div class="modMsg" id="modUsu">
         <div class="modImg">
             <img id="imgPic" src="../img/imgPalomita.png" alt="Mensaje" height="100%">

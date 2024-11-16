@@ -194,11 +194,10 @@ body {
   border-top: #008e5a solid 3px;
   border-top-width: 0px;
   margin-top: 0px;
-
   position: fixed;
   overflow-y: auto;
   height: 60%;
-  width: 96%;
+  width: calc(100% - 4rem);
 }
 
 #tabla-maquinaria {

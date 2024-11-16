@@ -1094,7 +1094,7 @@ function MostrartablaMaterialesTarjeta() {
                             fechaprecio: datos.fechaprecio,
                             unidad: datos.unidad,
                             cantidad: datos.cantmaterial,
-                            suministrado: datos.suministrado,
+                            suministrado: datos.suministrado == 1? true : false,
                             estatus: datos.estatus
                         });
                     })

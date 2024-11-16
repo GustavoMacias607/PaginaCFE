@@ -121,8 +121,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <a class="opcionesMenu" onclick="preciona(this);" href="javascript:opcion('Maquinaria');">Maquinaria</a>
             </li>
             <li>
-                <a class="opcionesMenu" onclick=" preciona(this);"
-                    href="javascript:opcion('materiales');">Materiales</a>
+                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('materiales');">Materiales</a>
             </li>
             <li>
                 <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('Basicos');">Básicos</a>
@@ -147,7 +146,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <ul id="opc" class='MenuOpciones'>
                     <a class="tex opcionesMenu" onclick="javascript:incioUsuario(); EstablecerPag(); preciona(this)"
                         href="javascript:opcion('usuarios');">Usuarios</a>
-                    <a class="tex opcionesMenu" onclick="javascript:zonas(); EstablecerPag(); preciona(this)"
+                    <a class="tex opcionesMenu" onclick="javascript:Zonas(); EstablecerPag(); preciona(this)"
                         href="javascript:opcion('zonas');">Zonas</a>
                     <a class="tex" href="index.php?x=1">Cerrar sesión</a>
                 </ul>
@@ -177,6 +176,7 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/funciones_Maquinaria.js"></script>
     <script src="js/funciones_Tarjeta.js"></script>
     <script src="js/funciones_Basicos.js"></script>
+    <script src="js/funciones_Zonas.js"></script>
     <script src="js/funciones_Especificaciones.js"></script>
     <script src="../DataTables-1.11.3/datatables.min.js"></script>
 

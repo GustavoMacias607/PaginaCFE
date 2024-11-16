@@ -197,7 +197,7 @@ body {
   position: fixed;
   overflow-y: auto;
   height: 60%;
-  width: 96%;
+  width: calc(100% - 4rem);
 }
 
 #tabla-manodeobra {

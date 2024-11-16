@@ -12,6 +12,10 @@ function opcion(op) {
             url = "Usuarios/addUsuariosFrm.php";
             funcion = GetUsuario;
             break;
+        case "zonas":
+            url = "Zonas/addZonasFrm.php";
+            funcion = GetZona;
+            break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
             break;

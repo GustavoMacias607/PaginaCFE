@@ -246,12 +246,17 @@ th {
   background-color: #fff; /* Fondo para el encabezado */
   z-index: 10; /* Asegura que el encabezado esté por encima del contenido */
 }
-#tabla-MaterialesCatalogo th,
-#tabla-MaterialesCatalogo td {
+#tabla-MaterialesCatalogo th, 
+#tabla-MaterialesCatalogo td{
   border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
   padding: 8px;
   text-align: left;
 }
+
+#tabla-MaterialesCatalogo td:last-child{
+  text-align: right;
+}
+
 .tabla-MaterialesCatalogo th:focus {
   outline: none;
   border: none;
@@ -592,9 +597,9 @@ th {
   }
   @media (min-width: 1090px) {
     margin-top: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    width: calc(97%);
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: calc(100% - 4rem);
   }
 }
 .tabla-container-materialesmodal_catalogo {
@@ -655,7 +660,7 @@ th {
   text-align: right;
   color: #303030;
   border: none;
-  width: 11rem;
+  width: 9rem;
 }
 
 .subtotales_numeros_top {

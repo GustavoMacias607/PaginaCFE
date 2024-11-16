@@ -190,11 +190,10 @@ body {
   border-top: #008e5a solid 3px;
   border-top-width: 0px;
   margin-top: 0px;
-
   position: fixed;
   overflow-y: auto;
   height: 60%;
-  width: 96%;
+  width: calc(100% - 4rem);
 }
 
 #tabla-usuarios {
@@ -243,7 +242,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  padding: 0 2vw 0 2vw;
+  padding: 0 2rem 0 2rem;
   align-items: center;
   margin-top: 0.2rem;
   width: 100%;
@@ -266,7 +265,13 @@ body {
   display: flex;
   flex-wrap: wrap;
 }
-.text {
+.text1 {
+  color: #008e5a;
+  font-family: "LatoBold", sans-serif;
+  padding-right: 10px;
+}
+
+.text2 {
   color: #008e5a;
   font-family: "LatoBold", sans-serif;
   padding-left: 10px;
@@ -281,7 +286,6 @@ body {
   margin-top: 1rem;
   display: flex;
   align-items: center;
-  padding-right: 2rem;
 }
 
 .inputLleno {

@@ -140,7 +140,7 @@ if (!isset($_SESSION['idusuario'])) {
 
                         <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
-                                <span>Unidad: </span>
+                                <span>Unidad</span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                     <option value="">Todo</option>
@@ -188,7 +188,7 @@ if (!isset($_SESSION['idusuario'])) {
 
     <div class="contTabla-materialesmodal_catalogo">
         <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-manodeobra">
+            <table id="tabla-MaterialesCatalogo">
                 <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th>
@@ -243,7 +243,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
     <div class="contTabla-materialesmodal_catalogo">
         <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-maquinaria">
+            <table id="tabla-MaterialesCatalogo">
                 <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
@@ -254,7 +254,7 @@ if (!isset($_SESSION['idusuario'])) {
                         </th>
                         <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
-                                <span>Unidad: </span>
+                                <span>Unidad</span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                     <option value="" selected>Todo</option>
@@ -291,29 +291,29 @@ if (!isset($_SESSION['idusuario'])) {
 
     <div id="btnAgregarBasicos" class="titulo-materiales" style="display: none;">
         <nav class="pSeccion-catalogo">
-            <div>Basicos</div>
+            <div>Básicos</div>
             <div><button type="button" onclick="javascript:AbrirModalBasicosTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
                     data-bs-target="#AgregarModalBasicosesConcepto">Agregar</button></div>
-            <div id="LecturaBasicos" style="display: none;">Hay un concepto basico Inactivo</div>
+            <div id="LecturaBasicos" style="display: none;">Hay un concepto básico Inactivo</div>
 
         </nav>
     </div>
 
     <div id="tablaAgregarBasicos" style="display: none;" class="contTabla-materialesmodal_catalogo">
         <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-basicos">
+            <table id="tabla-MaterialesCatalogo">
                 <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
                             ID
                         </th>
-                        <th style="width: 28rem;">
+                        <th>
                             Descripción
                         </th>
                         <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
-                                <span>Unidad: </span>
+                                <span>Unidad</span>
                                 <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosPrincipal"
                                     style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
 
@@ -344,7 +344,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
-    <div style="margin-top: 7rem; margin-bottom: 5rem; padding-bottom: 3rem;">
+    <div style="margin-top: 5rem; margin-bottom: 5rem; padding-bottom: 3rem;">
         <div class="grid-container">
             <label class="subtotales_textos">Total:</label>
             <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
@@ -577,7 +577,7 @@ if (!isset($_SESSION['idusuario'])) {
                                 </th>
                                 <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
-                                        <span>Unidad: </span>
+                                        <span>Unidad</span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="" selected>Todo</option>
@@ -702,7 +702,7 @@ if (!isset($_SESSION['idusuario'])) {
 
                                 <th style="width: 9rem;">
                                     <div class="d-flex align-items-center">
-                                        <span>Unidad: </span>
+                                        <span>Unidad</span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadManoObraModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="">Todo</option>
@@ -827,7 +827,7 @@ if (!isset($_SESSION['idusuario'])) {
                                 </th>
                                 <th style="width: 9.5rem;">
                                     <div class="d-flex align-items-center">
-                                        <span>Unidad: </span>
+                                        <span>Unidad</span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaquinariaModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="">Todo</option>
@@ -873,7 +873,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar concepto Basico</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar concepto básico</h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputBasicos">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
@@ -910,7 +910,7 @@ if (!isset($_SESSION['idusuario'])) {
                                     ID
                                 </th>
                                 <th>
-                                    Descripcion
+                                    Descripción
                                 </th>
                                 <th style="width: 10rem;">
                                     <div class="d-flex align-items-center">
@@ -942,7 +942,7 @@ if (!isset($_SESSION['idusuario'])) {
 
             <div class="contTabla-materialesmodal_catalogo" style="margin-top: 0;">
                 <label for=""
-                    style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Conceptos basicos
+                    style=" font-family: 'LatoBold', sans-serif; color: #303030; font-size: 1.2rem; ">Conceptos básicos
                     seleccionados</label>
                 <div class="tabla-container-tablaModalSegunda">
                     <table id="tabla-MaterialesCatalogo">
@@ -952,11 +952,11 @@ if (!isset($_SESSION['idusuario'])) {
                                     ID
                                 </th>
                                 <th>
-                                    Descripcion
+                                    Descripción
                                 </th>
                                 <th style="width: 10rem;">
                                     <div class="d-flex align-items-center">
-                                        <span>Unidad: </span>
+                                        <span>Unidad</span>
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadBasicosModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="" selected>Todo</option>
