@@ -528,6 +528,7 @@ th {
   color: #008e5a;
   border: none;
   font-size: 30px;
+  padding: 0px 1rem 0px 0px;
 }
 
 /* Estilos para el botón Guardar del modal */
@@ -780,4 +781,8 @@ div[style*="justify-content: end"] {
 
 .DatoInactivo {
   background-color: rgb(225, 133, 133);
+}
+
+.fs-5-catalogo{
+  padding:0px 0px 0px 1rem;
 }

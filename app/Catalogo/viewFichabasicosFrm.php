@@ -451,7 +451,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar materiales</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; padding:0px 0px 0px 1rem;">Agregar materiales</h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputMateriales">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
@@ -621,7 +621,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel"
-                    style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar mano de obra
+                    style="color: #303030; font-family: 'latoBold', sans-serif; padding:0px 0px 0px 1rem;">Agregar mano de obra
                 </h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputManoObra">
@@ -747,7 +747,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel"
-                    style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar maquinaria</h1>
+                    style="color: #303030; font-family: 'latoBold', sans-serif; padding:0px 0px 0px 1rem;">Agregar maquinaria</h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputMaquinaria">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
@@ -873,7 +873,7 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="modal-dialog modal-dialog_catalogo">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif;">Agregar concepto básico</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-family: 'latoBold', sans-serif; padding:0px 0px 0px 1rem;">Agregar concepto básico</h1>
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-inputBasicos">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
