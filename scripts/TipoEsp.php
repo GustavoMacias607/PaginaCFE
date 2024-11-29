@@ -1,5 +1,5 @@
 <?php
-class Especificaciones
+class TipoEsp
 {
     private $conn;
     public function __construct($conexion)
@@ -7,23 +7,22 @@ class Especificaciones
         $this->conn = $conexion;
     }
 
-    /** Metodo para agregar una especificacion a la base de datos
+    /** Metodo para agregar una tipoEsp a la base de datos
      * recibe objeto datos
      */
 
-    function addEspecificacion($datos)
+    function addTipoEsp($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptosInsertar(:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
+            $consulta = "call spTipoEspInsertar(:IdEspecificacion,:Codigo,:Nombre, :Descripcion);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
-                "Id" => $datos->id,
-                "Tipo" => $datos->tipo,
-                "Unidad" => $datos->unidad,
+                "IdEspecificacion" => $datos->idEspecificacion,
+                "Codigo" => $datos->codigo,
                 "Nombre" => $datos->nombre,
-                "Plazo" => $datos->plazo
+                "Descripcion" => $datos->descripcion
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -31,23 +30,22 @@ class Especificaciones
         }
         return $R;
     }
-    /** Metodo para modificar una especificacion de la base de datos
+    /** Metodo para modificar una tipoEsp de la base de datos
      * recibe objeto datos
      */
-    function UpdEspecificacion($datos)
+    function UpdTipoEsp($datos)
     {
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spConceptosModificar(:IdAnterior,:Id,:Tipo,:Unidad,:Nombre, :Plazo);";
+            $consulta = "call spTipoEspModificar(:IdTipo,:IdEspecificacion,:Codigo,:Nombre, :Descripcion);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
-                "IdAnterior" => $datos->idAnterior,
-                "Id" => $datos->id,
-                "Tipo" => $datos->tipo,
-                "Unidad" => $datos->unidad,
+                "IdTipo" => $datos->idTipo,
+                "IdEspecificacion" => $datos->idEspecificacion,
+                "Codigo" => $datos->codigo,
                 "Nombre" => $datos->nombre,
-                "Plazo" => $datos->plazo
+                "Descripcion" => $datos->descripcion
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -56,24 +54,19 @@ class Especificaciones
         return $R;
     }
 
-    /** Metodo para mostrar las especificaciones existentes de la base de datos
+    /** Metodo para mostrar las tipoEsp existentes de la base de datos
      * recibe objeto datos con los filtros necesarios para la consulta a la base de datos
      * 
      */
-    function getAllEspecificacion($datos)
+    function getAllTipoEsp($datos)
     {
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBuscarTipoUnidadNombrePlazo(:Estatus,:Tipo,:Unidad, :Buscar,:OrderId, :OrderNombre);";
+            $consulta = "call spTipoEspMostrar(:IdEspecificacion);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
-                "Estatus" => $datos->estatus,
-                "Tipo" => $datos->tipo,
-                "Unidad" => $datos->unidad,
-                "Buscar" => $datos->buscar,
-                "OrderId" => $datos->orderId,
-                "OrderNombre" => $datos->orderNombre,
+                "IdEspecificacion" => $datos->idEspecificacion,
             ));
 
             $R['filas'] = $sql->rowCount();
@@ -88,43 +81,18 @@ class Especificaciones
         }
         return $R;
     }
-    /** Metodo para buscar la especificacion en la base de datos y ver si existe
-     * recibe el id de la especificacion
-     */
-    function checkEspecificacion($datos)
-    {
-        $R['estado'] = "OK";
-        $c = $this->conn;
-        try {
-            $consulta = "call spConceptoBuscarId(:Id);";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "Id" => $datos->id
-            ));
-            $R['filas'] = $sql->rowCount();
-            if ($R['filas'] > 0) {
-                $R['estado'] = "A";
-            } else {
-                $R['estado'] = "N";
-            }
-            $c = null;
-        } catch (PDOException $e) {
-            $R['estado'] = "Error: " . $e->getMessage();
-        }
-        return $R;
-    }
 
-    /** Metodo para habilitar o desabilitar la especificacion
-     * recibe el id de la especificacion asi como el estado al cual se cambiara
+    /** Metodo para habilitar o desabilitar la tipoEsp
+     * recibe el id de la tipoEsp asi como el estado al cual se cambiara
      */
-    function CambiarEstatusEspecificacion($datos)
+    function CambiarEstatusTipoEsp($datos)
     {
 
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
 
-            $consulta = "call spConceptoEstatus(:Id, :Estatus);";
+            $consulta = "call spTipoEspEstatus(:Id, :Estatus);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
@@ -135,6 +103,33 @@ class Especificaciones
                 $R['estado'] = "Sin Resultados";
             } else {
                 $R['datos'] = $sql->fetchAll();
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+
+    /** Metodo para mostrar el id tipoEsp el ulitmo agregdo a la base de datos
+     * 
+     */
+    function getIdTipoEsp()
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spContIdTipoEsp();";
+            $sql = $c->prepare($consulta);
+            $sql->execute(); // Ejecutar la consulta
+            $datos = $sql->fetchAll();
+
+            $R['filas'] = count($datos); // Contar las filas de los resultados
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $datos;
             }
             $c = null;
         } catch (PDOException $e) {

@@ -48,7 +48,7 @@ function opcion(op) {
             break;
         case "Especificaciones":
             url = "Especificaciones/addEspecificaciones.php";
-            //funcion = cambiarTamanoMaquinaria;
+            //funcion = ;
             break;
         default: alert("Opción incorrecta"); return;
     }

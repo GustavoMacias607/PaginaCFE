@@ -158,7 +158,7 @@ class ConceptosBasicos
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spConceptoBasicoTotal();";
+            $consulta = "call spConceptoBasicoCalculoTotal();";
             $sql = $c->prepare($consulta);
             $sql->execute();
             $datos = $sql->fetchAll();

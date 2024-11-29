@@ -214,10 +214,10 @@ function CambioEstatusZona() {
     datos.id = idEliminar;
     if (ActivarS == 1) {
         datos.estatus = "Inactivo";
-        msgzo = msgEliminarUsu;
+        msgzo = msgEliminarZona;
     } else {
         datos.estatus = "Activo";
-        msgzo = msgActivarUsu;
+        msgzo = msgActivarZona;
     }
     let json = JSON.stringify(datos);
     console.log(json);

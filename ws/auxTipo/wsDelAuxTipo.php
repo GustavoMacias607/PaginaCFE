@@ -8,12 +8,12 @@ $resultado['estado'] = "Error";
 
 require_once("../../scripts/connect.php");
 require_once("../../scripts/Conexion.php");
-require_once("../../scripts/Especificaciones.php");
+require_once("../../scripts/auxTipo.php");
 
 $c = new Conexion($conData);
-$u = new Especificaciones($c->getConnection());
+$u = new AuxTipo($c->getConnection());
 
-$res = $u->addEspecificacion($datos);
+$res = $u->DelConceptos($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
 } else {

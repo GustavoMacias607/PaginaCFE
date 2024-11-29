@@ -8,16 +8,19 @@ $resultado['estado'] = "Error";
 
 require_once("../../scripts/connect.php");
 require_once("../../scripts/Conexion.php");
-require_once("../../scripts/Especificaciones.php");
+require_once("../../scripts/TipoEsp.php");
 
 $c = new Conexion($conData);
-$u = new Especificaciones($c->getConnection());
+$u = new TipoEsp($c->getConnection());
 
-$res = $u->UpdEspecificacion($datos);
+
+$res = $u->getAllTipoEsp($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
+    $resultado['datos'] = $res['datos'];
 } else {
     $resultado['estado'] = $res['estado'];
+    $resultado['mensaje'] = "N";
 }
 
 echo json_encode($resultado);
