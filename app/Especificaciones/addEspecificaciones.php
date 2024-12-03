@@ -9,36 +9,27 @@ if (!isset($_SESSION['idusuario'])) {
 
 ?>
 
-
-
-
 <div class="fondBlanco">
     <div class="bottom-rectangle-especificaciones">
         <div class="text-especificaciones">Especificaciones</div>
         <button type="button" class="btn btn-agregar-especificaciones" data-bs-toggle="modal"
             id="btnAgregarEspecificaciones" data-bs-target="#AgregarModalEspecificaciones"
-            onclick="LlenarCamposAgregar();" style="display: none;">Agregar Especificación</button>
+            onclick="LlenarCamposAgregar();">Agregar Especificación</button>
         <a href="index.php" class="text-inicio-especificaciones">
             <div>Ir al inicio</div>
         </a>
     </div>
-    <div style="margin-top:6rem; display: flex; justify-content: center; align-content: space-around; gap: 25px;">
-        <button type="button" class="btn btn-tiposde-especificaciones"
-            onclick="seleccionEspecificacion('1'); precionaBtnEsp(this);">Redes
-            áereas</button>
-        <button type="button" class="btn btn-tiposde-especificaciones"
-            onclick="seleccionEspecificacion('2'); precionaBtnEsp(this);">Redes
-            subterraneas</button>
-    </div>
 
-    <div class=" label-container-especificaciones d-none" id="BuscadorTipoEsp">
+    <div class=" label-container-especificaciones" id="BuscadorTipoEsp">
         <input type="text" placeholder="Buscar" id="search-inputEspecificaciones">
         <i class="fas fa-search icon-especificaciones" id="searchIcon"></i>
     </div>
 
+    
+
     <!-- Paginacion  -->
-    <div class="pagRegistrosusuarios d-none" id="contenidoTipoEsp">
-        <nav class="pSeccion">
+    <div class="pagRegistrosusuarios">
+        <nav class="pSeccion d-none" id="contenidoTipoEsp">
             <div class="cantregusuarios">
                 <div class="text1">Mostrar</div>
                 <select class="cantregistrosmanodeobra" id="rows-per-pagePrincipal">
@@ -51,19 +42,28 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <ul class="pagination" id="paginationPrincipal">
-                <!-- Aquí se agregarán dinámicamente los enlaces de página -->
-                <li class="page-item active"></li>
+            <!-- Aquí se agregarán dinámicamente los enlaces de página -->
             </ul>
-
         </nav>
-        <div class="toggle-estatus-usuarios">
-            <div class="text">Estatus</div>
+
+        <div class="buttons-and-status" style="display: contents;">
+            <button type="button" class="btn btn-tiposde-especificaciones" style="margin-left: 1rem; margin-right: 0.5rem;"
+            onclick="seleccionEspecificacion('1'); precionaBtnEsp(this);">Redes aéreas
+            </button>
+            <button type="button" class="btn btn-tiposde-especificaciones" style="margin-left: 0.5rem; margin-right: 1rem;"
+            onclick="seleccionEspecificacion('2'); precionaBtnEsp(this);">Redes subterráneas
+            </button>
+        </div>
+
+        <div class="toggle-estatus-especificaciones">
+            <div class="text" style=" padding-left: 0px;">Estatus</div>
             <div class="">
-                <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
-                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusTipoEsp();">
+            <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+            <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusTipoEsp();">
             </div>
         </div>
     </div>
+
 
     <div class="contTabla-especificaciones d-none" id="TablaTipoEsp">
         <div class="tabla-container-especificaciones">
@@ -74,7 +74,7 @@ if (!isset($_SESSION['idusuario'])) {
                             ID
                         </th>
                         <th>
-                            Especificacion
+                            Especificación
                         </th>
                         <th style="width: 100px;">
                             <div style="display: flex; min-width: 144px; justify-content: space-between;">
@@ -133,7 +133,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </div>
                     <div style="display: flex; flex-wrap: wrap;">
                         <label for="idInput" class="form-label"
-                            style="color: #303030; align-content: end; margin-right: .5rem;">ID Codigo</label>
+                            style="color: #303030; align-content: end; margin-right: .5rem;">ID</label>
                         <div>
                             <input type="text" class="form-control inputLleno"
                                 style="font-family: 'latoBold', sans-serif;" id="AddidCodigoInput" disabled

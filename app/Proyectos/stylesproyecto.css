@@ -79,3 +79,95 @@
   .titulos-tiposde-proyecto{
     color: #008e5a;
   }
+
+  .contTabla-catalogo-conceptos {
+    width: calc(100% - 0.2rem);
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+  
+    @media (min-width: 393px) {
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+      width: calc(97%);
+    }
+    @media (min-width: 508px) {
+      margin-top: 7rem;
+      margin-left: 0.2rem;
+      margin-right: 0.2rem;
+      width: calc(97%);
+    }
+    @media (min-width: 1090px) {
+      margin-top: 1rem;
+      margin-left: 2rem;
+      margin-right: 2rem;
+      width: calc(100% - 4rem);
+    }
+  }
+  /* Estilos personalizados para la tabla */
+  .tabla-container-catalogo-conceptos {
+    text-align: center;
+    /* Altura máxima del contenedor */
+    /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+    /* Centrado horizontal */
+    border-top: #008e5a solid 3px;
+    border-top-width: 0px;
+    position: fixed;
+    overflow-y: auto;
+    margin-bottom: .5rem;
+  
+    width: calc(100% - 4rem);
+  }
+
+  .fa-solid-Siguiente-catalogo {
+    font-family: "LatoBold", sans-serif; /* tipografia */
+    --bs-btn-padding-y: 0.3rem;
+    --bs-btn-padding-x: 1rem; /* largo del boton */
+    --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
+    background-color: #008e5a;
+    border: 3px solid #008e5a;
+    border-radius: 5;
+    transition: all 0.3s ease; /* Transición suave */
+    color: #ffffff;
+  }
+  
+  .fa-solid-Siguiente-catalogo:hover {
+    background-color: #ffffff; /* Fondo blanco al pasar el mouse */
+    border: 3px solid #008e5a;
+    color: #008e5a; /* Letra verde al pasar el mouse */
+  }
+  
+  .fa-solid-Siguiente-catalogo:active {
+    background-color: #008e5a;
+    border: 3px solid #008e5a;
+    color: #ffffff;
+    --bs-btn-background-color: #008e5a; /* Fondo blanco al hacer clic */
+    --bs-btn-border-color: #008e5a; /* Contorno verde al pasar el mouse */
+    --bs-btn-color: #ffffff; /* Letra verde al hacer clic */
+  }
+
+  /* Estilos para el botón "Agregar concepto" */
+.btn-agregar-Proyecto {
+  font-family: "LatoBold", sans-serif; /* tipografia */
+  --bs-btn-padding-y: 0.3rem;
+  --bs-btn-padding-x: 10px; /* largo del boton */
+  --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
+  background-color: #ffffff; /* Fondo blanco */
+  color: #303030; /* Letra blanca */
+  border: 3px solid #ffffff; /* Contorno verde */
+  border-radius: 5; /* Sin bordes redondeados */
+  transition: all 0.3s ease; /* Transición suave */
+  transform: translate(20px); /* posicion del boton */
+  margin-right: 1rem;
+}
+
+.btn-agregar-Proyecto:hover {
+  background-color: #ffffffa2; /* Fondo blanco al pasar el mouse */
+  border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
+  color: #303030; /* Letra verde al pasar el mouse */
+}
+
+.btn-agregar-Proyecto:active {
+  background-color: #ffffffa2; /* Fondo blanco al hacer clic */
+  border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
+  color: #ffffff; /* Letra verde al hacer clic */
+}
