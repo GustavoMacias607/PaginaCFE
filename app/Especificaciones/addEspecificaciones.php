@@ -148,9 +148,9 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
             </div>
 
-            <div class="contTabla-especificaciones" style="margin-top: 0;">
-                <div class="titulo-especificaciones">
-                    <nav class="pSeccion-especificaciones">
+            <div class="contTabla-especificaciones" style="margin-top: 0; padding-top: 0.5rem;">
+                <div class="titulo-especificaciones" style="margin-left: 0px; padding-top: 0px;">
+                    <nav class="pSeccion-especificaciones" >
                         <div>Conceptos</div>
                         <div>
                             <!-- Button without data-bs-toggle/data-bs-target -->

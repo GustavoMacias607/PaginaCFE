@@ -139,7 +139,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body modal-body-conceptos">
+            <div class="modal-body modal-body-conceptosbasicos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
@@ -180,7 +180,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body modal-body-conceptos">
+            <div class="modal-body modal-body-conceptosbasicos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
                 <input type="text" class="form-control d-none" id="UpdTotal" style="border: 3px solid #008E5A;">
@@ -223,7 +223,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body modal-body-conceptos">
+            <div class="modal-body modal-body-conceptosbasicos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <div class="mb-3">
                     <label for="idInputConceptoBasico" class="form-label" style="color: #303030;">ID*</label>
@@ -265,7 +265,7 @@ if (!isset($_SESSION['idusuario'])) {
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
-            <div class="modal-body modal-body-conceptos">
+            <div class="modal-body modal-body-conceptosbasicos">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
                 <input type="text" class="form-control d-none" id="UpdidAnteriorBasico"
                     style="border: 3px solid #008E5A;">

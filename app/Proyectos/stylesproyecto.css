@@ -78,6 +78,7 @@
 
   .titulos-tiposde-proyecto{
     color: #008e5a;
+    font-size: 170%;
   }
 
   .contTabla-catalogo-conceptos {
@@ -171,3 +172,108 @@
   border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al hacer clic */
 }
+
+.contTabla-proyecto {
+  width: calc(100% - 0.2rem);
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+  padding-top: 12rem;
+  @media (min-width: 393px) {
+    padding-top: 8rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 508px) {
+    padding-top: 7rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 1090px) {
+    padding-top: 265px;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: calc(100% - 4rem);
+  }
+}
+
+/* Estilos personalizados para la tabla */
+.tabla-container-proyecto {
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+  position: fixed;
+  overflow-y: auto;
+  height: 60%;
+  width: calc(100% - 4rem);
+  overflow-x: auto;
+}
+
+#tabla-proyecto {
+  width: 100%;
+}
+
+#tabla-proyecto th,
+#tabla-proyecto td {
+  border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+  padding: 8px;
+  text-align: left;
+}
+
+#tabla-proyecto th,
+#tabla-proyecto td:focus {
+  outline: none;
+  border: 3px solid #008e5a;
+}
+
+#tabla-proyecto th {
+  background-color: #008e5a; /* Encabezados con fondo verde */
+  color: white; /* Letras blancas en los encabezados */
+}
+
+#tabla-proyecto tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
+.fila-proyecto:hover {
+  background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
+}
+
+.valores-proyecto {
+  justify-content: space-around;
+  align-items: center;
+  display: none;
+}
+.fila:hover {
+  background-color: #008e5a53; /* Líneas divisorias de 3px de grosor en color verde */
+}
+
+.valores {
+  display: none;
+}
+
+.fila:hover .valores {
+  display: flex;
+}
+
+
+.contenedor-columnas {
+  display: flex;
+  gap: 1rem; /* Espaciado entre las columnas */
+  padding: 1rem;
+}
+
+.columna {
+  flex: 1; /* Cada columna ocupa el 50% del ancho disponible */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+

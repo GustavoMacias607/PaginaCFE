@@ -177,7 +177,7 @@ body {
   border-color: #008e5a; /* Color del borde al hacer clic */
   color: #000000; /* Color negro al hacer clic */
 }
-.modal-body-conceptos input[type="text"] {
+.modal-body-conceptosbasicos input[type="text"] {
   font-family: "Lato", sans-serif;
 }
 
