@@ -14,7 +14,8 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-especificaciones">Especificaciones</div>
         <button type="button" class="btn btn-agregar-especificaciones" data-bs-toggle="modal"
             id="btnAgregarEspecificaciones" data-bs-target="#AgregarModalEspecificaciones"
-            onclick="LlenarCamposAgregar();">Agregar Especificación</button>
+            onclick="javascript:LlenarCamposAgregar(true);">Agregar
+            Especificación</button>
         <a href="index.php" class="text-inicio-especificaciones">
             <div>Ir al inicio</div>
         </a>
@@ -25,7 +26,7 @@ if (!isset($_SESSION['idusuario'])) {
         <i class="fas fa-search icon-especificaciones" id="searchIcon"></i>
     </div>
 
-    
+
 
     <!-- Paginacion  -->
     <div class="pagRegistrosusuarios">
@@ -42,24 +43,26 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <ul class="pagination" id="paginationPrincipal">
-            <!-- Aquí se agregarán dinámicamente los enlaces de página -->
+                <!-- Aquí se agregarán dinámicamente los enlaces de página -->
             </ul>
         </nav>
 
         <div class="buttons-and-status" style="display: contents;">
-            <button type="button" class="btn btn-tiposde-especificaciones" style="margin-left: 1rem; margin-right: 0.5rem;"
-            onclick="seleccionEspecificacion('1'); precionaBtnEsp(this);">Redes aéreas
+            <button type="button" class="btn btn-tiposde-especificaciones"
+                style="margin-left: 1rem; margin-right: 0.5rem;"
+                onclick="seleccionEspecificacion('1'); precionaBtnEsp(this);">Redes aéreas
             </button>
-            <button type="button" class="btn btn-tiposde-especificaciones" style="margin-left: 0.5rem; margin-right: 1rem;"
-            onclick="seleccionEspecificacion('2'); precionaBtnEsp(this);">Redes subterráneas
+            <button type="button" class="btn btn-tiposde-especificaciones"
+                style="margin-left: 0.5rem; margin-right: 1rem;"
+                onclick="seleccionEspecificacion('2'); precionaBtnEsp(this);">Redes subterráneas
             </button>
         </div>
 
-        <div class="toggle-estatus-especificaciones">
+        <div class="toggle-estatus-especificaciones d-none" id="btnEsta">
             <div class="text" style=" padding-left: 0px;">Estatus</div>
             <div class="">
-            <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
-            <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusTipoEsp();">
+                <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+                <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusTipoEsp();">
             </div>
         </div>
     </div>
@@ -113,17 +116,20 @@ if (!isset($_SESSION['idusuario'])) {
 
                 <div class="seccion-fami-espe-id">
                     <div style="display: flex; flex-wrap: wrap;">
-                        <label for="unidadInput" class="form-label"
+                        <label for="unidadInput" class="form-label" id="lblFam"
                             style="color: #303030; align-content: end; margin-right: .5rem;">Familia*</label>
                         <div>
-
-                            <input type="text" class="form-control inputLleno"
-                                style="font-family: 'latoBold', sans-serif;" id="addFamilia" disabled
-                                onblur="javascript:CompruebaTieneAlgoInput(this);">
+                            <select class="form-select inputLleno" id="addFamilia"
+                                onblur="javascript:CompruebaTieneAlgoInput(this);"
+                                onchange="javascript:seleccionarFamilia();">
+                                <option value="" selected>Seleccione una familia</option>
+                                <option value="1">Redes aéreas</option>
+                                <option value="2">Redes subterráneas</option>
+                            </select>
                         </div>
                     </div>
                     <div style="display: flex; flex-wrap: wrap;">
-                        <label for="idInput" class="form-label"
+                        <label for="idInput" class="form-label" id="lblEsp"
                             style="color: #303030; align-content: end; margin-right: .5rem;">Especificación*</label>
                         <div>
                             <input type="text" class="form-control inputLleno"
@@ -142,7 +148,7 @@ if (!isset($_SESSION['idusuario'])) {
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Descripción*</label>
+                    <label for="normaInput" class="form-label" style="color: #303030;" id="lblDes">Descripción*</label>
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddDescripcionInput" rows="17"></textarea>
                 </div>
@@ -150,7 +156,7 @@ if (!isset($_SESSION['idusuario'])) {
 
             <div class="contTabla-especificaciones" style="margin-top: 0; padding-top: 0.5rem;">
                 <div class="titulo-especificaciones" style="margin-left: 0px; padding-top: 0px;">
-                    <nav class="pSeccion-especificaciones" >
+                    <nav class="pSeccion-especificaciones">
                         <div>Conceptos</div>
                         <div>
                             <!-- Button without data-bs-toggle/data-bs-target -->
@@ -185,7 +191,11 @@ if (!isset($_SESSION['idusuario'])) {
                                 <th style="width: 8rem;">
                                     Total
                                 </th>
-
+                                <th style="width: 100px;">
+                                    <div style="display: flex; min-width: 144px; justify-content: space-between;">
+                                        <span>Acciones</span>
+                                    </div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="table-bodyConceptoEspecificacionPrincipal">

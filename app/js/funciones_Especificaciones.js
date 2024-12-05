@@ -7,22 +7,19 @@ let msgActivarTipoEsp = "Especificación habilitada";
 let msgEliminarTipoEsp = "Especificación deshabilitada";
 function seleccionEspecificacion(valor) {
     seleccion.idEspecificacion = valor;
-    if (valor == "1") {
-        seleccion.nombreEspecificacion = "Redes áereas"
-    } else if (valor == "2") {
-        seleccion.nombreEspecificacion = "Redes subterraneas"
-    }
-    let btn = document.getElementById("btnAgregarEspecificaciones");
-    btn.style.display = "block";
+    rowsPerPage = 10;
+    let paginas = document.getElementById("rows-per-pagePrincipal");
+    paginas.value = 10;
     let contenido = document.getElementById("contenidoTipoEsp");
     contenido.classList.remove("d-none")
     let tabla = document.getElementById("TablaTipoEsp");
     tabla.classList.remove("d-none")
     let buscador = document.getElementById("BuscadorTipoEsp");
     buscador.classList.remove("d-none")
-    GetTipoEsp(seleccion.idEspecificacion);
+    let esta = document.getElementById("btnEsta");
+    esta.classList.remove("d-none")
+    GetTipoEsp(valor);
 }
-
 
 function precionaBtnEsp(valor) {
     let opciones = document.querySelectorAll(".btn-tiposde-especificaciones");
@@ -33,6 +30,7 @@ function precionaBtnEsp(valor) {
 }
 
 function GetTipoEsp(idEsp) {
+    rowsPerPage = 10;
     let datos = {};
     datos.idEspecificacion = idEsp;
     let json = JSON.stringify(datos);
@@ -48,6 +46,7 @@ function GetTipoEsp(idEsp) {
                 } else {
                     data = [];
                 }
+
                 llenarTablaTipoEsp();
                 filterDataTipoEsp();
             } else {
@@ -271,7 +270,9 @@ function CambioEstatusTipoEsp() {
 
 function llenarModalVerTipoEsp(idTipo, idEspecificacion, codigo, nombre, descripcion) {
     let familia = document.querySelector('#addFamilia');
-    familia.value = seleccion.nombreEspecificacion;
+    familia.value = idEspecificacion;
+    familia.disabled = true;
+    seleccion.idEspecificacion = idEspecificacion;
     let especificacion = document.querySelector('#addNombreEspecificacion');
     especificacion.disabled = true;
     especificacion.value = nombre;
@@ -282,22 +283,29 @@ function llenarModalVerTipoEsp(idTipo, idEspecificacion, codigo, nombre, descrip
     id.value = codigo;
     let nombrebtn = document.getElementById('exampleModalLabel');
     nombrebtn.innerHTML = 'Ver especificación';
+    tipoModal = 5;
+
     let btnAgregar = document.getElementById('btnAgregarCon');
     btnAgregar.style.display = 'none';
 
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Cerrar"
 
+    document.getElementById('lblFam').innerHTML = "Familia";
+    document.getElementById('lblEsp').innerHTML = "Especificación";
+    document.getElementById('lblDes').innerHTML = "Descripción";
+
+    const lecturaConcepto = document.querySelector('#LecturaConcepto');
+    lecturaConcepto.style.display = 'none';
     MostrartablaConceptoEspecificacion(idTipo, 1);
 
 }
 
-
-
-
 function llenarModalModificarTipoEsp(idTipo, idEspecificacion, codigo, nombre, descripcion) {
     let familia = document.querySelector('#addFamilia');
-    familia.value = seleccion.nombreEspecificacion;
+    familia.value = idEspecificacion;
+    familia.disabled = true;
+    seleccion.idEspecificacion = idEspecificacion;
     let especificacion = document.querySelector('#addNombreEspecificacion');
     especificacion.disabled = false;
     especificacion.value = nombre;
@@ -306,14 +314,18 @@ function llenarModalModificarTipoEsp(idTipo, idEspecificacion, codigo, nombre, d
     descripcionTxt.value = descripcion;
     let id = document.querySelector('#AddidCodigoInput');
     id.value = codigo;
+    tipoModal = 1;
     let nombrebtn = document.getElementById('exampleModalLabel');
     nombrebtn.innerHTML = 'Modificar especificación';
     let btnAgregar = document.getElementById('btnAgregarCon');
     btnAgregar.style.display = 'block';
-
+    const lecturaConcepto = document.querySelector('#LecturaConcepto');
+    lecturaConcepto.style.display = 'none';
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Guardar"
-
+    document.getElementById('lblFam').innerHTML = "Familia";
+    document.getElementById('lblEsp').innerHTML = "Especificación*";
+    document.getElementById('lblDes').innerHTML = "Descripción*";
     MostrartablaConceptoEspecificacion(idTipo, 1);
 
 }

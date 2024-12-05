@@ -5,6 +5,8 @@ let filteredDataConcepto = [...data];
 let idNuevoTipoEsp;
 
 let idTipoModificar;
+
+let tipoModal;
 function LlenarTablaConceptoEspecificacion() {
 
     objTabla2ModalConceptoPrincipal = [];
@@ -12,15 +14,31 @@ function LlenarTablaConceptoEspecificacion() {
     obtenerConceptosEspecificacion();
 }
 
+function seleccionarFamilia() {
+    let familia = document.getElementById("addFamilia").value
+    seleccion.idEspecificacion = familia;
+    LlenarCamposAgregar(false);
 
+    GetTipoEspAutoincremental();
+    GetIdTipoEsp();
+}
 function obtenerConceptosEspecificacion() {
     MostrartablaConceptoEspecificacion();
 }
 
 
-function guardarTipoEspEnBD() {
-    EliminartablaConceptoEspecificacion();
-    GetTipoEsp(seleccion.idEspecificacion);
+function guardarTipoEspEnBD(msg) {
+    console.log(conceptoInactivo);
+    if (conceptoInactivo) {
+        mensajePantalla("Hay un concepto inactivo", false);
+        return;
+    } else {
+        EliminartablaConceptoEspecificacion();
+        GetTipoEsp(seleccion.idEspecificacion);
+        CerrarModalConceptoEspecificaciones();
+        mensajePantalla(msg, true);
+    }
+
 }
 
 
@@ -55,12 +73,18 @@ function displayTableConceptoEspecificacionP(page) {
             if (!record.estatus) {
                 row.classList.add('DatoInactivo');
             }
-
+            console.log(tipoModal);
             row.innerHTML = `
                   <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
                     <td>${precioFormateado}</td>
+                    <td class="estatus">
+                  <div style="display: flex; justify-content: space-around; align-items: center;">
+                 ${tipoModal != 5 ? `<i class="coloresIcono fa-solid fa-x" style="cursor: pointer; " alt="Eliminar" onclick="eliminarFilaDelObjetoConceptoTipoEsp('${record.idconcepto}')"></i>` : ``}
+              
+                    </div >
+                     </td >
             `;
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
@@ -69,10 +93,21 @@ function displayTableConceptoEspecificacionP(page) {
 
         const lecturaConcepto = document.querySelector('#LecturaConcepto');
         lecturaConcepto.style.display = conceptoInactivo ? 'flex' : 'none';
-
     } else {
-        tableBody.innerHTML += `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
+        tableBody.innerHTML += `<tr>
+                        <td colspan="8" class="Code">Sin resultados</td>
+                     </tr>`;
     }
+}
+function eliminarFilaDelObjetoConceptoTipoEsp(codigo) {
+    console.log(codigo)
+    // Eliminar el material de objMaterialesSeleccionados usando su código
+    objTabla2ModalConceptoPrincipal.forEach((valor, index) => {
+        if (codigo == valor.idconcepto) {
+            objTabla2ModalConceptoPrincipal.splice(index, 1);
+        }
+    });
+    llenarTablaConceptoSeleccionadosP();
 }
 
 // Método para los filtros de la tabla
@@ -91,13 +126,14 @@ function llenarTablaConceptoEspecificacionP() {
 }
 
 function AgregartablaConceptoEspecificacion() {
+
     objTabla2ModalConceptoPrincipal.forEach(concepto => {
 
         let nombrebtn = document.getElementById('exampleModalLabel');
         if (nombrebtn.innerHTML == "Modificar especificación") {
             concepto.idTipo = idTipoModificar;
         } else {
-            concepto.idTipo = parseInt(idNuevoTipoEsp) + 1;;
+            concepto.idTipo = parseInt(idNuevoTipoEsp) + 1;
         }
 
 
@@ -108,6 +144,7 @@ function AgregartablaConceptoEspecificacion() {
                 if (status == "success") {
                     let resp = JSON.parse(responseText);
                     if (resp.estado == "OK") {
+
                         //mensajePantalla(mgsCatalogoAgregado, true);
                     }
                 } else {
@@ -147,8 +184,6 @@ async function MostrartablaConceptoEspecificacion(idTipoEsp, opc) {
     const spinner = document.querySelector(".sk-circle");
     // Muestra el spinner
     spinner.style.display = "block";
-
-
     const tbody = document.getElementById('table-bodyConceptoEspecificacionPrincipal');
     tbody.innerHTML = '';
     const filaSinResultados = document.createElement('tr');
@@ -226,18 +261,25 @@ async function MostrartablaConceptoEspecificacion(idTipoEsp, opc) {
 
 
 function AddTipoValidar() {
+
+    if (tipoModal == 5) {
+        CerrarModalConceptoEspecificaciones();
+        return;
+    }
     let vacio = false;
     let PrimerValorVacio;
     const datos = {};
     let codigo = document.querySelector('#AddidCodigoInput');
-    if (codigo.value == "") {
-        codigo.classList.add("inputVacio");
+    datos.codigo = codigo.value;
+    let familia = document.querySelector('#addFamilia');
+    if (familia.value == "") {
+        familia.classList.add("inputVacio");
         vacio = true;
         if (!PrimerValorVacio) {
-            PrimerValorVacio = codigo;
+            PrimerValorVacio = familia;
         }
     }
-    datos.codigo = codigo.value;
+
     let nombre = document.querySelector('#addNombreEspecificacion');
     if (nombre.value == "") {
         nombre.classList.add("inputVacio");
@@ -284,15 +326,13 @@ function AddTipoValidar() {
 
     }
     let json = JSON.stringify(datos);
+    console.log(json);
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
-                    CerrarModalConceptoEspecificaciones();
-                    guardarTipoEspEnBD();
-                    mensajePantalla(msg, true);
-
+                    guardarTipoEspEnBD(msg);
                 }
             } else {
                 throw e = status;
@@ -303,29 +343,47 @@ function AddTipoValidar() {
     });
 }
 
-function LlenarCamposAgregar() {
-    let familia = document.querySelector('#addFamilia');
-    familia.value = seleccion.nombreEspecificacion;
-    let especificacion = document.querySelector('#addNombreEspecificacion');
-    especificacion.disabled = false;
-    especificacion.value = "";
-    let descripcion = document.querySelector('#AddDescripcionInput');
-    descripcion.disabled = false;
-    descripcion.value = "";
+function LlenarCamposAgregar(valor) {
+
+    if (valor) {
+        const lecturaConcepto = document.querySelector('#LecturaConcepto');
+        lecturaConcepto.style.display = 'none';
+        console.log(lecturaConcepto);
+        let familia = document.getElementById("addFamilia");
+        familia.value = "";
+        familia.disabled = false;
+        const tbody = document.getElementById('table-bodyConceptoEspecificacionPrincipal');
+        tbody.innerHTML = '';
+        const filaSinResultados = document.createElement('tr');
+        filaSinResultados.innerHTML = '<td colspan="8" style="text-align: left;">Sin resultados</td>';
+        tbody.appendChild(filaSinResultados);
+        let especificacion = document.querySelector('#addNombreEspecificacion');
+        especificacion.disabled = false;
+        especificacion.value = "";
+        let descripcion = document.querySelector('#AddDescripcionInput');
+        descripcion.disabled = false;
+        descripcion.value = "";
+        conceptoInactivo = false;
+        document.getElementById("AddidCodigoInput").value = "";
+        document.getElementById('lblFam').innerHTML = "Familia*";
+        document.getElementById('lblEsp').innerHTML = "Especificación*";
+        document.getElementById('lblDes').innerHTML = "Descripción*";
+
+
+
+        filteredDataConcepto = [];
+        objTabla2ModalConceptoPrincipal = [];
+    }
+
+    tipoModal = 1;
     let nombrebtn = document.getElementById('exampleModalLabel');
     nombrebtn.innerHTML = 'Agregar especificación';
-
-
     let btnAgregar = document.getElementById('btnAgregarCon');
     btnAgregar.style.display = 'block';
-
-
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Guardar"
-    filteredDataConcepto = [];
-    objTabla2ModalConceptoPrincipal = [];
-    GetTipoEspAutoincremental();
-    GetIdTipoEsp();
+
+
 }
 
 function idTipoEspAutomatico(datosTipoEsp) {
@@ -393,7 +451,6 @@ function GetIdTipoEsp() {
                 } else {
                     idNuevoTipoEsp = 0;
                 }
-                MostrartablaConceptoEspecificacion(idNuevoTipoEsp, 0);
             } else {
                 throw e = status;
             }
@@ -402,8 +459,6 @@ function GetIdTipoEsp() {
         }
     });
 }
-
-
 function AbrirModalConceptoEspecificaciones() {
     let modal2 = new bootstrap.Modal(document.getElementById('AgregarModalConceptoEspecificaciones'));
     modal2.show();
