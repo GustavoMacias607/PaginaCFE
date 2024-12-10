@@ -120,7 +120,7 @@ class TipoEsp
         $R['estado'] = 'OK';
         $c = $this->conn;
         try {
-            $consulta = "call spContIdTipoEsp();";
+            $consulta = "call spTipoEspUltimoId();";
             $sql = $c->prepare($consulta);
             $sql->execute(); // Ejecutar la consulta
             $datos = $sql->fetchAll();
@@ -130,6 +130,30 @@ class TipoEsp
                 $R['estado'] = "Sin Resultados";
             } else {
                 $R['datos'] = $datos;
+            }
+            $c = null;
+        } catch (PDOException $e) {
+            $R['estado'] = "Error: " . $e->getMessage();
+        }
+        return $R;
+    }
+
+    function getConceptosEsp($datos)
+    {
+        $R['estado'] = 'OK';
+        $c = $this->conn;
+        try {
+            $consulta = "call spConceptosMostrarxFamilia(:IdEspecificacion);";
+            $sql = $c->prepare($consulta);
+            $sql->execute(array(
+                "IdEspecificacion" => $datos->idEspecificacion,
+            ));
+
+            $R['filas'] = $sql->rowCount();
+            if ($R['filas'] <= 0) {
+                $R['estado'] = "Sin Resultados";
+            } else {
+                $R['datos'] = $sql->fetchAll();
             }
             $c = null;
         } catch (PDOException $e) {

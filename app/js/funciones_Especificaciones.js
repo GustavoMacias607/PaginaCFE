@@ -294,6 +294,7 @@ function llenarModalVerTipoEsp(idTipo, idEspecificacion, codigo, nombre, descrip
     document.getElementById('lblFam').innerHTML = "Familia";
     document.getElementById('lblEsp').innerHTML = "Especificación";
     document.getElementById('lblDes').innerHTML = "Descripción";
+    document.getElementById('lblRequerido').innerHTML = "";
 
     const lecturaConcepto = document.querySelector('#LecturaConcepto');
     lecturaConcepto.style.display = 'none';
@@ -321,6 +322,7 @@ function llenarModalModificarTipoEsp(idTipo, idEspecificacion, codigo, nombre, d
     btnAgregar.style.display = 'block';
     const lecturaConcepto = document.querySelector('#LecturaConcepto');
     lecturaConcepto.style.display = 'none';
+    document.getElementById('lblRequerido').innerHTML = "Es requerido: *";
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Guardar"
     document.getElementById('lblFam').innerHTML = "Familia";

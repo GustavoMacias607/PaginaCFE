@@ -15,12 +15,15 @@ function LlenarTablaConceptoEspecificacion() {
 }
 
 function seleccionarFamilia() {
+    console.log("gola")
     let familia = document.getElementById("addFamilia").value
     seleccion.idEspecificacion = familia;
     LlenarCamposAgregar(false);
-
+    let btnAgregar = document.getElementById('btnAgregarCon');
+    btnAgregar.style.display = 'block';
     GetTipoEspAutoincremental();
     GetIdTipoEsp();
+
 }
 function obtenerConceptosEspecificacion() {
     MostrartablaConceptoEspecificacion();
@@ -138,6 +141,7 @@ function AgregartablaConceptoEspecificacion() {
 
 
         let json = JSON.stringify(concepto);
+        console.log(json);
         let url = "../ws/auxTipo/wsAddAuxTipo.php";
         $.post(url, json, (responseText, status) => {
             try {
@@ -225,7 +229,7 @@ async function MostrartablaConceptoEspecificacion(idTipoEsp, opc) {
                             descripcion: datos.descripcion,
                             idconcepto: datos.idconcepto,
                             unidad: datos.unidad,
-                            nombre: datos.nombre,
+                            nombre: datos.nombreConcepto,
                             total: datos.total,
                             estatus: datos.estatus,
                         });
@@ -331,6 +335,7 @@ function AddTipoValidar() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+                console.log(resp);
                 if (resp.estado == "OK") {
                     guardarTipoEspEnBD(msg);
                 }
@@ -352,11 +357,7 @@ function LlenarCamposAgregar(valor) {
         let familia = document.getElementById("addFamilia");
         familia.value = "";
         familia.disabled = false;
-        const tbody = document.getElementById('table-bodyConceptoEspecificacionPrincipal');
-        tbody.innerHTML = '';
-        const filaSinResultados = document.createElement('tr');
-        filaSinResultados.innerHTML = '<td colspan="8" style="text-align: left;">Sin resultados</td>';
-        tbody.appendChild(filaSinResultados);
+
         let especificacion = document.querySelector('#addNombreEspecificacion');
         especificacion.disabled = false;
         especificacion.value = "";
@@ -368,18 +369,22 @@ function LlenarCamposAgregar(valor) {
         document.getElementById('lblFam').innerHTML = "Familia*";
         document.getElementById('lblEsp').innerHTML = "Especificación*";
         document.getElementById('lblDes').innerHTML = "Descripción*";
+        document.getElementById('lblRequerido').innerHTML = "Es requerido: *";
+        let btnAgregar = document.getElementById('btnAgregarCon');
+        btnAgregar.style.display = 'none';
 
 
-
-        filteredDataConcepto = [];
-        objTabla2ModalConceptoPrincipal = [];
     }
-
+    const tbody = document.getElementById('table-bodyConceptoEspecificacionPrincipal');
+    tbody.innerHTML = '';
+    const filaSinResultados = document.createElement('tr');
+    filaSinResultados.innerHTML = '<td colspan="8" style="text-align: left;">Sin resultados</td>';
+    tbody.appendChild(filaSinResultados);
+    filteredDataConcepto = [];
+    objTabla2ModalConceptoPrincipal = [];
     tipoModal = 1;
     let nombrebtn = document.getElementById('exampleModalLabel');
     nombrebtn.innerHTML = 'Agregar especificación';
-    let btnAgregar = document.getElementById('btnAgregarCon');
-    btnAgregar.style.display = 'block';
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Guardar"
 

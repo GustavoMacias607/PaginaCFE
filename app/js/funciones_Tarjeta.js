@@ -56,12 +56,16 @@ let importeBasicos = 0;
 function LlenarTablaConceptoTarjeta() {
     //Llena tabla concepto de la pagina catalogo
     let tbody = document.getElementById("tabla-conceptosCatalogo").getElementsByTagName("tbody")[0];
+    if (datosCatalogo.TipoConcepto) {
+        document.getElementById('columnaFamilia').style.display = 'none';
+    }
+
     let fila = document.createElement("tr");
     fila.innerHTML = `
         <td>${datosCatalogo.id}</td> 
         <td>${datosCatalogo.nombre}</td>
          <td>${datosCatalogo.unidad}</td>
-        <td>${datosCatalogo.familia}</td>`;
+       ${!datosCatalogo.TipoConcepto ? `<td> ${datosCatalogo.familia}</td>` : ``} `;
     tbody.appendChild(fila);
 
     objTabla2ModalMaterialesPrincipal = [];
@@ -185,8 +189,7 @@ function displayTableMaterialesTarjetaP(page) {
                 row.classList.add('DatoInactivo');
             }
 
-            row.innerHTML = `
-                <td class="Code">${record.codigo}</td>
+            row.innerHTML = `<td class="Code"> ${record.codigo}</td>
                 <td>${record.descripcion || "---"}</td>
                 <td>${record.unidad || "---"}</td>
                 <td>${precioFormateado}</td>
@@ -200,7 +203,7 @@ function displayTableMaterialesTarjetaP(page) {
                     </div>
                 </td>
                 <td class="resultadoMaterial">---</td>
-            `;
+    `;
 
             const cantidadCell = row.querySelector('.editable');
             const checkbox = row.querySelector('input[type="checkbox"]');
@@ -263,7 +266,7 @@ function displayTableMaterialesTarjetaP(page) {
         lecturaMaterial.style.display = materialInactivo ? 'flex' : 'none';
 
     } else {
-        tableBody.innerHTML += `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
+        tableBody.innerHTML += `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
     }
 }
 
@@ -351,7 +354,7 @@ function displayTableManoObraTarjetaP(page) {
             }
 
             row.innerHTML = `
-                <td class="Code">${record.idmanoobra}</td>
+        <td class="Code" > ${record.idmanoobra}</td>
                 <td>${record.categoria || "---"}</td>
                 <td>${record.unidad || "---"}</td>
                 <td>${precioFormateado}</td>
@@ -361,7 +364,7 @@ function displayTableManoObraTarjetaP(page) {
                 <td class="cantidad">---</td>
                 <td class="multiplicacion">---</td>
                 <td class="resultadoMano">---</td>
-            `;
+    `;
 
             const rendimientoCell = row.querySelector('.editable-rendimiento');
             const cantidadCell = row.querySelector('.cantidad');
@@ -431,7 +434,7 @@ function displayTableManoObraTarjetaP(page) {
         LecturaManoObra.style.display = manoObraInactivo ? 'flex' : 'none';
 
     } else {
-        const row = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
+        const row = `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
         tableBody.innerHTML += row;
     }
 }
@@ -591,7 +594,7 @@ function displayTableMaquinariaTarjetaP(page) {
             }
 
             row.innerHTML = `
-                <td class="Code">${record.idmaquinaria}</td>
+        <td class="Code" > ${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td>${precioFormateado}</td>
@@ -599,7 +602,7 @@ function displayTableMaquinariaTarjetaP(page) {
                     ${record.rhm || 0}
                 </td>
                 <td class="resultadoMaqui">---</td>
-            `;
+    `;
 
             const rhmCell = row.querySelector('.editable-Rhm');
             const resultadoCellMaqui = row.querySelector('.resultadoMaqui');
@@ -659,7 +662,7 @@ function displayTableMaquinariaTarjetaP(page) {
         LecturaMaquinaria.style.display = maquinariaInactivo ? 'flex' : 'none';
 
     } else {
-        const row = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
+        const row = `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
         tableBody.innerHTML += row;
     }
 }
@@ -755,7 +758,7 @@ function displayTableBasicosTarjetaP(page) {
             }
 
             row.innerHTML = `
-                <td class="Code">${record.idconbasi}</td>
+        <td class="Code"> ${record.idconbasi}</td>
                 <td>${record.nombre != "" ? record.nombre : "---"}</td>
                 <td>${record.unidad != "" ? record.unidad : "---"}</td>
                 <td>${precioFormateado}</td>
@@ -763,7 +766,7 @@ function displayTableBasicosTarjetaP(page) {
                     ${record.cantconbasi || 0}
                 </td>
                 <td class="resultadoBasi">---</td>
-            `;
+    `;
 
             const cantidadCell = row.querySelector('.editable-cantidadBasi');
             const resultadoCell = row.querySelector('.resultadoBasi');
@@ -823,7 +826,7 @@ function displayTableBasicosTarjetaP(page) {
         LecturaBasicos.style.display = basicosInactivo ? 'flex' : 'none';
 
     } else {
-        const row = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
+        const row = `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
         tableBody.innerHTML += row;
     }
 }
@@ -1094,7 +1097,7 @@ function MostrartablaMaterialesTarjeta() {
                             fechaprecio: datos.fechaprecio,
                             unidad: datos.unidad,
                             cantidad: datos.cantmaterial,
-                            suministrado: datos.suministrado == 1? true : false,
+                            suministrado: datos.suministrado == 1 ? true : false,
                             estatus: datos.estatus
                         });
                     })

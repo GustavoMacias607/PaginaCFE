@@ -169,6 +169,11 @@ if (!isset($_SESSION['idusuario'])) {
     <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
     <script src="../bootstrap-5.3.1-dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/code.jquery.com_jquery-3.7.1.min.js"></script>
+    <!-- <script src="../js/jspdf.umd.min.js"></script> -->
+    <!-- <script src="../js/jspdf.min.js"></script> -->
+    <!-- <script src="../js/jspdf.plugin.autotable.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="js/funciones.js"></script>
     <script src="js/funciones_usuarios.js"></script>
     <script src="js/funciones_PerfilUsuario.js"></script>

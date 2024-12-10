@@ -69,7 +69,7 @@ body {
   margin: 7rem auto 0 auto;
   width: 70vw; /* Ancho del label */
   background-color: #ffffff; /* Fondo blanco */
-  border: 3px solid #008e5a; /* Contorno de 3px color verde */
+  border: 3px solid rgb(0, 142, 90); /* Contorno de 3px color verde */
   border-radius: 5px; /* Bordes redondeados */
   transition: all 0.3s ease;
   @media (max-width: 1090px) {

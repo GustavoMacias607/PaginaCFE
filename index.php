@@ -65,121 +65,113 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/code.jquery.com_jquery-3.7.1.min.js"></script>
     <Script type="text/javascript">
-    function CompruebaTieneAlgoInput(input) {
-        if (input.value) {
-            input.classList.add("inputLleno");
-            input.classList.remove("inputVacio");
-            input.placeholder = ""
+        function CompruebaTieneAlgoInput(input) {
+            if (input.value) {
+                input.classList.add("inputLleno");
+                input.classList.remove("inputVacio");
+                input.placeholder = ""
+            }
         }
-    }
+
+        function logueo() {
 
 
-
-    function logueo() {
-
-
-        try {
-            let vacio = false;
-            let PrimerValorVacio;
-            const datos = {};
-            let usuario = document.querySelector('#Usuario');
-            if (usuario.value == "") {
-                usuario.classList.add("inputVacio");
-                usuario.placeholder = "Campo usuario vacío"
-                vacio = true;
-                PrimerValorVacio = usuario;
-            }
-            datos.usuario = usuario.value;
-
-            let password = document.querySelector('#Password');
-            if (password.value == "") {
-                password.classList.add("inputVacio");
-                password.placeholder = "Campo constraseña vacío"
-                vacio = true;
-                if (!PrimerValorVacio) {
-                    PrimerValorVacio = password;
+            try {
+                let vacio = false;
+                let PrimerValorVacio;
+                const datos = {};
+                let usuario = document.querySelector('#Usuario');
+                if (usuario.value == "") {
+                    usuario.classList.add("inputVacio");
+                    usuario.placeholder = "Campo usuario vacío"
+                    vacio = true;
+                    PrimerValorVacio = usuario;
                 }
+                datos.usuario = usuario.value;
 
-            }
-            datos.password = password.value;
-
-            if (vacio) {
-                PrimerValorVacio.focus();
-                return;
-            }
-            const json = JSON.stringify(datos);
-            console.log(json)
-            $.post("ws/wsLogin.php", json, (responseText, status) => {
-                try {
-                    console.log(responseText);
-                    if (status == "success") {
-                        res = JSON.parse(responseText);
-                        if (res.estado == "OK") {
-
-                            window.location.href = "app/index.php";
-                        } else {
-                            mensajePantallaLogIn(res.estado, false);
-                        }
-                    } else {
-                        console.log(status);
+                let password = document.querySelector('#Password');
+                if (password.value == "") {
+                    password.classList.add("inputVacio");
+                    password.placeholder = "Campo constraseña vacío"
+                    vacio = true;
+                    if (!PrimerValorVacio) {
+                        PrimerValorVacio = password;
                     }
-                } catch (error) {
-                    console.log(error);
+
                 }
-            });
-        } catch (error) {
-            console.log(error);
+                datos.password = password.value;
+
+                if (vacio) {
+                    PrimerValorVacio.focus();
+                    return;
+                }
+                const json = JSON.stringify(datos);
+                console.log(json)
+                $.post("ws/wsLogin.php", json, (responseText, status) => {
+                    try {
+                        console.log(responseText);
+                        if (status == "success") {
+                            res = JSON.parse(responseText);
+                            if (res.estado == "OK") {
+
+                                window.location.href = "app/index.php";
+                            } else {
+                                mensajePantallaLogIn(res.estado, false);
+                            }
+                        } else {
+                            console.log(status);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
-    }
 
+        var subMenu = document.querySelector('.submenu');
+        var openSubMenu = document.querySelector('.open_submenu');
 
+        openSubMenu.addEventListener('click', function() {
+            subMenu.classList.toggle('show');
+        })
 
+        document.addEventListener('click', function(e) {
+            if (subMenu.classList.contains('show') &&
+                !subMenu.contains(e.target) &&
+                !openSubMenu.contains(e.target)) {
 
-    var subMenu = document.querySelector('.submenu');
-    var openSubMenu = document.querySelector('.open_submenu');
+                subMenu.classList.remove('show');
+            }
+        });
 
-    openSubMenu.addEventListener('click', function() {
-        subMenu.classList.toggle('show');
-    })
-
-    document.addEventListener('click', function(e) {
-        if (subMenu.classList.contains('show') &&
-            !subMenu.contains(e.target) &&
-            !openSubMenu.contains(e.target)) {
-
-            subMenu.classList.remove('show');
+        function mensajePantallaLogIn(msg, valor) {
+            let msgModal = document.getElementById('modalMsgLogIn');
+            let parrafoModal = document.getElementById('modParrafo');
+            let modLogIn = document.getElementById('modLogIn');
+            let img = document.getElementById('imgPic');
+            if (valor) {
+                img.src = "img/imgPalomita.png"
+                parrafoModal.innerHTML = msg;
+                msgModal.classList.remove("modMsgEsconder");
+                modLogIn.classList.add("modMsgBien");
+                setTimeout(() => {
+                    msgModal.classList.add("modMsgEsconder");
+                    modLogIn.classList.remove("modMsgBien");
+                }, 2500);
+            } else {
+                img.src = "img/imgEquis.png"
+                parrafoModal.innerHTML = msg;
+                msgModal.classList.remove("modMsgEsconder");
+                modLogIn.classList.add("modMsgMal");
+                setTimeout(() => {
+                    msgModal.classList.add("modMsgEsconder");
+                    msgModal.classList.remove("modMsgMal");
+                }, 2500);
+            }
         }
-    });
-
-    function mensajePantallaLogIn(msg, valor) {
-        let msgModal = document.getElementById('modalMsgLogIn');
-        let parrafoModal = document.getElementById('modParrafo');
-        let modLogIn = document.getElementById('modLogIn');
-        let img = document.getElementById('imgPic');
-        if (valor) {
-            img.src = "img/imgPalomita.png"
-            parrafoModal.innerHTML = msg;
-            msgModal.classList.remove("modMsgEsconder");
-            modLogIn.classList.add("modMsgBien");
-            setTimeout(() => {
-                msgModal.classList.add("modMsgEsconder");
-                modLogIn.classList.remove("modMsgBien");
-            }, 2500);
-        } else {
-            img.src = "img/imgEquis.png"
-            parrafoModal.innerHTML = msg;
-            msgModal.classList.remove("modMsgEsconder");
-            modLogIn.classList.add("modMsgMal");
-            setTimeout(() => {
-                msgModal.classList.add("modMsgEsconder");
-                msgModal.classList.remove("modMsgMal");
-            }, 2500);
-        }
-    }
     </Script>
-
-
 </body>
-
 
 </html>

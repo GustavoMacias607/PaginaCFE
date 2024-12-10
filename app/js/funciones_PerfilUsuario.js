@@ -87,16 +87,17 @@ function UpdPerfilUsuarioValidar(modificarContra) {
                         nombre: nombre.value,
                         usuario: usuario.value
                     }, (responseSession) => {
-
+                        if (!modificarContra) {
+                            mensajePantalla("Modificando usuario...", true);
+                            setInterval(() => {
+                                window.location.href = window.location.href;
+                            }, 2000);
+                        }
                     });
-                    if (!modificarContra) {
-                        window.location.href = window.location.href;
-
-                    } else {
+                    if (modificarContra) {
                         mensajePantalla(msgModificarContra, true);
                         $('#CambiarcontraseñaModal').modal('hide');
                     }
-
                 }
             } else {
                 throw status;

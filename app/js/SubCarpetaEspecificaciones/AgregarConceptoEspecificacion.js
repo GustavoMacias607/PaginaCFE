@@ -21,7 +21,6 @@ async function GetConceptoEspecificacion() {
     if (nombrebtn.innerHTML != "Modificar especificación") {
         try {
             // Espera a que termine `ActualizarTotalesConcepto`
-            console.log("Actualiz")
             await ActualizarTotalesConcepto();
         } catch (error) {
             console.error("Error en ActualizarTotalesConcepto:", error);
@@ -30,8 +29,10 @@ async function GetConceptoEspecificacion() {
         }
     }
 
-    let json = "";
-    let url = "../ws/Conceptos/wsGetConcepto.php";
+    let datos = {};
+    datos.idEspecificacion = seleccion.idEspecificacion;
+    let json = JSON.stringify(datos);
+    let url = "../ws/TipoEsp/wsGetConceptosEsp.php";
     console.log("OBTENER")
     $.post(url, json, (responseText, status) => {
         try {

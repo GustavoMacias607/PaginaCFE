@@ -111,7 +111,7 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
 
             <div class="modal-body modal-body-conceptos">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                <h1 class="modal-title fs-5" id="lblRequerido" style="color: #303030;">Es requerido: *</h1>
 
 
                 <div class="seccion-fami-espe-id">

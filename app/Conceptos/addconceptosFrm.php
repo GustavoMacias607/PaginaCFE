@@ -23,6 +23,9 @@ if (!isset($_SESSION['idusuario'])) {
         <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-agregar-conceptos esconderBoton">
             Exportar datos a Excel
         </button>
+        <button id="btnExportarPDF" onclick="javascript:exportarPDF()" class="btn btn-agregar-conceptos">
+            Exportar datos a PDF
+        </button>
         <a href="index.php" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
@@ -92,7 +95,7 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th style="width: 8rem;">
+                    <th id="columFamilia" style="width: 8rem; ">
                         Familia
                     </th>
                     <th style="width: 8rem;">
