@@ -12,8 +12,6 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco" style="height: 4rem;">
     <div class="bottom-rectangle-proyecto">
         <div class="text-materiales">Presupuesto</div>
-        <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal" 
-                onclick="javascript:AddlimpiarModalMaquinaria();">Editar datos de proyecto</button>
             <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal" 
                 onclick="javascript:AddlimpiarModalMaquinaria();">Catálogo de conceptos</button>
             <a href="index.php" class="text-inicio-conceptos">
@@ -22,19 +20,19 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
-<div>
-<label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Zona:</label>
-        <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem;"
-            onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
+<div style="">
+    <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-left: 2rem; margin-top: 12rem; align-content: center;">Para la obra:</label>
+    <div style="display: flex; flex-wrap: wrap; margin-top: 9.8rem; float: right; margin-bottom: 1rem;">
+        <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Id:</label>
+            <label for="" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
+        <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Zona:</label>
+            <label for="" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
         <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Tipo de obra:</label>
-        <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem;"
-            onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
-            <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Fecha posible de inicio:</label>
-        <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem;"
-            onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
-            <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Fecha de término:</label>
-        <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem;"
-            onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
+            <label for="" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
+        <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Fecha posible de inicio:</label>
+            <label for="" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
+        <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Fecha de término:</label>
+            <label for="" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
     </div>
 </div>
     
@@ -46,7 +44,8 @@ if (!isset($_SESSION['idusuario'])) {
     <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Materiales suministrados CFE</button>
     <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Materiales fuera de CFE</button>
     <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Mano de obra</button>
-    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Herramienta de mano y equipo de seguridad</button>
+    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Herramienta de mano</button>
+    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Equipo de seguridad</button>
     <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Maquinaria</button>
 </div>
 

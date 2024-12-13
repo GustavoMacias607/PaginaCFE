@@ -27,7 +27,7 @@ function opcion(op) {
             };;
             break;
         case "proyecto":
-            url = "Proyectos/addProyectoFrm.php";
+            url = "Proyectos/addProyTermFrm.php";
             break;
         case "ManoObra":
             url = "ManoObra/addManoObraFrm.php";
