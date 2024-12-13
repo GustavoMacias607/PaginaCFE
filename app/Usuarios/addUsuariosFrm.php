@@ -104,7 +104,7 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Modal insertar usuario -->
 <div class="modal modal-usuarios fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar usuario</h1>
@@ -162,7 +162,7 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Modal modificar Usuario-->
 <div class="modal modal-usuarios fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar usuario</h1>

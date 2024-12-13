@@ -141,7 +141,7 @@ require("../../scripts/Materiales.php");
 <!-- Modal insertar material -->
 <div class="modal modal-materiales fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar material</h1>
@@ -150,70 +150,75 @@ require("../../scripts/Materiales.php");
             </div>
             <div class="modal-body modal-body-materiales">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno" id="AddidInput"
-                        onblur="javascript:CompruebaTieneAlgoInput(this); checkMaterial('Add');">
-                </div>
-                <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                    <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        style="font-family: 'latoBold', sans-serif;" id="AddnormaInput">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
+                        <input type="number" class="form-control inputLleno" id="AddidInput"
+                            onblur="javascript:CompruebaTieneAlgoInput(this); checkMaterial('Add');">
+                    </div>
+                    <div class="col-6">
+                        <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
+                        <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                            style="font-family: 'latoBold', sans-serif;" id="AddnormaInput">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción*</label>
                     <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="AdddescripcionInput" rows="3"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Precio*</label>
-                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddprecioInput">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="precioInput" class="form-label" style="color: #303030;">Precio*</label>
+                        <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddprecioInput">
+                    </div>
+                    <div class="col-6">
+                        <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                            id="AddfechaPrecioInput">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="AddfamiliaInput">
+                            <option selected value="">Seleccione una familia</option>
+                            <option value="Sin Clasificacion">Sin clasificación</option>
+                            <option value="Accesorios">Accesorios</option>
+                            <option value="Aislamiento">Aislamiento</option>
+                            <option value="Bobedas">Bobedas</option>
+                            <option value="Conductores">Conductores</option>
+                            <option value="Ductos">Ductos</option>
+                            <option value="Equipos">Equipos</option>
+                            <option value="Herrajes">Herrajes</option>
+                            <option value="Miselaneos">Miselaneos</option>
+                            <option value="Postes">Postes</option>
+                            <option value="Pozos">Pozos</option>
+                            <option value="Protecciones">Protecciones</option>
+                            <option value="Registros">Registros</option>
+                            <option value="Seccionamiento">Seccionamiento</option>
+                            <option value="Transformadores">Transformadores</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                        <input type="text" oninput="mostrarSugerenciasMateriales(this, 'AddUnidad')"
+                            onfocus="mostrarSugerenciasMateriales(this, 'AddUnidad')"
+                            onblur="ocultarSugerenciasMateriales('AddUnidad');CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddunidadInput"
+                            autocomplete="off">
+                        <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    </div>
                 </div>
                 <div class="mb-3">
-                    <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddfechaPrecioInput">
-                </div>
-                <div class="mb-3">
-                    <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddfamiliaInput">
-                        <option selected value="">Seleccione una familia</option>
-                        <option value="Sin Clasificacion">Sin clasificación</option>
-                        <option value="Accesorios">Accesorios</option>
-                        <option value="Aislamiento">Aislamiento</option>
-                        <option value="Bobedas">Bobedas</option>
-                        <option value="Conductores">Conductores</option>
-                        <option value="Ductos">Ductos</option>
-                        <option value="Equipos">Equipos</option>
-                        <option value="Herrajes">Herrajes</option>
-                        <option value="Miselaneos">Miselaneos</option>
-                        <option value="Postes">Postes</option>
-                        <option value="Pozos">Pozos</option>
-                        <option value="Protecciones">Protecciones</option>
-                        <option value="Registros">Registros</option>
-                        <option value="Seccionamiento">Seccionamiento</option>
-                        <option value="Transformadores">Transformadores</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerenciasMateriales(this, 'AddUnidad')"
-                        onfocus="mostrarSugerenciasMateriales(this, 'AddUnidad')"
-                        onblur="ocultarSugerenciasMateriales('AddUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddunidadInput"
-                        autocomplete="off">
-                    <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
-                    <input type="file" class="form-control inputLleno" id="AddimagenInput"
-                        onchange="AddmostrarImagen(this)" style="border: 3px solid #008E5A;">
-                </div>
-                <img id="AddimagenPreview" src="" alt="Imagen" width="200px"
-                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
+                        <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
+                        <input type="file" class="form-control inputLleno" id="AddimagenInput"
+                            onchange="AddmostrarImagen(this)" style="border: 3px solid #008E5A;">
+                    </div>
+                        <img id="AddimagenPreview" src="" alt="Imagen" width="200px"
+                            style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
 
                 <div class="modal-footer modal-footer-materiales">
                     <button type="button" class="btn btn-primary"
@@ -232,7 +237,7 @@ require("../../scripts/Materiales.php");
 <!-- Modal modificar Material-->
 <div class="modal fade modal-materiales fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar material</h1>
@@ -244,71 +249,80 @@ require("../../scripts/Materiales.php");
                     style="border: 3px solid #008E5A;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
 
-                <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="number" class="form-control inputLleno "
-                        onblur="javascript:CompruebaTieneAlgoInput(this); checkMaterial('upd');" id="UpdidInput">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
+                        <input type="number" class="form-control inputLleno "
+                            onblur="javascript:CompruebaTieneAlgoInput(this); checkMaterial('upd');" id="UpdidInput">
+                    </div>
+                    <div class="col-6">
+                        <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
+                        <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnormaInput">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnormaInput">
-                </div>
+
                 <div class="mb-3">
                     <label for="descripcionInput" class="form-label" style="color: #303030;">Descripción*</label>
                     <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         id="UpddescripcionInput" rows="3"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Precio*</label>
-                    <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdprecioInput">
-                </div>
-                <div class="mb-3">
-                    <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                    <input type="date" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdfechaPrecioInput">
-                </div>
-                <div class="mb-3">
-                    <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdfamiliaInput">
-                        <option value="" selected>Seleccione una familia</option>
-                        <option value="Sin Clasificacion">Sin clasificación</option>
-                        <option value="Accesorios">Accesorios</option>
-                        <option value="Aislamiento">Aislamiento</option>
-                        <option value="Bobedas">Bobedas</option>
-                        <option value="Conductores">Conductores</option>
-                        <option value="Ductos">Ductos</option>
-                        <option value="Equipos">Equipos</option>
-                        <option value="Herrajes">Herrajes</option>
-                        <option value="Miselaneos">Miselaneos</option>
-                        <option value="Postes">Postes</option>
-                        <option value="Pozos">Pozos</option>
-                        <option value="Protecciones">Protecciones</option>
-                        <option value="Registros">Registros</option>
-                        <option value="Seccionamiento">Seccionamiento</option>
-                        <option value="Transformadores">Transformadores</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
-                        onfocus="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
-                        onblur="ocultarSugerenciasMateriales('UpdUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="UpdunidadInput"
-                        autocomplete="off">
-                    <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
-                </div>
-                <div class="mb-3">
-                    <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
-                    <input type="file" class="form-control" id="UpdimagenInput" onchange="UpdmostrarImagen(this)"
-                        style=" border: 3px solid #008E5A;">
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="precioInput" class="form-label" style="color: #303030;">Precio*</label>
+                        <input type="number" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdprecioInput">
+                    </div>
+                    <div class="col-6">
+                        <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                        <input type="date" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="UpdfechaPrecioInput">
+                    </div>
                 </div>
 
-                <img id="UpdimagenPreview" src="" width="200px"
-                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
-                <div class=" modal-footer modal-footer-materiales">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="familiaInput" class="form-label" style="color: #303030;">Familia*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="UpdfamiliaInput">
+                            <option value="" selected>Seleccione una familia</option>
+                            <option value="Sin Clasificacion">Sin clasificación</option>
+                            <option value="Accesorios">Accesorios</option>
+                            <option value="Aislamiento">Aislamiento</option>
+                            <option value="Bobedas">Bobedas</option>
+                            <option value="Conductores">Conductores</option>
+                            <option value="Ductos">Ductos</option>
+                            <option value="Equipos">Equipos</option>
+                            <option value="Herrajes">Herrajes</option>
+                            <option value="Miselaneos">Miselaneos</option>
+                            <option value="Postes">Postes</option>
+                            <option value="Pozos">Pozos</option>
+                            <option value="Protecciones">Protecciones</option>
+                            <option value="Registros">Registros</option>
+                            <option value="Seccionamiento">Seccionamiento</option>
+                            <option value="Transformadores">Transformadores</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                        <input type="text" oninput="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
+                            onfocus="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
+                            onblur="ocultarSugerenciasMateriales('UpdUnidad');CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="UpdunidadInput"
+                            autocomplete="off">
+                        <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                        <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
+                        <input type="file" class="form-control" id="UpdimagenInput" onchange="UpdmostrarImagen(this)"
+                            style="border: 3px solid #008E5A;">
+                    </div>
+
+                        <img id="UpdimagenPreview" src="" width="200px"
+                            style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
+                <div class="modal-footer modal-footer-materiales">
                     <button type="button" class="btn btn-primary"
                         onclick="javascript:UpdMaterialValidar()">Guardar</button>
                 </div>

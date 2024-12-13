@@ -104,10 +104,10 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 
-<!-- Modal insertar manodeobra -->
-<div class="modal modal-manodeobra" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Modal insertar mano de obra -->
+<div class="modal modal-manodeobra fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar mano de obra</h1>
@@ -127,24 +127,26 @@ if (!isset($_SESSION['idusuario'])) {
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AddCategoriaInputManodeobra" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddUnidadInputManodeobra">
-                        <option value="" selected>Seleccciona una unidad</option>
-                        <option value="JOR">JOR</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
-                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddsalarioInputManodeobra">
-                </div>
-                <div class="mb-3">
-                    <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del
-                        salario</label>
-                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddfechaSalarioInput">
+                <!-- Fila para Unidad, Salario y Fecha -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="AddUnidadInputManodeobra">
+                            <option value="" selected></option>
+                            <option value="JOR">JOR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
+                        <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddsalarioInputManodeobra">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                            id="AddfechaSalarioInput">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
@@ -159,10 +161,12 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
-<!-- Modal modificar manodeobra-->
+
+
+<!-- Modal modificar mano de obra -->
 <div class="modal fade modal-manodeobra" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar mano de obra
@@ -186,31 +190,33 @@ if (!isset($_SESSION['idusuario'])) {
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="UpdCategoriaInputManodeobra" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="updUnidadInputManodeobra">
-                        <option value="" selected>Seleccciona una unidad</option>
-                        <option value="JOR">JOR</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
-                    <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
-                </div>
-                <div class="mb-3">
-                    <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del
-                        salario</label>
-                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="UpdfechaSalarioInput">
+                <!-- Fila para Unidad, Salario y Fecha -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="updUnidadInputManodeobra">
+                            <option value="" selected></option>
+                            <option value="JOR">JOR</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="precioInput" class="form-label" style="color: #303030;">Salario*</label>
+                        <input type="number" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                            id="UpdfechaSalarioInput">
+                    </div>
                 </div>
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                     <input type="file" class="form-control inputLleno" id="UpdpdfInput"
                         style="border: 3px solid #008E5A;">
                 </div>
-                <div class=" modal-footer modal-footer-manodeobra">
+                <div class="modal-footer modal-footer-manodeobra">
                     <button type="button" class="btn btn-primary"
                         onclick="javascript:UpdManoObraValidar()">Guardar</button>
                 </div>
@@ -218,6 +224,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
+
 
 <!-- modal para activar el registro de manodeobra -->
 <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"

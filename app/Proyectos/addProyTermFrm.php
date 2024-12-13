@@ -11,11 +11,15 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlanco" style="height: 4rem;">
     <div class="bottom-rectangle-proyecto">
-        <div class="text-materiales">Presupuesto</div>
-        <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal" 
-                onclick="javascript:AddlimpiarModalMaquinaria();">Editar datos de proyecto</button>
-            <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal" 
-                onclick="javascript:AddlimpiarModalMaquinaria();">Catálogo de conceptos</button>
+        <div class="text-materiales">Proyecto términado</div>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Conceptos</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Tarjetas</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Materiales suminsitrados CFE</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Materiales fuera de CFE</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Mano de obra</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Herramienta de mano</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Equipo de seguridad</button>
+        <button type="button" class="btn btn-agregar-Proyecto" onclick="">Maquinaria</button>
             <a href="index.php" class="text-inicio-conceptos">
                 <div>Ir al inicio</div>
             </a>
@@ -23,7 +27,9 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <div>
-<label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Zona:</label>
+    <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-left: 2rem; margin-top: 12rem; align-content: center;">Para la obra:</label>
+    <div style="display: flex; flex-wrap: wrap; margin-top: 9.8rem; float: right; margin-bottom: 1rem;">
+        <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Zona:</label>
         <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem;"
             onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
         <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Tipo de obra:</label>
@@ -35,6 +41,7 @@ if (!isset($_SESSION['idusuario'])) {
             <label for="" style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Fecha de término:</label>
         <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem;"
             onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
+            
     </div>
 </div>
     
@@ -42,12 +49,10 @@ if (!isset($_SESSION['idusuario'])) {
                     onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnombreInput" rows="4"></textarea>
     
 
-<div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: space-between;">
-    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Materiales suministrados CFE</button>
-    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Materiales fuera de CFE</button>
-    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Mano de obra</button>
-    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Herramienta de mano y equipo de seguridad</button>
-    <button type="button" class="btn fa-solid-Siguiente-catalogo" onclick="">Maquinaria</button>
+<div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center; display: none;">
+    <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;" onclick="">Exportar a Excel</button>
+    <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;" onclick="">Exportar a PDF</button>
+
 </div>
 
 <!--tabla materiales suministrados por cfe-->
@@ -402,7 +407,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
-<div>
+<div style="display: none;">
     <div class="contTabla-catalogo-conceptos">
         <div class="tabla-container-catalogo-conceptos">
             <table id="tabla-conceptos">
@@ -464,8 +469,6 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="grid-container">
             <label class="subtotales_textos">Total:</label>
             <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
-            <button type="button" class="btn fa-solid-Guardar-catalogo"
-                onclick="javascript:guardarTablasEnBD()">Terminar</button>
         </div>
     </div>
 </div>

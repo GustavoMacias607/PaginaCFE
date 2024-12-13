@@ -114,7 +114,7 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Modal insertar zonas -->
 <div class="modal modal-zonas fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar zona</h1>
@@ -129,40 +129,46 @@ if (!isset($_SESSION['idusuario'])) {
                         <input type="number" class="form-control inputLleno" disabled id="AddidInput"
                             onblur="javascript:CompruebaTieneAlgoInput(this);">
                     </div>
-                    <div class="mb-3">
-                        <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
-                        <input type="text" class="form-control inputLleno"
-                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="AddZonaInput">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
+                            <input type="text" class="form-control inputLleno"
+                                onblur="javascript:CompruebaTieneAlgoInput(this)" id="AddZonaInput">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="rolInput" class="form-label" style="color: #303030;">Obra*</label>
+                            <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                                id="AddObraInput">
+                                <option selected value="">Selecciona una opción</option>
+                                <option value="Nueva">Nueva</option>
+                                <option value="Mejora red">Mejora red</option>
+                                <option value="Solicitud">Solicitud</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="rolInput" class="form-label" style="color: #303030;">Obra*</label>
-                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                            id="AddObraInput">
-                            <option selected value="">Selecciona una opción</option>
-                            <option value="Nueva">Nueva</option>
-                            <option value="Mejora red">Mejora red</option>
-                            <option value="Solicitud">Solicitud</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
-                        <input type="number" class="form-control inputLleno" id="AddIndirecto"
-                            onblur="javascript:CompruebaTieneAlgoInput(this);">
-                    </div>
-                    <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
-                        <input type="number" class="form-control inputLleno" id="AddFinanciamiento"
-                            onblur="javascript:CompruebaTieneAlgoInput(this); ">
-                    </div>
-                    <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
-                        <input type="number" class="form-control inputLleno" id="AddUtilidad"
-                            onblur="javascript:CompruebaTieneAlgoInput(this);">
-                    </div>
-                    <div class="mb-3">
-                        <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
-                        <input type="number" class="form-control inputLleno" id="AddAdicionales"
-                            onblur="javascript:CompruebaTieneAlgoInput(this); ">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
+                            <input type="number" class="form-control inputLleno" id="AddIndirecto"
+                                onblur="javascript:CompruebaTieneAlgoInput(this);">
+                        </div>             
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
+                            <input type="number" class="form-control inputLleno" id="AddFinanciamiento"
+                                onblur="javascript:CompruebaTieneAlgoInput(this); ">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
+                            <input type="number" class="form-control inputLleno" id="AddUtilidad"
+                                onblur="javascript:CompruebaTieneAlgoInput(this);">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
+                            <input type="number" class="form-control inputLleno" id="AddAdicionales"
+                                onblur="javascript:CompruebaTieneAlgoInput(this); ">
+                        </div>
                     </div>
 
                     <div class="modal-footer modal-footer-zonas">
@@ -179,7 +185,7 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Modal modificar zonas-->
 <div class="modal modal-zonas fade" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar zona</h1>
@@ -196,42 +202,49 @@ if (!isset($_SESSION['idusuario'])) {
                         <input type="text" class="form-control" disabled id="UpdidInput"
                             style="border: 3px solid #008E5A;">
                     </div>
-                    <div class="mb-3">
-                        <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
-                        <input type="text" class="form-control inputLleno" id="UpdZonaInput"
-                            onblur="javascript:CompruebaTieneAlgoInput(this)">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
+                            <input type="text" class="form-control inputLleno" id="UpdZonaInput"
+                                onblur="javascript:CompruebaTieneAlgoInput(this)">
+                        </div>                   
+                        <div class="col-md-6 mb-3">
+                            <label for="urolInput" class="form-label" style="color: #303030;">Obra*</label>
+                            <select class="form-select inputLleno" id="UpdObraInput"
+                                onblur="javascript:CompruebaTieneAlgoInput(this)">
+                                <option selected value="">Selecciona una opción</option>
+                                <option value="Nueva">Nueva</option>
+                                <option value="Mejora red">Mejora red</option>
+                                <option value="Solicitud">Solicitud</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="urolInput" class="form-label" style="color: #303030;">Obra*</label>
-                        <select class="form-select inputLleno" id="UpdObraInput"
-                            onblur="javascript:CompruebaTieneAlgoInput(this)">
-                            <option selected value="">Selecciona una opción</option>
-                            <option value="Nueva">Nueva</option>
-                            <option value="Mejora red">Mejora red</option>
-                            <option value="Solicitud">Solicitud</option>
-                        </select>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
+                            <input type="text" class="form-control" id="UpdIndirecto"
+                                onblur="javascript:CompruebaTieneAlgoInput(this)" style="border: 3px solid #008E5A;">
+                        </div>       
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
+                            <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                                id="UpdFinanciamiento" style="border: 3px solid #008E5A;">
+                        </div>
                     </div>
-                    <div class="mb-3 ">
-                        <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
-                        <input type="text" class="form-control" id="UpdIndirecto"
-                            onblur="javascript:CompruebaTieneAlgoInput(this)" style="border: 3px solid #008E5A;">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
+                            <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                                id="UpdUtilidad" style="border: 3px solid #008E5A;">
+                        </div>                                                         
+                        <div class="col-md-6 mb-3">
+                            <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
+                            <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                                id="UpdAdicionales" style="border: 3px solid #008E5A;">
+                        </div>
                     </div>
-                    <div class="mb-3 ">
-                        <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
-                        <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                            id="UpdFinanciamiento" style="border: 3px solid #008E5A;">
-                    </div>
-                    <div class="mb-3 ">
-                        <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
-                        <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                            id="UpdUtilidad" style="border: 3px solid #008E5A;">
-                    </div>
-                    <div class="mb-3 ">
-                        <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
-                        <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                            id="UpdAdicionales" style="border: 3px solid #008E5A;">
-                    </div>
-                    <div class=" modal-footer modal-footer-zonas">
+
+                    <div class="modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
                             onclick="javascript:UpdZonaValidar()">Guardar</button>
@@ -241,6 +254,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
+
 
 
 <!-- modal para activar el registro de zonas -->

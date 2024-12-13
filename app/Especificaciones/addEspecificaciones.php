@@ -100,7 +100,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 <!-- Modal insertar especificaciones -->
 <div class="modal fade modal-especificaciones" id="AgregarModalEspecificaciones" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    aria-labelledby="staticBackdropLabel" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog_especificaciones">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">

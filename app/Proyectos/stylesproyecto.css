@@ -11,9 +11,9 @@
   body {
     font-family: "Lato", sans-serif;
   }
-  .fondBlanco {
+  .fondBlanco-proyecto {
     background-color: white;
-    height: 10.5rem;
+    height: 10rem;
     width: 100%;
     position: fixed;
     z-index: 500;
@@ -191,7 +191,7 @@
     width: calc(100% - 0.2rem);
   }
   @media (min-width: 1090px) {
-    padding-top: 265px;
+    padding-top: 240px;
     margin-left: 2rem;
     margin-right: 2rem;
     width: calc(100% - 4rem);
@@ -208,10 +208,10 @@
   border-top: #008e5a solid 3px;
   border-top-width: 0px;
   margin-top: 0px;
-  position: fixed;
+  /*position: fixed;*/
   overflow-y: auto;
   height: 60%;
-  width: calc(100% - 4rem);
+  /*width: calc(45% - 1.5rem);*/
   overflow-x: auto;
 }
 
@@ -266,7 +266,6 @@
 .contenedor-columnas {
   display: flex;
   gap: 1rem; /* Espaciado entre las columnas */
-  padding: 1rem;
 }
 
 .columna {

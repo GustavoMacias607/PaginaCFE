@@ -99,9 +99,9 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- Modal insertar maquinaria -->
-<div class="modal modal-maquinaria" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal modal-maquinaria fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar maquinaria</h1>
@@ -121,25 +121,30 @@ if (!isset($_SESSION['idusuario'])) {
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
                         class="form-control inputLleno" id="AdddescripcionInputMaquinaria" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="AddUnidadInputMaquinaria">
-                        <option value="" selected>Seleccciona una unidad</option>
-                        <option value="HR">HR</option>
-                        <option value="%MO">%MO</option>
-                    </select>
+
+                <!-- Nueva fila para Unidad, PhM y Fecha -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="AddUnidadInputMaquinaria">
+                            <option value="" selected></option>
+                            <option value="HR">HR</option>
+                            <option value="%MO">%MO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
+                        <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddphmInputMaquinaria">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddfechaPrecioInput">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
-                    <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddphmInputMaquinaria">
-                </div>
-                <div class="mb-3">
-                    <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="AddfechaPrecioInput">
-                </div>
+
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                     <input type="file" class="form-control inputLleno" id="AddpdfInput"
@@ -153,10 +158,12 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
-<!-- Modal modificar maquinaria-->
+
+
+<!-- Modal modificar maquinaria -->
 <div class="modal fade modal-maquinaria" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar maquinaria
@@ -180,31 +187,36 @@ if (!isset($_SESSION['idusuario'])) {
                     <textarea type="text" class="form-control inputLleno"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpddescripcionInput" rows="2"></textarea>
                 </div>
-                <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        id="UpdUnidadInputMaquinaria">
-                        <option value="" selected>Seleccciona una unidad</option>
-                        <option value="HR">HR</option>
-                        <option value="%MO">%MO</option>
-                    </select>
+
+                <!-- Fila para Unidad, PhM y Fecha -->
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="UpdUnidadInputMaquinaria">
+                            <option value="" selected></option>
+                            <option value="HR">HR</option>
+                            <option value="%MO">%MO</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
+                        <input type="number" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="UpdfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
+                            id="UpdfechaPrecioInput">
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="precioInput" class="form-label" style="color: #303030;">PhM*</label>
-                    <input type="number" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
-                </div>
-                <div class="mb-3">
-                    <label for="UpdfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                    <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                        id="UpdfechaPrecioInput">
-                </div>
+
                 <div class="mb-3">
                     <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                     <input type="file" class="form-control inputLleno" id="UpdpdfInput"
                         style="border: 3px solid #008E5A;">
                 </div>
-                <div class=" modal-footer modal-footer-maquinaria">
+                <div class="modal-footer modal-footer-maquinaria">
                     <button type="button" class="btn btn-primary"
                         onclick="javascript:UpdMaquinariaValidar()">Guardar</button>
                 </div>
@@ -212,6 +224,7 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
+
 
 <!-- modal para activar el registro de maquinaria -->
 <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"

@@ -9,7 +9,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 ?>
 
-<div class="fondBlanco">
+<div class="fondBlanco-proyecto">
     <div class="bottom-rectangle-proyecto">
     <div class="text-materiales">Proyectos</div>
     <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal" 

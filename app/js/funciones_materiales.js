@@ -21,7 +21,7 @@ function AddMaterialValidar() {
     let id = document.querySelector('#AddidInput');
     if (id.value == "") {
         id.classList.add("inputVacio");
-        id.placeholder = "Requerido el ID del material"
+        id.placeholder = "Requerido el ID"
         vacio = true;
         PrimerValorVacio = id;
     }
@@ -30,7 +30,7 @@ function AddMaterialValidar() {
     let norma = document.querySelector('#AddnormaInput');
     if (norma.value == "") {
         norma.classList.add("inputVacio");
-        norma.placeholder = "Requerida la Norma del material"
+        norma.placeholder = "Requerida la Norma"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = norma;
@@ -41,7 +41,7 @@ function AddMaterialValidar() {
     let descripcion = document.querySelector('#AdddescripcionInput');
     if (descripcion.value == "") {
         descripcion.classList.add("inputVacio");
-        descripcion.placeholder = "Requerida la Descripcion del material"
+        descripcion.placeholder = "Requerida la Descripción"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = descripcion;
@@ -52,7 +52,7 @@ function AddMaterialValidar() {
     let precio = document.querySelector('#AddprecioInput');
     if (precio.value == "") {
         precio.classList.add("inputVacio");
-        precio.placeholder = "Requerido el Precio del material"
+        precio.placeholder = "Requerido el Precio"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = precio;
@@ -62,7 +62,7 @@ function AddMaterialValidar() {
     let fecha = document.querySelector('#AddfechaPrecioInput');
     if (fecha.value == "") {
         fecha.classList.add("inputVacio");
-        fecha.placeholder = "Requerida la Fecha del material"
+        fecha.placeholder = "Requerida la Fecha"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = fecha;
@@ -136,7 +136,7 @@ function UpdMaterialValidar() {
     let idCambiado = id.value !== idA.value;
     if (id.value == "") {
         id.classList.add("inputVacio");
-        id.placeholder = "Requerido el ID del material"
+        id.placeholder = "Requerido el ID"
         vacio = true;
         PrimerValorVacio = id;
     }
@@ -146,7 +146,7 @@ function UpdMaterialValidar() {
     let norma = document.querySelector('#UpdnormaInput');
     if (norma.value == "") {
         norma.classList.add("inputVacio");
-        norma.placeholder = "Requerida la Norma del material"
+        norma.placeholder = "Requerida la Norma"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = norma;
@@ -156,7 +156,7 @@ function UpdMaterialValidar() {
     let descripcion = document.querySelector('#UpddescripcionInput');
     if (descripcion.value == "") {
         descripcion.classList.add("inputVacio");
-        descripcion.placeholder = "Requerida la Descripcion del material"
+        descripcion.placeholder = "Requerida la Descripción"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = descripcion;
@@ -166,7 +166,7 @@ function UpdMaterialValidar() {
     let precio = document.querySelector('#UpdprecioInput');
     if (precio.value == "") {
         precio.classList.add("inputVacio");
-        precio.placeholder = "Requerido el Precio del material"
+        precio.placeholder = "Requerido el Precio"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = precio;
@@ -176,7 +176,7 @@ function UpdMaterialValidar() {
     let fecha = document.querySelector('#UpdfechaPrecioInput');
     if (fecha.value == "") {
         fecha.classList.add("inputVacio");
-        fecha.placeholder = "Requerida la Fecha del material"
+        fecha.placeholder = "Requerida la Fecha"
         vacio = true;
         if (!PrimerValorVacio) {
             PrimerValorVacio = fecha;

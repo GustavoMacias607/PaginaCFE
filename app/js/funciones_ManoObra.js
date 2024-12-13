@@ -189,7 +189,7 @@ function UpdManoObraValidar() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
-                    mensajePantalla(msgModificarCon, true);
+                    mensajePantalla(msgModificarObra, true);
                     GetManoObra();
                 }
             } else {

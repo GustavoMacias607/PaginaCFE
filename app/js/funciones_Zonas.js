@@ -1,8 +1,8 @@
 
-let msgEliminarZona = "Zona deshabilitado";
-let msgActivarZona = "Zona habilitado";
-let msgAgregarZona = "Zona agregado";
-let msgModificarZona = "Zona modificado";
+let msgEliminarZona = "Zona deshabilitada";
+let msgActivarZona = "Zona habilitada";
+let msgAgregarZona = "Zona agregada";
+let msgModificarZona = "Zona modificada";
 var estatusZona = 1;
 
 //Metodo que valida el formulario para agregar usuarios y al mismo tiempo agrega el usuario
