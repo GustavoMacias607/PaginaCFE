@@ -189,7 +189,7 @@ if (!isset($_SESSION['idusuario'])) {
                                     </div>
                                 </th>
                                 <th style="width: 8rem;">
-                                    Total
+                                    Precio U
                                 </th>
                                 <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
@@ -287,7 +287,7 @@ if (!isset($_SESSION['idusuario'])) {
                                     </div>
                                 </th>
                                 <th style="width: 9rem;">
-                                    Total
+                                    Precio U
                                 </th>
                             </tr>
                         </thead>
@@ -339,7 +339,7 @@ if (!isset($_SESSION['idusuario'])) {
                                     </div>
                                 </th>
                                 <th style="width: 9rem;">
-                                    Total
+                                    Precio U
                                 </th>
                                 <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
@@ -364,17 +364,17 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 
-<!-- modal para activar el registro de zonas -->
+<!-- modal para activar el registro de especificaciones -->
 <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel"
     style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                    ¿Habilitar esta zona?</h5>
+                    ¿Habilitar esta especificación?</h5>
                 <button type="button" class="btn" id="confirmActivationButton"
                     onclick="javascript:ActivarCerrarModal(); CambioEstatusTipoEsp();"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Habilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0px 1rem 0px 1rem;">Habilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -390,10 +390,10 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="modal-content">
             <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
-                    ¿Deshabilitar esta zona?</h5>
+                    ¿Deshabilitar esta especificación?</h5>
                 <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
                     id="confirmDeleteButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif;">Deshabilitar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0px 1rem 0px 1rem;">Deshabilitar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
@@ -409,10 +409,10 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-header"
                 style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
                 <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
-                    seguro de que desea deshabilitar esta zona?</h5>
+                    seguro de que desea deshabilitar esta especificación?</h5>
                 <button type="button" onclick="javascript:EliminarCerrarModal(); CambioEstatusTipoEsp();" class="btn"
                     id="confirmAdditionalButton"
-                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; ">Confirmar</button>
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0px 1rem 0px 1rem;">Confirmar</button>
                 <button type="button" class="btn" data-bs-dismiss="modal"
                     style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>

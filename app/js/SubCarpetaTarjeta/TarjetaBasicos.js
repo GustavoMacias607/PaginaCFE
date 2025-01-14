@@ -1,5 +1,5 @@
 let objTabla2ModalBasicos = [];
-let msgYaAgregadoBasicos = "Basico ya agregado";
+let msgYaAgregadoBasicos = "Básico ya agregado";
 var datosObjetoBasicos = [];
 
 //Metodo para hacer la consulta de los Basicos tomando en cuanta los filtros

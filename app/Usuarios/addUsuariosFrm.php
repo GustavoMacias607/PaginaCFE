@@ -80,10 +80,14 @@ if (!isset($_SESSION['idusuario'])) {
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected>Todo</option>
                                 <option value="Administrador">Administrador</option>
+                                <option value="Analista">Analista de precios</option>
+                                <option value="Proyectista">Proyectista</option>
                                 <option value="Invitado">Invitado</option>
-                                <option value="Constructor">Constructor</option>
                             </select>
                         </div>
+                    </th>
+                    <th Style="Width: 14rem;">
+                        Zona
                     </th>
                     <th style="width: 100px;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
@@ -137,16 +141,29 @@ if (!isset($_SESSION['idusuario'])) {
                             onblur="javascript:ComprobarContrasenas();javascript:CompruebaTieneAlgoInputUsuario(this)"
                             rows="3">
                     </div>
-                    <div class="mb-3">
-                        <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
-                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
-                            id="AddrolInput">
-                            <option selected value="">Selecciona una opción</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Invitado">Invitado</option>
-                            <option value="Constructor">Constructor</option>
-                        </select>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
+                            <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
+                                id="AddrolInput">
+                                <option selected value="">Selecciona una opción</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Analista">Analista de precios</option>
+                                <option value="Proyectista">Proyectista</option>
+                                <option value="Invitado">Invitado</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label for="zonaInput" class="form-label" style="color: #303030;">Zona*</label>
+                                <input type="text" oninput="mostrarSugerencias(this, 'AddZona')"
+                                onfocus="mostrarSugerencias(this, 'AddZona')"
+                                onblur="ocultarSugerencias('AddZona');CompruebaTieneAlgoInput(this)"
+                                class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                                id="AddzonaUsuario" autocomplete="off">
+                        <div id="AddsugerenciasZona" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                        </div>
                     </div>
+                </div>
                     <div class="modal-footer modal-footer-usuarios">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
@@ -188,15 +205,27 @@ if (!isset($_SESSION['idusuario'])) {
                         <input class="form-control inputLleno" id="UpdusuarioInput" rows="3"
                             onblur="javascript:CompruebaTieneAlgoInputUsuario(this); checkUsuario('upd');">
                     </div>
-                    <div class="mb-3">
-                        <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
-                        <select class="form-select inputLleno" id="UpdrolInput"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
-                            <option selected value="">Selecciona una opción</option>
-                            <option value="Administrador">Administrador</option>
-                            <option value="Invitado">Invitado</option>
-                            <option value="Constructor">Constructor</option>
-                        </select>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="urolInput" class="form-label" style="color: #303030;">Rol*</label>
+                            <select class="form-select inputLleno" id="UpdrolInput"
+                                onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
+                                <option selected value="">Selecciona una opción</option>
+                                <option value="Administrador">Administrador</option>
+                                <option value="Analista">Analista de precios</option>
+                                <option value="Proyectista">Proyectista</option>
+                                <option value="Invitado">Invitado</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                                <label for="uzonaInput" class="form-label" style="color: #303030;">Zona*</label>
+                                    <input type="text" oninput="mostrarSugerencias(this, 'UpdZona')"
+                                    onfocus="mostrarSugerencias(this, 'UpdZona')"
+                                    onblur="ocultarSugerencias('UpdZona');CompruebaTieneAlgoInput(this)"
+                                    class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                                    id="UpdzonaUsuario" autocomplete="off">
+                            <div id="AddsugerenciasZona" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                            </div>
                     </div>
                     <hr>
                     <div class="mb-3">

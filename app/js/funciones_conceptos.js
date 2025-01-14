@@ -1,6 +1,6 @@
 
 let msgEliminarCon = "Concepto deshabilitado";
-let msgActivarCon = "Concepto habilitdo";
+let msgActivarCon = "Concepto habilitado";
 let msgAgregarCon = "Concepto agregado";
 let msgModificarCon = "Concepto modificado";
 let msgSeleccion = "Selecciona un concepto"

@@ -115,7 +115,7 @@ function guardarTablasEnBD() {
     }
     hayCantidadBasicos();
     if (cantidadBasicos) {
-        mensajePantalla("Basico sin cantidad", false);
+        mensajePantalla("Básico sin cantidad", false);
         return;
     }
 
@@ -136,11 +136,11 @@ function comprobarDatoInactivo() {
         return true;
     }
     if (manoObraInactivo) {
-        mensajePantalla("ManoObra Inactiva", false);
+        mensajePantalla("Mano de obra inactiva", false);
         return true;
     }
     if (basicosInactivo) {
-        mensajePantalla("Concepto basico Inactivo", false);
+        mensajePantalla("Concepto básico inactivo", false);
         return true;
     }
 

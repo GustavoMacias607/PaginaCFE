@@ -19,13 +19,22 @@ if (!isset($_SESSION['idusuario'])) {
     <div>
         <input class="input-text-nombre d-none" type="text" id="idInput" disabled value="<?= $_SESSION['idusuario'] ?>">
         <input type="text" id="AddUsuAnterior" class="d-none" value="<?= $_SESSION['usuario'] ?>">
-        <div>
-            <label class="texto_perfil" for="nombre">Nombre</label>
+        <div class="seccion-usu-rol">
             <div>
-                <input class="input-text-nombre inputLleno" id="AddnombreInput" type="text"
-                    onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" value="<?= $_SESSION['nombre'] ?>">
+                <label class="texto_perfil" for="nombre">Nombre</label>
+                <div>
+                    <input class="input-text-usuario inputLleno" id="AddnombreInput" type="text"
+                        onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" value="<?= $_SESSION['nombre'] ?>">
+                </div>
+            </div>
+            <div style="padding-left: 1rem;">
+                <label class="texto_perfil" for="zona">Zona</label>
+                <div>
+                    <input class="input-text-rol" id="AddzonaInput" type="text" disabled value="<?= $_SESSION['zona'] ?>">
+                </div>
             </div>
         </div>
+
         <div class="seccion-usu-rol">
             <div>
                 <label class="texto_perfil" for="usuario">Usuario</label>

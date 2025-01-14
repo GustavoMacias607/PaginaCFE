@@ -289,7 +289,7 @@ function llenarModalVerTipoEsp(idTipo, idEspecificacion, codigo, nombre, descrip
     btnAgregar.style.display = 'none';
 
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
-    btnGuardar.innerHTML = "Cerrar"
+    btnGuardarModalTipoEsp.style.display = 'none';
 
     document.getElementById('lblFam').innerHTML = "Familia";
     document.getElementById('lblEsp').innerHTML = "Especificación";
