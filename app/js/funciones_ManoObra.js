@@ -379,6 +379,7 @@ function GetManoObra() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     data = resp.datos;
+                    console.log(data);
                     llenarTablaManoObra();
                     filterDataManoObra();
                     llenarUnidadTablaManoObra();

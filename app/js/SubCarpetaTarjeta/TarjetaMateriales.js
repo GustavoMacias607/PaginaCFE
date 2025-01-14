@@ -58,7 +58,7 @@ function displayTableMaterialesTarjeta(page) {
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         <div class="miDiv imaCuadro">
-                            <img class="imagenPreview" src="../Materiales/118">
+                            <img class="imagenPreview" style="text-align: left !important;" src="../Materiales/118">
                         </div>
                     </div>
                     <div style="display: flex; justify-content: space-around; align-items: center;">

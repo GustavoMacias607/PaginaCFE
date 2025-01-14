@@ -246,14 +246,14 @@ th {
   background-color: #fff; /* Fondo para el encabezado */
   z-index: 10; /* Asegura que el encabezado esté por encima del contenido */
 }
-#tabla-MaterialesCatalogo th, 
-#tabla-MaterialesCatalogo td{
+#tabla-MaterialesCatalogo th,
+#tabla-MaterialesCatalogo td {
   border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
   padding: 8px;
   text-align: left;
 }
 
-#tabla-MaterialesCatalogo td:last-child{
+#tabla-MaterialesCatalogo td:last-child {
   text-align: right;
 }
 
@@ -783,6 +783,21 @@ div[style*="justify-content: end"] {
   background-color: rgb(225, 133, 133);
 }
 
-.fs-5-catalogo{
-  padding:0px 0px 0px 1rem;
+.fs-5-catalogo {
+  padding: 0px 0px 0px 1rem;
+}
+
+.totalesTablas {
+  display: flex;
+  align-items: end;
+  justify-content: flex-end;
+  gap: 10px; /* Espacio entre elementos */
+  float: right;
+  width: 100%;
+}
+
+.claseTotales {
+  margin-top: 2rem;
+  margin-right: 2rem;
+  margin-bottom: 2rem;
 }

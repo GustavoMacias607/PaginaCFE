@@ -28,6 +28,19 @@ function opcion(op) {
             break;
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";
+            funcion = GetProyectoProceso;
+            break;
+        case "addCatConFrm":
+            url = "Proyectos/addCatConFrm.php";
+            funcion = llenarCamposPagina;
+            break;
+        case "addPresupuestoFrm":
+            url = "Proyectos/addPresupuestoFrm.php";
+            funcion = llenarCamposPaginaPresupuesto;
+            break;
+        case "addProyTermFrm":
+            url = "Proyectos/addProyTermFrm.php";
+            funcion = llenarCamposPaginaTerminado;
             break;
         case "ManoObra":
             url = "ManoObra/addManoObraFrm.php";
@@ -202,3 +215,16 @@ function FormateoFecha(fecha) {
     let diaFormateado = fechaFormateada.getDate().toString().padStart(2, '0');
     return fechaFinal = `${añoFormateado}-${mesFormateado}-${diaFormateado}`;
 }
+
+
+function ObtenerFechaActual() {
+    let fechaActual = new Date();
+    let año = fechaActual.getFullYear();
+    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    let dia = fechaActual.getDate().toString().padStart(2, '0');
+    let fechaFormateada = `${año}-${mes}-${dia}`;
+    return fechaFormateada;
+}
+
+
+

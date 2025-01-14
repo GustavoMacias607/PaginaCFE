@@ -253,6 +253,7 @@ body {
   border: #008e5a solid 0.2rem;
   height: 100%;
   width: 93%;
+  text-align: left !important;
 }
 
 .coloresIcono {
@@ -261,6 +262,7 @@ body {
   cursor: pointer;
 }
 .imaCuadro {
+  text-align: left;
   color: #008e5a;
   background-color: #008e5a;
   width: 10rem;

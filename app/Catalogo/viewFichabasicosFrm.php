@@ -18,7 +18,6 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <div class="contenidoagg-catalogo">
-
     <div class="titulo-concepto">
         <nav class="pSeccion-catalogo">
             <div>Concepto</div>
@@ -929,9 +928,6 @@ if (!isset($_SESSION['idusuario'])) {
                                     </div>
                                 </th>
                                 <th style="width: 8rem;">
-                                    Familia
-                                </th>
-                                <th style="width: 8rem;">
                                     Precio U
                                 </th>
                             </tr>
@@ -969,9 +965,6 @@ if (!isset($_SESSION['idusuario'])) {
                                             <option value="PZA">PZA</option>
                                         </select>
                                     </div>
-                                </th>
-                                <th style="width: 8rem;">
-                                    Familia
                                 </th>
                                 <th style="width: 8rem;">
                                     Precio U

@@ -51,7 +51,6 @@ function displayTableBasicosTarjeta(page) {
                 <td class="Code">${record.idconbasi}</td>
                 <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                 <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                <td>---</td>
                 <td>${precioFormateado}</td>
                
             `;
@@ -262,7 +261,6 @@ function displayTableBasicosTarjetaModal(page) {
                <td class="Code">${record.idconbasi}</td>
                 <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                 <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                <td>---</td>
                 <td>${precioFormateado}</td>
                  <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">

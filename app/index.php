@@ -193,6 +193,13 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/SubCarpetaTarjeta/TarjetaMaquinaria.js"></script>
     <script src="js/SubCarpetaTarjeta/TarjetaBasicos.js"></script>
 
+    <script src="js/Funciones_Proyecto/funciones_addProyecto.js"></script>
+    <script src="js/Funciones_Proyecto/funciones_CatalogoConceptos.js"></script>
+    <script src="js/Funciones_Proyecto/funciones_presupuesto.js"></script>
+    <script src="js/Funciones_Proyecto/funciones_ProyTerm.js"></script>
+    <script src="js/Funciones_Proyecto/funciones_TarjetaProyecto.js"></script>
+
+
     <script src="js/SubCarpetaEspecificaciones/tipoEsp.js"></script>
     <script src="js/SubCarpetaEspecificaciones/AgregarConceptoEspecificacion.js"></script>
     <script>
