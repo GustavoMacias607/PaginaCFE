@@ -240,17 +240,24 @@ function displayTableMaterialesTarjetaP(page) {
 
             // Eventos para cantidad
             cantidadCell.addEventListener('input', () => {
-                const valor = cantidadCell.innerText;
+                let valor = cantidadCell.innerText;
                 if (!/^\d*\.?\d*$/.test(valor)) {
                     cantidadCell.innerText = valor.slice(0, -1);
+                } else {
+                    const parts = valor.split('.');
+                    if (parts.length > 1 && parts[1].length > 2) {
+                        cantidadCell.innerText = valor.slice(0, -1);
+                    }
                 }
                 actualizarCalculos();
             });
 
             cantidadCell.addEventListener('blur', () => {
-                const valor = parseFloat(cantidadCell.innerText);
+                let valor = parseFloat(cantidadCell.innerText);
                 if (isNaN(valor) || valor < 0) {
                     cantidadCell.innerText = "0";
+                } else {
+                    cantidadCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
                 }
                 actualizarCalculos();
             });
@@ -411,9 +418,14 @@ function displayTableManoObraTarjetaP(page) {
 
             // Eventos para rendimiento
             rendimientoCell.addEventListener('input', () => {
-                const valor = rendimientoCell.innerText;
+                let valor = rendimientoCell.innerText;
                 if (!/^\d*\.?\d*$/.test(valor)) {
                     rendimientoCell.innerText = valor.slice(0, -1);
+                } else {
+                    const parts = valor.split('.');
+                    if (parts.length > 1 && parts[1].length > 2) {
+                        rendimientoCell.innerText = valor.slice(0, -1);
+                    }
                 }
                 actualizarCalculos();
             });
@@ -422,6 +434,8 @@ function displayTableManoObraTarjetaP(page) {
                 const valor = parseFloat(rendimientoCell.innerText);
                 if (isNaN(valor) || valor <= 0) {
                     rendimientoCell.innerText = "0";
+                } else {
+                    rendimientoCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
                 }
                 actualizarCalculos();
             });
@@ -564,7 +578,6 @@ function llenarTablaMaquinariaSeleccionadosP() {
     actualizarSumaMaquinaria();
 }
 
-// Método para llenar la tabla
 function displayTableMaquinariaTarjetaP(page) {
     importeMaquinaria = 0;
     maquinariaInactivo = false;
@@ -639,9 +652,14 @@ function displayTableMaquinariaTarjetaP(page) {
 
             // Eventos para rhm
             rhmCell.addEventListener('input', () => {
-                const valor = rhmCell.innerText;
+                let valor = rhmCell.innerText;
                 if (!/^\d*\.?\d*$/.test(valor)) {
                     rhmCell.innerText = valor.slice(0, -1);
+                } else {
+                    const parts = valor.split('.');
+                    if (parts.length > 1 && parts[1].length > 2) {
+                        rhmCell.innerText = valor.slice(0, -1);
+                    }
                 }
                 actualizarCalculosMaquinaria();
             });
@@ -650,6 +668,8 @@ function displayTableMaquinariaTarjetaP(page) {
                 const valor = parseFloat(rhmCell.innerText);
                 if (isNaN(valor) || valor < 0) {
                     rhmCell.innerText = "0";
+                } else {
+                    rhmCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
                 }
                 actualizarCalculosMaquinaria();
             });
@@ -666,7 +686,6 @@ function displayTableMaquinariaTarjetaP(page) {
         tableBody.innerHTML += row;
     }
 }
-
 
 function actualizarSumaMaquinaria() {
     suma4 = 0;
@@ -803,9 +822,14 @@ function displayTableBasicosTarjetaP(page) {
 
             // Eventos para cantidad
             cantidadCell.addEventListener('input', () => {
-                const valor = cantidadCell.innerText;
+                let valor = cantidadCell.innerText;
                 if (!/^\d*\.?\d*$/.test(valor)) {
                     cantidadCell.innerText = valor.slice(0, -1);
+                } else {
+                    const parts = valor.split('.');
+                    if (parts.length > 1 && parts[1].length > 2) {
+                        cantidadCell.innerText = valor.slice(0, -1);
+                    }
                 }
                 actualizarCalculosBasicos();
             });
@@ -814,6 +838,8 @@ function displayTableBasicosTarjetaP(page) {
                 const valor = parseFloat(cantidadCell.innerText);
                 if (isNaN(valor) || valor < 0) {
                     cantidadCell.innerText = "0";
+                } else {
+                    cantidadCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
                 }
                 actualizarCalculosBasicos();
             });
@@ -830,7 +856,6 @@ function displayTableBasicosTarjetaP(page) {
         tableBody.innerHTML += row;
     }
 }
-
 function actualizarSumaBasicos() {
     suma5 = 0;
     suma5 = importeBasicos

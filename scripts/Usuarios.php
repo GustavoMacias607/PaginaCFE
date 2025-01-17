@@ -18,14 +18,15 @@ class Usuario
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spUsuarioInsertar(:Nombre, :Usuario, :Pass,:Clave,:Rol);";
+            $consulta = "call spUsuarioInsertar(:Nombre, :Usuario, :Pass,:Clave,:Rol,:IdZona);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Nombre" => $datos->nombre,
                 "Usuario" => $datos->usuario,
                 "Pass" => $datos->pass,
                 "Clave" => $clave,
-                "Rol" => $datos->rol
+                "Rol" => $datos->rol,
+                "IdZona" => $datos->idZona,
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -38,7 +39,7 @@ class Usuario
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spUsuarioModificar(:Id,:Nombre, :Usuario, :Pass,:Clave,:Rol);";
+            $consulta = "call spUsuarioModificar(:Id,:Nombre, :Usuario, :Pass,:Clave,:Rol,:IdZona);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->id,
@@ -46,7 +47,8 @@ class Usuario
                 "Usuario" => $datos->usuario,
                 "Pass" => $datos->pass,
                 "Clave" => $clave,
-                "Rol" => $datos->rol
+                "Rol" => $datos->rol,
+                "IdZona" => $datos->idZona,
             ));
             unset($c);
         } catch (PDOException $e) {

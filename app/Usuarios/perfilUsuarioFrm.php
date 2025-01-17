@@ -30,7 +30,15 @@ if (!isset($_SESSION['idusuario'])) {
             <div style="padding-left: 1rem;">
                 <label class="texto_perfil" for="zona">Zona</label>
                 <div>
-                    <input class="input-text-rol" id="AddzonaInput" type="text" disabled value="<?= $_SESSION['zona'] ?>">
+                    <input class="input-text-rol" id="AddzonaInput" type="text" disabled
+                        value="<?= $_SESSION['zona'] ?>">
+                </div>
+            </div>
+            <div class="d-none" style="padding-left: 1rem;">
+                <label class="texto_perfil" for="zona">IdZona</label>
+                <div>
+                    <input class="input-text-rol" id="AddidzonaInput" type="text" disabled
+                        value="<?= $_SESSION['idzona'] ?>">
                 </div>
             </div>
         </div>

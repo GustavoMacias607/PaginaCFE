@@ -305,3 +305,44 @@ body {
   border-color: #ffffffa2; /* Contorno verde al pasar el mouse */
   color: #ffffff; /* Letra verde al hacer clic */
 }
+
+/**as
+asd
+asd
+
+asdasdasd
+
+*/
+
+@media print {
+  .tabla-container-tablaTarjeta {
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .encabezadoTablasTarjeta th {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+
+  .totalesTablas {
+    text-align: right;
+    font-weight: bold;
+  }
+}
+
+#contenedor-cfe table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#contenedor-cfe th,
+#contenedor-cfe td {
+  padding: 5px;
+}
+
+#contenedor-cfe th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}

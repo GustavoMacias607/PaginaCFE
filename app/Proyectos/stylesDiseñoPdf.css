@@ -1,0 +1,39 @@
+.titulo-conceptoPDF {
+  font-family: "LatoBold", sans-serif;
+  font-size: 1.2rem;
+  padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.textJus {
+  text-align: justify;
+}
+
+.textIzq {
+  text-align: left;
+}
+
+.textDer {
+  text-align: right;
+}
+.textCen {
+  text-align: center;
+}
+
+.sinBorde td {
+  border: 0;
+  border-top: 1px solid #000;
+}
+
+.todosBordes td,
+th {
+  border: 1px solid #000;
+}
+
+td.todosBordesSum {
+  border: 1px solid #000;
+}

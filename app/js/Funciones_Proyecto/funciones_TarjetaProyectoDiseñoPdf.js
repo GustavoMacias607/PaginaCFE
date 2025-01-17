@@ -1,8 +1,7 @@
-
-async function GeneradorTablaConcepto() {
-    const container = document.getElementById('tablaTarjetasProyecto');
+async function GeneradorTablaConceptoPDF() {
+    const container = document.getElementById('contenedor-cfe');
     if (!container) {
-        console.error('Contenedor "tablaTarjetasProyecto" no encontrado');
+        console.error('Contenedor "contenedor-cfe" no encontrado');
         return;
     }
     container.innerHTML = '';
@@ -10,84 +9,79 @@ async function GeneradorTablaConcepto() {
     console.log(conceptos);
     for (const concepto of conceptos) {
         let conceptoHTML = `
-       
+        
             <div id="concepto-${concepto.idconcepto}" class="tarjeta-concepto">
-                <div class="titulo-concepto">
-                    <div class="pSeccion-catalogo">
-                        <div>Concepto</div>
-                    </div>
-                </div>
                 <div class="contTabla-materialesmodal_catalogo">
-                    <div class="tabla-container-tablaTarjeta">
-                        <table id="tabla-conceptosCatalogo">
-                            <thead class="encabezadoTablasTarjeta">
-                                <tr>
-                                    <th style="width: 8rem;">ID</th>
-                                    <th>Nombre</th>
-                                    <th style="width: 10rem;">Unidad</th>
-                                    <th style="width: 8rem; display: table-cell;">Familia</th>
+                    <div>
+                        <table>
+                            <thead>
+                                <tr class="todosBordes">
+                                    <th class="textIzq" style="width: 8rem;  text-align: justify;">No.</th>
+                                    <th class="textIzq">Concepto</th>
+                                    <th class="textIzq" style="width: 10rem;">Unidad</th>
+                                    <th class="textIzq" style="width: 8rem; display: table-cell;">Cantidad</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>${concepto.idconcepto}</td>
-                                    <td>${concepto.nombre}</td>
-                                    <td>${concepto.unidad}</td>
-                                    <td>${concepto.familia || '---'}</td>
+                                <tr class="todosBordes"> 
+                                    <td class="textIzq">${concepto.idconcepto}</td>
+                                    <td class="textJus">${concepto.nombre}</td>
+                                    <td class="textCen">${concepto.unidad}</td>
+                                    <td class="textDer">${concepto.cantidad}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
-                <div class="titulo-concepto">
+                <div class="titulo-conceptoPDF">
                     <div class="pSeccion-catalogo">
                         <div>Materiales</div>
                     </div>
                 </div>
-                <div id="materiales-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-concepto">
+                <div id="materialesPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
                     <div class="pSeccion-catalogo">
                         <div>Mano de obra</div>
                     </div>
                 </div>
-                <div id="manoObra-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-concepto">
+                <div id="manoObraPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
                     <div class="pSeccion-catalogo">
                         <div>Herramienta y equipo de seguridad</div>
                     </div>
                 </div>
-                <div id="herramientaEquipo-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-concepto">
+                <div id="herramientaEquipoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
                     <div class="pSeccion-catalogo">
                         <div>Maquinaria</div>
                     </div>
                 </div>
-                <div id="maquinaria-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-concepto">
+                <div id="maquinariaPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
                     <div class="pSeccion-catalogo">
                         <div>Basico</div>
                     </div>
                 </div>
-                <div id="basico-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div id="basicoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
 
                 <div class="totalesTablas claseTotales">
                     <label class="subtotales_textos">Costo Total:</label>
                     <div>
-                        <label id="CostoTotal-${concepto.idconcepto}" class="subtotales_numeros_top">0</label>
+                        <label id="CostoTotalPDF-${concepto.idconcepto}" class="subtotales_numeros_top">0</label>
                     </div>
                 </div>
                 <hr class="separador-tarjetas">
             </div>
         `;
         container.innerHTML += conceptoHTML;
-        await TraerMaterialesConcepto(concepto.idconcepto);
-        await TraerManoObrasConcepto(concepto.idconcepto);
-        await TraerMaquinariaConcepto(concepto.idconcepto);
-        await TraerBasicoConcepto(concepto.idconcepto);
+        await TraerMaterialesConceptoPDF(concepto.idconcepto);
+        await TraerManoObrasConceptoPDF(concepto.idconcepto);
+        await TraerMaquinariaConceptoPDF(concepto.idconcepto);
+        await TraerBasicoConceptoPDF(concepto.idconcepto);
     }
 }
 
-function TraerMaterialesConcepto(idConceptoProyecto) {
+function TraerMaterialesConceptoPDF(idConceptoProyecto) {
     return new Promise((resolve, reject) => {
         let MaterialesConcepto = [];
         const datos = {};
@@ -114,7 +108,7 @@ function TraerMaterialesConcepto(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaMateriales(MaterialesConcepto, idConceptoProyecto);
+                    GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto);
                     resolve();
                 } else {
                     throw new Error(status);
@@ -127,8 +121,8 @@ function TraerMaterialesConcepto(idConceptoProyecto) {
     });
 }
 
-function GeneradorTablaMateriales(MaterialesConcepto, idConceptoProyecto) {
-    const container = document.getElementById(`materiales-${idConceptoProyecto}`);
+function GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto) {
+    const container = document.getElementById(`materialesPDF-${idConceptoProyecto}`);
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -137,49 +131,52 @@ function GeneradorTablaMateriales(MaterialesConcepto, idConceptoProyecto) {
     let totalImporteMateriales = MaterialesConcepto.reduce((total, material) => total + (material.suministrado ? 0 : (material.precio * material.cantidad)), 0);
 
     let materialesHTML = `
-        <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-MaterialesCatalogo">
-                <thead class="encabezadoTablasTarjeta">
-                    <tr>
+        <div>
+            <table>
+                <thead>
+                    <tr class="todosBordes">
                         <th style="width: 8rem;">ID</th>
                         <th>Descripción</th>
                         <th style="width: 8rem;">Unidad</th>
                         <th style="width: 8rem;">Precio U</th>
                         <th style="width: 8rem;">Cantidad</th>
-                        <th style="width: 11rem;">Suministrado por CFE</th>
-                        <th style="width: 9rem;">Importe</th>
+                        <th style="width: 14rem;">Suministrado por CFE</th>
+                        <th class="textDer" style="width: 15rem;">M = Precio * Cantidad</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${MaterialesConcepto.length > 0 ? MaterialesConcepto.map(material => `
-                        <tr>
-                            <td>${material.codigo}</td>
-                            <td>${material.descripcion}</td>
+                        <tr class="todosBordes">
+                            <td class="textDer">${material.codigo}</td>
+                            <td class="textIzq">${material.descripcion}</td>
                             <td>${material.unidad}</td>
-                            <td>${formatoMXN.format(material.precio)}</td>
-                            <td>${material.cantidad}</td>
-                            <td>${material.suministrado ? 'Sí' : 'No'}</td>
-                            <td>${formatoMXN.format(material.suministrado ? 0 : (material.precio * material.cantidad))}</td>
+                            <td class="textDer">${formatoMXN.format(material.precio)}</td>
+                            <td class="textCen">${material.cantidad}</td>
+                            <td class="textCen">${material.suministrado ? 'Sí' : 'No'}</td>
+                            <td class="textDer">${formatoMXN.format(material.suministrado ? 0 : (material.precio * material.cantidad))}</td>
                         </tr>
                     `).join('') : `
-                        <tr>
+                        <tr class="todosBordes">
                             <td colspan="7">Sin resultados</td>
                         </tr>
                     `}
+                    <tr class="sinBorde">
+                        <!-- Celdas vacías para las primeras 4 columnas -->
+                        <td class="no-border"  colspan="4"></td>
+                        <!-- Suma 1 en las últimas 2 columnas -->
+                        <td colspan="2" class="textCen todosBordesSum"><strong>SUMA 1:</strong></td>
+                        <td id="SumaImporteMaterialesPDF-${idConceptoProyecto}" class="textDer todosBordesSum">
+                            <strong>${formatoMXN.format(totalImporteMateriales)}</strong>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="totalesTablas">
-            <label class="subtotales_textos">Suma 1:</label>
-            <div>
-                <label id="SumaImporteMateriales-${idConceptoProyecto}" class="subtotales_numeros_top">${formatoMXN.format(totalImporteMateriales)}</label>
-            </div>
         </div>
     `;
     container.innerHTML += materialesHTML;
 }
 
-function TraerManoObrasConcepto(idConceptoProyecto) {
+function TraerManoObrasConceptoPDF(idConceptoProyecto) {
     return new Promise((resolve, reject) => {
         let ManoObraConcepto = [];
         const datos = {};
@@ -209,7 +206,7 @@ function TraerManoObrasConcepto(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaManoObra(ManoObraConcepto, idConceptoProyecto);
+                    GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto);
                     resolve();
                 } else {
                     throw new Error(status);
@@ -222,8 +219,8 @@ function TraerManoObrasConcepto(idConceptoProyecto) {
     });
 }
 
-function GeneradorTablaManoObra(ManoObraConcepto, idConceptoProyecto) {
-    const container = document.getElementById(`manoObra-${idConceptoProyecto}`);
+function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
+    const container = document.getElementById(`manoObraPDF-${idConceptoProyecto}`);
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -232,54 +229,57 @@ function GeneradorTablaManoObra(ManoObraConcepto, idConceptoProyecto) {
     let totalImporteManoObra = ManoObraConcepto.reduce((total, manoObra) => total + manoObra.importe, 0);
 
     let manoObraHTML = `
-        <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-MaterialesCatalogo">
-                <thead class="encabezadoTablasTarjeta">
-                    <tr>
+        <div>
+            <table>
+                <thead>
+                    <tr class="todosBordes">
                         <th style="width: 8rem;">ID</th>
                         <th>Categoría</th>
                         <th style="width: 10rem;">Unidad</th>
                         <th style="width: 8rem;">Salario</th>
-                        <th style="width: 8rem;">Rendimiento</th>
-                        <th style="width: 8rem;">Cantidad</th>
-                        <th style="width: 8rem;">Sr</th>
-                        <th style="width: 9rem;">Importe</th>
+                        <th style="width: 8rem;">R</th>
+                        <th style="width: 11rem;">Cantidad</th>
+                        <th style="width: 11rem;">Sr</th>
+                        <th style="width: 15rem;">Mo = Sr/R</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${ManoObraConcepto.length > 0 ? ManoObraConcepto.map(manoObra => `
-                        <tr>
+                        <tr class="todosBordes">
                             <td>${manoObra.idmanoobra}</td>
-                            <td>${manoObra.categoria}</td>
-                            <td>${manoObra.unidad}</td>
-                            <td>${formatoMXN.format(manoObra.salario)}</td>
-                            <td>${manoObra.rendimiento}</td>
-                            <td>${manoObra.cantidad.toFixed(2)}</td>
-                            <td>${formatoMXN.format(manoObra.sr)}</td>
-                            <td>${formatoMXN.format(manoObra.importe)}</td>
+                            <td class="textIzq">${manoObra.categoria}</td>
+                            <td class="textCen">${manoObra.unidad}</td>
+                            <td class="textDer">${formatoMXN.format(manoObra.salario)}</td>
+                            <td class="textDer">${manoObra.rendimiento}</td>
+                            <td class="textDer">${manoObra.cantidad.toFixed(2)}</td>
+                            <td class="textDer">${formatoMXN.format(manoObra.sr)}</td>
+                            <td class="textDer">${formatoMXN.format(manoObra.importe)}</td>
                         </tr>
                     `).join('') : `
-                        <tr>
+                        <tr class="todosBordes">
                             <td colspan="8">Sin resultados</td>
                         </tr>
                     `}
+                    <tr class="sinBorde">
+                        <!-- Celdas vacías para las primeras 4 columnas -->
+                        <td class="no-border"  colspan="5"></td>
+                        <!-- Suma 1 en las últimas 2 columnas -->
+                        <td colspan="2" class="textCen todosBordesSum"><strong>SUMA 2:</strong></td>
+                        <td id="SumaImporteManoObraPDF-${idConceptoProyecto}" class="textDer todosBordesSum">
+                            <strong>${formatoMXN.format(totalImporteManoObra)}</strong>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="totalesTablas">
-            <label class="subtotales_textos">Suma 2:</label>
-            <div>
-                <label id="SumaImporteManoObra-${idConceptoProyecto}" class="subtotales_numeros_top">${formatoMXN.format(totalImporteManoObra)}</label>
-            </div>
         </div>
     `;
     container.innerHTML += manoObraHTML;
 
-    GeneradorTablaHerramientaEquipo(idConceptoProyecto, totalImporteManoObra);
+    GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteManoObra);
 }
 
-function GeneradorTablaHerramientaEquipo(idConceptoProyecto, totalImporteManoObra) {
-    const container = document.getElementById(`herramientaEquipo-${idConceptoProyecto}`);
+function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteManoObra) {
+    const container = document.getElementById(`herramientaEquipoPDF-${idConceptoProyecto}`);
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -294,43 +294,46 @@ function GeneradorTablaHerramientaEquipo(idConceptoProyecto, totalImporteManoObr
     const totalImporteHerramientaEquipo = importeHerramientas + importeEquipo;
 
     let herramientaEquipoHTML = `
-        <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-MaterialesCatalogo">
-                <thead class="encabezadoTablasTarjeta">
-                    <tr>
+        <div>
+            <table >
+                <thead>
+                    <tr class="todosBordes">
                         <th>Descripción</th>
-                        <th style="width: 8rem;">Kh o Ks</th>
-                        <th style="width: 8rem;">Mo</th>
-                        <th style="width: 9rem;">Importe</th>
+                        <th style="width: 11rem;">Kh o Ks</th>
+                        <th style="width: 11rem;">Mo</th>
+                        <th style="width: 15rem;">HE = Kh * Mo</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="fila">
+                    <tr class="todosBordes">
                         <td class="Code">Herramientas de mano</td>
                         <td>${khHerramientas}</td>
-                        <td>${formatoMXN.format(totalImporteManoObra)}</td>
-                        <td>${formatoMXN.format(importeHerramientas)}</td>
+                        <td class="textDer">${formatoMXN.format(totalImporteManoObra)}</td>
+                        <td class="textDer">${formatoMXN.format(importeHerramientas)}</td>
                     </tr>
-                    <tr class="fila">
+                    <tr class="todosBordes">
                         <td class="Code">Equipo y seguridad</td>
                         <td>${khEquipo}</td>
-                        <td>${formatoMXN.format(totalImporteManoObra)}</td>
-                        <td>${formatoMXN.format(importeEquipo)}</td>
+                        <td class="textDer">${formatoMXN.format(totalImporteManoObra)}</td>
+                        <td class="textDer">${formatoMXN.format(importeEquipo)}</td>
                     </tr>
+                    <tr class="sinBorde">
+                        <!-- Celdas vacías para las primeras 4 columnas -->
+                        <td class="no-border"  colspan="1"></td>
+                        <!-- Suma 1 en las últimas 2 columnas -->
+                        <td colspan="2" class="textCen todosBordesSum"><strong>SUMA 3:</strong></td>
+                        <td id="SumaImporteHerramientaEquipoPDF-${idConceptoProyecto}" class="textDer todosBordesSum">
+                            <strong>${formatoMXN.format(totalImporteHerramientaEquipo)}</strong>
+                        </td>
+                    </tr >
                 </tbody>
             </table>
-        </div>
-        <div class="totalesTablas">
-            <label class="subtotales_textos">Suma 3:</label>
-            <div>
-                <label id="SumaImporteHerramientaEquipo-${idConceptoProyecto}" class="subtotales_numeros_top">${formatoMXN.format(totalImporteHerramientaEquipo)}</label>
-            </div>
         </div>
     `;
     container.innerHTML += herramientaEquipoHTML;
 }
 
-function TraerMaquinariaConcepto(idConceptoProyecto) {
+function TraerMaquinariaConceptoPDF(idConceptoProyecto) {
     return new Promise((resolve, reject) => {
         let MaquinariaConcepto = [];
         const datos = {};
@@ -355,7 +358,7 @@ function TraerMaquinariaConcepto(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto);
+                    GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto);
                     resolve();
                 } else {
                     throw new Error(status);
@@ -368,8 +371,8 @@ function TraerMaquinariaConcepto(idConceptoProyecto) {
     });
 }
 
-function GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto) {
-    const container = document.getElementById(`maquinaria-${idConceptoProyecto}`);
+function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
+    const container = document.getElementById(`maquinariaPDF-${idConceptoProyecto}`);
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -378,47 +381,50 @@ function GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto) {
     let totalImporteMaquinaria = MaquinariaConcepto.reduce((total, maquinaria) => total + (maquinaria.phm * maquinaria.rhm), 0);
 
     let maquinariaHTML = `
-        <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-MaterialesCatalogo">
-                <thead class="encabezadoTablasTarjeta">
-                    <tr>
+        <div>
+            <table>
+                <thead>
+                    <tr class="todosBordes">
                         <th style="width: 8rem;">ID</th>
                         <th>Descripción</th>
                         <th style="width: 10rem;">Unidad</th>
-                        <th style="width: 8rem;">PhM</th>
-                        <th style="width: 8rem;">RhM</th>
-                        <th style="width: 9rem;">Importe</th>
+                        <th style="width: 11rem;">PhM</th>
+                        <th style="width: 11rem;">RhM</th>
+                        <th style="width: 15rem;">Importe</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${MaquinariaConcepto.length > 0 ? MaquinariaConcepto.map(maquinaria => `
-                        <tr>
+                        <tr class="todosBordes">
                             <td>${maquinaria.idmaquinaria}</td>
                             <td>${maquinaria.descripcion}</td>
-                            <td>${maquinaria.unidad}</td>
-                            <td>${formatoMXN.format(maquinaria.phm)}</td>
-                            <td>${maquinaria.rhm}</td>
-                            <td>${formatoMXN.format(maquinaria.phm * maquinaria.rhm)}</td>
+                            <td class="textCen">${maquinaria.unidad}</td>
+                            <td class="textDer">${formatoMXN.format(maquinaria.phm)}</td>
+                            <td class="textDer">${maquinaria.rhm}</td>
+                            <td class="textDer">${formatoMXN.format(maquinaria.phm * maquinaria.rhm)}</td>
                         </tr>
                     `).join('') : `
-                        <tr>
+                        <tr class="todosBordes">
                             <td colspan="6">Sin resultados</td>
                         </tr>
                     `}
+                     <tr class="sinBorde">
+                        <!-- Celdas vacías para las primeras 4 columnas -->
+                        <td class="no-border"  colspan="3"></td>
+                        <!-- Suma 1 en las últimas 2 columnas -->
+                        <td colspan="2" class="textCen todosBordesSum"><strong>SUMA 4:</strong></td>
+                        <td id="SumaImporteMaquinariaPDF-${idConceptoProyecto}" class="textDer todosBordesSum">
+                            <strong>${formatoMXN.format(totalImporteMaquinaria)}</strong>
+                        </td>
+                    </tr >
                 </tbody>
             </table>
-        </div>
-        <div class="totalesTablas">
-            <label class="subtotales_textos">Suma 4:</label>
-            <div>
-                <label id="SumaImporteMaquinaria-${idConceptoProyecto}" class="subtotales_numeros_top">${formatoMXN.format(totalImporteMaquinaria)}</label>
-            </div>
         </div>
     `;
     container.innerHTML += maquinariaHTML;
 }
 
-function TraerBasicoConcepto(idConceptoProyecto) {
+function TraerBasicoConceptoPDF(idConceptoProyecto) {
     return new Promise((resolve, reject) => {
         let BasicoConcepto = [];
         const datos = {};
@@ -442,7 +448,7 @@ function TraerBasicoConcepto(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaBasico(BasicoConcepto, idConceptoProyecto);
+                    GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto);
                     resolve();
                 } else {
                     throw new Error(status);
@@ -455,8 +461,8 @@ function TraerBasicoConcepto(idConceptoProyecto) {
     });
 }
 
-function GeneradorTablaBasico(BasicoConcepto, idConceptoProyecto) {
-    const container = document.getElementById(`basico-${idConceptoProyecto}`);
+function GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto) {
+    const container = document.getElementById(`basicoPDF-${idConceptoProyecto}`);
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -465,55 +471,58 @@ function GeneradorTablaBasico(BasicoConcepto, idConceptoProyecto) {
     let totalImporteBasico = BasicoConcepto.reduce((total, basico) => total + (basico.total * basico.cantconbasi), 0);
 
     let basicoHTML = `
-        <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-MaterialesCatalogo">
-                <thead class="encabezadoTablasTarjeta">
-                    <tr>
+        <div>
+            <table>
+                <thead>
+                    <tr class="todosBordes">
                         <th style="width: 8rem;">ID</th>
                         <th>Descripción</th>
                         <th style="width: 10rem;">Unidad</th>
-                        <th style="width: 8rem;">Precio U</th>
-                        <th style="width: 8rem;">Cantidad</th>
-                        <th style="width: 9rem;">Importe</th>
+                        <th style="width: 11rem;">Precio U</th>
+                        <th style="width: 11rem;">Cantidad</th>
+                        <th style="width: 15rem;">Importe</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     ${BasicoConcepto.length > 0 ? BasicoConcepto.map(basico => `
-                        <tr>
+                        <tr class="todosBordes">
                             <td>${basico.idconbasi}</td>
                             <td>${basico.nombre}</td>
-                            <td>${basico.unidad}</td>
-                            <td>${formatoMXN.format(basico.total)}</td>
-                            <td>${basico.cantconbasi}</td>
-                            <td>${formatoMXN.format(basico.total * basico.cantconbasi)}</td>
+                            <td class="textCen">${basico.unidad}</td>
+                            <td class="textDer">${formatoMXN.format(basico.total)}</td>
+                            <td class="textDer">${basico.cantconbasi}</td>
+                            <td class="textDer">${formatoMXN.format(basico.total * basico.cantconbasi)}</td>
                         </tr>
                     `).join('') : `
-                        <tr>
+                        <tr class="todosBordes">
                             <td colspan="6">Sin resultados</td>
                         </tr>
                     `}
+                    <tr class="sinBorde">
+                        <!-- Celdas vacías para las primeras 4 columnas -->
+                        <td class="no-border"  colspan="3"></td>
+                        <!-- Suma 1 en las últimas 2 columnas -->
+                        <td colspan="2" class="textCen todosBordesSum"><strong>SUMA 5:</strong></td>
+                        <td id="SumaImporteBasicoPDF-${idConceptoProyecto}" class="textDer todosBordesSum">
+                            <strong>${formatoMXN.format(totalImporteBasico)}</strong>
+                        </td>
+                    </tr >
                 </tbody>
             </table>
-        </div>
-        <div class="totalesTablas">
-            <label class="subtotales_textos">Suma 5:</label>
-            <div>
-                <label id="SumaImporteBasico-${idConceptoProyecto}" class="subtotales_numeros_top">${formatoMXN.format(totalImporteBasico)}</label>
-            </div>
         </div>
     `;
     container.innerHTML += basicoHTML;
 
     // Actualizar el costo total
-    actualizarCostoTotal(idConceptoProyecto);
+    actualizarCostoTotalPDF(idConceptoProyecto);
 }
 
-function actualizarCostoTotal(idConceptoProyecto) {
-    const totalMateriales = parseFloat(document.getElementById(`SumaImporteMateriales-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalManoObra = parseFloat(document.getElementById(`SumaImporteManoObra-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalHerramientaEquipo = parseFloat(document.getElementById(`SumaImporteHerramientaEquipo-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalMaquinaria = parseFloat(document.getElementById(`SumaImporteMaquinaria-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalBasico = parseFloat(document.getElementById(`SumaImporteBasico-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
+function actualizarCostoTotalPDF(idConceptoProyecto) {
+    const totalMateriales = parseFloat(document.getElementById(`SumaImporteMaterialesPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
+    const totalManoObra = parseFloat(document.getElementById(`SumaImporteManoObraPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
+    const totalHerramientaEquipo = parseFloat(document.getElementById(`SumaImporteHerramientaEquipoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
+    const totalMaquinaria = parseFloat(document.getElementById(`SumaImporteMaquinariaPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
+    const totalBasico = parseFloat(document.getElementById(`SumaImporteBasicoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
 
     const costoTotal = totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico;
 
@@ -522,7 +531,7 @@ function actualizarCostoTotal(idConceptoProyecto) {
         currency: 'MXN'
     });
 
-    document.getElementById(`CostoTotal-${idConceptoProyecto}`).innerText = formatoMXN.format(costoTotal);
+    document.getElementById(`CostoTotalPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(costoTotal);
 }
 
 

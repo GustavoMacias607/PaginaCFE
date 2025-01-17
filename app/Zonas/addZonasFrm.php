@@ -17,7 +17,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div>Ir al inicio</div>
         </a>
     </div>
-    <div class="label-container-zonas">
+    <div class="label-container-zonas" style="margin-top: 4.5rem;">
         <form autocomplete="off">
             <input type="text" placeholder="Buscar" id="search-inputZona" placeholder="Buscar" name="no-autocomplete"
                 autocomplete="off">
@@ -151,14 +151,14 @@ if (!isset($_SESSION['idusuario'])) {
                             <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
                             <input type="number" class="form-control inputLleno" id="AddIndirecto"
                                 onblur="javascript:CompruebaTieneAlgoInput(this);">
-                        </div>             
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
                             <input type="number" class="form-control inputLleno" id="AddFinanciamiento"
                                 onblur="javascript:CompruebaTieneAlgoInput(this); ">
                         </div>
-                        </div>
-                        <div class="row">
+                    </div>
+                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
                             <input type="number" class="form-control inputLleno" id="AddUtilidad"
@@ -207,7 +207,7 @@ if (!isset($_SESSION['idusuario'])) {
                             <label for="nombreInput" class="form-label" style="color: #303030;">Zona*</label>
                             <input type="text" class="form-control inputLleno" id="UpdZonaInput"
                                 onblur="javascript:CompruebaTieneAlgoInput(this)">
-                        </div>                   
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="urolInput" class="form-label" style="color: #303030;">Obra*</label>
                             <select class="form-select inputLleno" id="UpdObraInput"
@@ -224,7 +224,7 @@ if (!isset($_SESSION['idusuario'])) {
                             <label for="idInput" class="form-label" style="color: #303030;">C. indirecto*</label>
                             <input type="text" class="form-control" id="UpdIndirecto"
                                 onblur="javascript:CompruebaTieneAlgoInput(this)" style="border: 3px solid #008E5A;">
-                        </div>       
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="idInput" class="form-label" style="color: #303030;">Financiamiento*</label>
                             <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
@@ -236,7 +236,7 @@ if (!isset($_SESSION['idusuario'])) {
                             <label for="idInput" class="form-label" style="color: #303030;">Utilidad*</label>
                             <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
                                 id="UpdUtilidad" style="border: 3px solid #008E5A;">
-                        </div>                                                         
+                        </div>
                         <div class="col-md-6 mb-3">
                             <label for="idInput" class="form-label" style="color: #303030;">C. adicionales*</label>
                             <input type="text" class="form-control" onblur="javascript:CompruebaTieneAlgoInput(this)"
@@ -331,20 +331,20 @@ if (!isset($_SESSION['idusuario'])) {
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script>
-    window.addEventListener('resize', function() {
-        const logoImage = document.getElementById('logoImage');
-        const windowWidth = window.innerWidth;
-        const originalWidth = logoImage.naturalWidth;
+window.addEventListener('resize', function() {
+    const logoImage = document.getElementById('logoImage');
+    const windowWidth = window.innerWidth;
+    const originalWidth = logoImage.naturalWidth;
 
-        if (windowWidth < originalWidth) {
-            logoImage.src =
-                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+    if (windowWidth < originalWidth) {
+        logoImage.src =
+            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-        } else {
-            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-            logoImage.alt = 'Logo'; // Restaura el atributo alt
-        }
-    });
+    } else {
+        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+        logoImage.alt = 'Logo'; // Restaura el atributo alt
+    }
+});
 </script>

@@ -46,7 +46,7 @@ class Proyecto
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spProyectoModificarPasos(:IdProyecto,:Nombre,:Fecha,:Periodo,:FechaInicio,:FechaTermino,:IdZona,:Estatus);";
+            $consulta = "call spProyectoModificarPasos(:IdProyecto,:Nombre,:Fecha,:Periodo,:FechaInicio,:FechaTermino,:IdZona,:Total,:Estatus);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdProyecto" => $datos->idProyecto,
@@ -56,6 +56,7 @@ class Proyecto
                 "FechaInicio" => $datos->fechaInicio,
                 "FechaTermino" => $datos->fechaTermino,
                 "IdZona" => $datos->idZona,
+                "Total" => $datos->total,
                 "Estatus" => $datos->estatus,
             ));
         } catch (PDOException $e) {
@@ -71,7 +72,7 @@ class Proyecto
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spProyectoMostrarxUsuario(:Id);";
+            $consulta = "call spProyectoBuscarIf(:Id);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "Id" => $datos->idUsuario
@@ -139,9 +140,6 @@ class Proyecto
         return $R;
     }
 }
-
-
-
 
 
 /***

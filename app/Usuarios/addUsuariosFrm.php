@@ -54,7 +54,6 @@ if (!isset($_SESSION['idusuario'])) {
             </div>
         </div>
     </div>
-
 </div>
 
 
@@ -103,7 +102,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
-</div>
+
 
 <!-- Modal insertar usuario -->
 <div class="modal modal-usuarios fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
@@ -144,32 +143,32 @@ if (!isset($_SESSION['idusuario'])) {
                     <div class="row mb-3">
                         <div class="col-6">
                             <label for="rolInput" class="form-label" style="color: #303030;">Rol*</label>
-                            <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInputUsuario(this)"
-                                id="AddrolInput">
+                            <select class="form-select inputLleno"
+                                onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="AddrolInput">
                                 <option selected value="">Selecciona una opción</option>
                                 <option value="Administrador">Administrador</option>
-                                <option value="Analista">Analista de precios</option>
+                                <option value="Analista de Precios">Analista de precios</option>
                                 <option value="Proyectista">Proyectista</option>
                                 <option value="Invitado">Invitado</option>
                             </select>
                         </div>
                         <div class="col-6">
-                            <label for="zonaInput" class="form-label" style="color: #303030;">Zona*</label>
-                                <input type="text" oninput="mostrarSugerencias(this, 'AddZona')"
-                                onfocus="mostrarSugerencias(this, 'AddZona')"
-                                onblur="ocultarSugerencias('AddZona');CompruebaTieneAlgoInput(this)"
-                                class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                                id="AddzonaUsuario" autocomplete="off">
-                        <div id="AddsugerenciasZona" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                            <label for="unidadInput" class="form-label" style="color: #303030;">Zona*</label>
+                            <input type="text" class="form-control inputLleno" id="inputZona"
+                                oninput="mostrarSugerenciasZonasUsuarios(this,'AddZona')"
+                                onfocus="mostrarSugerenciasZonasUsuarios(this,'AddZona')"
+                                onblur="ocultarSugerenciasZonasUsuarios('AddZona');CompruebaTieneAlgoInput(this)"
+                                autocomplete="off">
+                            <div id="Addsugerencias" class="sugerencias-boxZona"
+                                style="font-family: 'latoBold', sans-serif;">
+                            </div>
                         </div>
                     </div>
-                </div>
                     <div class="modal-footer modal-footer-usuarios">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
                             onclick="javascript:AddUsuarioValidar();">Guardar</button>
                     </div>
-
                 </div>
             </form>
         </div>
@@ -212,43 +211,42 @@ if (!isset($_SESSION['idusuario'])) {
                                 onblur="javascript:CompruebaTieneAlgoInputUsuario(this)">
                                 <option selected value="">Selecciona una opción</option>
                                 <option value="Administrador">Administrador</option>
-                                <option value="Analista">Analista de precios</option>
+                                <option value="Analista de Precios">Analista de precios</option>
                                 <option value="Proyectista">Proyectista</option>
                                 <option value="Invitado">Invitado</option>
                             </select>
                         </div>
                         <div class="col-6">
-                                <label for="uzonaInput" class="form-label" style="color: #303030;">Zona*</label>
-                                    <input type="text" oninput="mostrarSugerencias(this, 'UpdZona')"
-                                    onfocus="mostrarSugerencias(this, 'UpdZona')"
-                                    onblur="ocultarSugerencias('UpdZona');CompruebaTieneAlgoInput(this)"
-                                    class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                                    id="UpdzonaUsuario" autocomplete="off">
-                            <div id="AddsugerenciasZona" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                            <label for="unidadInput" class="form-label" style="color: #303030;">Zona*</label>
+                            <input type="text" class="form-control inputLleno" id="inputUpdZona"
+                                oninput="mostrarSugerenciasZonasUsuarios(this,'UpdZona')"
+                                onfocus="mostrarSugerenciasZonasUsuarios(this,'UpdZona')"
+                                onblur="ocultarSugerenciasZonasUsuarios('UpdZona');CompruebaTieneAlgoInput(this)"
+                                autocomplete="off">
+                            <div id="Updsugerencias" class="sugerencias-boxZona"
+                                style="font-family: 'latoBold', sans-serif;">
                             </div>
+                        </div>
+                        <hr>
+                        <div class="mb-3">
+                            <label for="passInput" class="form-label" style="color: #303030;">Nueva contraseña para el
+                                usuario</label>
+                            <input type="password" class="form-control inputLleno"
+                                onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
+                        </div>
+                        <div class=" modal-footer modal-footer-usuarios">
+                            <button type="button" class="btn btn-primary"
+                                style="background-color: #008E5A; border: 3px solid #008E5A;"
+                                onclick="javascript:UpdUsuarioValidar()">Guardar</button>
+                        </div>
                     </div>
-                    <hr>
-                    <div class="mb-3">
-                        <label for="passInput" class="form-label" style="color: #303030;">Nueva contraseña para el
-                            usuario</label>
-                        <input type="password" class="form-control inputLleno"
-                            onblur="javascript:CompruebaTieneAlgoInputUsuario(this)" id="UpdpassInput" rows="3">
-                    </div>
-
-                    <div class=" modal-footer modal-footer-usuarios">
-                        <button type="button" class="btn btn-primary"
-                            style="background-color: #008E5A; border: 3px solid #008E5A;"
-                            onclick="javascript:UpdUsuarioValidar()">Guardar</button>
-                    </div>
-                </div>
             </form>
         </div>
     </div>
 </div>
-
-
+</div>
 <!-- modal para activar el registro de usuarios -->
-<div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
+<div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel"
     style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -267,7 +265,8 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- Modal de Confirmación de Eliminación -->
-<div class="modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+
+<div class="modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     style="z-index: 4000; color: #303030; top: 194px;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -322,20 +321,20 @@ if (!isset($_SESSION['idusuario'])) {
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script>
-    window.addEventListener('resize', function() {
-        const logoImage = document.getElementById('logoImage');
-        const windowWidth = window.innerWidth;
-        const originalWidth = logoImage.naturalWidth;
+window.addEventListener('resize', function() {
+    const logoImage = document.getElementById('logoImage');
+    const windowWidth = window.innerWidth;
+    const originalWidth = logoImage.naturalWidth;
 
-        if (windowWidth < originalWidth) {
-            logoImage.src =
-                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+    if (windowWidth < originalWidth) {
+        logoImage.src =
+            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-        } else {
-            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-            logoImage.alt = 'Logo'; // Restaura el atributo alt
-        }
-    });
+    } else {
+        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+        logoImage.alt = 'Logo'; // Restaura el atributo alt
+    }
+});
 </script>

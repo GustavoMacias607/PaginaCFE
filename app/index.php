@@ -36,6 +36,7 @@ if (!isset($_SESSION['idusuario'])) {
     <link rel="stylesheet" href="./Catalogo/stylesBasicos.css">
     <link rel="stylesheet" href="./Proyectos/stylesproyecto.css">
     <link rel="stylesheet" href="./Zonas/styleszonas.css">
+    <link rel="stylesheet" href="./Proyectos/stylesDiseñoPdf.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title></title>
@@ -174,6 +175,7 @@ if (!isset($_SESSION['idusuario'])) {
     <!-- <script src="../js/jspdf.plugin.autotable.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="js/funciones.js"></script>
     <script src="js/funciones_usuarios.js"></script>
     <script src="js/funciones_PerfilUsuario.js"></script>
@@ -198,59 +200,60 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/Funciones_Proyecto/funciones_presupuesto.js"></script>
     <script src="js/Funciones_Proyecto/funciones_ProyTerm.js"></script>
     <script src="js/Funciones_Proyecto/funciones_TarjetaProyecto.js"></script>
+    <script src="js/Funciones_Proyecto/funciones_TarjetaProyectoDiseñoPdf.js"></script>
 
 
     <script src="js/SubCarpetaEspecificaciones/tipoEsp.js"></script>
     <script src="js/SubCarpetaEspecificaciones/AgregarConceptoEspecificacion.js"></script>
     <script>
-        window.onload = function() {
-            opcion('proyecto');
-        };
+    window.onload = function() {
+        opcion('proyecto');
+    };
 
-        function mostrarOp() {
-            let opc = document.querySelector("#opc");
+    function mostrarOp() {
+        let opc = document.querySelector("#opc");
 
-            if (!opc.classList.contains("MenuOpcionesMostrar")) {
-                opc.classList.add("MenuOpcionesMostrar");
-            } else {
+        if (!opc.classList.contains("MenuOpcionesMostrar")) {
+            opc.classList.add("MenuOpcionesMostrar");
+        } else {
+            opc.classList.remove("MenuOpcionesMostrar");
+        }
+    }
+
+
+    function preciona(valor) {
+        let opciones = document.querySelectorAll(".opcionesMenu");
+        opciones.forEach(opcion => {
+            opcion.classList.remove("precionado");
+        });
+        valor.classList.add('precionado');
+    }
+
+    function esconderMenu() {
+        let menu = document.querySelector(".menuDesplegable");
+        if (menu.classList.contains("esconder")) {
+            menu.classList.remove("esconder");
+        } else {
+            menu.classList.add("esconder");
+        }
+    }
+
+
+    document.addEventListener('click', function(event) {
+        const opc = document.getElementById('opc');
+
+        // Verifica si el clic ocurrió fuera del div
+        if (opc.classList.contains("MenuOpcionesMostrar")) {
+            if (!opc.contains(event.target)) {
                 opc.classList.remove("MenuOpcionesMostrar");
             }
         }
+    });
 
-
-        function preciona(valor) {
-            let opciones = document.querySelectorAll(".opcionesMenu");
-            opciones.forEach(opcion => {
-                opcion.classList.remove("precionado");
-            });
-            valor.classList.add('precionado');
-        }
-
-        function esconderMenu() {
-            let menu = document.querySelector(".menuDesplegable");
-            if (menu.classList.contains("esconder")) {
-                menu.classList.remove("esconder");
-            } else {
-                menu.classList.add("esconder");
-            }
-        }
-
-
-        document.addEventListener('click', function(event) {
-            const opc = document.getElementById('opc');
-
-            // Verifica si el clic ocurrió fuera del div
-            if (opc.classList.contains("MenuOpcionesMostrar")) {
-                if (!opc.contains(event.target)) {
-                    opc.classList.remove("MenuOpcionesMostrar");
-                }
-            }
-        });
-
-        const toggleButton = document.getElementById('toggleButton');
-        toggleButton.addEventListener('click', function(event) {
-            event.stopPropagation(); // Detiene la propagación del evento
-        });
+    const toggleButton = document.getElementById('toggleButton');
+    toggleButton.addEventListener('click', function(event) {
+        event.stopPropagation(); // Detiene la propagación del evento
+    });
     </script>
 
 

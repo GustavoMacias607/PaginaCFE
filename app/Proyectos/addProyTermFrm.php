@@ -52,10 +52,7 @@ if (!isset($_SESSION['idusuario'])) {
             de obra:</label>
         <label for="" id="lblTipoObra"
             style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
-        <label for=""
-            style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Periodo:</label>
-        <label for="" id="lblPeriodo"
-            style="font-family: 'latoBold', sans-serif; margin-right:2rem; width: 9rem; border-bottom: 3px solid #008e5a;"></label>
+
         <label for=""
             style="color:#303030; font-family: 'LatoBold', sans-serif; margin-right: .5rem; align-content: center;">Fecha
             posible de inicio:</label>
@@ -543,6 +540,20 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 <!-- Tarjetas del proyecto -->
-<div id="tablaTarjetasProyecto" style="display: none;">
-    hola
+<div>
+    <div id="mostrarBtnPdf" style="margin: 1rem 2rem 0px 2rem; display: none; justify-content: center;">
+        <button type="button" class="btn fa-solid-Siguiente-catalogo"
+            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="exportarPDFConHtml()">Exportar a PDF</button>
+    </div>
+    <div id="tablaTarjetasProyecto" style="display: none;">
+
+    </div>
+
+</div>
+
+
+<div id="contenedor-cfe" style="font-size: 20px; display: none;">
+
 </div>

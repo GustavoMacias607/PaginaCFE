@@ -173,7 +173,8 @@ if (!isset($_SESSION['idusuario'])) {
                         <input type="text" class="form-control inputLleno" id="inputZona"
                             oninput="mostrarSugerenciasZonas(this)" onfocus="mostrarSugerenciasZonas(this)"
                             onblur="ocultarSugerenciasZonas();CompruebaTieneAlgoInput(this)" autocomplete="off">
-                        <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                        <div id="Addsugerencias" class="sugerencias-boxZona"
+                            style="font-family: 'latoBold', sans-serif;">
                         </div>
                     </div>
                 </div>

@@ -8,8 +8,6 @@ function llenarCamposPaginaTerminado() {
     let nombre = document.getElementById("lblNombre").value = datosProyecto.nombre;
     let periodo = document.getElementById("lblPeriodo").innerHTML = datosProyecto.periodo;
     MostrarConceptosContenidosProyectoTerminado();
-
-
     getMaterialesSi();
     getMaterialesNo();
     getMaquinarias();
@@ -19,6 +17,13 @@ function llenarCamposPaginaTerminado() {
 function mostrarTablaTerminado(tablaId, boton) {
     const tabla = document.getElementById(tablaId);
     const isVisible = tabla.style.display === 'block';
+    if (tablaId == "tablaTarjetasProyecto" && !isVisible) {
+        let btns = document.getElementById("mostrarBtnPdf");
+        btns.style.display = 'flex';
+    } else {
+        let btns = document.getElementById("mostrarBtnPdf");
+        btns.style.display = 'none';
+    }
     // Ocultar todas las tablas
     const tablas = document.querySelectorAll('div[id^="tabla"]');
     tablas.forEach(tabla => {
@@ -75,6 +80,7 @@ function MostrarConceptosContenidosProyectoTerminado() {
                     editedRows = {};
                 }
                 GeneradorTablaConcepto();
+                GeneradorTablaConceptoPDF();
                 llenarTablaConceptosTerminado();
             } else {
                 throw new Error(status);
@@ -181,7 +187,7 @@ function ExportarPDFMaterialesSi() {
     // Encabezado sin espacio entre renglones
     const addHeader = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
+        const marginRight = 15; // Margen derecho (2.3 cm)
         const headerX = pageWidth - marginRight; // Posición X del encabezado
         const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
 
@@ -325,7 +331,7 @@ function ExportarPDFMaterialesNo() {
     // Encabezado sin espacio entre renglones
     const addHeader = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
+        const marginRight = 15; // Margen derecho (2.3 cm)
         const headerX = pageWidth - marginRight; // Posición X del encabezado
         const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
 
@@ -469,7 +475,7 @@ function ExportarPDFManoObra() {
     // Encabezado sin espacio entre renglones
     const addHeader = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
+        const marginRight = 15; // Margen derecho (2.3 cm)
         const headerX = pageWidth - marginRight; // Posición X del encabezado
         const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
 
@@ -614,7 +620,7 @@ function ExportarPDFHerramientasMano() {
     // Encabezado sin espacio entre renglones
     const addHeader = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
+        const marginRight = 15; // Margen derecho (2.3 cm)
         const headerX = pageWidth - marginRight; // Posición X del encabezado
         const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
 
@@ -756,7 +762,7 @@ function ExportarPDFEquipoSeguirdad() {
     // Encabezado sin espacio entre renglones
     const addHeader = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
+        const marginRight = 15; // Margen derecho (2.3 cm)
         const headerX = pageWidth - marginRight; // Posición X del encabezado
         const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
 
@@ -1020,6 +1026,7 @@ function ExportarPDFMaquinarias() {
 
     doc.save("tablaMaquinarias.pdf");
 }
+
 function ExportarPDFConceptos() {
     let total = document.getElementById("TotalSumaImporteConceptos").innerHTML;
     const { jsPDF } = window.jspdf;
@@ -1040,7 +1047,7 @@ function ExportarPDFConceptos() {
     // Encabezado sin espacio entre renglones
     const addHeader = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
+        const marginRight = 15; // Margen derecho (2.3 cm)
         const headerX = pageWidth - marginRight; // Posición X del encabezado
         const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
 
@@ -1163,3 +1170,130 @@ function ExportarPDFConceptos() {
 
     doc.save("tablaConceptos.pdf");
 }
+
+async function exportarPDFConHtml() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('p', 'pt', 'a4');
+    const container = document.getElementById('contenedor-cfe');
+
+    if (!container) {
+        console.error('Contenedor "contenedor-cfe" no encontrado');
+        return;
+    }
+
+    // Configurar el contenedor temporalmente visible
+    container.style.display = 'block';
+    container.style.position = 'absolute';
+    container.style.left = '-9999px';
+
+    const tarjetas = container.getElementsByClassName('tarjeta-concepto');
+    const marginX = 2 * 28.35; // 2.3 cm in points
+    const marginY = 4.5 * 28.35; // 4 cm in points
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const contentWidth = pageWidth - 2 * marginX;
+    const contentHeight = pageHeight - 2 * marginY;
+
+    for (let i = 0; i < tarjetas.length; i++) {
+        const tarjeta = tarjetas[i];
+
+        // Usar html2canvas para convertir el contenido HTML de cada tarjeta a una imagen
+        await html2canvas(tarjeta).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = contentWidth;
+            const imgHeight = canvas.height * imgWidth / canvas.width;
+            let position = marginY;
+
+            if (i > 0) {
+                doc.addPage();
+            }
+
+            // Agregar encabezado, imagen, título y pie de página
+            addHeader(doc);
+            addImage(doc);
+            addTitle(doc);
+            addFooter(doc);
+
+            doc.addImage(imgData, 'PNG', marginX, position, imgWidth, imgHeight);
+        });
+    }
+
+    // Restaurar los estilos originales del contenedor
+    container.style.display = 'none';
+    container.style.position = '';
+    container.style.left = '';
+
+    doc.save('proyecto.pdf');
+}
+
+// Encabezado sin espacio entre renglones
+const addHeader = (doc) => {
+    const pageWidth = doc.internal.pageSize.width; // Ancho de la página
+    const marginRight = 1.5 * 28.35; // Margen derecho (2.3 cm)
+    const headerX = pageWidth - marginRight; // Posición X del encabezado
+    const headerYStart = 50; // Posición Y del primer renglón (3 cm del margen superior)
+
+    doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
+
+    // Línea 1
+    doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+    doc.setFontSize(12);
+    const line1 = "División de distribución Jalisco";
+    doc.text(line1, headerX, headerYStart, { align: "right" });
+
+    // Línea 2
+    doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+    doc.setFontSize(10);
+    const line2 = "Zona " + datosProyecto.zona;
+    doc.text(line2, headerX, headerYStart + 10, { align: "right" }); // Solo 3.6 mm debajo del anterior
+
+    // Línea 3
+    doc.setFontSize(9);
+    const line3 = "Departamento de Planeación, Proyectos y Construcción";
+    doc.text(line3, headerX, headerYStart + 20, { align: "right" }); // Solo 3.4 mm debajo del anterior
+};
+
+// Pie de página centrado
+const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
+const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
+
+const addFooter = (doc) => {
+    const pageHeight = doc.internal.pageSize.height; // Altura de la página
+    const pageWidth = doc.internal.pageSize.width; // Ancho de la página
+    const footerY = pageHeight - 30; // 1.5 cm desde la parte inferior (15 mm)
+
+    doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
+    doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+    doc.setFontSize(10); // Tamaño de fuente
+
+    const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
+    const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+
+    // Centrar los dos renglones
+    doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
+    doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 8); // Segundo renglón
+};
+
+// Agregar título de la tabla
+const addTitle = (doc) => {
+    const pageWidth = doc.internal.pageSize.width; // Ancho de la página
+    const marginRight = 2.3 * 28.35; // Margen derecho (2.3 cm)
+    const titleX = pageWidth - marginRight; // Posición X del título
+    const titleY = 110; // Posición Y del título (4.5 cm del margen superior)
+
+    doc.setFont("helvetica", "normal"); // Helvetica Roman
+    doc.setFontSize(10);
+    const title = "Análisis de los precios unitarios de los conceptos de trabajo";
+    doc.text(title, titleX, titleY, { align: "right" });
+};
+
+// Agregar imagen
+const addImage = (doc) => {
+    const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
+    const marginLeft = 1.5 * 28.35; // Margen izquierdo (1.5 cm)
+    const marginTop = 1.5 * 28.35; // Margen superior (1.5 cm)
+    const imageWidth = 135; // Ancho de la imagen (ajusta según sea necesario)
+    const imageHeight = 45; // Altura de la imagen (ajusta según sea necesario)
+
+    doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
+};

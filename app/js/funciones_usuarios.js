@@ -62,6 +62,20 @@ function AddUsuarioValidar() {
 
     }
     datos.rol = rol.value;
+
+    let nombreZona = document.querySelector('#inputZona');
+    // Verificar si la zona es válida
+    const zonaValida = objZonas.some(z => z.zona.toLowerCase() === nombreZona.value.toLowerCase());
+    if (nombreZona.value == "" || !zonaValida) {
+        nombreZona.classList.add("inputVacio");
+        nombreZona.placeholder = nombreZona.value == "" ? "Requerida la zona" : "Zona no válida";
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = nombreZona;
+        }
+    }
+    datos.zona = nombreZona.value;
+    datos.idZona = obtenerIdZonaXNombre(nombreZona.value);
     if (vacio) {
         PrimerValorVacio.focus();
         return;
@@ -77,6 +91,7 @@ function AddUsuarioValidar() {
         return;
     }
     let json = JSON.stringify(datos);
+    console.log(json);
     let url = "../ws/Usuarios/wsAddUsuario.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -149,6 +164,21 @@ function UpdUsuarioValidar() {
 
     }
     datos.rol = rol.value;
+
+
+    let nombreZona = document.querySelector('#inputUpdZona');
+    // Verificar si la zona es válida
+    const zonaValida = objZonas.some(z => z.zona.toLowerCase() === nombreZona.value.toLowerCase());
+    if (nombreZona.value == "" || !zonaValida) {
+        nombreZona.classList.add("inputVacio");
+        nombreZona.placeholder = nombreZona.value == "" ? "Requerida la zona" : "Zona no válida";
+        vacio = true;
+        if (!PrimerValorVacio) {
+            PrimerValorVacio = nombreZona;
+        }
+    }
+    datos.zona = nombreZona.value;
+    datos.idZona = obtenerIdZonaXNombre(nombreZona.value);
     if (vacio) {
         PrimerValorVacio.focus();
         return;
@@ -164,11 +194,13 @@ function UpdUsuarioValidar() {
 
 
     let json = JSON.stringify(datos);
+    console.log(json);
     let url = "../ws/Usuarios/wsUpdUsuario.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+                console.log(resp);
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
                     mensajePantalla(msgModificarUsu, true);
@@ -237,7 +269,6 @@ function CambioEstatusUsuario() {
         datos.estatus = "Activo";
     }
     let json = JSON.stringify(datos);
-    console.log(json);
     switch (parseInt(ActivarS)) {
         case 0: {
             let url = "../ws/Usuarios/wsCambiarStatusUsuario.php";
@@ -292,6 +323,7 @@ function GetUsuario() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     data = resp.datos;
+                    ObtenerZonas();
                     llenarTablaUsuario();
                     filterDataUsuario();
                 }
@@ -323,10 +355,11 @@ function displayTableUsuario(page) {
                 <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
                 <td>${(!record.usuario == "") ? record.usuario : "---"}</td>
                 <td>${(!record.rol == "") ? record.rol : "---"}</td>
+                <td>${(!record.zona == "") ? record.zona : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `
-                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${record.idusuario},'${record.nombre}','${record.usuario}','${record.rol}')"></i>
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarUsuario(${record.idusuario},'${record.nombre}','${record.usuario}','${record.rol}','${record.zona}')"></i>
                         ` : ``}
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idusuario},${record.estatus})"></i>` :
@@ -351,6 +384,8 @@ function displayTableUsuario(page) {
     }
 
 }
+
+
 
 function setupPaginationUsuario() {
     const paginationDiv = document.getElementById("pagination");
@@ -476,23 +511,27 @@ function AddlimpiarModalUsuario() {
     let rolU = document.querySelector('#AddrolInput');
     let pass = document.querySelector('#AddpassInput');
     let passConfir = document.querySelector('#AddConfirpassInput');
+    let zona = document.querySelector('#inputZona');
 
     nombreU.value = "";
     usuarioU.value = "";
     rolU.value = "";
     pass.value = "";
     passConfir.value = "";
+    zona.value = "";
 
     nombreU.placeholder = "";
     usuarioU.placeholder = "";
     pass.placeholder = "";
     passConfir.placeholder = "";
+    zona.placeholder = "";
 
     nombreU.classList.remove("inputVacio");
     usuarioU.classList.remove("inputVacio");
     rolU.classList.remove("inputVacio");
     pass.classList.remove("inputVacio");
     passConfir.classList.remove("inputVacio");
+    zona.classList.remove("inputVacio");
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre usuarios activos e inactivos
@@ -513,20 +552,22 @@ function valStatusUsuario() {
 
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del usuario seleccionado
-function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de datos en el modal
-    console.log(id, nombre, usuario, rol)
+function llenarModalModificarUsuario(id, nombre, usuario, rol, zona) { //Llenado de datos en el modal
     let idU = document.querySelector('#UpdidInput');
     let nombreU = document.querySelector('#UpdnombreInput');
     let usuarioU = document.querySelector('#UpdusuarioInput');
     let rolU = document.querySelector('#UpdrolInput');
     let pass = document.querySelector('#UpdpassInput');
+    let zonaU = document.querySelector('#inputUpdZona');
     let UsuAnterior = document.querySelector('#UpUsuAnterior');
+
     UsuAnterior.value = usuario;
     idU.value = id;
     nombreU.value = nombre;
     usuarioU.value = usuario;
-    rolU.value = rol;
     pass.value = "";
+    rolU.value = rol;
+    zonaU.value = zona;
     //llenar el select de responsables
     for (var i = 0; i < rolU.options.length; i++) {
         if (rolU.options[i].value === rol) {
@@ -539,6 +580,7 @@ function llenarModalModificarUsuario(id, nombre, usuario, rol) { //Llenado de da
     nombreU.classList.remove("inputVacio");
     usuarioU.classList.remove("inputVacio");
     rolU.classList.remove("inputVacio");
+    zonaU.classList.remove("inputVacio");
 }
 
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
@@ -552,3 +594,83 @@ function AbrirModalConfirm1Usuario() {
 
 }
 
+
+
+
+function mostrarSugerenciasZonasUsuarios(input, inputUnidad) {
+    let sugerenciasDiv;
+    if (inputUnidad == "AddZona") {
+        sugerenciasDiv = document.getElementById('Addsugerencias');
+    } else if (inputUnidad == "UpdZona") {
+        sugerenciasDiv = document.getElementById('Updsugerencias');
+    }
+    sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
+
+    const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
+    const sugerenciasFiltradas = filtro === '' ? objZonas : objZonas.filter(zona =>
+        zona.zona.toLowerCase().includes(filtro)
+    );
+
+    // Crear un objeto para filtrar zonas duplicadas
+    const zonasUnicas = {};
+    sugerenciasFiltradas.forEach(zona => {
+        zonasUnicas[zona.zona.toLowerCase()] = zona;
+    });
+
+    // Convertir el objeto de zonas únicas de nuevo a un array
+    const zonasUnicasArray = Object.values(zonasUnicas);
+
+
+    // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
+    if (zonasUnicasArray.length === 0 || (zonasUnicasArray.length === 1 && zonasUnicasArray[0].zona.toLowerCase() === filtro)) {
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+        return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
+    } else {
+        sugerenciasDiv.classList.add('activado'); // Mostrar el cuadro de sugerencias si hay coincidencias
+    }
+
+    // Crear los elementos de sugerencia y agregarlos al cuadro
+    zonasUnicasArray.forEach(zona => {
+        const div = document.createElement('div');
+        div.classList.add('sugerencia-itemZona');
+        div.textContent = zona.zona;
+
+        div.onclick = () => {
+            seleccionarSugerenciaZonasUsuarios(zona.zona, inputUnidad, sugerenciasDiv);
+        }
+        sugerenciasDiv.appendChild(div);
+    });
+}
+
+// Función para ocultar el cuadro de sugerencias al perder el foco
+function ocultarSugerenciasZonasUsuarios(inputUnidad) {
+    setTimeout(() => {
+        let sugerenciasDiv;
+        if (inputUnidad == "AddZona") {
+            sugerenciasDiv = document.getElementById('Addsugerencias');
+        } else if (inputUnidad == "UpdZona") {
+            sugerenciasDiv = document.getElementById('Updsugerencias');
+        }
+        sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
+    }, 200);
+}
+
+function seleccionarSugerenciaZonasUsuarios(zona, inputUnidad, sugerenciasDiv) {
+    let input;
+    if (inputUnidad == "AddZona") {
+        input = document.getElementById('inputZona');
+    } else if (inputUnidad == "UpdZona") {
+        input = document.getElementById('inputUpdZona');
+    }
+    input.value = zona; // Colocar la zona seleccionada en el input
+    sugerenciasDiv.innerHTML = ''; // Limpiar las sugerencias
+    sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro
+}
+
+
+
+
+function obtenerIdZonaXNombre(zona) {
+    const zonaEncontrada = objZonas.find(z => z.zona === zona);
+    return zonaEncontrada ? zonaEncontrada.idzona : null;
+}

@@ -927,7 +927,10 @@ function AbrirModalConfirm() {
 }
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
 function AbrirModalConfirm1() {
+    console.log("hola");
     let estatus = document.getElementById('ValCheEsta').checked;
+    console.log(estatus);
+
     if (estatus) {
         $('#confirmDeleteModal').modal('show');
     } else {

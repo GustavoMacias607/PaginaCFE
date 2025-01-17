@@ -16,7 +16,7 @@ function llenarCamposPaginaPresupuesto() {
     let fechaTermino = document.getElementById("lblFechaTermino").innerHTML = formatearFecha(datosProyecto.fechaTermino);
     let nombre = document.getElementById("lblNombre").value = datosProyecto.nombre;
     let periodo = document.getElementById("lblPeriodo").innerHTML = datosProyecto.periodo;
-    llenarTablaConceptoSeleccionadosPresupuesto();
+    MostrarConceptosContenidosProyectoPresupuesto();
     getMaterialesSi();
     getMaterialesNo();
     getMaquinarias();
@@ -30,7 +30,41 @@ function llenarCamposPaginaPresupuesto() {
 //     LlenarCamposAgregar();
 //     obtenerConceptosPresupuesto();
 // }
-
+function MostrarConceptosContenidosProyectoPresupuesto() {
+    const datos = {};
+    datos.idProyecto = datosProyecto.idProyecto;
+    let json = JSON.stringify(datos);
+    let url = "../ws/ConceptosProyecto/wsGetConceptos.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                let datosBd = resp.datos;
+                console.log(datosBd);
+                if (datosBd) {
+                    datosBd.forEach((datos) => {
+                        editedRows[datos.IdConcepto] = {
+                            cantidad: datos.CantidadTotal,
+                            estatus: datos.EstatusConcepto,
+                            idconcepto: datos.IdConcepto,
+                            nombre: datos.NombreConcepto,
+                            nombreespe: "",
+                            total: datos.TotalConcepto,
+                            unidad: datos.UnidadConcepto,
+                        };
+                    });
+                } else {
+                    editedRows = {};
+                }
+                llenarTablaConceptoSeleccionadosPresupuesto();
+            } else {
+                throw new Error(status);
+            }
+        } catch (error) {
+            alert("Error: " + error);
+        }
+    });
+}
 
 function obtenerConceptosPresupuesto() {
     MostrartablaConceptoPresupuesto();
@@ -172,6 +206,7 @@ function setupPaginationConceptoPresupuesto() {
 function filterDataConceptoPresupuesto() {
     const searchText = document.getElementById("search-inputConceptos").value.toLowerCase();
     const statusFilter = 1;
+    console.log(editedRows)
     filteredDataPresupuesto = Object.values(editedRows).filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
@@ -243,7 +278,7 @@ function TerminacionProyecto() {
     datos.fechaTermino = datosProyecto.fechaTermino;
     datos.idZona = datosProyecto.idZona;
     datos.total = totalProyecto;
-    datos.estatus = "Tarjeta Precios Unitarios";
+    datos.estatus = 'Terminado';
     let json = JSON.stringify(datos);
 
     let url = "../ws/Proyecto/wsUpdProyecto.php";

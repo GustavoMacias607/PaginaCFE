@@ -231,8 +231,12 @@ function displayTableProyectoProceso(page) {
                     total: record.total,
                     estatus: record.estatus
                 };
+                if (record.estatus == "Catalogo Conceptos") {
+                    opcion("addCatConFrm");
+                } else {
+                    opcion("addPresupuestoFrm");
+                }
 
-                opcion("addCatConFrm");
             });
 
             // Añadir la fila al tbody
@@ -332,14 +336,24 @@ function setupPaginationProyectoProceso() {
 
 function filterDataProyectoProceso() {
     const searchText = document.getElementById("search-inputProyecto").value.toLowerCase();
-    const statusFilter = "Carga Cuadro Dispositivos";
+    const statusFilterCuadro = "Catalogo Conceptos";
+    const statusFilterPresupuesto = "Presupuesto";
+    console.log(data);
     filteredData = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
         );
-        const matchesStatus = record.estatus == statusFilter;
+        let matchesStatus;
+        if (record.estatus == statusFilterCuadro || record.estatus == statusFilterPresupuesto) {
+            matchesStatus = true;
+        } else {
+            matchesStatus = false;
+        }
+
+        console.log(record.estatus == statusFilterCuadro, record.estatus == statusFilterPresupuesto)
         return matchesSearch && matchesStatus;
     });
+    console.log(filteredData);
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableProyectoProceso(currentPage);
     setupPaginationProyectoProceso();
@@ -411,7 +425,7 @@ function mostrarSugerenciasZonas(input) {
     // Crear los elementos de sugerencia y agregarlos al cuadro
     zonasUnicasArray.forEach(zona => {
         const div = document.createElement('div');
-        div.classList.add('sugerencia-item');
+        div.classList.add('sugerencia-itemZona');
         div.textContent = zona.zona;
         div.onclick = () => seleccionarSugerenciaZonas(zona.zona, sugerenciasDiv);
         sugerenciasDiv.appendChild(div);
@@ -449,7 +463,6 @@ function obtenerIdZona() {
 }
 
 function GetIdProyecto() {
-
     let json = "";
     let url = "../ws/Proyecto/wsGetIdProyecto.php";
     $.post(url, json, (responseText, status) => {
@@ -459,7 +472,6 @@ function GetIdProyecto() {
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
                     document.querySelector('#inputIdProyecto').value = resp.datos[0].idproyecto + 1;
-
                 } else {
                     document.querySelector('#inputIdProyecto').value = 1;
                 }
@@ -626,7 +638,7 @@ function setupPaginationProyectoTerminado() {
 
 function filterDataProyectoTerminado() {
     const searchText = document.getElementById("search-inputProyecto").value.toLowerCase();
-    const statusFilter = "Tarjeta Precios Unitarios";
+    const statusFilter = 'Terminado';
     console.log(data)
     filterDataProyTerm = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>

@@ -20,6 +20,8 @@ if (isset($datos->usuario) && isset($datos->password)) {
             $_SESSION["usuario"] = $fila['usuario'];
             $_SESSION["rol"] = $fila['rol'];
             $_SESSION["estatus"] = $fila['estatus'];
+            $_SESSION["idzona"] = $fila['idzona'];
+            $_SESSION["zona"] = $fila['zona'];
         }
         $resultado['estado'] = "OK";
     } else {

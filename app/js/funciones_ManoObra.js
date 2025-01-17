@@ -689,14 +689,14 @@ function llenarModalModificarManoObra(id, categoria, unidad, salario, fechaSalar
 }
 
 //Metodo para abrir el modal dependiendo si se abre para activar o eliminar
-function AbrirModalConfirm1() {
-    let estatus = document.getElementById('ValCheEsta').checked;
-    if (estatus) {
-        $('#confirmDeleteModal').modal('show');
-    } else {
-        $('#confirmActivationModal').modal('show');
-    }
-}
+// function AbrirModalConfirm1() {
+//     let estatus = document.getElementById('ValCheEsta').checked;
+//     if (estatus) {
+//         $('#confirmDeleteModal').modal('show');
+//     } else {
+//         $('#confirmActivationModal').modal('show');
+//     }
+// }
 
 
 function idManoObraAutomatico() {

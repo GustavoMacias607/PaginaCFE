@@ -36,6 +36,9 @@ function UpdPerfilUsuarioValidar(modificarContra) {
     let rol = document.querySelector('#AddrolInput');
     datos.rol = rol.value;
 
+    let idzona = document.querySelector('#AddidzonaInput');
+    datos.idZona = idzona.value;
+
     if (modificarContra) {
 
         if (pass.value == "") {
