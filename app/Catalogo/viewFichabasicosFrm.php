@@ -336,37 +336,41 @@ if (!isset($_SESSION['idusuario'])) {
             </table>
         </div>
     </div>
-    <div class="grid-container" id="TotalAgregarBasicos" style="display: none;">
-        <label class="subtotales_textos">Suma 5:</label>
-        <div>
-            <label id="Suma5" class="subtotales_numeros_top">$0.00</label>
-        </div>
-    </div>
+    
 
-    <div style="margin-top: 5rem; margin-bottom: 5rem; padding-bottom: 3rem;">
+    <!-- <div style="margin-top: 5rem; margin-bottom: 5rem; padding-bottom: 3rem;">
         <div class="grid-container">
             <label class="subtotales_textos">Total:</label>
             <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
             <button type="button" class="btn fa-solid-Guardar-catalogo"
                 onclick="javascript:guardarTablasEnBD()">Guardar</button>
         </div>
-    </div>
+    </div>-->
+    <div style="display: grid; grid-template-columns: auto auto auto; gap: 0px; column-gap: 1rem; align-items: center; justify-content: end; margin-bottom: 2rem; margin-right: 2rem;">
+        
+        <div style="grid-column: 1;">
+        </div>
+        <div style="grid-column: 2" id="TotalAgregarBasicos" style="display: none;">
+            <label class="subtotales_textos">Suma 5:</label>
+        </div>
+        <div style="grid-column: 3;">
+        <label id="Suma5" class="subtotales_numeros_top">$0.00</label>
+        </div>
 
-    <!--<div style="display: grid; grid-template-columns: auto auto auto; gap: 0px; column-gap: 1rem; align-items: center; justify-content: end; margin-bottom: 2rem; margin-right: 2rem;">
         <div style="grid-column: 1;">
         </div>
         <div style="grid-column: 2;">
             <label class="subtotales_textos">Costo directo:</label>
         </div>
         <div style="grid-column: 3;">
-            <input type="number" class="subtotales_numeros_top">
+        <label id="TotalSumas" class="subtotales_numeros_top">$0.00</label>
         </div>
 
         <div style="grid-column: 1;">
-            <button class="btn anexos">Agregar anexo</button>
+        <label class="costosadicionales">Costos indirectos:</label>
         </div>
         <div style="grid-column: 2;">
-            <label class="costosadicionales">Costos indirectos:</label>
+            <label class="costosadicionales" style="float: right;">15%</label>
         </div>
         <div style="grid-column: 3;">
             <input type="number" class="subtotales_numeros_bottom">
@@ -381,10 +385,10 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
 
         <div style="grid-column: 1;">
-            <button class="btn anexos">Agregar anexo</button>
+        <label class="costosadicionales">Financiamiento:</label>
         </div>
         <div style="grid-column: 2;">
-            <label class="costosadicionales">Financiamiento:</label>
+            <label class="costosadicionales" style="float: right;">1%</label>
         </div>
         <div style="grid-column: 3;">
             <input type="number" class="subtotales_numeros_bottom">
@@ -399,10 +403,10 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
 
         <div style="grid-column: 1;">
-            <button class="btn anexos">Agregar anexo</button>
+        <label class="costosadicionales">Utilidad:</label>
         </div>
         <div style="grid-column: 2;">
-            <label class="costosadicionales">Utilidad:</label>
+            <label class="costosadicionales" style="float: right;">10%</label>
         </div>
         <div style="grid-column: 3;">
             <input type="number" class="subtotales_numeros_bottom">
@@ -417,10 +421,10 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
 
         <div style="grid-column: 1;">
-            <button class="btn anexos">Agregar anexo</button>
+        <label class="costosadicionales">Cargos adicionales:</label>
         </div>
         <div style="grid-column: 2;">
-            <label class="costosadicionales">Cargos adicionales:</label>
+            <label class="costosadicionales" style="float: right;">0.5%</label>
         </div>
         <div style="grid-column: 3;">
             <input type="number" class="subtotales_numeros_bottom">
@@ -436,9 +440,9 @@ if (!isset($_SESSION['idusuario'])) {
 
             <div style="grid-column: 3; margin-top: 1rem; justify-self: end;">
                 <button type="button" class="btn fa-solid-Guardar-catalogo"
-                    onclick="javascript:AgregarCatalogoConcepto()">Guardar</button>
+                    onclick="javascript:guardarTablasEnBD()">Guardar</button>
             </div>
-    </div> -->
+    </div>
 
 
 

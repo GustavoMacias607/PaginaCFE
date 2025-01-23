@@ -676,6 +676,7 @@ th {
   font-family: "LatoBold", sans-serif;
   font-size: 1.2rem;
   color: #303030;
+  height: 2.3rem;
 }
 
 /* Reduce el espacio entre columnas */
@@ -686,15 +687,6 @@ div[style*="grid-template-columns"] {
 /* Asegura que los elementos estén alineados a la derecha */
 div[style*="justify-content: end"] {
   justify-content: end; /* Alinea todo hacia la derecha */
-}
-
-.subtotales_textos {
-  display: flex;
-  justify-items: end;
-  font-family: "LatoBold", sans-serif;
-  color: #858585;
-  font-size: 1.2rem;
-  float: right;
 }
 
 /*aqui se terminan los costos indirectos, adicionales, utilidad y financiamiento*/
@@ -715,6 +707,7 @@ div[style*="justify-content: end"] {
   color: #858585;
   font-size: 1.2rem;
   justify-content: end;
+  display: flex;
 }
 
 .subtotales_numeros_top {

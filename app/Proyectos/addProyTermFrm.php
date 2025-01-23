@@ -11,13 +11,13 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlanco" style="height: 4rem;">
     <div class="bottom-rectangle-proyecto">
-        <div class="text-materiales" style="margin-right: 1rem;">Proyecto términado</div>
+        <div class="text-materiales" style="margin-right: 1rem;">Proyecto terminado</div>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaConceptos', this)">Conceptos</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaTarjetasProyecto', this)">Tarjetas</button>
         <button type=" button" class="btn btnTabla btnTerminadoBn"
-            onclick="mostrarTablaTerminado('tablaMaterialesSuministrados', this)">Materiales suminsitrados CFE</button>
+            onclick="mostrarTablaTerminado('tablaMaterialesSuministrados', this)">Materiales suministrados</button>
         <button type=" button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaMaterialesNoSuministrados', this)">Materiales fuera de CFE</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
@@ -28,6 +28,8 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="mostrarTablaTerminado('tablaEquipoSeguridad', this)">Equipo de seguridad</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaMaquinaria', this)">Maquinaria</button>
+            <button type="button" class="btn btnTabla btnTerminadoBn"
+            onclick="mostrarTablaTerminado('tablaMaquinaria', this)">Reutilizar</button>
         <a href="index.php" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>

@@ -68,13 +68,13 @@ if (!isset($_SESSION['idusuario'])) {
     <button id="btnMaterialesSuministrados" class="btnTabla btn fa-solid-Siguiente-catalogo"
         onclick="mostrarTabla('tablaMaterialesSuministrados', this)">Materiales suministrados</button>
     <button id="btnMaterialesNoSuministrados" class="btnTabla btn fa-solid-Siguiente-catalogo"
-        onclick="mostrarTabla('tablaMaterialesNoSuministrados', this)">Materiales no suministrados</button>
+        onclick="mostrarTabla('tablaMaterialesNoSuministrados', this)">Materiales fuera de CFE</button>
     <button id="btnManoObra" class="btnTabla btn fa-solid-Siguiente-catalogo"
         onclick="mostrarTabla('tablaManoObra', this)">Mano de obra</button>
     <button id="btnMaquinaria" class="btnTabla btn fa-solid-Siguiente-catalogo"
         onclick="mostrarTabla('tablaMaquinaria', this)">maquinaria</button>
     <button id="btnHerramientas" class="btnTabla btn fa-solid-Siguiente-catalogo"
-        onclick="mostrarTabla('tablaHerramientas', this)">herramientas de mano</button>
+        onclick="mostrarTabla('tablaHerramientas', this)">herramienta de mano</button>
     <button id="btnEquipoSeguridad" class="btnTabla btn fa-solid-Siguiente-catalogo"
         onclick="mostrarTabla('tablaEquipoSeguridad', this)">Equipo de seguridad</button>
 </div>

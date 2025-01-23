@@ -152,7 +152,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 <!-- Modal insertar proyecto -->
 <div class="modal modal-maquinaria" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
@@ -185,8 +185,8 @@ if (!isset($_SESSION['idusuario'])) {
                             id="AddTipoObra">
                             <option value="" selected>Selecciona</option>
                             <option value="Nueva">Nueva</option>
-                            <option value="Mejora red">Mejora red</option>
-                            <option value="Solicitud">Solicitud</option>
+                            <option value="Mejora red">Mejora de red</option>
+                            <option value="Solicitud">Solicitudes</option>
                         </select>
                     </div>
                     <div class="col-6">

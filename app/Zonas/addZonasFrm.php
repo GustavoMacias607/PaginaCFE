@@ -77,8 +77,8 @@ if (!isset($_SESSION['idusuario'])) {
                                 style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected>Todo</option>
                                 <option value="Nueva">Nueva</option>
-                                <option value="Mejora red">Mejora red</option>
-                                <option value="Solicitud">Solicitud</option>
+                                <option value="Mejora red">Mejora de red</option>
+                                <option value="Solicitud">Solicitudes</option>
                             </select>
                         </div>
                     </th>
@@ -141,8 +141,8 @@ if (!isset($_SESSION['idusuario'])) {
                                 id="AddObraInput">
                                 <option selected value="">Selecciona una opción</option>
                                 <option value="Nueva">Nueva</option>
-                                <option value="Mejora red">Mejora red</option>
-                                <option value="Solicitud">Solicitud</option>
+                                <option value="Mejora red">Mejora de red</option>
+                                <option value="Solicitud">Solicitudes</option>
                             </select>
                         </div>
                     </div>
@@ -170,7 +170,11 @@ if (!isset($_SESSION['idusuario'])) {
                                 onblur="javascript:CompruebaTieneAlgoInput(this); ">
                         </div>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
+                        <input type="file" class="form-control inputLleno" id="AddpdfInput"
+                        style="border: 3px solid #008E5A;">
+                    </div>
                     <div class="modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
@@ -214,8 +218,8 @@ if (!isset($_SESSION['idusuario'])) {
                                 onblur="javascript:CompruebaTieneAlgoInput(this)">
                                 <option selected value="">Selecciona una opción</option>
                                 <option value="Nueva">Nueva</option>
-                                <option value="Mejora red">Mejora red</option>
-                                <option value="Solicitud">Solicitud</option>
+                                <option value="Mejora red">Mejora de red</option>
+                                <option value="Solicitud">Solicitudes</option>
                             </select>
                         </div>
                     </div>
@@ -243,7 +247,11 @@ if (!isset($_SESSION['idusuario'])) {
                                 id="UpdAdicionales" style="border: 3px solid #008E5A;">
                         </div>
                     </div>
-
+                    <div class="mb-3">
+                        <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
+                        <input type="file" class="form-control inputLleno" id="UpdpdfInput"
+                        style="border: 3px solid #008E5A;">
+                    </div>
                     <div class="modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
                             style="background-color: #008E5A; border: 3px solid #008E5A;"
