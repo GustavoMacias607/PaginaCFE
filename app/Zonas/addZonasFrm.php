@@ -13,7 +13,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-zonas">Zonas</div>
         <button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalZona();">Agregar zona</button>
-        <a href="index.php" class="text-inicio-zonas">
+        <a onclick="opcion('proyecto')" class="text-inicio-zonas">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -141,8 +141,8 @@ if (!isset($_SESSION['idusuario'])) {
                                 id="AddObraInput">
                                 <option selected value="">Selecciona una opción</option>
                                 <option value="Nueva">Nueva</option>
-                                <option value="Mejora red">Mejora de red</option>
-                                <option value="Solicitud">Solicitudes</option>
+                                <option value="Mejora de red">Mejora de red</option>
+                                <option value="Solicitudes">Solicitudes</option>
                             </select>
                         </div>
                     </div>
@@ -173,7 +173,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <div class="mb-3">
                         <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                         <input type="file" class="form-control inputLleno" id="AddpdfInput"
-                        style="border: 3px solid #008E5A;">
+                            style="border: 3px solid #008E5A;">
                     </div>
                     <div class="modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
@@ -218,8 +218,8 @@ if (!isset($_SESSION['idusuario'])) {
                                 onblur="javascript:CompruebaTieneAlgoInput(this)">
                                 <option selected value="">Selecciona una opción</option>
                                 <option value="Nueva">Nueva</option>
-                                <option value="Mejora red">Mejora de red</option>
-                                <option value="Solicitud">Solicitudes</option>
+                                <option value="Mejora de red">Mejora de red</option>
+                                <option value="Solicitudes">Solicitudes</option>
                             </select>
                         </div>
                     </div>
@@ -250,7 +250,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <div class="mb-3">
                         <label for="pdfInput" class="form-label" style="color: #303030;">Añadir PDF</label>
                         <input type="file" class="form-control inputLleno" id="UpdpdfInput"
-                        style="border: 3px solid #008E5A;">
+                            style="border: 3px solid #008E5A;">
                     </div>
                     <div class="modal-footer modal-footer-zonas">
                         <button type="button" class="btn btn-primary"
@@ -339,20 +339,20 @@ if (!isset($_SESSION['idusuario'])) {
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script>
-window.addEventListener('resize', function() {
-    const logoImage = document.getElementById('logoImage');
-    const windowWidth = window.innerWidth;
-    const originalWidth = logoImage.naturalWidth;
+    window.addEventListener('resize', function() {
+        const logoImage = document.getElementById('logoImage');
+        const windowWidth = window.innerWidth;
+        const originalWidth = logoImage.naturalWidth;
 
-    if (windowWidth < originalWidth) {
-        logoImage.src =
-            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+        if (windowWidth < originalWidth) {
+            logoImage.src =
+                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-    } else {
-        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-        logoImage.alt = 'Logo'; // Restaura el atributo alt
-    }
-});
+        } else {
+            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+            logoImage.alt = 'Logo'; // Restaura el atributo alt
+        }
+    });
 </script>

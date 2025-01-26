@@ -185,8 +185,8 @@ if (!isset($_SESSION['idusuario'])) {
                             id="AddTipoObra">
                             <option value="" selected>Selecciona</option>
                             <option value="Nueva">Nueva</option>
-                            <option value="Mejora red">Mejora de red</option>
-                            <option value="Solicitud">Solicitudes</option>
+                            <option value="Mejora de red">Mejora de red</option>
+                            <option value="Solicitudes">Solicitudes</option>
                         </select>
                     </div>
                     <div class="col-6">

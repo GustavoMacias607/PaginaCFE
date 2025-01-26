@@ -9,7 +9,7 @@ var estatusConcepto = 1;
 let conceptoTipoSeleccionado;
 
 let selectedRows = [];
-
+let selectedCheckboxes = {};
 let unidades;
 
 let currentSortField = null;
@@ -233,6 +233,10 @@ function CambioEstatusConcepto() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function PrincipalConcepto(tipoConcepto) {
+    //vaciar el objeto
+    selectedRows = [];
+    selectedCheckboxes = {};
+
     estatusConcepto = 1;
     document.getElementById("sort-id").addEventListener("click", () => sortData('idconbasi'));
     document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
@@ -247,6 +251,7 @@ function PrincipalConcepto(tipoConcepto) {
 }
 
 async function obtenerDatosConceptos(btnOpcion) {
+
     // Selecciona el elemento del spinner
     const spinner = document.querySelector(".sk-circle");
 
@@ -381,6 +386,7 @@ function displayTableConcepto(page) {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
+
     if (conceptoTipoSeleccionado) {
         document.getElementById('columFamilia').style.display = 'table-cell';
         if (paginatedData.length > 0) {
@@ -403,7 +409,11 @@ function displayTableConcepto(page) {
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
                             ${record.estatus == 1 ? `
-                                <input type="checkbox" class="custom-checkbox" id="checkbox_${record.idconcepto}" onchange="toggleRowSelection('${record.idconcepto}', '${record.nombre}', '${record.unidad}', '${record.total}', this.checked)">
+                                <input type="checkbox" 
+                                       class="custom-checkbox" 
+                                       id="checkbox_${record.idconcepto}" 
+                                       onchange="toggleRowSelection('${record.idconcepto}', '${record.nombre}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
+                                       ${selectedCheckboxes[record.idconcepto] ? 'checked' : ''}>
                                 <label for="checkbox_${record.idconcepto}" class="checkbox-design"></label>
                             ` : ``}
                             ${record.estatus == 1 ? `
@@ -432,8 +442,6 @@ function displayTableConcepto(page) {
             `;
             tableBody.innerHTML += row;
         }
-
-
     } else {
         document.getElementById('columFamilia').style.display = 'none';
         if (paginatedData.length > 0) {
@@ -485,29 +493,21 @@ function displayTableConcepto(page) {
 }
 
 //Se agrega o quita del arreglo los conceptos seleccionados para su exportacion
-function toggleRowSelection(idconcepto, nombre, unidad, total, isChecked) {
+function toggleRowSelection(idconcepto, nombre, unidad, total, familia, isChecked) {
     if (isChecked) {
-        // Agregar la fila seleccionada al array
+        // Agregar la fila seleccionada al array y al objeto
         selectedRows.push({
-            idconcepto, nombre, unidad, total: total == "null" ? 0 : total
+            idconcepto, nombre, unidad, familia, total: total == "null" ? 0 : total,
         });
+        selectedCheckboxes[idconcepto] = true;
     } else {
-        // Remover la fila del array si se desmarca el checkbox
+        // Remover la fila del array y del objeto si se desmarca el checkbox
         selectedRows = selectedRows.filter(row => row.idconcepto !== idconcepto);
+        delete selectedCheckboxes[idconcepto];
     }
     console.log(selectedRows); // Muestra las filas seleccionadas
 }
-//Datos para la tarjeta
-function InfoTarjeta(id, nombre, unidad, familia, tipoConcp) {
-    datosCatalogo = {
-        id,
-        nombre,
-        unidad,
-        familia,
-        TipoConcepto: tipoConcp
-    }
 
-}
 function setupPaginationConcepto() {
     const paginationDiv = document.getElementById("pagination");
     paginationDiv.innerHTML = "";
@@ -628,7 +628,17 @@ function llenarTablaConcepto() {
     });
 }
 
+//Datos para la tarjeta
+function InfoTarjeta(id, nombre, unidad, familia, tipoConcp) {
+    datosCatalogo = {
+        id,
+        nombre,
+        unidad,
+        familia,
+        TipoConcepto: tipoConcp
+    }
 
+}
 //Metodo para limpiar el modal de agregar material
 function AddlimpiarModalConcepto() {
     let idC = document.querySelector('#AddidInputConcepto');
@@ -1350,4 +1360,174 @@ function exportarPDF() {
     });
     // Guarda el PDF
     doc.save("tabla-datos.pdf");
+}
+
+
+
+async function GeneradorTarjetasConceptoPdf() {
+    let conceptos = selectedRows;
+    if (conceptos.length != 0) {
+
+
+        costosAdicionales.CIndirecto = 15;
+        costosAdicionales.Financiamiento = 1;
+        costosAdicionales.utilidad = 10;
+        costosAdicionales.CAdicionales = 0.5;
+
+        const container = document.getElementById('contenedor-cfe');
+        if (!container) {
+            console.error('Contenedor "contenedor-cfe" no encontrado');
+            return;
+        }
+        container.innerHTML = '';
+
+        for (const concepto of conceptos) {
+            console.log(concepto);
+            let conceptoHTML = `
+        
+            <div id="concepto-${concepto.idconcepto}" class="tarjeta-concepto">
+                <div class="contTabla-materialesmodal_catalogo">
+                    <div>
+                        <table>
+                            <thead>
+                                <tr class="todosBordes">
+                                    <th class="textIzq" style="width: 8rem;  text-align: justify;">No.</th>
+                                    <th class="textIzq">Concepto</th>
+                                    <th class="textIzq" style="width: 10rem;">Unidad</th>
+                                    <th class="textIzq" style="width: 8rem; display: table-cell;">Familia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="todosBordes"> 
+                                    <td class="textIzq">${concepto.idconcepto}</td>
+                                    <td class="textJus">${concepto.nombre}</td>
+                                    <td class="textCen">${concepto.unidad}</td>
+                                    <td class="textDer">${concepto.familia}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="titulo-conceptoPDF">
+                    <div class="pSeccion-catalogo">
+                        <div>Materiales</div>
+                    </div>
+                </div>
+                <div id="materialesPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
+                    <div class="pSeccion-catalogo">
+                        <div>Mano de obra</div>
+                    </div>
+                </div>
+                <div id="manoObraPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
+                    <div class="pSeccion-catalogo">
+                        <div>Herramienta y equipo de seguridad</div>
+                    </div>
+                </div>
+                <div id="herramientaEquipoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
+                    <div class="pSeccion-catalogo">
+                        <div>Maquinaria</div>
+                    </div>
+                </div>
+                <div id="maquinariaPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                <div class="titulo-conceptoPDF">
+                    <div class="pSeccion-catalogo">
+                        <div>Basico</div>
+                    </div>
+                </div>
+                <div id="basicoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
+                      <div class="contTabla-materialesmodal_catalogo">
+                    <div>
+                        <table class="todosBordesCuadro">
+                                 <tr> 
+                                    <td></td>
+                                    <td></td>
+                                    <td class="terceraColumna"></td>
+                                    <td></td>
+                                </tr>
+                                <tr> 
+                                    <td class="primeraColumna negritas">(CD) COSTO DIRECTO</td>
+                                    <td style="width: 18rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="CostoDirectoPDF-${concepto.idconcepto}"  class="textDer ultimaColumna negritas" style="width: 10rem;">3454</td>
+                                </tr>
+                                <tr> 
+                                    <td  class="primeraColumna">(CI) COSTO INDIRECTOS</td>
+                                    <td style="width: 15rem;">${costosAdicionales.CIndirecto}.00%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="costoIndirectoPDF-${concepto.idconcepto}" class="textDer style="width: 10rem;">45454</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">SUBTOTALE1</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="subTotal1PDF-${concepto.idconcepto}"  class="textDer ultimaColumna" style="width: 10rem;">4545</td>
+                                </tr>
+                                  <tr> 
+                                    <td   class="primeraColumna">(CF) FINANCIAMIENTO</td>
+                                    <td style="width: 15rem;">${costosAdicionales.Financiamiento}.00%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="financiamientoPDF-${concepto.idconcepto}" class="textDer" style="width: 10rem;">4545</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">SUBTOTAL2</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="subTotal2PDF-${concepto.idconcepto}"  class="textDer ultimaColumna" style="width: 10rem;">34534</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">(CU) UTILIDAD</td>
+                                    <td style="width: 15rem;">${costosAdicionales.utilidad}.00%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="utilidadPDF-${concepto.idconcepto}" class="textDer" style="width: 10rem;">3453</td>
+                                </tr>
+                                  <tr> 
+                                    <td  class="primeraColumna">SUBTOTAL3</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="subTotal3PDF-${concepto.idconcepto}" class="textDer ultimaColumna" style="width: 10rem;">345345</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">CARGOS ADICIONALES</td>
+                                    <td style="width: 15rem;">${costosAdicionales.CAdicionales}0%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                     <td id="cargosAdicionalesPDF-${concepto.idconcepto}"  class="textDer" style="width: 10rem;">3453</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna negritas">PRECIO UNITARIO (CD+CIO+CIC+CF+CU+CA)</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="precioUnitarioPDF-${concepto.idconcepto}" class="textDer ultimaColumna negritas" style="width: 10rem;"></td>
+                                </tr>
+                                  <tr> 
+                                    <td id="LecturaPrecioUnitarioPDF-${concepto.idconcepto}" class="primeraColumna negritas"></td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td class="textDer" style="width: 10rem;"></td>
+                                </tr>
+                                  <tr> 
+                                    <td></td>
+                                    <td></td>
+                                    <td class="terceraColumna"></td>
+                                    <td></td>
+                                </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+            container.innerHTML += conceptoHTML;
+            await TraerMaterialesConceptoPDF(concepto.idconcepto);
+            await TraerManoObrasConceptoPDF(concepto.idconcepto);
+            await TraerMaquinariaConceptoPDF(concepto.idconcepto);
+            await TraerBasicoConceptoPDF(concepto.idconcepto);
+        }
+        exportarPDFConHtml();
+    } else {
+        mensajePantalla("No hay conceptos seleccionados", false);
+    }
+
 }

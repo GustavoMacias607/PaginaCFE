@@ -289,7 +289,7 @@ function llenarModalVerTipoEsp(idTipo, idEspecificacion, codigo, nombre, descrip
     btnAgregar.style.display = 'none';
 
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
-    btnGuardarModalTipoEsp.style.display = 'none';
+    btnGuardar.style.display = 'none';
 
     document.getElementById('lblFam').innerHTML = "Familia";
     document.getElementById('lblEsp').innerHTML = "Especificación";
@@ -325,6 +325,7 @@ function llenarModalModificarTipoEsp(idTipo, idEspecificacion, codigo, nombre, d
     document.getElementById('lblRequerido').innerHTML = "Es requerido: *";
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Guardar"
+    btnGuardar.style.display = 'inline-block';
     document.getElementById('lblFam').innerHTML = "Familia";
     document.getElementById('lblEsp').innerHTML = "Especificación*";
     document.getElementById('lblDes').innerHTML = "Descripción*";

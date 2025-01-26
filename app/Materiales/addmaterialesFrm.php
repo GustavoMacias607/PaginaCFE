@@ -26,7 +26,7 @@ require("../../scripts/Materiales.php");
 
         <input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls" />
 
-        <a href="index.php" class="text-inicio-materiales">
+        <a onclick="opcion('proyecto')" class="text-inicio-materiales">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -158,8 +158,9 @@ require("../../scripts/Materiales.php");
                     </div>
                     <div class="col-6">
                         <label for="normaInput" class="form-label" style="color: #303030;">Norma*</label>
-                        <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                            style="font-family: 'latoBold', sans-serif;" id="AddnormaInput">
+                        <input type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                            id="AddnormaInput">
                     </div>
                 </div>
                 <div class="mb-3">
@@ -175,8 +176,8 @@ require("../../scripts/Materiales.php");
                     </div>
                     <div class="col-6">
                         <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                            id="AddfechaPrecioInput">
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddfechaPrecioInput">
                     </div>
                 </div>
                 <div class="row mb-3">
@@ -207,18 +208,19 @@ require("../../scripts/Materiales.php");
                         <input type="text" oninput="mostrarSugerenciasMateriales(this, 'AddUnidad')"
                             onfocus="mostrarSugerenciasMateriales(this, 'AddUnidad')"
                             onblur="ocultarSugerenciasMateriales('AddUnidad');CompruebaTieneAlgoInput(this)"
-                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="AddunidadInput"
-                            autocomplete="off">
-                        <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                            id="AddunidadInput" autocomplete="off">
+                        <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
-                        <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
-                        <input type="file" class="form-control inputLleno" id="AddimagenInput"
-                            onchange="AddmostrarImagen(this)" style="border: 3px solid #008E5A;">
-                    </div>
-                        <img id="AddimagenPreview" src="" alt="Imagen" width="200px"
-                            style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
+                    <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
+                    <input type="file" class="form-control inputLleno" id="AddimagenInput"
+                        onchange="AddmostrarImagen(this)" style="border: 3px solid #008E5A;">
+                </div>
+                <img id="AddimagenPreview" src="" alt="Imagen" width="200px"
+                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
 
                 <div class="modal-footer modal-footer-materiales">
                     <button type="button" class="btn btn-primary"
@@ -276,8 +278,8 @@ require("../../scripts/Materiales.php");
                     </div>
                     <div class="col-6">
                         <label for="fechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                        <input type="date" class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                            id="UpdfechaPrecioInput">
+                        <input type="date" class="form-control inputLleno"
+                            onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdfechaPrecioInput">
                     </div>
                 </div>
 
@@ -309,19 +311,20 @@ require("../../scripts/Materiales.php");
                         <input type="text" oninput="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
                             onfocus="mostrarSugerenciasMateriales(this, 'UpdUnidad')"
                             onblur="ocultarSugerenciasMateriales('UpdUnidad');CompruebaTieneAlgoInput(this)"
-                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="UpdunidadInput"
-                            autocomplete="off">
-                        <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                            class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
+                            id="UpdunidadInput" autocomplete="off">
+                        <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;">
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
-                        <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
-                        <input type="file" class="form-control" id="UpdimagenInput" onchange="UpdmostrarImagen(this)"
-                            style="border: 3px solid #008E5A;">
-                    </div>
+                    <label for="imagenInput" class="form-label" style="color: #303030;">Añadir imagen</label>
+                    <input type="file" class="form-control" id="UpdimagenInput" onchange="UpdmostrarImagen(this)"
+                        style="border: 3px solid #008E5A;">
+                </div>
 
-                        <img id="UpdimagenPreview" src="" width="200px"
-                            style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
+                <img id="UpdimagenPreview" src="" width="200px"
+                    style="border: 3px solid #008e5a; border-radius: 5px; transform: translateX(60%);">
                 <div class="modal-footer modal-footer-materiales">
                     <button type="button" class="btn btn-primary"
                         onclick="javascript:UpdMaterialValidar()">Guardar</button>

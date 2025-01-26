@@ -16,7 +16,7 @@ if (!isset($_SESSION['idusuario'])) {
             id="btnAgregarEspecificaciones" data-bs-target="#AgregarModalEspecificaciones"
             onclick="javascript:LlenarCamposAgregar(true);">Agregar
             Especificación</button>
-        <a href="index.php" class="text-inicio-especificaciones">
+        <a onclick="opcion('proyecto')" class="text-inicio-especificaciones">
             <div>Ir al inicio</div>
         </a>
     </div>

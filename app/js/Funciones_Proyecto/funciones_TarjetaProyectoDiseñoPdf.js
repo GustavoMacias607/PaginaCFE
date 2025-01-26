@@ -5,8 +5,10 @@ async function GeneradorTablaConceptoPDF() {
         return;
     }
     container.innerHTML = '';
+    console.log(datosProyecto.idProyecto)
+    console.log(datosProyecto.idZona)
+    console.log(costosAdicionales.utilidad)
     let conceptos = Object.values(editedRows);
-    console.log(conceptos);
     for (const concepto of conceptos) {
         let conceptoHTML = `
         
@@ -63,14 +65,85 @@ async function GeneradorTablaConceptoPDF() {
                     </div>
                 </div>
                 <div id="basicoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-
-                <div class="totalesTablas claseTotales">
-                    <label class="subtotales_textos">Costo Total:</label>
+                      <div class="contTabla-materialesmodal_catalogo">
                     <div>
-                        <label id="CostoTotalPDF-${concepto.idconcepto}" class="subtotales_numeros_top">0</label>
+                        <table class="todosBordesCuadro">
+                                 <tr> 
+                                    <td></td>
+                                    <td></td>
+                                    <td class="terceraColumna"></td>
+                                    <td></td>
+                                </tr>
+                                <tr> 
+                                    <td class="primeraColumna negritas">(CD) COSTO DIRECTO</td>
+                                    <td style="width: 18rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="CostoDirectoPDF-${concepto.idconcepto}"  class="textDer ultimaColumna negritas" style="width: 10rem;">3454</td>
+                                </tr>
+                                <tr> 
+                                    <td  class="primeraColumna">(CI) COSTO INDIRECTOS</td>
+                                    <td style="width: 15rem;">${costosAdicionales.CIndirecto}.00%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="costoIndirectoPDF-${concepto.idconcepto}" class="textDer style="width: 10rem;">45454</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">SUBTOTALE1</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="subTotal1PDF-${concepto.idconcepto}"  class="textDer ultimaColumna" style="width: 10rem;">4545</td>
+                                </tr>
+                                  <tr> 
+                                    <td   class="primeraColumna">(CF) FINANCIAMIENTO</td>
+                                    <td style="width: 15rem;">${costosAdicionales.Financiamiento}.00%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="financiamientoPDF-${concepto.idconcepto}" class="textDer" style="width: 10rem;">4545</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">SUBTOTAL2</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="subTotal2PDF-${concepto.idconcepto}"  class="textDer ultimaColumna" style="width: 10rem;">34534</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">(CU) UTILIDAD</td>
+                                    <td style="width: 15rem;">${costosAdicionales.utilidad}.00%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="utilidadPDF-${concepto.idconcepto}" class="textDer" style="width: 10rem;">3453</td>
+                                </tr>
+                                  <tr> 
+                                    <td  class="primeraColumna">SUBTOTAL3</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="subTotal3PDF-${concepto.idconcepto}" class="textDer ultimaColumna" style="width: 10rem;">345345</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna">CARGOS ADICIONALES</td>
+                                    <td style="width: 15rem;">${costosAdicionales.CAdicionales}0%</td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                     <td id="cargosAdicionalesPDF-${concepto.idconcepto}"  class="textDer" style="width: 10rem;">3453</td>
+                                </tr>
+                                  <tr> 
+                                    <td class="primeraColumna negritas">PRECIO UNITARIO (CD+CIO+CIC+CF+CU+CA)</td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td id="precioUnitarioPDF-${concepto.idconcepto}" class="textDer ultimaColumna negritas" style="width: 10rem;"></td>
+                                </tr>
+                                  <tr> 
+                                    <td id="LecturaPrecioUnitarioPDF-${concepto.idconcepto}" class="primeraColumna negritas"></td>
+                                    <td style="width: 15rem;"></td>
+                                    <td style="width: 5rem;" class="terceraColumna"></td>
+                                    <td class="textDer" style="width: 10rem;"></td>
+                                </tr>
+                                  <tr> 
+                                    <td></td>
+                                    <td></td>
+                                    <td class="terceraColumna"></td>
+                                    <td></td>
+                                </tr>
+
+                        </table>
                     </div>
                 </div>
-                <hr class="separador-tarjetas">
             </div>
         `;
         container.innerHTML += conceptoHTML;
@@ -240,7 +313,7 @@ function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
                         <th style="width: 8rem;">R</th>
                         <th style="width: 11rem;">Cantidad</th>
                         <th style="width: 11rem;">Sr</th>
-                        <th style="width: 15rem;">Mo = Sr/R</th>
+                        <th class="textDer" style="width: 15rem;">Mo = Sr/R</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -301,7 +374,7 @@ function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteMano
                         <th>Descripción</th>
                         <th style="width: 11rem;">Kh o Ks</th>
                         <th style="width: 11rem;">Mo</th>
-                        <th style="width: 15rem;">HE = Kh * Mo</th>
+                        <th class="textDer" style="width: 15rem;">HE = Kh * Mo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -378,7 +451,7 @@ function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
         currency: 'MXN'
     });
 
-    let totalImporteMaquinaria = MaquinariaConcepto.reduce((total, maquinaria) => total + (maquinaria.phm * maquinaria.rhm), 0);
+    let totalImporteMaquinaria = MaquinariaConcepto.reduce((total, maquinaria) => total + (maquinaria.phm / maquinaria.rhm), 0);
 
     let maquinariaHTML = `
         <div>
@@ -390,7 +463,7 @@ function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
                         <th style="width: 10rem;">Unidad</th>
                         <th style="width: 11rem;">PhM</th>
                         <th style="width: 11rem;">RhM</th>
-                        <th style="width: 15rem;">Importe</th>
+                        <th class="textDer" style="width: 15rem;">Ma = PhM / RhM</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -480,7 +553,7 @@ function GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto) {
                         <th style="width: 10rem;">Unidad</th>
                         <th style="width: 11rem;">Precio U</th>
                         <th style="width: 11rem;">Cantidad</th>
-                        <th style="width: 15rem;">Importe</th>
+                        <th class="textDer" style="width: 15rem;">B = Precio * Cantidad</th>
                     </tr>
                 </thead>
                 <tbody >
@@ -524,15 +597,115 @@ function actualizarCostoTotalPDF(idConceptoProyecto) {
     const totalMaquinaria = parseFloat(document.getElementById(`SumaImporteMaquinariaPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
     const totalBasico = parseFloat(document.getElementById(`SumaImporteBasicoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
 
-    const costoTotal = totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico;
+    const costoDirecto = totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico;
+    const costoIndirecto = costoDirecto * (costosAdicionales.CIndirecto / 100);
+    const subTotal1 = costoDirecto + costoIndirecto;
+    const financiamiento = subTotal1 * (costosAdicionales.Financiamiento / 100);;
+    const subTotal2 = financiamiento + subTotal1;
+    const utilidad = subTotal2 * (costosAdicionales.utilidad / 100);
+    const subTotal3 = utilidad + subTotal2;
+    const cargosAdicionales = subTotal3 * (costosAdicionales.CAdicionales / 100);
+    const precioUnitario = subTotal3 + cargosAdicionales;
+
+    let letras = numeroALetras(precioUnitario.toString());
+    console.log(letras);
 
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
     });
 
-    document.getElementById(`CostoTotalPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(costoTotal);
+    document.getElementById(`CostoDirectoPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(costoDirecto);
+    document.getElementById(`costoIndirectoPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(costoIndirecto);
+    document.getElementById(`subTotal1PDF-${idConceptoProyecto}`).innerText = formatoMXN.format(subTotal1);
+    document.getElementById(`financiamientoPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(financiamiento);
+    document.getElementById(`subTotal2PDF-${idConceptoProyecto}`).innerText = formatoMXN.format(subTotal2);
+    document.getElementById(`utilidadPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(utilidad);
+    document.getElementById(`subTotal3PDF-${idConceptoProyecto}`).innerText = formatoMXN.format(subTotal3);
+    document.getElementById(`cargosAdicionalesPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(cargosAdicionales);
+    document.getElementById(`precioUnitarioPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(precioUnitario);
+    document.getElementById(`LecturaPrecioUnitarioPDF-${idConceptoProyecto}`).innerText = `(" ${letras}")`;
+
+
+
 }
 
+
+function numeroALetras(precioUnitario) {
+    const unidades = [
+        "", "UNO", "DOS", "TRES", "CUATRO", "CINCO", "SEIS", "SIETE", "OCHO", "NUEVE"
+    ];
+    const decenas = [
+        "", "", "VEINTE", "TREINTA", "CUARENTA", "CINCUENTA",
+        "SESENTA", "SETENTA", "OCHENTA", "NOVENTA"
+    ];
+    const especiales = [
+        "DIEZ", "ONCE", "DOCE", "TRECE", "CATORCE", "QUINCE",
+        "DIECISÉIS", "DIECISIETE", "DIECIOCHO", "DIECINUEVE"
+    ];
+    const centenas = [
+        "", "CIENTO", "DOSCIENTOS", "TRESCIENTOS", "CUATROCIENTOS",
+        "QUINIENTOS", "SEISCIENTOS", "SETECIENTOS", "OCHOCIENTOS", "NOVECIENTOS"
+    ];
+
+    const convertirGrupo = (num) => {
+        let resultado = "";
+
+        if (num.length === 3) {
+            if (num === "100") return "CIEN";
+            resultado += centenas[parseInt(num[0])] + " ";
+            num = num.slice(1);
+        }
+
+        if (num.length === 2) {
+            if (num[0] === "1") {
+                return resultado + especiales[parseInt(num[1])] || "";
+            } else if (num[0] === "2" && num[1] !== "0") {
+                return resultado + "VEINTI" + unidades[parseInt(num[1])];
+            } else {
+                resultado += decenas[parseInt(num[0])] + " ";
+                num = num.slice(1);
+            }
+        }
+
+        if (num.length === 1) {
+            resultado += unidades[parseInt(num)];
+        }
+
+        return resultado.trim();
+    };
+
+    const separarMiles = (num) => {
+        const partes = [];
+        while (num.length > 0) {
+            partes.unshift(num.slice(-3));
+            num = num.slice(0, -3);
+        }
+        return partes;
+    };
+
+    const precioNumerico = parseFloat(precioUnitario.replace(/,/g, ""));
+    const enteros = Math.floor(precioNumerico);
+    const centavos = Math.round((precioNumerico - enteros) * 100);
+
+    const grupos = separarMiles(enteros.toString());
+    const sufijos = ["", "MIL", "MILLONES", "MIL MILLONES"]; // Para manejar grandes cantidades
+
+    const gruposEnPalabras = grupos.map((grupo, i) => {
+        const palabras = convertirGrupo(grupo);
+        const sufijo = sufijos[grupos.length - 1 - i]; // Asegura el orden correcto
+        return palabras ? `${palabras} ${sufijo}`.trim() : "";
+    });
+
+    // Filtrar grupos vacíos (como "MIL" cuando el grupo es 0)
+    const resultadoEnteros = gruposEnPalabras
+        .filter((palabra) => palabra && !palabra.includes("undefined"))
+        .join(" ")
+        .trim();
+
+    const resultadoCentavos = centavos ? `${centavos}/100 M.N` : "00/100 M.N";
+
+    return `${resultadoEnteros} PESOS ${resultadoCentavos}`;
+}
 
 

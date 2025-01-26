@@ -23,10 +23,11 @@ if (!isset($_SESSION['idusuario'])) {
         <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-agregar-conceptos esconderBoton">
             Exportar datos a Excel
         </button>
-        <button id="btnExportarPDF" onclick="javascript:exportarPDF()" class="btn btn-agregar-conceptos">
+        <button id="btnExportarPDF" onclick="javascript:GeneradorTarjetasConceptoPdf()"
+            class="btn btn-agregar-conceptos">
             Exportar datos a PDF
         </button>
-        <a href="index.php" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -128,14 +129,15 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="sk-circle12 sk-child"></div>
         </div>
     </div>
-
 </div>
 
+<div id="contenedor-cfe" style="margin-top: 50rem; font-size: 20px; display: none;">
 
+</div>
 <!-- Modal insertar conceptos -->
 <div class="modal modal-conceptos fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar concepto</h1>
@@ -372,6 +374,8 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

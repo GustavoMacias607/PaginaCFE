@@ -15,7 +15,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-manodeobra">Mano de obra</div>
         <button type="button" class="btn btn-agregar-manodeobra" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalManoObra();">Agregar mano de obra</button>
-        <a href="index.php" class="text-inicio-manodeobra">
+        <a onclick="opcion('proyecto')" class="text-inicio-manodeobra">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -143,9 +143,10 @@ if (!isset($_SESSION['idusuario'])) {
                             class="form-control inputLleno" id="AddsalarioInputManodeobra">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
-                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                            id="AddfechaSalarioInput">
+                        <label for="AddfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del
+                            salario</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddfechaSalarioInput">
                     </div>
                 </div>
                 <div class="mb-3">
@@ -206,9 +207,10 @@ if (!isset($_SESSION['idusuario'])) {
                             onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdsalarioInput">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del salario</label>
-                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                            id="UpdfechaSalarioInput">
+                        <label for="UpdfechaSalarioInput" class="form-label" style="color: #303030;">Fecha del
+                            salario</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="UpdfechaSalarioInput">
                     </div>
                 </div>
                 <div class="mb-3">

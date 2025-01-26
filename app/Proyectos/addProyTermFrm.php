@@ -28,9 +28,8 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="mostrarTablaTerminado('tablaEquipoSeguridad', this)">Equipo de seguridad</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaMaquinaria', this)">Maquinaria</button>
-            <button type="button" class="btn btnTabla btnTerminadoBn"
-            onclick="mostrarTablaTerminado('tablaMaquinaria', this)">Reutilizar</button>
-        <a href="index.php" class="text-inicio-conceptos">
+        <button type="button" class="btn btnTabla btnTerminadoBn">Reutilizar</button>
+        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>

@@ -13,7 +13,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-usuarios">Usuarios</div>
         <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalUsuario();">Agregar usuario</button>
-        <a href="index.php" class="text-inicio-usuarios">
+        <a onclick="opcion('proyecto')" class="text-inicio-usuarios">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -321,20 +321,20 @@ if (!isset($_SESSION['idusuario'])) {
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
 </script>
 <script>
-window.addEventListener('resize', function() {
-    const logoImage = document.getElementById('logoImage');
-    const windowWidth = window.innerWidth;
-    const originalWidth = logoImage.naturalWidth;
+    window.addEventListener('resize', function() {
+        const logoImage = document.getElementById('logoImage');
+        const windowWidth = window.innerWidth;
+        const originalWidth = logoImage.naturalWidth;
 
-    if (windowWidth < originalWidth) {
-        logoImage.src =
-            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+        if (windowWidth < originalWidth) {
+            logoImage.src =
+                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-    } else {
-        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-        logoImage.alt = 'Logo'; // Restaura el atributo alt
-    }
-});
+        } else {
+            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+            logoImage.alt = 'Logo'; // Restaura el atributo alt
+        }
+    });
 </script>

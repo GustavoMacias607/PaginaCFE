@@ -113,6 +113,7 @@ body {
 
 /* Estilos para el titulo volver a inicio */
 .text-inicio-Catalogo {
+  cursor: pointer;
   text-decoration: none;
   position: static;
   font-family: "LatoBold", sans-serif;

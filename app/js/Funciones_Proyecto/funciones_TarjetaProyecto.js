@@ -375,7 +375,7 @@ function GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto) {
         currency: 'MXN'
     });
 
-    let totalImporteMaquinaria = MaquinariaConcepto.reduce((total, maquinaria) => total + (maquinaria.phm * maquinaria.rhm), 0);
+    let totalImporteMaquinaria = MaquinariaConcepto.reduce((total, maquinaria) => total + (maquinaria.phm / maquinaria.rhm), 0);
 
     let maquinariaHTML = `
         <div class="tabla-container-tablaTarjeta">

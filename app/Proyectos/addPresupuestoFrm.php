@@ -14,7 +14,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-materiales">Presupuesto</div>
         <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:opcion('addCatConFrm');">Catálogo de conceptos</button>
-        <a href="index.php" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>

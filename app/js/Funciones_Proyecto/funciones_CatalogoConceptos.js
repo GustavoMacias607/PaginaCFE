@@ -312,6 +312,7 @@ function AgregartablaConceptoProyecto() {
     conceptosArray.forEach(concepto => {
         concepto.idProyecto = datosProyecto.idProyecto;
         let json = JSON.stringify(concepto);
+
         let url = "../ws/ConceptosProyecto/wsAddConcepto.php";
         $.post(url, json, (responseText, status) => {
             try {

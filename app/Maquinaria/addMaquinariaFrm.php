@@ -15,7 +15,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-maquinaria">Maquinaria</div>
         <button type="button" class="btn btn-agregar-maquinaria" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalMaquinaria();">Agregar maquinaria</button>
-        <a href="index.php" class="text-inicio-maquinaria">
+        <a onclick="opcion('proyecto')" class="text-inicio-maquinaria">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -139,7 +139,8 @@ if (!isset($_SESSION['idusuario'])) {
                             class="form-control inputLleno" id="AddphmInputMaquinaria">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
+                        <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de
+                            precio</label>
                         <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
                             class="form-control inputLleno" id="AddfechaPrecioInput">
                     </div>
@@ -205,9 +206,10 @@ if (!isset($_SESSION['idusuario'])) {
                             onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdphmInput">
                     </div>
                     <div class="col-md-4 mb-3">
-                        <label for="UpdfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de precio</label>
-                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" class="form-control inputLleno"
-                            id="UpdfechaPrecioInput">
+                        <label for="UpdfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de
+                            precio</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="UpdfechaPrecioInput">
                     </div>
                 </div>
 

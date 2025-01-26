@@ -83,6 +83,15 @@ function AddZonaValidar() {
         return;
     }
 
+    guardo = true;
+    let inputFile = document.getElementById('AddpdfInput');
+    if (inputFile.value) {
+        AddAgregarPDFZona()
+        if (!guardo) {
+            return;
+        }
+    }
+
     let json = JSON.stringify(datos);
     console.log(json)
     let url = "../ws/Zonas/wsAddZona.php";
@@ -185,6 +194,14 @@ function UpdZonaValidar() {
     } else {
         datos.fecha = fechita.value
     }
+    guardo = true;
+    let inputFile = document.getElementById('UpdpdfInput');
+    if (inputFile.value) {
+        UpdAgregarPDFZona()
+        if (!guardo) {
+            return;
+        }
+    }
     let json = JSON.stringify(datos);
     let url = "../ws/Zonas/wsUpdZona.php";
     $.post(url, json, (responseText, status) => {
@@ -285,16 +302,17 @@ function displayTableZona(page) {
                 <td class="Code">${record.idzona}</td>
                 <td>${(!record.zona == "") ? record.zona : "---"}</td>
                 <td>${(!record.obra == "") ? record.obra : "---"}</td>
-                <td>${(!record.indirecto == "") ? record.indirecto : "---"}</td>
-                <td>${(!record.financiamiento == "") ? record.financiamiento : "---"}</td>
-                <td>${(!record.utilidad == "") ? record.utilidad : "---"}</td>
-                <td>${(!record.adicionales == "") ? record.adicionales : "---"}</td>
+                <td>${(!record.indirecto == "") ? record.indirecto : "---"}%</td>
+                <td>${(!record.financiamiento == "") ? record.financiamiento : "---"}%</td>
+                <td>${(!record.utilidad == "") ? record.utilidad : "---"}%</td>
+                <td>${(!record.adicionales == "") ? record.adicionales : "---"}%</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" 
                         onclick="llenarModalModificarZona(${record.idzona},'${record.zona}','${record.obra}','${record.fecha}',${record.indirecto},${record.financiamiento},${record.utilidad},${record.adicionales})"></i>
                         ` : ``}
+                        <i class="coloresIcono fa-regular fa-file-pdf" style="cursor: pointer;" alt="Ver PDF" onclick="verPDFZona('${record.idzona}')"></i>
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idzona},${record.estatus})"></i>` :
                     `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idzona},${record.estatus})"></i>`
@@ -562,4 +580,116 @@ function idZonasutomatico() {
     // Incrementa el número más alto encontrado y genera el nuevo id
     const newId = (maxIdNumber + 1).toString();
     return newId;
+}
+
+
+
+function UpdAgregarPDFZona() {
+    let id = document.querySelector('#UpdidInput').value;
+    let idAnterior = document.querySelector('#UpdidInput').value; // Obtener el ID anterior
+    var inputFile = document.getElementById('UpdpdfInput');
+    var file = inputFile.files[0];
+
+    // Verificar el tamaño máximo del archivo (5 MB)
+    var maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size <= maxSizeBytes) {
+        // Verificar si el archivo es un PDF
+        if (file.type === 'application/pdf') {
+            var formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('id', id);
+            formData.append('idAnterior', idAnterior); // Añadir el ID anterior al FormData
+
+            // Enviar el archivo al servidor
+            $.ajax({
+                url: './js/guardar_pdfZona.php', // Asegúrate de que la ruta es correcta
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log('PDF guardado:', response);
+                    guardo = true;
+                },
+                error: function (error) {
+                    console.error('Error al guardar el PDF:', error);
+                    guardo = false;
+                }
+            });
+        } else {
+            mensajePantalla('El archivo seleccionado no es un PDF.', false);
+            guardo = false;
+        }
+    } else {
+        mensajePantalla('El tamaño del archivo excede el límite de 5 MB.', false);
+        guardo = false;
+    }
+}
+function AddAgregarPDFZona() {
+    let id = document.querySelector('#AddidInput').value;
+    let inputFile = document.getElementById('AddpdfInput');
+    let idAnterior = id;
+    var file = inputFile.files[0];
+    // Verificar el tamaño máximo del archivo (5 MB)
+    var maxSizeBytes = 5 * 1024 * 1024;
+    if (file.size <= maxSizeBytes) {
+        // Verificar si el archivo es un PDF
+        if (file.type === 'application/pdf') {
+            var formData = new FormData();
+            formData.append('pdfFile', file);
+            formData.append('id', id);
+            formData.append('idAnterior', idAnterior);
+            // Enviar el archivo al servidor
+            $.ajax({
+                url: './js/guardar_pdfZona.php',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    console.log('PDF guardado:', response);
+                    guardo = true;
+                },
+                error: function (error) {
+                    console.error('Error al guardar el PDF:', error);
+                    guardo = false;
+                }
+            });
+        } else {
+            mensajePantalla('El archivo no es un PDF.', false);
+            guardo = false;
+        }
+    } else {
+        mensajePantalla('El tamaño del archivo excede el límite de 5 MB.', false);
+        guardo = false;
+    }
+}
+
+function verPDFZona(idZona) {
+    // Construir la ruta del directorio donde se encuentra el archivo PDF
+    const pdfDirectory = `../PDFZona/${idZona}/`;
+
+    // Llamar al servidor para obtener la lista de archivos en la carpeta
+    fetch(pdfDirectory)
+        .then(response => {
+            if (response.ok) {
+                // Si la carpeta existe, buscar el primer archivo PDF
+                return response.text();
+            } else {
+                mensajePantalla("Zona sin PDF");
+            }
+        })
+        .then(data => {
+            // Buscar el primer archivo PDF en la respuesta
+            const pdfFileMatch = data.match(/href="([^"]+\.pdf)"/);
+            if (pdfFileMatch) {
+                // Si encontramos un archivo PDF, construir la URL completa
+                const pdfPath = pdfDirectory + pdfFileMatch[1];
+                // Abrir el PDF en una nueva pestaña
+                window.open(pdfPath, '_blank');
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar el archivo:', error);
+        });
 }

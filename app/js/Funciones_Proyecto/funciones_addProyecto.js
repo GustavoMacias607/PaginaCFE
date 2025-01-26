@@ -3,6 +3,10 @@ let objZonas;
 let idNuevoProyecto;
 let datosProyecto = {};
 let filterDataProyTerm = [...data];
+
+
+let costosAdicionales = {};
+
 function AddProyectoFase1() {
     let vacio = false;
     let PrimerValorVacio;
@@ -94,6 +98,7 @@ function AddProyectoFase1() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+                console.log(resp);
                 if (resp.estado == "OK") {
                     AddCerrarModal();
                     opcion("addCatConFrm")
@@ -172,6 +177,7 @@ function GetProyectoProceso() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+                console.log(resp);
                 if (resp.estado == "OK") {
                     data = resp.datos;
                     console.log(data)
@@ -384,6 +390,7 @@ function ObtenerZonas() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     objZonas = resp.datos;
+                    PorsentajesZona(objZonas);
                 }
             } else {
                 throw e = status;
@@ -451,9 +458,12 @@ function seleccionarSugerenciaZonas(unidad, sugerenciasDiv) {
 function obtenerIdZona() {
     let zona = document.getElementById('inputZona').value.toLowerCase();
     let obra = document.getElementById('AddTipoObra').value.toLowerCase();
+    console.log(objZonas);
     console.log(zona, obra);
+
     // Encontrar el objeto que coincida con la zona y la obra
-    const resultado = objZonas.find(z => z.zona.toLowerCase() === zona && z.obra.toLowerCase() === obra);
+    const resultado = objZonas.find(z => z.zona.toLowerCase() == zona && z.obra.toLowerCase() == obra);
+    console.log(resultado);
     // Si se encuentra el objeto, devolver el idzona, de lo contrario, devolver null o un valor por defecto
     if (resultado) {
         return resultado.idzona;

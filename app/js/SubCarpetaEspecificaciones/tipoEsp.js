@@ -387,6 +387,7 @@ function LlenarCamposAgregar(valor) {
     nombrebtn.innerHTML = 'Agregar especificación';
     let btnGuardar = document.getElementById('btnGuardarModalTipoEsp');
     btnGuardar.innerHTML = "Guardar"
+    btnGuardar.style.display = 'inline-block';
 
 
 }

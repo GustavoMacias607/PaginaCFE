@@ -16,7 +16,7 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="javascript:AbrirModal();">Editar datos de proyecto</button>
         <button type="button" class="btn btn-agregar-Proyecto" onclick="">Cargar cuadro de dispositivos</button>
         <input type="text" class="form-control inputLleno d-none" id="idUsuario" value="<?= $_SESSION['idusuario'] ?>">
-        <a href="index.php" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>

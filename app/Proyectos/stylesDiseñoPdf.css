@@ -37,3 +37,23 @@ th {
 td.todosBordesSum {
   border: 1px solid #000;
 }
+
+.ultimaColumna {
+  border-top: 4px solid #000;
+}
+
+.todosBordesCuadro {
+  border: 3px solid #000;
+  padding: 2px !important;
+}
+
+.primeraColumna {
+  padding: 1px 1px 1px 10rem !important;
+}
+.terceraColumna {
+  border-left: 3px solid #000;
+}
+
+.negritas {
+  font-weight: bold;
+}

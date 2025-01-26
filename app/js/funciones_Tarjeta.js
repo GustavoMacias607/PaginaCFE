@@ -280,7 +280,6 @@ function displayTableMaterialesTarjetaP(page) {
 function actualizarSumaMateriales() {
     suma1 = 0;
     suma1 = importeMateriales;
-    console.log(suma1, importeMateriales)
     const formattedSuma = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -633,7 +632,7 @@ function displayTableMaquinariaTarjetaP(page) {
                 rhmCell.style.backgroundColor = rhm > 0 ? '#82f75780' : 'red';
 
                 // Calcular el resultado y actualizar celdas
-                const resultado = phm * rhm;
+                const resultado = phm / rhm;
                 resultadoCellMaqui.textContent = formatoMXN.format(resultado);
 
                 // Recalcular el importe total
@@ -1148,7 +1147,6 @@ function MostrartablaManoObraTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                console.log(datosBd);
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalManoObraiaPrincipal.push({
@@ -1218,7 +1216,6 @@ function MostrartablaBasicosTarjeta() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                console.log(datosBd)
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         objTabla2ModalBasicosPrincipal.push({
@@ -1255,7 +1252,7 @@ function AgregarTotalConcepto() {
     let datos = {}
     datos = datosCatalogo;
     datos.idAnterior = datosCatalogo.id;
-    const total = document.getElementById('TotalSumas').innerHTML;
+    let total;
     const convertirAMoneda = (valor) => {
         return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
     }
@@ -1265,8 +1262,10 @@ function AgregarTotalConcepto() {
     let url = "";
     if (datosCatalogo.TipoConcepto) {
         url = "../ws/ConceptosBasicos/wsUpdConceptoBasico.php";
+        total = document.getElementById('TotalSumas').innerHTML;
     } else {
         url = "../ws/Conceptos/wsUpdConcepto.php";
+        total = document.getElementById('tarTotalTarjeta').innerHTML;
     }
 
 
@@ -1305,6 +1304,7 @@ function calcularTotal() {
     // Formatear el total como moneda
     document.getElementById('TotalSumas').innerHTML = totalFormateado
     llenarColumnaMo();
+    actualizarCostosExtras();
 }
 
 function pantallaIr() {
@@ -1318,13 +1318,16 @@ function pantallaIr() {
 function mostrarCosasBasicos() {
 
     if (!datosCatalogo.TipoConcepto) {
+        console.log(!datosCatalogo.TipoConcepto)
         const total = document.getElementById('TotalAgregarBasicos');
         const tabla = document.getElementById('tablaAgregarBasicos');
         const btn = document.getElementById('btnAgregarBasicos');
+        const porcentajes = document.getElementById('apartadoPorcentajes');
 
         total.style.display = 'block';
         tabla.style.display = 'block';
         btn.style.display = 'block';
+        porcentajes.style.display = 'grid';
     } else {
         basicosInactivo = false;
     }
@@ -1430,4 +1433,31 @@ function llenarUnidadTablaTarjeta() {
             console.error(error);
         }
     });
+}
+
+
+function actualizarCostosExtras() {
+    const costoDirecto = suma1 + suma2 + suma3 + suma4 + suma5;
+    const costoIndirecto = costoDirecto * (15 / 100);
+    const subTotal1 = costoDirecto + costoIndirecto;
+    const financiamiento = subTotal1 * (1 / 100);
+    const subTotal2 = financiamiento + subTotal1;
+    const utilidad = subTotal2 * (10 / 100);
+    const subTotal3 = utilidad + subTotal2;
+    const cargosAdicionales = subTotal3 * (0.5 / 100);
+    const precioUnitario = subTotal3 + cargosAdicionales;
+
+    const formatoMXN = new Intl.NumberFormat('es-MX', {
+        style: 'currency',
+        currency: 'MXN'
+    });
+
+    document.getElementById(`tarCostoIndirecto`).innerText = formatoMXN.format(costoIndirecto);
+    document.getElementById(`tarSub1`).innerText = formatoMXN.format(subTotal1);
+    document.getElementById(`tarFinanciamiento`).innerText = formatoMXN.format(financiamiento);
+    document.getElementById(`tarSub2`).innerText = formatoMXN.format(subTotal2);
+    document.getElementById(`tarUtilidad`).innerText = formatoMXN.format(utilidad);
+    document.getElementById(`tarSub3`).innerText = formatoMXN.format(subTotal3);
+    document.getElementById(`tarCargoAdicional`).innerText = formatoMXN.format(cargosAdicionales);
+    document.getElementById(`tarTotalTarjeta`).innerText = formatoMXN.format(precioUnitario);
 }

@@ -12,6 +12,22 @@ function llenarCamposPaginaTerminado() {
     getMaterialesNo();
     getMaquinarias();
     getManoObras();
+    ObtenerZonas();
+
+}
+function PorsentajesZona(zonis) {
+    zonis.forEach((zona) => {
+        console.log(zona.idzona, datosProyecto.idZona)
+        if (zona.idzona == datosProyecto.idZona) {
+            costosAdicionales.CIndirecto = zona.indirecto;
+            costosAdicionales.Financiamiento = zona.financiamiento;
+            costosAdicionales.utilidad = zona.utilidad;
+            costosAdicionales.CAdicionales = zona.adicionales;
+            GeneradorTablaConceptoPDF();
+            return
+        }
+    })
+
 }
 
 function mostrarTablaTerminado(tablaId, boton) {
@@ -80,7 +96,6 @@ function MostrarConceptosContenidosProyectoTerminado() {
                     editedRows = {};
                 }
                 GeneradorTablaConcepto();
-                GeneradorTablaConceptoPDF();
                 llenarTablaConceptosTerminado();
             } else {
                 throw new Error(status);
@@ -184,125 +199,117 @@ function ExportarPDFMaterialesSi() {
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
-
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
-        doc.setFontSize(10); // Tamaño de fuente
-
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
-
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
-    };
 
     // Agregar título de la tabla
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const titleX = pageWidth / 2; // Posición centrada en el ancho
+        const titleY = 45; // Posición Y del título
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+        doc.setFontSize(10); // Tamaño de la fuente
         const title = "Materiales suministrados por CFE";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG';
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
 
-    // Generar la tabla y configurar estilos
+    // Generar la tabla con pie de página dinámico
+    let pageNumber = 0;
+    // Pie de página dinámico
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 8,
         },
         columnStyles: {
-            0: { halign: 'right' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'justify' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' }, // Centrar contenido de la columna "Cantidad"
-            4: { halign: 'left' }, // Centrar contenido de la columna "Precio U"
-            5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            0: { halign: 'right' },
+            1: { halign: 'justify' },
+            2: { halign: 'left' },
+            3: { halign: 'right' },
+            4: { halign: 'left' },
+            5: { halign: 'right' }
         },
-        didDrawPage: () => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+
+        didDrawPage: (data) => {
+            pageNumber += 1; // Incrementar el número de página
+            addImage(doc);
+            addHeader(doc);
+            addTitle(doc);
+            addFooter(doc, pageNumber); // Pasar el número de página al pie
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -328,125 +335,115 @@ function ExportarPDFMaterialesNo() {
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
-
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
-        doc.setFontSize(10); // Tamaño de fuente
-
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
-
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
-    };
-
-    // Agregar título de la tabla
+    // Agregar título
     const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
+        const titleY = 45;
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
+        doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
         const title = "Materiales no suministrados por CFE";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" });
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG';
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
 
-    // Generar la tabla y configurar estilos
+    // Pie de página dinámico
+    let pageNumber = 0;
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 8,
         },
         columnStyles: {
-            0: { halign: 'right' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'justify' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' }, // Centrar contenido de la columna "Cantidad"
-            4: { halign: 'left' }, // Centrar contenido de la columna "Precio U"
-            5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            0: { halign: 'right' },
+            1: { halign: 'justify' },
+            2: { halign: 'left' },
+            3: { halign: 'right' },
+            4: { halign: 'left' },
+            5: { halign: 'right' }
         },
-        didDrawPage: () => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+
+        didDrawPage: (data) => {
+            pageNumber += 1;
+            addImage(doc);
+            addHeader(doc);
+            addTitle(doc);
+            addFooter(doc, pageNumber);
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -454,7 +451,6 @@ function ExportarPDFMaterialesNo() {
 
     doc.save("tablaMaterialesNoSuministrados.pdf");
 }
-
 function ExportarPDFManoObra() {
     let total = document.getElementById("TotalSumaManoObra").innerHTML;
     const { jsPDF } = window.jspdf;
@@ -484,7 +480,7 @@ function ExportarPDFManoObra() {
         // Línea 1
         doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
         // Línea 2
@@ -499,40 +495,32 @@ function ExportarPDFManoObra() {
         doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
+    const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height; // Altura de la página
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
+        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
 
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
         doc.setFontSize(10); // Tamaño de fuente
+        doc.setTextColor(0, 0, 0); // Color negro
 
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+        const pageText = `Página ${pageNumber}`; // Texto del número de página
+        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
 
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
+        // Centrar el texto en el pie de página
+        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
     };
 
-    // Agregar título de la tabla
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const titleX = pageWidth / 2; // Posición centrada en el ancho
+        const titleY = 45; // Posición Y del título
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+        doc.setFontSize(10); // Tamaño de la fuente
         const title = "Mano de obra";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
-
     // Agregar imagen
     const addImage = (doc) => {
         const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
@@ -568,11 +556,12 @@ function ExportarPDFManoObra() {
             5: { halign: 'right' }, // Alinear a la derecha contenido de la columna "Importe"
             6: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
-        didDrawPage: () => {
+        didDrawPage: (data) => {
             addImage(doc); // Agregar imagen
             addHeader(doc); // Agregar encabezado
             addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
+            addFooter(doc, pageNumber); // Agregar el pie de página numerado
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -629,7 +618,7 @@ function ExportarPDFHerramientasMano() {
         // Línea 1
         doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
         // Línea 2
@@ -644,38 +633,33 @@ function ExportarPDFHerramientasMano() {
         doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
+    const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height; // Altura de la página
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
+        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
 
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
         doc.setFontSize(10); // Tamaño de fuente
+        doc.setTextColor(0, 0, 0); // Color negro
 
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+        const pageText = `Página ${pageNumber}`; // Texto del número de página
+        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
 
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
+        // Centrar el texto en el pie de página
+        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
     };
 
     // Agregar título de la tabla
+
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const titleX = pageWidth / 2; // Posición centrada en el ancho
+        const titleY = 45; // Posición Y del título
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+        doc.setFontSize(10); // Tamaño de la fuente
         const title = "Herramientas de mano de obra";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
 
     // Agregar imagen
@@ -710,11 +694,12 @@ function ExportarPDFHerramientasMano() {
             2: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
             3: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
-        didDrawPage: () => {
+        didDrawPage: (data) => {
             addImage(doc); // Agregar imagen
             addHeader(doc); // Agregar encabezado
             addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
+            addFooter(doc, pageNumber); // Agregar el pie de página numerado
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -771,7 +756,7 @@ function ExportarPDFEquipoSeguirdad() {
         // Línea 1
         doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
         // Línea 2
@@ -786,38 +771,32 @@ function ExportarPDFEquipoSeguirdad() {
         doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
+    const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height; // Altura de la página
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
+        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
 
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
         doc.setFontSize(10); // Tamaño de fuente
+        doc.setTextColor(0, 0, 0); // Color negro
 
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+        const pageText = `Página ${pageNumber}`; // Texto del número de página
+        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
 
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
+        // Centrar el texto en el pie de página
+        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
     };
 
     // Agregar título de la tabla
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const titleX = pageWidth / 2; // Posición centrada en el ancho
+        const titleY = 45; // Posición Y del título
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+        doc.setFontSize(10); // Tamaño de la fuente
         const title = "Equipo y seguridad";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
 
     // Agregar imagen
@@ -852,11 +831,12 @@ function ExportarPDFEquipoSeguirdad() {
             2: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
             3: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
-        didDrawPage: () => {
+        didDrawPage: (data) => {
             addImage(doc); // Agregar imagen
             addHeader(doc); // Agregar encabezado
             addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
+            addFooter(doc, pageNumber); // Agregar el pie de página numerado
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -912,7 +892,7 @@ function ExportarPDFMaquinarias() {
         // Línea 1
         doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
         // Línea 2
@@ -927,40 +907,34 @@ function ExportarPDFMaquinarias() {
         doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
+    const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height; // Altura de la página
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
+        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
 
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
         doc.setFontSize(10); // Tamaño de fuente
+        doc.setTextColor(0, 0, 0); // Color negro
 
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+        const pageText = `Página ${pageNumber}`; // Texto del número de página
+        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
 
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
+        // Centrar el texto en el pie de página
+        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
     };
 
     // Agregar título de la tabla
+
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const titleX = pageWidth / 2; // Posición centrada en el ancho
+        const titleY = 45; // Posición Y del título
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+        doc.setFontSize(10); // Tamaño de la fuente
         const title = "Maquinarias";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
-
     // Agregar imagen
     const addImage = (doc) => {
         const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
@@ -995,11 +969,12 @@ function ExportarPDFMaquinarias() {
             4: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
             5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
-        didDrawPage: () => {
+        didDrawPage: (data) => {
             addImage(doc); // Agregar imagen
             addHeader(doc); // Agregar encabezado
             addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
+            addFooter(doc, pageNumber); // Agregar el pie de página numerado
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -1056,7 +1031,7 @@ function ExportarPDFConceptos() {
         // Línea 1
         doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
         doc.setFontSize(12);
-        const line1 = "División de distribución Jalisco";
+        const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
         // Línea 2
@@ -1071,38 +1046,33 @@ function ExportarPDFConceptos() {
         doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
     };
 
-    // Pie de página centrado
-    const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-    const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-    const addFooter = (doc) => {
+    const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height; // Altura de la página
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 15; // 1.5 cm desde la parte inferior (15 mm)
+        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
 
-        doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-        doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
         doc.setFontSize(10); // Tamaño de fuente
+        doc.setTextColor(0, 0, 0); // Color negro
 
-        const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-        const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+        const pageText = `Página ${pageNumber}`; // Texto del número de página
+        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
 
-        // Centrar los dos renglones
-        doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-        doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 0); // Segundo renglón
+        // Centrar el texto en el pie de página
+        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
     };
 
     // Agregar título de la tabla
+
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 23; // Margen derecho (2.3 cm)
-        const titleX = pageWidth - marginRight; // Posición X del título
-        const titleY = 45; // Posición Y del título (4.5 cm del margen superior)
+        const titleX = pageWidth / 2; // Posición centrada en el ancho
+        const titleY = 45; // Posición Y del título
 
-        doc.setFont("helvetica", "normal"); // Helvetica Roman
-        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+        doc.setFontSize(10); // Tamaño de la fuente
         const title = "Conceptos";
-        doc.text(title, titleX, titleY, { align: "right" });
+        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
 
     // Agregar imagen
@@ -1139,11 +1109,12 @@ function ExportarPDFConceptos() {
             4: { halign: 'right' }, // Centrar contenido de la columna "Precio U"
             5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
-        didDrawPage: () => {
+        didDrawPage: (data) => {
             addImage(doc); // Agregar imagen
             addHeader(doc); // Agregar encabezado
             addTitle(doc); // Agregar título
-            addFooter(doc); // Agregar pie de página
+            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
+            addFooter(doc, pageNumber); // Agregar el pie de página numerado
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -1173,7 +1144,7 @@ function ExportarPDFConceptos() {
 
 async function exportarPDFConHtml() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'pt', 'a4');
+    const doc = new jsPDF('p', 'pt', 'letter');
     const container = document.getElementById('contenedor-cfe');
 
     if (!container) {
@@ -1187,8 +1158,8 @@ async function exportarPDFConHtml() {
     container.style.left = '-9999px';
 
     const tarjetas = container.getElementsByClassName('tarjeta-concepto');
-    const marginX = 2 * 28.35; // 2.3 cm in points
-    const marginY = 4.5 * 28.35; // 4 cm in points
+    const marginX = 2 * 28.35; // 2.3 cm en puntos
+    const marginY = 4.5 * 28.35; // 4.5 cm en puntos
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const contentWidth = pageWidth - 2 * marginX;
@@ -1207,12 +1178,14 @@ async function exportarPDFConHtml() {
             if (i > 0) {
                 doc.addPage();
             }
-
+            const pageNumber = doc.internal.getNumberOfPages();
             // Agregar encabezado, imagen, título y pie de página
             addHeader(doc);
             addImage(doc);
-            addTitle(doc);
-            addFooter(doc);
+            addTitle(doc, pageNumber);
+
+            // Obtener número de página actual
+            addFooter(doc, pageNumber); // Agregar pie de página con número de página
 
             doc.addImage(imgData, 'PNG', marginX, position, imgWidth, imgHeight);
         });
@@ -1225,7 +1198,6 @@ async function exportarPDFConHtml() {
 
     doc.save('proyecto.pdf');
 }
-
 // Encabezado sin espacio entre renglones
 const addHeader = (doc) => {
     const pageWidth = doc.internal.pageSize.width; // Ancho de la página
@@ -1238,7 +1210,7 @@ const addHeader = (doc) => {
     // Línea 1
     doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
     doc.setFontSize(12);
-    const line1 = "División de distribución Jalisco";
+    const line1 = "División de Distribución Jalisco";
     doc.text(line1, headerX, headerYStart, { align: "right" });
 
     // Línea 2
@@ -1254,37 +1226,39 @@ const addHeader = (doc) => {
 };
 
 // Pie de página centrado
-const footerTextLine1 = "Rio Lerma 334, 1er Piso, Col. Cuauhtémoc C.P. 06589, Ciudad de México";
-const footerTextLine2 = "Tel. 52 29 44 00 ext. 92104";
-
-const addFooter = (doc) => {
+const addFooter = (doc, pageNumber) => {
     const pageHeight = doc.internal.pageSize.height; // Altura de la página
     const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-    const footerY = pageHeight - 30; // 1.5 cm desde la parte inferior (15 mm)
+    const footerY = pageHeight - 20; // Posición Y del pie de página (1 cm desde la parte inferior)
 
-    doc.setFont("helvetica", "oblique"); // Fuente Helvetica Condensed Oblique
-    doc.setTextColor(0, 0, 0, 0.8); // Color negro al 80%
+    doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
     doc.setFontSize(10); // Tamaño de fuente
+    doc.setTextColor(0, 0, 0); // Color negro
 
-    const textWidthLine1 = doc.getTextWidth(footerTextLine1); // Ancho del primer renglón
-    const textWidthLine2 = doc.getTextWidth(footerTextLine2); // Ancho del segundo renglón
+    const pageText = `Página ${pageNumber}`; // Texto del número de página
+    const textWidth = doc.getTextWidth(pageText); // Ancho del texto
 
-    // Centrar los dos renglones
-    doc.text(footerTextLine1, (pageWidth - textWidthLine1) / 2, footerY - 5); // Primer renglón
-    doc.text(footerTextLine2, (pageWidth - textWidthLine2) / 2, footerY + 8); // Segundo renglón
+    // Centrar el texto en el pie de página
+    doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
 };
 
 // Agregar título de la tabla
-const addTitle = (doc) => {
+const addTitle = (doc, iteration) => {
     const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-    const marginRight = 2.3 * 28.35; // Margen derecho (2.3 cm)
-    const titleX = pageWidth - marginRight; // Posición X del título
-    const titleY = 110; // Posición Y del título (4.5 cm del margen superior)
+    const titleX = pageWidth / 2; // Posición centrada en el ancho
+    const titleY = 120; // Posición Y del título
 
-    doc.setFont("helvetica", "normal"); // Helvetica Roman
-    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
+    doc.setFontSize(10); // Tamaño de la fuente
+
+    // Título centrado
     const title = "Análisis de los precios unitarios de los conceptos de trabajo";
-    doc.text(title, titleX, titleY, { align: "right" });
+    doc.text(title, titleX, titleY, { align: "center" });
+    doc.setFontSize(8); // Tamaño de la fuente
+    // Número de tarjeta alineado a la izquierda
+    const noTarjeta = `Concepto${String(iteration).padStart(3, '0')}`; // Formato con ceros a la izquierda
+    const marginLeft = 2 * 28.35; // 2 cm de margen izquierdo
+    doc.text(noTarjeta, marginLeft, titleY); // Texto alineado a la izquierda
 };
 
 // Agregar imagen

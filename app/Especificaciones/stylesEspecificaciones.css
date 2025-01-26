@@ -50,6 +50,7 @@ body {
 
 /* Estilos para el titulo volver a inicio */
 .text-inicio-especificaciones {
+  cursor: pointer;
   text-decoration: none;
   position: static;
   font-family: "LatoBold", sans-serif;
