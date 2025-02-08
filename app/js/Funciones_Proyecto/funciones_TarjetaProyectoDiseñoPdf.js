@@ -5,30 +5,44 @@ async function GeneradorTablaConceptoPDF() {
         return;
     }
     container.innerHTML = '';
-    console.log(datosProyecto.idProyecto)
-    console.log(datosProyecto.idZona)
-    console.log(costosAdicionales.utilidad)
     let conceptos = Object.values(editedRows);
+    contador = 0;
     for (const concepto of conceptos) {
+        contador++;
         let conceptoHTML = `
-        
             <div id="concepto-${concepto.idconcepto}" class="tarjeta-concepto">
                 <div class="contTabla-materialesmodal_catalogo">
                     <div>
-                        <table>
+                        <table style="width: 100rem">
                             <thead>
                                 <tr class="todosBordes">
-                                    <th class="textIzq" style="width: 8rem;  text-align: justify;">No.</th>
-                                    <th class="textIzq">Concepto</th>
-                                    <th class="textIzq" style="width: 10rem;">Unidad</th>
-                                    <th class="textIzq" style="width: 8rem; display: table-cell;">Cantidad</th>
+                                    <td class="textIzq" style="text-align: justify; height: fit-content; ">Para: ${datosProyecto.nombre}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table style="width: 100rem">
+                            <thead>
+                                <tr class="todosBordes">
+                                    <th class="textIzq" style="width: 9rem;  text-align: justify;  ">No. Concepto</th>
+                                    <td class="textDer" style="width:4rem; border: 1px solid #000;">${String(contador).padStart(3, '0')}</td>
+                                    <td class="textCen" style="border: 1px solid #000;">Análisis de los precios unitarios de los conceptos de trabajo</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table style="width: 100rem">
+                            <thead>
+                                <tr class="todosBordes">
+                                    <th class="textCen" style="width: 9rem;">ID</th>
+                                    <th class="textCen">Concepto</th>
+                                    <th class="textCen" style="width: 10rem;">Unidad</th>
+                                    <th class="textCen" style="width: 8rem; display: table-cell;">Cantidad</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="todosBordes"> 
                                     <td class="textIzq">${concepto.idconcepto}</td>
-                                    <td class="textJus">${concepto.nombre}</td>
-                                    <td class="textCen">${concepto.unidad}</td>
+                                    <td class="textJus" style="height: fit-content; text-align: justify;">${concepto.nombre}</td>
+                                    <td class="textIzq">${concepto.unidad}</td>
                                     <td class="textDer">${concepto.cantidad}</td>
                                 </tr>
                             </tbody>
@@ -147,14 +161,14 @@ async function GeneradorTablaConceptoPDF() {
             </div>
         `;
         container.innerHTML += conceptoHTML;
-        await TraerMaterialesConceptoPDF(concepto.idconcepto);
-        await TraerManoObrasConceptoPDF(concepto.idconcepto);
-        await TraerMaquinariaConceptoPDF(concepto.idconcepto);
-        await TraerBasicoConceptoPDF(concepto.idconcepto);
+        await TraerMaterialesConceptoPDF(concepto.idconcepto, false);
+        await TraerManoObrasConceptoPDF(concepto.idconcepto, false);
+        await TraerMaquinariaConceptoPDF(concepto.idconcepto, false);
+        await TraerBasicoConceptoPDF(concepto.idconcepto, false);
     }
 }
 
-function TraerMaterialesConceptoPDF(idConceptoProyecto) {
+function TraerMaterialesConceptoPDF(idConceptoProyecto, excel) {
     return new Promise((resolve, reject) => {
         let MaterialesConcepto = [];
         const datos = {};
@@ -166,6 +180,7 @@ function TraerMaterialesConceptoPDF(idConceptoProyecto) {
                 if (status == "success") {
                     let resp = JSON.parse(responseText);
                     let datosBd = resp.datos;
+
                     if (datosBd) {
                         datosBd.forEach((datos) => {
                             MaterialesConcepto.push({
@@ -181,8 +196,10 @@ function TraerMaterialesConceptoPDF(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto);
-                    resolve();
+                    if (!excel) {
+                        GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto);
+                    }
+                    resolve(MaterialesConcepto);
                 } else {
                     throw new Error(status);
                 }
@@ -208,24 +225,24 @@ function GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto) {
             <table>
                 <thead>
                     <tr class="todosBordes">
-                        <th style="width: 8rem;">ID</th>
-                        <th>Descripción</th>
-                        <th style="width: 8rem;">Unidad</th>
-                        <th style="width: 8rem;">Precio U</th>
-                        <th style="width: 8rem;">Cantidad</th>
-                        <th style="width: 14rem;">Suministrado por CFE</th>
-                        <th class="textDer" style="width: 15rem;">M = Precio * Cantidad</th>
+                        <th class="textCen" style="width: 8rem;">ID</th>
+                        <th class="textCen">Descripción</th>
+                        <th class="textCen" style="width: 8rem;">Unidad</th>
+                        <th class="textCen" style="width: 8rem;">Precio U</th>
+                        <th class="textCen" style="width: 8rem;">Cantidad</th>
+                        <th class="textCen" style="width: 14rem;">Suministrado por CFE</th>
+                        <th class="textCen" style="width: 15rem;">M = Precio * Cantidad</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${MaterialesConcepto.length > 0 ? MaterialesConcepto.map(material => `
                         <tr class="todosBordes">
                             <td class="textDer">${material.codigo}</td>
-                            <td class="textIzq">${material.descripcion}</td>
-                            <td>${material.unidad}</td>
+                            <td class="textIzq" style="height: fit-content;">${material.descripcion}</td>
+                            <td >${material.unidad}</td>
                             <td class="textDer">${formatoMXN.format(material.precio)}</td>
-                            <td class="textCen">${material.cantidad}</td>
-                            <td class="textCen">${material.suministrado ? 'Sí' : 'No'}</td>
+                            <td class="textDer">${material.cantidad}</td>
+                            <td class="textIzq">${material.suministrado ? 'Sí' : 'No'}</td>
                             <td class="textDer">${formatoMXN.format(material.suministrado ? 0 : (material.precio * material.cantidad))}</td>
                         </tr>
                     `).join('') : `
@@ -249,7 +266,7 @@ function GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto) {
     container.innerHTML += materialesHTML;
 }
 
-function TraerManoObrasConceptoPDF(idConceptoProyecto) {
+function TraerManoObrasConceptoPDF(idConceptoProyecto, excel) {
     return new Promise((resolve, reject) => {
         let ManoObraConcepto = [];
         const datos = {};
@@ -279,8 +296,10 @@ function TraerManoObrasConceptoPDF(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto);
-                    resolve();
+                    if (!excel) {
+                        GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto);
+                    }
+                    resolve(ManoObraConcepto);
                 } else {
                     throw new Error(status);
                 }
@@ -306,14 +325,14 @@ function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
             <table>
                 <thead>
                     <tr class="todosBordes">
-                        <th style="width: 8rem;">ID</th>
-                        <th>Categoría</th>
-                        <th style="width: 10rem;">Unidad</th>
-                        <th style="width: 8rem;">Salario</th>
-                        <th style="width: 8rem;">R</th>
-                        <th style="width: 11rem;">Cantidad</th>
-                        <th style="width: 11rem;">Sr</th>
-                        <th class="textDer" style="width: 15rem;">Mo = Sr/R</th>
+                        <th class="textCen" style="width: 8rem;">ID</th>
+                        <th class="textCen">Categoría</th>
+                        <th class="textCen" style="width: 10rem;">Unidad</th>
+                        <th class="textCen" style="width: 8rem;">Salario</th>
+                        <th class="textCen" style="width: 8rem;">R</th>
+                        <th class="textCen" style="width: 11rem;">Cantidad</th>
+                        <th class="textCen" style="width: 11rem;">Sr</th>
+                        <th class="textCen" style="width: 15rem;">Mo = Sr/R</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -321,7 +340,7 @@ function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
                         <tr class="todosBordes">
                             <td>${manoObra.idmanoobra}</td>
                             <td class="textIzq">${manoObra.categoria}</td>
-                            <td class="textCen">${manoObra.unidad}</td>
+                            <td class="textIzq">${manoObra.unidad}</td>
                             <td class="textDer">${formatoMXN.format(manoObra.salario)}</td>
                             <td class="textDer">${manoObra.rendimiento}</td>
                             <td class="textDer">${manoObra.cantidad.toFixed(2)}</td>
@@ -349,6 +368,7 @@ function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
     container.innerHTML += manoObraHTML;
 
     GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteManoObra);
+    GeneradorTablaHerramientaEquipoExcel(idConceptoProyecto, totalImporteManoObra);
 }
 
 function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteManoObra) {
@@ -371,22 +391,22 @@ function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteMano
             <table >
                 <thead>
                     <tr class="todosBordes">
-                        <th>Descripción</th>
-                        <th style="width: 11rem;">Kh o Ks</th>
-                        <th style="width: 11rem;">Mo</th>
-                        <th class="textDer" style="width: 15rem;">HE = Kh * Mo</th>
+                        <th class="textCen">Descripción</th>
+                        <th class="textCen" style="width: 11rem;">Kh o Ks</th>
+                        <th class="textCen" style="width: 11rem;">Mo</th>
+                        <th class="textCen" style="width: 15rem;">HE = Kh * Mo</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="todosBordes">
                         <td class="Code">Herramientas de mano</td>
-                        <td>${khHerramientas}</td>
+                        <td class="textDer">${khHerramientas}</td>
                         <td class="textDer">${formatoMXN.format(totalImporteManoObra)}</td>
                         <td class="textDer">${formatoMXN.format(importeHerramientas)}</td>
                     </tr>
                     <tr class="todosBordes">
                         <td class="Code">Equipo y seguridad</td>
-                        <td>${khEquipo}</td>
+                        <td class="textDer">${khEquipo}</td>
                         <td class="textDer">${formatoMXN.format(totalImporteManoObra)}</td>
                         <td class="textDer">${formatoMXN.format(importeEquipo)}</td>
                     </tr>
@@ -406,7 +426,7 @@ function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteMano
     container.innerHTML += herramientaEquipoHTML;
 }
 
-function TraerMaquinariaConceptoPDF(idConceptoProyecto) {
+function TraerMaquinariaConceptoPDF(idConceptoProyecto, excel) {
     return new Promise((resolve, reject) => {
         let MaquinariaConcepto = [];
         const datos = {};
@@ -431,8 +451,11 @@ function TraerMaquinariaConceptoPDF(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto);
-                    resolve();
+                    if (!excel) {
+                        GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto);
+                    }
+
+                    resolve(MaquinariaConcepto);
                 } else {
                     throw new Error(status);
                 }
@@ -458,12 +481,12 @@ function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
             <table>
                 <thead>
                     <tr class="todosBordes">
-                        <th style="width: 8rem;">ID</th>
-                        <th>Descripción</th>
-                        <th style="width: 10rem;">Unidad</th>
-                        <th style="width: 11rem;">PhM</th>
-                        <th style="width: 11rem;">RhM</th>
-                        <th class="textDer" style="width: 15rem;">Ma = PhM / RhM</th>
+                        <th  class="textCen" style="width: 8rem;">ID</th>
+                        <th class="textCen">Descripción</th>
+                        <th  class="textCen" style="width: 10rem;">Unidad</th>
+                        <th  class="textCen" style="width: 11rem;">PhM</th>
+                        <th  class="textCen" style="width: 11rem;">RhM</th>
+                        <th  class="textCen" style="width: 15rem;">Ma = PhM / RhM</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -471,10 +494,10 @@ function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
                         <tr class="todosBordes">
                             <td>${maquinaria.idmaquinaria}</td>
                             <td>${maquinaria.descripcion}</td>
-                            <td class="textCen">${maquinaria.unidad}</td>
+                            <td class="textIzq">${maquinaria.unidad}</td>
                             <td class="textDer">${formatoMXN.format(maquinaria.phm)}</td>
                             <td class="textDer">${maquinaria.rhm}</td>
-                            <td class="textDer">${formatoMXN.format(maquinaria.phm * maquinaria.rhm)}</td>
+                            <td class="textDer">${formatoMXN.format(maquinaria.phm / maquinaria.rhm)}</td>
                         </tr>
                     `).join('') : `
                         <tr class="todosBordes">
@@ -497,7 +520,7 @@ function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
     container.innerHTML += maquinariaHTML;
 }
 
-function TraerBasicoConceptoPDF(idConceptoProyecto) {
+function TraerBasicoConceptoPDF(idConceptoProyecto, excel) {
     return new Promise((resolve, reject) => {
         let BasicoConcepto = [];
         const datos = {};
@@ -521,8 +544,10 @@ function TraerBasicoConceptoPDF(idConceptoProyecto) {
                             });
                         });
                     }
-                    GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto);
-                    resolve();
+                    if (!excel) {
+                        GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto);
+                    }
+                    resolve(BasicoConcepto);
                 } else {
                     throw new Error(status);
                 }
@@ -548,20 +573,20 @@ function GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto) {
             <table>
                 <thead>
                     <tr class="todosBordes">
-                        <th style="width: 8rem;">ID</th>
-                        <th>Descripción</th>
-                        <th style="width: 10rem;">Unidad</th>
-                        <th style="width: 11rem;">Precio U</th>
-                        <th style="width: 11rem;">Cantidad</th>
-                        <th class="textDer" style="width: 15rem;">B = Precio * Cantidad</th>
+                        <th  class="textCen" style="width: 8rem;">ID</th>
+                        <th class="textCen" >Descripción</th>
+                        <th  class="textCen" style="width: 10rem;">Unidad</th>
+                        <th  class="textCen" style="width: 11rem;">Precio U</th>
+                        <th  class="textCen" style="width: 11rem;">Cantidad</th>
+                        <th  class="textCen" style="width: 15rem;">B = Precio * Cantidad</th>
                     </tr>
                 </thead>
                 <tbody >
                     ${BasicoConcepto.length > 0 ? BasicoConcepto.map(basico => `
                         <tr class="todosBordes">
                             <td>${basico.idconbasi}</td>
-                            <td>${basico.nombre}</td>
-                            <td class="textCen">${basico.unidad}</td>
+                            <td style="text-align: justify; height: fit-content;">${basico.nombre}</td>
+                            <td class="textIzq">${basico.unidad}</td>
                             <td class="textDer">${formatoMXN.format(basico.total)}</td>
                             <td class="textDer">${basico.cantconbasi}</td>
                             <td class="textDer">${formatoMXN.format(basico.total * basico.cantconbasi)}</td>

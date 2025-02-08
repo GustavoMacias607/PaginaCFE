@@ -19,6 +19,7 @@ function opcion(op) {
             break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
+            funcion = GetPerfilUsuario;
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
@@ -62,7 +63,11 @@ function opcion(op) {
             break;
         case "Especificaciones":
             url = "Especificaciones/addEspecificaciones.php";
-            //funcion = ;
+            funcion = priEspe;
+            break;
+        case "ICM":
+            url = "ICM/ICMFrm.php";
+            funcion = llenarCamposPaginaICM;
             break;
         default: alert("Opción incorrecta"); return;
     }

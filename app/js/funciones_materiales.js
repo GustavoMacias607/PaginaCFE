@@ -13,6 +13,9 @@ let datosObjetoMateriales = [];
 let ExportarExcel = [];
 
 let unidadMateriales;
+
+
+let materialesMod;
 //Metodo que valida el formulario para agregar materiales y al mismo tiempo agrega el material
 function AddMaterialValidar() {
     let vacio = false;
@@ -100,6 +103,7 @@ function AddMaterialValidar() {
     }
 
     let json = JSON.stringify(datos);
+    console.log(json);
     let url = "../ws/Materiales/wsAddMaterial.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -209,7 +213,7 @@ function UpdMaterialValidar() {
         return;
     }
     let json = JSON.stringify(datos);
-
+    console.log(json);
     let url = "../ws/Materiales/wsUpdMaterial.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -330,7 +334,8 @@ function CambioEstatus() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetMateriales() {
-
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
     let json = "";
     let url = "../ws/Materiales/wsGetMateriales.php";
     $.post(url, json, (responseText, status) => {
@@ -366,38 +371,49 @@ function GetMateriales() {
     });
 }
 
-
 function displayTableMateriales(page) {
     const tableBody = document.getElementById("table-bodyMateriales");
     tableBody.innerHTML = "";
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
-    if (paginatedData.length > 0) {
-        paginatedData.forEach(record => {
-            const formatoMXN = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            });
 
-            // Asegurarse de que el precio se formatee correctamente
+    if (paginatedData.length > 0) {
+        const formatoMXN = new Intl.NumberFormat('es-MX', {
+            style: 'currency',
+            currency: 'MXN'
+        });
+
+        const fechaActual = new Date();
+
+        paginatedData.forEach(record => {
             const precioFormateado = (record.precio !== undefined && record.precio !== "")
                 ? formatoMXN.format(record.precio)
                 : "---";
 
-            // Crear un elemento de fila (tr)
+            let esReciente = false;
+            if (record.fechaprecio && record.fechaprecio.trim() !== "") {
+                const fechaPrecio = new Date(record.fechaprecio);
+                const diferenciaMeses = (fechaActual.getFullYear() - fechaPrecio.getFullYear()) * 12 +
+                    (fechaActual.getMonth() - fechaPrecio.getMonth());
+                esReciente = diferenciaMeses <= 6;
+            }
+
             const row = document.createElement('tr');
             row.classList.add('fila');
 
-            // Establecer el contenido HTML de la fila
+            if (esReciente) {
+                row.classList.add('fila-reciente'); // Agregar clase para el color verde
+            }
+
             row.innerHTML = `
                 <td class="Code">${record.codigo}</td>
-                <td>${(!record.norma == "") ? record.norma : "Sin norma"}</td>
-                <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
+                <td>${record.norma ? record.norma : "Sin norma"}</td>
+                <td>${record.descripcion ? record.descripcion : "---"}</td>
                 <td>${precioFormateado}</td>
-                <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
-                <td>${(!record.familia == "") ? record.familia : "---"}</td>
-                <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
+                <td>${record.fechaprecio ? record.fechaprecio : "---"}</td>
+                <td>${record.familia ? record.familia : "---"}</td>
+                <td>${record.unidad ? record.unidad : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         <div class="miDiv imaCuadro">
@@ -415,11 +431,9 @@ function displayTableMateriales(page) {
                 </td>
             `;
 
-            // Añadir eventos mouseover y mouseout
-            row.addEventListener("mouseover", () => mostrarValores(row));
-            row.addEventListener("mouseout", () => ocultarValores(row));
+            row.addEventListener("mouseover", () => row.classList.add("fila-hover"));
+            row.addEventListener("mouseout", () => row.classList.remove("fila-hover"));
 
-            // Añadir la fila al tbody
             tableBody.appendChild(row);
         });
     } else {
@@ -428,8 +442,8 @@ function displayTableMateriales(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
-
 }
+
 
 function setupPaginationMateriales() {
     const paginationDiv = document.getElementById("pagination");
@@ -941,48 +955,181 @@ function AbrirModalConfirm1() {
 
 
 // Exportar a Excel a partir de un objeto
-function ExportarMateriales() {
-    const fechaActual = new Date();
+async function ExportarMateriales() {
+    // Crear un nuevo libro de trabajo
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("ExportarExcel");
 
-    // Obtener el día, mes y año
-    const dia = fechaActual.getDate();        // Día del mes (1-31)
-    const mes = fechaActual.getMonth() + 1;
-    const ano = fechaActual.getFullYear();    // Mes (0-11, por lo que le sumamos 1)
-    const ws = XLSX.utils.json_to_sheet(ExportarExcel);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Hoja1");
-    XLSX.writeFile(wb, `Reporte Materiales ${dia}-${mes}-${ano}.xlsx`);
-};
+    // Cargar la imagen como base64
+    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageBase64 = await fetch(imageUrl)
+        .then(response => response.blob())
+        .then(blob => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        });
 
+    const imageId = workbook.addImage({
+        base64: imageBase64.split(",")[1], // Remover el encabezado `data:image/png;base64,`
+        extension: "png",
+    });
+
+    worksheet.addImage(imageId, {
+        tl: { col: 0.2, row: 0.2 }, // Posición superior izquierda
+        ext: { width: 150, height: 50 }, // Tamaño de la imagen
+    });
+
+    // Agregar encabezado
+    worksheet.mergeCells("B2:H2");
+    const line1 = worksheet.getCell("B2");
+    line1.value = "División de Distribución Jalisco";
+    line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
+    line1.alignment = { horizontal: "right", vertical: "middle" };
+
+
+    worksheet.mergeCells("B3:H3");
+    const line3 = worksheet.getCell("B3");
+    line3.value = "Departamento de Planeación, Proyectos y Construcción";
+    line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
+    line3.alignment = { horizontal: "right", vertical: "middle" };
+
+    // Agregar título
+    worksheet.mergeCells("A5:H5");
+    const titleCell = worksheet.getCell("A5");
+    titleCell.value = "Materiales";
+    titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
+    titleCell.alignment = { horizontal: "center", vertical: "middle" };
+
+    // Agregar encabezados
+    const headers = ["ID", "Norma", "Descripción", "Precio", "Fecha precio", "Familia", "Unidad", "Estatus"];
+    worksheet.addRow(headers).eachCell((cell) => {
+        cell.font = { bold: true };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
+        cell.alignment = { horizontal: "center", vertical: "middle" };
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+        };
+    });
+
+    // Agregar datos
+    ExportarExcel.forEach((data, rowIndex) => {
+        const rowData = Object.values(data);
+        const excelRow = worksheet.addRow(rowData);
+
+        // Aplicar color alterno a las filas
+        excelRow.eachCell((cell, colNumber) => {
+            // Configuración de alineación según la columna
+            switch (colNumber) {
+                case 1: // ID
+                    cell.alignment = { horizontal: "right", vertical: "middle" };
+                    break;
+                case 2: // Norma
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
+                    break;
+                case 3: // Descripción
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
+                    break;
+                case 4: // Precio
+                    cell.alignment = { horizontal: "right", vertical: "middle" };
+                    break;
+                case 5: // Fecha precio
+                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    break;
+                case 6: // Familia
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
+                    break;
+                case 7: // Unidad
+                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    break;
+                case 8: // Estatus
+                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    break;
+                default:
+                    cell.alignment = { horizontal: "center", vertical: "middle" }; // Por defecto
+            }
+
+            // Aplicar colores alternos en las filas
+            if (rowIndex % 2 === 0) {  // Filas pares
+                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF0F0F0" } }; // Gris claro
+            } else {  // Filas impares
+                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } }; // Blanco
+            }
+
+            // Configurar bordes solo en los lados (izquierda y derecha)
+            cell.border = {
+                left: { style: "thin" },
+                right: { style: "thin" },
+                top: { style: "none" },
+                bottom: { style: "none" }
+            };
+        });
+    });
+
+    worksheet.columns = [
+        { header: "", width: 10 },
+        { header: "", width: 15 },
+        { header: "", width: 40 },
+        { header: "", width: 12 },
+        { header: "", width: 15 },
+        { header: "", width: 20 },
+        { header: "", width: 12 },
+        { header: "", width: 12 }
+    ];
+    // Descargar el archivo Excel
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "ExportarExcel.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 // Función para importar y convertir a objeto, y luego mostrar en la tabla
 function handleFile(e) {
     const file = e.target.files[0];
     const reader = new FileReader();
 
-    reader.onload = function async(event) {
+    reader.onload = async function (event) {
         const datos = new Uint8Array(event.target.result);
-        const workbook = XLSX.read(datos, {
-            type: 'array'
-        });
+        const workbook = XLSX.read(datos, { type: 'array' });
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
 
         // Convertir la hoja de Excel a un objeto JSON
         const jsonObject = XLSX.utils.sheet_to_json(sheet);
 
-        // Aquí tienes el objeto JSON sin manipular la tabla HTML
+        // Transformar jsonObject al formato de ExportarExcel
+        const formattedData = jsonObject.map(row => ({
+            codigo: row["ID"] || row[""],
+            norma: row["Norma"] || row["_1"],
+            descripcion: row["Descripción"] || row["_2"],
+            precio: row["Precio"] || row["_3"],
+            fechaprecio: row["Fecha precio"] || row["_4"],
+            familia: row["Familia"] || row["_5"],
+            unidad: row["Unidad"] || row["_6"],
+            estatus: row["Estatus"] || row["_7"]
+        }));
 
-        // Puedes retornar el objeto JSON o usarlo como desees
-
-        await = MetodoEspera(jsonObject);
-        return jsonObject;
+        console.log(formattedData);
+        // Aquí puedes usar formattedData como desees
+        await MetodoEspera(formattedData);
+        return formattedData;
     };
     reader.readAsArrayBuffer(file);
-
 }
 
 function MetodoEspera(jsonObject) {
-    datosObjetoMateriales = actualizarFechaMateriales(jsonObject, ExportarExcel);
+    const { datosActualizados, materialesModificados } = actualizarFechaMateriales(jsonObject, ExportarExcel);
+    datosObjetoMateriales = datosActualizados;
+    materialesMod = materialesModificados;
+    document.getElementById("btnGuardarMatBD").style.display = "block";
     llenarTablaMateriales();
     filterDataMateriales();
 }
@@ -995,6 +1142,9 @@ function actualizarFechaMateriales(datosExcel, datosBD) {
     const año = fechaActual.getFullYear();
     const fechaHoy = `${año}-${mes < 10 ? '0' + mes : mes}-${dia < 10 ? '0' + dia : dia}`; // Formato YYYY-MM-DD
 
+    // Arreglo para almacenar los materiales modificados
+    const materialesModificados = [];
+
     // Recorrer los datos de Excel
     datosExcel.forEach((materialExcel) => {
         // Buscar si hay un material en la base de datos con el mismo codigo
@@ -1005,19 +1155,49 @@ function actualizarFechaMateriales(datosExcel, datosBD) {
             if (materialExcel.precio !== materialBD.precio) {
                 // Actualizar solo la fecha de precio en el material de Excel
                 materialExcel.fechaprecio = fechaHoy;
+                // Agregar el material modificado al arreglo
+                materialesModificados.push(materialExcel);
             }
         }
     });
-    // Retornar el objeto de datosExcel con las fechas actualizadas y precios intactos
-    return datosExcel;
+
+    // Retornar el objeto de datosExcel con las fechas actualizadas y precios intactos, y los materiales modificados
+    return { datosActualizados: datosExcel, materialesModificados };
 }
 
+function guardarCambios() {
+    let datos = {}
+    materialesMod.forEach(material => {
+        datos.idA = material.codigo;
+        datos.id = material.codigo;
+        datos.norma = material.norma ? material.norma : "";
+        datos.descripcion = material.descripcion ? material.descripcion : "";
+        datos.precio = material.precio ? material.precio : 0;
+        datos.precioFecha = material.fechaprecio ? material.fechaprecio : "";
+        datos.unidad = material.unidad ? material.unidad : "";
+        datos.familia = material.familia ? material.familia : "";
 
-
-
-
-
-
+        let json = JSON.stringify(datos);
+        console.log(json);
+        let url = "../ws/Materiales/wsUpdMaterial.php";
+        $.post(url, json, (responseText, status) => {
+            try {
+                if (status == "success") {
+                    let resp = JSON.parse(responseText);
+                    console.log(resp)
+                    if (resp.estado == "OK") {
+                        GetMateriales();
+                        mensajePantalla("Materiales Reescribidos", true)
+                    }
+                } else {
+                    throw e = status;
+                }
+            } catch (error) {
+                alert("Error: " + error)
+            }
+        });
+    })
+}
 function llenarUnidadTablaMateriales() {
     const unidadFilter = document.getElementById("selectUnidadMateriales"); // El select donde agregarás las opciones
     let json = "";

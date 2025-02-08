@@ -1,0 +1,137 @@
+.fondBlancoICM {
+  background-color: white;
+  height: 5rem;
+  width: 100%;
+  position: fixed;
+  z-index: 500;
+  margin-top: 5rem;
+  @media (max-width: 1090px) {
+    position: static;
+    margin-top: 0;
+    padding-top: 5rem;
+  }
+}
+.btnMostrarTabla {
+  margin: 2rem 0 0 2.2rem;
+}
+.btnColorcito:hover {
+  color: black;
+}
+
+.ApartadoProvedor {
+  flex-wrap: wrap;
+  display: flex;
+}
+
+.ocultarProvedor {
+  display: none;
+}
+
+.provForm {
+  border: #008e5a solid 3px;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+#tabla-proveedores {
+  width: 100%;
+}
+
+#tabla-proveedores th,
+#tabla-proveedores td {
+  border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+  padding: 8px;
+}
+
+#tabla-proveedores th {
+  background-color: #008e5a; /* Encabezados con fondo verde */
+  color: white; /* Letras blancas en los encabezados */
+}
+
+#tabla-proveedores tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
+.contTabla-ICM {
+  padding-left: 2rem;
+  margin-right: 2rem;
+  padding-top: 12rem;
+}
+
+.tabla-container-ICM {
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+
+  margin-top: 0px;
+}
+
+.proveedores-container {
+  width: 50rem;
+  margin-left: 2rem;
+  margin-right: 2rem;
+}
+
+.tabla-proveedores {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  margin-bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  width: calc(100% - 4rem);
+}
+
+.contTabla-ICM {
+  padding-top: 3rem;
+  overflow-x: auto; /* Agregar scroll horizontal */
+}
+
+#tabla-ICM {
+  table-layout: fixed; /* Forzar anchos de columna */
+  width: auto; /* Ancho según contenido */
+  min-width: 100%; /* Mínimo ancho del contenedor */
+  border-collapse: collapse;
+}
+
+#tabla-ICM tbody th,
+#tabla-ICM tbody td {
+  border: 3px solid #008e5a;
+  padding: 8px;
+}
+
+#tabla-ICM tbody th,
+#tabla-ICM tbody td:focus {
+  outline: none;
+  border: 3px solid #008e5a;
+}
+
+#tabla-ICM tbody th {
+  background-color: #008e5a;
+  color: white;
+}
+
+#tabla-ICM tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
+.tabla-container-ICM {
+  position: relative;
+  background: white;
+  z-index: 1;
+}
+
+#tabla-ICM thead th {
+  position: sticky;
+  top: 0;
+  background: #008e5a;
+  z-index: 2;
+  color: white;
+}

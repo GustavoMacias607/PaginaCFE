@@ -26,6 +26,10 @@ require("../../scripts/Materiales.php");
 
         <input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls" />
 
+        <button id="btnGuardarMatBD" onclick="javascript:guardarCambios()" style="display: none;"
+            class="btn btn-agregar-material">
+            Reescribir Materiales
+        </button>
         <a onclick="opcion('proyecto')" class="text-inicio-materiales">
             <div>Ir al inicio</div>
         </a>

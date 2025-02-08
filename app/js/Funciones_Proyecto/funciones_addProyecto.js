@@ -165,6 +165,8 @@ function calcularFechaTermino() {
     }
 }
 function GetProyectoProceso() {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
     document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     ObtenerZonas();

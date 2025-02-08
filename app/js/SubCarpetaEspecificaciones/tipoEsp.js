@@ -15,7 +15,6 @@ function LlenarTablaConceptoEspecificacion() {
 }
 
 function seleccionarFamilia() {
-    console.log("gola")
     let familia = document.getElementById("addFamilia").value
     seleccion.idEspecificacion = familia;
     LlenarCamposAgregar(false);
@@ -31,7 +30,6 @@ function obtenerConceptosEspecificacion() {
 
 
 function guardarTipoEspEnBD(msg) {
-    console.log(conceptoInactivo);
     if (conceptoInactivo) {
         mensajePantalla("Hay un concepto inactivo", false);
         return;
@@ -76,7 +74,6 @@ function displayTableConceptoEspecificacionP(page) {
             if (!record.estatus) {
                 row.classList.add('DatoInactivo');
             }
-            console.log(tipoModal);
             row.innerHTML = `
                   <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
@@ -103,7 +100,6 @@ function displayTableConceptoEspecificacionP(page) {
     }
 }
 function eliminarFilaDelObjetoConceptoTipoEsp(codigo) {
-    console.log(codigo)
     // Eliminar el material de objMaterialesSeleccionados usando su código
     objTabla2ModalConceptoPrincipal.forEach((valor, index) => {
         if (codigo == valor.idconcepto) {
@@ -138,10 +134,7 @@ function AgregartablaConceptoEspecificacion() {
         } else {
             concepto.idTipo = parseInt(idNuevoTipoEsp) + 1;
         }
-
-
         let json = JSON.stringify(concepto);
-        console.log(json);
         let url = "../ws/auxTipo/wsAddAuxTipo.php";
         $.post(url, json, (responseText, status) => {
             try {

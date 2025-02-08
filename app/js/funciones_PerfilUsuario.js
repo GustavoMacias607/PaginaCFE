@@ -1,7 +1,10 @@
 
 let msgModificarContra = "Contraseña modificada";
 
-
+function GetPerfilUsuario() {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
+}
 function UpdPerfilUsuarioValidar(modificarContra) {
     let pass = document.querySelector('#AddContraInput');
     let passConfi = document.querySelector('#AddContraConfInput');

@@ -21,7 +21,7 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 
-<div style="">
+<div>
     <label for=""
         style="color:#303030; font-family: 'LatoBold', sans-serif; margin-left: 2rem; margin-top: 12rem; align-content: center;">Para
         la obra:</label>

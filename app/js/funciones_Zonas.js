@@ -262,6 +262,8 @@ function CambioEstatusZona() {
 
 //Metodo para hacer la consulta de los usuarios tomando en cuanta los filtros
 function GetZona() {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
     let json = "";
     let url = "../ws/Zonas/wsGetZona.php";
     $.post(url, json, (responseText, status) => {

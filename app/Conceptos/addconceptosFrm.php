@@ -20,10 +20,11 @@ if (!isset($_SESSION['idusuario'])) {
         <button type="button" class="btn btn-agregar-conceptos esconderBoton" data-bs-toggle="modal"
             data-bs-target="#AgregarModalBasi" id="btnConceptoBasicos"
             onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar básico</button>
-        <button id="btnExportar" onclick="javascript:Exportar()" class="btn btn-agregar-conceptos esconderBoton">
+        <button id="btnExportar" onclick="javascript:ExportarExcelTarjetas(false)"
+            class="btn btn-agregar-conceptos esconderBoton">
             Exportar datos a Excel
         </button>
-        <button id="btnExportarPDF" onclick="javascript:GeneradorTarjetasConceptoPdf()"
+        <button id="btnExportarPDF" onclick="javascript:GeneradorTarjetasConceptoPdf(true)"
             class="btn btn-agregar-conceptos">
             Exportar datos a PDF
         </button>
@@ -75,7 +76,7 @@ if (!isset($_SESSION['idusuario'])) {
         <table id="tabla-conceptos">
             <thead class="">
                 <tr>
-                    <th style="width: 8rem; ">
+                    <th style="width: 8rem;">
                         <button id="sort-id" class="sort-button">
                             ID <i class="fa-solid fa-arrow-up-wide-short"></i>
                         </button>
@@ -131,7 +132,7 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
-<div id="contenedor-cfe" style="margin-top: 50rem; font-size: 20px; display: none;">
+<div id="contenedor-cfe" style="margin-top: 50rem; font-size: 20px;">
 
 </div>
 <!-- Modal insertar conceptos -->
@@ -220,7 +221,7 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Modal insertar conceptos de basicos -->
 <div class="modal modal-conceptos" id="AgregarModalBasi" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-    <div class="modal-dialog" modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar básico

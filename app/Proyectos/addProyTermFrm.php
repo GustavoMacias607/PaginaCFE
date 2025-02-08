@@ -78,8 +78,8 @@ if (!isset($_SESSION['idusuario'])) {
 <!--tabla materiales suministrados por cfe-->
 <div id="tablaMaterialesSuministrados" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelMaterialesSi();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFMaterialesSi()">Exportar a PDF</button>
     </div>
@@ -146,8 +146,8 @@ if (!isset($_SESSION['idusuario'])) {
 <!--tabla materiales no suministrados por cfe-->
 <div id="tablaMaterialesNoSuministrados" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelMaterialesNo();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFMaterialesNo()">Exportar a PDF</button>
     </div>
@@ -213,8 +213,8 @@ if (!isset($_SESSION['idusuario'])) {
 <!--tabla mano de obra-->
 <div id="tablaManoObra" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelManoObra();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFManoObra()">Exportar a PDF</button>
     </div>
@@ -283,8 +283,8 @@ if (!isset($_SESSION['idusuario'])) {
 <!--tabla maquinaria-->
 <div id="tablaMaquinaria" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelMaquinarias();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFMaquinarias()">Exportar a PDF</button>
     </div>
@@ -351,8 +351,8 @@ if (!isset($_SESSION['idusuario'])) {
 <!--tabla herramienta de mano-->
 <div id="tablaHerramientas" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelHerramientasMano();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFHerramientasMano()">Exportar a PDF</button>
     </div>
@@ -411,8 +411,8 @@ if (!isset($_SESSION['idusuario'])) {
 <!--tabla equipo de seguridad-->
 <div id="tablaEquipoSeguridad" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelEquipoSeguridad();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFEquipoSeguirdad()">Exportar a PDF</button>
     </div>
@@ -470,8 +470,8 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div id="tablaConceptos" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
+        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
+            onclick="ExportarExcelConceptosProyecto();">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFConceptos()">Exportar a PDF</button>
     </div>
@@ -543,10 +543,11 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Tarjetas del proyecto -->
 <div>
     <div id="mostrarBtnPdf" style="margin: 1rem 2rem 0px 2rem; display: none; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;">Exportar a Excel</button>
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
-            onclick="exportarPDFConHtml()">Exportar a PDF</button>
+            onclick="ExportarExcelTarjetas(true);">Exportar a Excel</button>
+        <button type="button" id="btnExportarPDF" class="btn fa-solid-Siguiente-catalogo"
+            style="margin-left: 0.5rem; margin-right: 0.5rem;" onclick="exportarPDFConHtml(false)">Exportar a
+            PDF</button>
     </div>
     <div id="tablaTarjetasProyecto" style="display: none;">
 
@@ -556,5 +557,4 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <div id="contenedor-cfe" style="font-size: 20px; display: none;">
-
 </div>

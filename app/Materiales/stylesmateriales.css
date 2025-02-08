@@ -369,3 +369,12 @@ body {
   color: #303030;
   border-color: 3px solid #303030;
 }
+
+.fila-reciente {
+  background-color: rgb(214, 251, 214) !important;
+}
+
+.fila:hover,
+.fila-hover {
+  background-color: #008e5a67 !important; /* Color cuando se pasa el mouse */
+}

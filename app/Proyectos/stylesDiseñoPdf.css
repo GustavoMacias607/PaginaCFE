@@ -57,3 +57,8 @@ td.todosBordesSum {
 .negritas {
   font-weight: bold;
 }
+
+.btnClickeadoExportar {
+  background-color: red !important;
+  color: black !important;
+}

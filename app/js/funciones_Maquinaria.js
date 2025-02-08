@@ -295,6 +295,8 @@ function CambioEstatusMaquinaria() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetMaquinaria() {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
     let json = "";
     let url = "../ws/Maquinaria/wsGetMaquinaria.php";
     $.post(url, json, (responseText, status) => {

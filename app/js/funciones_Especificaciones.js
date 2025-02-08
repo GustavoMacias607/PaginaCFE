@@ -5,6 +5,11 @@ let filterDataTipoEspPrincipal = [...data];
 
 let msgActivarTipoEsp = "Especificación habilitada";
 let msgEliminarTipoEsp = "Especificación deshabilitada";
+
+function priEspe() {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
+}
 function seleccionEspecificacion(valor) {
     seleccion.idEspecificacion = valor;
     rowsPerPage = 10;
@@ -34,28 +39,28 @@ function GetTipoEsp(idEsp) {
     let datos = {};
     datos.idEspecificacion = idEsp;
     let json = JSON.stringify(datos);
+    let url = "../ws/TipoEsp/wsGetTipoEsp.php"; +
+        $.post(url, json, (responseText, status) => {
+            try {
 
-    let url = "../ws/TipoEsp/wsGetTipoEsp.php";
-    $.post(url, json, (responseText, status) => {
-        try {
+                if (status == "success") {
+                    let resp = JSON.parse(responseText);
+                    console.log(resp)
+                    if (resp.estado == "OK") {
+                        data = resp.datos;
+                    } else {
+                        data = [];
+                    }
 
-            if (status == "success") {
-                let resp = JSON.parse(responseText);
-                if (resp.estado == "OK") {
-                    data = resp.datos;
+                    llenarTablaTipoEsp();
+                    filterDataTipoEsp();
                 } else {
-                    data = [];
+                    throw e = status;
                 }
-
-                llenarTablaTipoEsp();
-                filterDataTipoEsp();
-            } else {
-                throw e = status;
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error(error);
-        }
-    });
+        });
 }
 
 function displayTableTipoEsp(page) {

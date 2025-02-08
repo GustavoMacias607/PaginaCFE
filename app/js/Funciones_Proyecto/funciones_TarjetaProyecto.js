@@ -398,7 +398,7 @@ function GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto) {
                             <td>${maquinaria.unidad}</td>
                             <td>${formatoMXN.format(maquinaria.phm)}</td>
                             <td>${maquinaria.rhm}</td>
-                            <td>${formatoMXN.format(maquinaria.phm * maquinaria.rhm)}</td>
+                            <td>${formatoMXN.format(maquinaria.phm / maquinaria.rhm)}</td>
                         </tr>
                     `).join('') : `
                         <tr>

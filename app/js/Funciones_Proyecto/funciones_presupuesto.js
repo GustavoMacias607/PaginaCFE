@@ -9,6 +9,8 @@ let objMaterialesSi;
 let totalProyecto;
 
 function llenarCamposPaginaPresupuesto() {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'block';
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
     let zona = document.getElementById("lblZona").innerHTML = datosProyecto.zona;
     let tipoObra = document.getElementById("lblTipoObra").innerHTML = datosProyecto.obra;

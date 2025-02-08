@@ -233,6 +233,8 @@ function CambioEstatusConcepto() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function PrincipalConcepto(tipoConcepto) {
+    let btnICMNav = document.querySelector('#btnICMNav');
+    btnICMNav.style.display = 'none';
     //vaciar el objeto
     selectedRows = [];
     selectedCheckboxes = {};
@@ -1147,262 +1149,54 @@ function idConceptoBasicoAutomatico() {
 
 
 
-function exportarPDF() {
-    const { jsPDF } = window.jspdf; // Referencia correcta al constructor
-    const doc = new jsPDF();
-
-    doc.setFontSize(10);
-
-    // Definir la posición Y del texto (puedes ajustarlo como desees)
-    const posicionY = 30; // Posición vertical en la página
-
-    // Colocar el texto a la derecha
-
-
-    // Texto del concepto
-    doc.setFontSize(14);
-    doc.text(20, 20, "Concepto");
-    doc.setFontSize(10);
-    // Datos del concepto
-    const datosConcepto = [
-        { id: "C100D1-1", nombre: "Suministro e instalacion de transformador D1-100-13200-120/240 en estructura existente, incluye el traslado desde el almacen de contratista hasta la obra y mano de obra para su instalacion.", unidad: "Pieza", familia: "RED AEREA" },
-    ];
-
-    // Columnas y filas para concepto
-    const columnasConcepto = ["ID", "Nombre", "Unidad", "Familia"];
-    const filasConcepto = datosConcepto.map(item => [item.id, item.nombre, item.unidad, item.familia]);
-
-    // Crear la tabla de conceptos
-    doc.autoTable({
-        head: [columnasConcepto],
-        body: filasConcepto,
-        startY: 25, // Posición inicial debajo del texto
-        margin: { top: 10 },
-        headStyles: {
-            fillColor: [0, 142, 90],  // Color de fondo (RGB: azul oscuro)
-            textColor: [255, 255, 255], // Color del texto (blanco)
-            fontStyle: 'bold', // Estilo del texto (negrita)
-        }, // Agrega un margen para evitar problemas de desbordamiento
-    });
-
-    // Obtener la posición final de la tabla de conceptos usando lastAutoTable
-    let finalYConcepto = doc.lastAutoTable.finalY + 10; // Asegura que el siguiente contenido se dibuje después de la tabla
-    console.log(doc.lastAutoTable.finalY);
-
-    // Texto para materiales
-    doc.setFontSize(14);
-    doc.text(20, finalYConcepto, "Materiales"); // Esto debería funcionar correctamente
-    doc.setFontSize(10);
-    // Datos de materiales
-    const datosMateriales = [
-        { id: "67", Descripcion: "MOTO OPERADOR P/CUCHILLA DESC. DE 115KV.", unidad: "PZA", precio: "$81,746.70", cantidad: "2.00", suministrado: "No", importe: "$163,493.40" },
-        { id: "118", Descripcion: "RELEVADOR DE SOBRECORRIENTE 50/51 MOD. I", unidad: "PZA", precio: "$40,371.24", cantidad: "1.00", suministrado: "No", importe: "$40,371.24" },
-        { id: "118", Descripcion: "RELEVADOR DE SOBRECORRIENTE 50/51 MOD. I", unidad: "PZA", precio: "$40,371.24", cantidad: "1.00", suministrado: "No", importe: "$40,371.24" },
-        { id: "118", Descripcion: "RELEVADOR DE SOBRECORRIENTE 50/51 MOD. I", unidad: "PZA", precio: "$40,371.24", cantidad: "1.00", suministrado: "No", importe: "$40,371.24" },
-        { id: "118", Descripcion: "RELEVADOR DE SOBRECORRIENTE 50/51 MOD. I", unidad: "PZA", precio: "$40,371.24", cantidad: "1.00", suministrado: "No", importe: "$40,371.24" },
-        { id: "118", Descripcion: "RELEVADOR DE SOBRECORRIENTE 50/51 MOD. I", unidad: "PZA", precio: "$40,371.24", cantidad: "1.00", suministrado: "No", importe: "$40,371.24" },
-    ];
-
-    // Columnas y filas para materiales
-    const columnasMateriales = ["ID", "Descripcion", "Unidad", "Precio U", "Cantidad", "Suministrado por CFE", "Importe"];
-    const filasMateriales = datosMateriales.map(item => [item.id, item.Descripcion, item.unidad, item.precio, item.cantidad, item.suministrado, item.importe]);
-
-    // Crear la tabla de materiales
-    doc.autoTable({
-        head: [columnasMateriales],
-        body: filasMateriales,
-        startY: finalYConcepto + 5, // Posición inicial debajo del texto "Materiales"
-        margin: { top: 10 }, // Agrega margen en la tabla de materiales para evitar desbordamientos
-        headStyles: {
-            fillColor: [0, 142, 90],  // Color de fondo (RGB: azul oscuro)
-            textColor: [255, 255, 255], // Color del texto (blanco)
-            fontStyle: 'bold', // Estilo del texto (negrita)
-        },
-    });
-
-    let finalYManoObra = doc.lastAutoTable.finalY + 10;
-
-    const anchoPagina = doc.internal.pageSize.width;
-
-    // Calcular la posición X para el texto, dejando un margen a la derecha (por ejemplo, 20 unidades)
-    const margenDerecho = 20;
-    const posicionX = anchoPagina - margenDerecho;
-
-    // Texto que quieres colocar con borde superior
-    const texto = "Suma1: $203,864.64";
-
-    // Medir el ancho del texto para ajustarlo
-    const width = doc.getStringUnitWidth(texto) * doc.internal.getFontSize() / doc.internal.scaleFactor;
-
-    // Colocar el texto debajo del borde
-    doc.text(texto, posicionX - width, finalYManoObra - 5); // Colocar el texto
-
-    // Agregar borde superior
-    const bordeY = finalYManoObra - 10; // Ajusta esta posición si es necesario para alinear con el texto
-    const bordeX1 = posicionX - width; // Posición X inicial
-    const bordeX2 = posicionX; // Posición X final
-
-    // Dibuja una línea en la parte superior del texto
-    doc.setDrawColor(0, 142, 90); // Color negro para el borde
-    doc.setLineWidth(0.7); // Grosor de la línea del borde
-    doc.line(bordeX1, bordeY, bordeX2, bordeY); // Dibuja la línea
-    doc.setFontSize(14);
-    doc.text(20, finalYManoObra, "Mano de obra");
-    doc.setFontSize(10);
-    const datosManoObra = [
-        { id: "Mano03", Categoria: "OFICIAL ELECTRICISTA", unidad: "JOR", Salario: "$553.94", rendimiento: "2", cantidad: "0.50", sr: "$276.97", importe: "$138.49" },
-        { id: "Mano03", Categoria: "OFICIAL ELECTRICISTA", unidad: "JOR", Salario: "$553.94", rendimiento: "2", cantidad: "0.50", sr: "$276.97", importe: "$138.49" },
-        { id: "Mano03", Categoria: "OFICIAL ELECTRICISTA", unidad: "JOR", Salario: "$553.94", rendimiento: "2", cantidad: "0.50", sr: "$276.97", importe: "$138.49" },
-        { id: "", Categoria: "", unidad: "", Salario: "", rendimiento: "", cantidad: "", sr: "", importe: "" },
-
-    ];
-
-    // Columnas y filas para materiales
-    const columnasManoObra = ["ID", "Categoria", "Unidad", "Salario", "Rendimiento", "Cantidad", "Sr", "Importe"];
-    const filasManoObra = datosManoObra.map(item => [item.id, item.Categoria, item.unidad, item.Salario, item.rendimiento, item.cantidad, item.sr, item.importe]);
-
-    // Crear la tabla de materiales
-    doc.autoTable({
-        head: [columnasManoObra],
-        body: filasManoObra,
-        startY: finalYManoObra + 5, // Posición inicial debajo del texto "ManoObra"
-        margin: { top: 10 }, // Agrega margen en la tabla de materiales para evitar desbordamientos
-        headStyles: {
-            fillColor: [0, 142, 90],  // Color de fondo (RGB: azul oscuro)
-            textColor: [255, 255, 255], // Color del texto (blanco)
-            fontStyle: 'bold', // Estilo del texto (negrita)
-        },
-    });
-
-    //Herramientas y equipo de seguridad
-    let finalYHerramientas = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text(20, finalYHerramientas, "Herramientas y equipo de seguridad");
-    doc.setFontSize(10);
-    const datosHerramientas = [
-        { descripcion: "HERRAMIENTAS DE MANO", kh: "0.03", mo: "$0.00", importe: "$0.00" },
-        { descripcion: "EQUIPO Y SEGURIDAD", kh: "0.02", mo: "$0.00", importe: "$0.00" },
-
-    ];
-
-    // Columnas y filas para materiales
-    const columnasHerramientas = ["Descripción", "Kh o Ks", "Mo", "Importe"];
-    const filasHerramientas = datosHerramientas.map(item => [item.descripcion, item.kh, item.mo, item.importe]);
-
-    // Crear la tabla de materiales
-    doc.autoTable({
-        head: [columnasHerramientas],
-        body: filasHerramientas,
-        startY: finalYHerramientas + 5, // Posición inicial debajo del texto "Herramientas"
-        margin: { top: 10 }, // Agrega margen en la tabla de materiales para evitar desbordamientos
-        headStyles: {
-            fillColor: [0, 142, 90],  // Color de fondo (RGB: azul oscuro)
-            textColor: [255, 255, 255], // Color del texto (blanco)
-            fontStyle: 'bold', // Estilo del texto (negrita)
-        },
-    });
-
-
-    //Maquinaria
-
-    let finalYMaquinaria = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text(20, finalYMaquinaria, "Maquinaria");
-    doc.setFontSize(10);
-    const datosMaquinaria = [
-        { id: "Maq01", descripcion: "BAILARINA COMPACTADORA PATA DE ELEFANTE", unidad: "HR", phm: "$177.97", rhm: "2", importe: "$355.94" },
-        { id: "Maq02", descripcion: "CAMION VOLTEO DE 7M3", unidad: "HR", phm: "$466.75", rhm: "3", importe: "$1,400.25" },
-    ];
-
-    // Columnas y filas para materiales
-    const columnasMaquinaria = ["id", "Descripción", "Unidad", "Phm", "Rhm", "Importe"];
-    const filasMaquinaria = datosMaquinaria.map(item => [item.id, item.descripcion, item.unidad, item.phm, item.rhm, item.importe]);
-
-    // Crear la tabla de materiales
-    doc.autoTable({
-        head: [columnasMaquinaria],
-        body: filasMaquinaria,
-        startY: finalYMaquinaria + 5, // Posición inicial debajo del texto "Herramientas"
-        margin: { top: 10 }, // Agrega margen en la tabla de materiales para evitar desbordamientos
-        headStyles: {
-            fillColor: [0, 142, 90],  // Color de fondo (RGB: azul oscuro)
-            textColor: [255, 255, 255], // Color del texto (blanco)
-            fontStyle: 'bold', // Estilo del texto (negrita)
-        },
-    });
-
-    //Basicos
-
-    let finalYBasicos = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(14);
-    doc.text(20, finalYBasicos, "Basicos");
-    doc.setFontSize(10);
-    const datosBasicos = [
-        { id: "1", Descripcion: "prueba", unidad: "Poste", precio: "$11,653.62", cantidad: "3", importe: "$34,960.86" },
-        { id: "1", Descripcion: "prueba2", unidad: "Poste", precio: "$8,373.69", cantidad: "2", importe: "$16,747.38" },
-    ];
-
-    // Columnas y filas para materiales
-    const columnasBasicos = ["ID", "Descripcion", "Unidad", "Precio U", "Cantidad", "Importe"]
-    const filasBasicos = datosBasicos.map(item => [item.id, item.Descripcion, item.unidad, item.precio, item.cantidad, item.importe]);
-
-    // Crear la tabla de materiales
-    doc.autoTable({
-        head: [columnasBasicos],
-        body: filasBasicos,
-        startY: finalYBasicos + 5, // Posición inicial debajo del texto "Herramientas"
-        margin: { top: 10 }, // Agrega margen en la tabla de materiales para evitar desbordamientos
-        headStyles: {
-            fillColor: [0, 142, 90],  // Color de fondo (RGB: azul oscuro)
-            textColor: [255, 255, 255], // Color del texto (blanco)
-            fontStyle: 'bold', // Estilo del texto (negrita)
-        },
-    });
-    // Guarda el PDF
-    doc.save("tabla-datos.pdf");
-}
-
-
-
-async function GeneradorTarjetasConceptoPdf() {
+async function GeneradorTarjetasConceptoPdf(value) {
     let conceptos = selectedRows;
+    const containerCon = document.getElementById('contenedor-cfe');
+    if (!containerCon) {
+        console.error('Contenedor "contenedor-cfe" no encontrado');
+        return;
+    }
     if (conceptos.length != 0) {
-
-
         costosAdicionales.CIndirecto = 15;
         costosAdicionales.Financiamiento = 1;
         costosAdicionales.utilidad = 10;
         costosAdicionales.CAdicionales = 0.5;
 
-        const container = document.getElementById('contenedor-cfe');
-        if (!container) {
-            console.error('Contenedor "contenedor-cfe" no encontrado');
-            return;
-        }
-        container.innerHTML = '';
 
+        containerCon.innerHTML = '';
+        contador = 0;
         for (const concepto of conceptos) {
+            contador++;
             console.log(concepto);
             let conceptoHTML = `
         
             <div id="concepto-${concepto.idconcepto}" class="tarjeta-concepto">
                 <div class="contTabla-materialesmodal_catalogo">
                     <div>
-                        <table>
+                        <table style="width: 100rem">
                             <thead>
                                 <tr class="todosBordes">
-                                    <th class="textIzq" style="width: 8rem;  text-align: justify;">No.</th>
-                                    <th class="textIzq">Concepto</th>
-                                    <th class="textIzq" style="width: 10rem;">Unidad</th>
-                                    <th class="textIzq" style="width: 8rem; display: table-cell;">Familia</th>
+                                    <th class="textIzq" style="width: 9rem;  text-align: justify;  ">No. Concepto</th>
+                                    <td class="textDer" style="width:4rem; border: 1px solid #000;">${String(contador).padStart(3, '0')}</td>
+                                    <td class="textCen" style="border: 1px solid #000;">Análisis de los precios unitarios de los conceptos de trabajo</td>
+                                </tr>
+                            </thead>
+                        </table>
+                        <table style="width: 100rem">
+                            <thead>
+                                <tr class="todosBordes">
+                                    <th class="textCen" style="width: 9rem;">ID</th>
+                                    <th class="textCen">Concepto</th>
+                                    <th class="textCen" style="width: 10rem;">Unidad</th>
+                                    <th class="textCen" style="width: 8rem; display: table-cell;">Familia</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr class="todosBordes"> 
                                     <td class="textIzq">${concepto.idconcepto}</td>
-                                    <td class="textJus">${concepto.nombre}</td>
-                                    <td class="textCen">${concepto.unidad}</td>
-                                    <td class="textDer">${concepto.familia}</td>
+                                    <td class="textJus" style="text-align: justify; height: fit-content;">${concepto.nombre}</td>
+                                    <td class="textIzq">${concepto.unidad}</td>
+                                    <td class="textIzq">${concepto.familia}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1519,13 +1313,16 @@ async function GeneradorTarjetasConceptoPdf() {
                 </div>
             </div>
         `;
-            container.innerHTML += conceptoHTML;
+            containerCon.innerHTML += conceptoHTML;
             await TraerMaterialesConceptoPDF(concepto.idconcepto);
             await TraerManoObrasConceptoPDF(concepto.idconcepto);
             await TraerMaquinariaConceptoPDF(concepto.idconcepto);
             await TraerBasicoConceptoPDF(concepto.idconcepto);
         }
-        exportarPDFConHtml();
+        if (value) {
+            exportarPDFConHtml(true);
+        }
+
     } else {
         mensajePantalla("No hay conceptos seleccionados", false);
     }
