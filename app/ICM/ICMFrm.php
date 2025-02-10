@@ -16,6 +16,8 @@ require("../../scripts/Materiales.php");
 <div class="fondBlancoICM">
     <div class="bottom-rectangle-materiales">
         <div class="text-materiales">ICM</div>
+        <button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AbrirApartadoAgregar();">Agregar proveedor</button>
         <a onclick="opcion('proyecto')" class="text-inicio-materiales">
             <div>Ir al inicio</div>
         </a>
@@ -69,12 +71,7 @@ require("../../scripts/Materiales.php");
 <div id="apartadoTablaProve" class="ocultarProvedor">
     <div class="proveedores-container">
         <div style="display: flex; gap:2rem ; margin-bottom: 1rem;">
-            <h3>Selecciona los proveedores:</h3>
-            <div id="btnAgregarProvee" class="modal-footer modal-footer-zonas">
-                <button type="button" class="btn btn-primary"
-                    style="background-color: #008E5A; border: 3px solid #008E5A;"
-                    onclick="javascript:AbrirApartadoAgregar();">Agregar</button>
-            </div>
+            <h3>Proveedores</h3>
         </div>
         <table id="tabla-proveedores" border="1">
             <thead>
@@ -87,49 +84,6 @@ require("../../scripts/Materiales.php");
                 <!-- Filas dinámicas de proveedores -->
             </tbody>
         </table>
-    </div>
-
-    <div id="apartadoFormProve" class="proveedores-container" style="display: none;">
-        <div class="provForm">
-            <h1 class="modal-title fs-5" id="tituloProveedores" style="color: #303030; font-weight:bold;">
-            </h1>
-            <form name="no-autocomplete" autocomplete="off">
-                <div class="modal-body modal-body-zonas">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-weight:600;">Es
-                        requerido: *</h1>
-                    <input type="text" class="d-none" id="inputIdProv">
-                    <div class="col-md-6 mb-3" style="width: 45rem;">
-                        <label for="idInput" class="form-label"
-                            style="color: #303030; font-weight:600; margin: 0 2rem 0 2rem;">Nombre
-                            proveedor*</label>
-                        <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this);"
-                            id="txtNombreProveedor" style="margin: 0 2rem 0 2rem;"></textarea>
-                    </div>
-                    <div class="col-md-6 mb-3" style="width: 45rem;">
-                        <label for="idInput" class="form-label"
-                            style="color: #303030; font-weight:600; margin: 0 2rem 0 2rem;">No.
-                            propuesta*</label>
-                        <input type="text" class="form-control inputLleno" style="margin: 0 2rem 0 2rem;"
-                            id="addNoPropuesta" onblur="javascript:CompruebaTieneAlgoInput(this); ">
-                    </div>
-                    <div class="col-md-6 mb-3 " style="width: 45rem;">
-                        <label for="idInput" class="form-label"
-                            style="color: #303030; font-weight:600; margin: 0 2rem 0 2rem;">Fecha*</label>
-                        <input type="date" class="form-control inputLleno" style="margin: 0 2rem 0 2rem;"
-                            id="AddFechaProv" onblur="javascript:CompruebaTieneAlgoInput(this);">
-                    </div>
-                    <div class="modal-footer modal-footer-zonas d-flex gap-3">
-                        <button type="button" class="btn btn-primary" id="btnGuardarForm"
-                            style="background-color: #008E5A; border: 3px solid #008E5A;"
-                            onclick="javascript:AddUpdProveedorValidar();">Agregar</button>
-                        <button type="button" class="btn btn-primary"
-                            style="background-color:rgb(74, 74, 74); border: 3px solid rgb(74, 74, 74);"
-                            onclick="javascript:CerrarFormProv();">Cancelar</button>
-                    </div>
-                </div>
-            </form>
-
-        </div>
     </div>
 </div>
 <div class="contTabla-ICM">
@@ -144,6 +98,50 @@ require("../../scripts/Materiales.php");
         </table>
     </div>
 </div>
+
+<div class="modal modal-zonas fade" id="AgregarModal" tabindex="9999" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 3px solid #008E5A;">
+            <div class="modal-header" style="border-bottom: none;">
+                <h1 class="modal-title fs-5" id="tituloProveedores" style="color: #303030; font-weight:bold;">
+                </h1>
+                <button type="button" class="fa-solid fa-xmark btnclose-zonas" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <form name="no-autocomplete" autocomplete="off">
+                <div class="modal-body modal-body-zonas">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; font-weight:600;">Es
+                        requerido: *</h1>
+                    <input type="text" class="d-none" id="inputIdProv">
+                    <div class="col-md-6 mb-3 w-100">
+                        <label for="idInput" class="form-label" style="color: #303030; font-weight:600; ">Nombre
+                            proveedor*</label>
+                        <textarea class="form-control inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this);"
+                            id="txtNombreProveedor"></textarea>
+                    </div>
+                    <div class="col-md-6 mb-3 w-100">
+                        <label for="idInput" class="form-label" style="color: #303030; font-weight:600; ">No.
+                            propuesta*</label>
+                        <input type="text" class="form-control inputLleno" id="addNoPropuesta"
+                            onblur="javascript:CompruebaTieneAlgoInput(this); ">
+                    </div>
+                    <div class="col-md-6 mb-3 w-100">
+                        <label for="idInput" class="form-label" style="color: #303030; font-weight:600; ">Fecha*</label>
+                        <input type="date" class="form-control inputLleno" id="AddFechaProv"
+                            onblur="javascript:CompruebaTieneAlgoInput(this);">
+                    </div>
+                    <div class="modal-footer modal-footer-zonas">
+                        <button type="button" class="btn btn-primary" id="btnGuardarForm"
+                            style="background-color: #008E5A; border: 3px solid #008E5A;"
+                            onclick="javascript:AddUpdProveedorValidar();">Agregar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal Mensaje -->
 <div class="centrarMsg modMsgEsconder" id="modalMsgUsuarios">

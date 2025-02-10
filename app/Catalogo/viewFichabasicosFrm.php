@@ -361,7 +361,7 @@ if (!isset($_SESSION['idusuario'])) {
             <label class="costosadicionales" style="float: right;">15%</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarCostoIndirecto" class="subtotales_numeros_bottom">holita</label>
+            <label id="tarCostoIndirecto" class="subtotales_numeros_bottom">$0.00</label>
         </div>
 
         <div style="grid-column: 1;"></div>
@@ -369,7 +369,7 @@ if (!isset($_SESSION['idusuario'])) {
             <label class="subtotales_textos">Subtotal 1:</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarSub1" class="subtotales_numeros">pepita</label>
+            <label id="tarSub1" class="subtotales_numeros">$0.00</label>
         </div>
 
         <div style="grid-column: 1;">
@@ -379,7 +379,7 @@ if (!isset($_SESSION['idusuario'])) {
             <label class="costosadicionales" style="float: right;">1%</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarFinanciamiento" class="subtotales_numeros_bottom">holita</label>
+            <label id="tarFinanciamiento" class="subtotales_numeros_bottom">$0.00</label>
         </div>
 
 
@@ -387,7 +387,7 @@ if (!isset($_SESSION['idusuario'])) {
             <label class="subtotales_textos">Subtotal 2:</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarSub2" class="subtotales_numeros">pepita</label>
+            <label id="tarSub2" class="subtotales_numeros">$0.00</label>
         </div>
 
         <div style="grid-column: 1;">
@@ -397,14 +397,14 @@ if (!isset($_SESSION['idusuario'])) {
             <label class="costosadicionales" style="float: right;">10%</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarUtilidad" class="subtotales_numeros_bottom">holita</label>
+            <label id="tarUtilidad" class="subtotales_numeros_bottom">$0.00</label>
         </div>
 
         <div style="grid-column: 2;">
             <label class="subtotales_textos">Subtotal 3:</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarSub3" class="subtotales_numeros">pepita</label>
+            <label id="tarSub3" class="subtotales_numeros">$0.00</label>
         </div>
 
         <div style="grid-column: 1;">
@@ -414,13 +414,13 @@ if (!isset($_SESSION['idusuario'])) {
             <label class="costosadicionales" style="float: right;">0.5%</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarCargoAdicional" class="subtotales_numeros_bottom">holita</label>
+            <label id="tarCargoAdicional" class="subtotales_numeros_bottom">$0.00</label>
         </div>
         <div style="grid-column: 2;">
             <label class="subtotales_textos">Total:</label>
         </div>
         <div style="grid-column: 3;">
-            <label id="tarTotalTarjeta" class="subtotales_numeros_top">pepita</label>
+            <label id="tarTotalTarjeta" class="subtotales_numeros_top">$0.00</label>
         </div>
     </div>
 

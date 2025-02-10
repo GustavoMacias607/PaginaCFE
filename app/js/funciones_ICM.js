@@ -107,7 +107,7 @@ function generarTablaProveedores() {
                 selectedProveedores.push(idProveedor);
                 // Asegurarse de que los precios sean 0 si no existen
                 AuxProvedores = AuxProvedores.map(aux => {
-                    if (aux.idproveedor === idProveedor && aux.precio === undefined) {
+                    if (aux.idproveedor == idProveedor && aux.precio == undefined) {
                         return {
                             ...aux,
                             precio: 0
@@ -119,7 +119,7 @@ function generarTablaProveedores() {
                 selectedProveedores = selectedProveedores.filter(id => id !== idProveedor);
                 // Restaurar los precios originales
                 AuxProvedores = AuxProvedores.map(aux => {
-                    if (aux.idproveedor === idProveedor) {
+                    if (aux.idproveedor == idProveedor) {
                         return {
                             ...aux,
                             precio: preciosOriginales[idProveedor] && preciosOriginales[idProveedor][aux.idconcepto] !== undefined
@@ -138,7 +138,7 @@ function generarTablaProveedores() {
 // Función para obtener los proveedores seleccionados
 function obtenerProveedoresSeleccionados() {
     const checkboxes = document.querySelectorAll("#tabla-proveedores input:checked");
-    if (checkboxes.length === 0) {
+    if (checkboxes.length == 0) {
         return [];
     }
     const seleccionados = Array.from(checkboxes).map(checkbox => parseInt(checkbox.value));
@@ -265,7 +265,7 @@ function agregarEventosInflacion() {
         });
 
         celda.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
+            if (e.key == "Enter") {
                 e.preventDefault();
                 celda.blur(); // Aplicar formato al presionar Enter
             }
@@ -297,7 +297,7 @@ function generarTabla() {
         // Columnas dinámicas para proveedores seleccionados
         let totalesConInflacion = []; // Para calcular el promedio
         obtenerProveedoresSeleccionados().forEach(proveedor => {
-            let aux = AuxProvedores.find(aux => aux.idconcepto === concepto.idconcepto && aux.idproveedor === proveedor.idproveedor);
+            let aux = AuxProvedores.find(aux => aux.idconcepto == concepto.idconcepto && aux.idproveedor == proveedor.idproveedor);
             if (!aux) {
                 aux = { idconcepto: concepto.idconcepto, idproveedor: proveedor.idproveedor, precio: 0 };
                 AuxProvedores.push(aux);
@@ -398,7 +398,7 @@ function generarTabla() {
         });
 
         celda.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
+            if (e.key == "Enter") {
                 e.preventDefault();
                 celda.blur(); // Aplicar formato al presionar Enter
             }
@@ -433,7 +433,7 @@ function recalcularFila(idconcepto) {
         // Recalcular las columnas de proveedores y el promedio
         let totalesConInflacion = [];
         obtenerProveedoresSeleccionados().forEach((proveedor, index) => {
-            const aux = AuxProvedores.find(aux => aux.idconcepto === concepto.idconcepto && aux.idproveedor === proveedor.idproveedor);
+            const aux = AuxProvedores.find(aux => aux.idconcepto == concepto.idconcepto && aux.idproveedor == proveedor.idproveedor);
             const precio = parseFloat(aux ? aux.precio : 0) || 0;
             const inflacion = parseFloat(proveedor.inflacion) || 0;
             const totalConInflacion = precio * (1 + inflacion / 100);
@@ -478,11 +478,11 @@ function recalcularTotales() {
 
 // Función para generar el objeto del proveedor
 function generarObjetoProveedor(idProveedor) {
-    const proveedor = Proveedores.find(p => p.idproveedor === idProveedor);
+    const proveedor = Proveedores.find(p => p.idproveedor == idProveedor);
     const objetoProveedor = [];
 
     Object.values(editedRows).forEach(concepto => {
-        const aux = AuxProvedores.find(aux => aux.idconcepto === concepto.idconcepto && aux.idproveedor === idProveedor);
+        const aux = AuxProvedores.find(aux => aux.idconcepto == concepto.idconcepto && aux.idproveedor == idProveedor);
         if (aux) {
             objetoProveedor.push({
                 idproveedor: proveedor.idproveedor,
@@ -609,7 +609,7 @@ function AddUpdProveedorValidar() {
                 let resp = JSON.parse(responseText);
                 console.log(resp)
                 if (resp.estado == "OK") {
-                    CerrarFormProv();
+                    AddCerrarModal();
                     mensajePantalla(msg, true);
                     GetProveedores();
                 }
@@ -629,26 +629,22 @@ function formatoMXN(valor) {
 
 function modificarProveedor(idproveedor, nombreprov, nopropuesta, fechaprov) {
     const seleccionados = obtenerProveedoresSeleccionados();
-    if (seleccionados.some(proveedor => proveedor.idproveedor === idproveedor)) {
+    if (seleccionados.some(proveedor => proveedor.idproveedor == idproveedor)) {
         mensajePantalla("Proveedor seleccionado", false)
     } else {
         llenarFormularioProveedores(idproveedor, nombreprov, nopropuesta, fechaprov);
+        $('#AgregarModal').modal('show');
     }
 }
 
-function AbrirApartadoAgregar() {
-    let apartadoForm = document.querySelector("#apartadoFormProve");
-    let btnAgregar = document.querySelector("#btnAgregarProvee");
-    apartadoForm.style.display = "block";
-    btnAgregar.style.display = "none";
 
+function AbrirApartadoAgregar() {
     let tituloForm = document.querySelector("#tituloProveedores");
     tituloForm.innerHTML = "Agregar proveedor";
 
     let Nombre = document.querySelector('#txtNombreProveedor');
     let Propuesta = document.querySelector('#addNoPropuesta');
     let Fecha = document.querySelector('#AddFechaProv');
-    document.getElementById('btnGuardarForm').innerHTML = "Agregar";
     Nombre.value = "";
     Propuesta.value = "";
     Fecha.value = "";
@@ -659,7 +655,6 @@ function AbrirApartadoAgregar() {
     Nombre.classList.remove("inputVacio");
     Propuesta.classList.remove("inputVacio");
     Fecha.classList.remove("inputVacio");
-
 }
 
 function CerrarFormProv() {
@@ -671,10 +666,6 @@ function CerrarFormProv() {
 }
 
 function llenarFormularioProveedores(idproveedor, nombre, propuesta, fecha) {
-    let apartadoForm = document.querySelector("#apartadoFormProve");
-    let btnAgregar = document.querySelector("#btnAgregarProvee");
-    apartadoForm.style.display = "block";
-    btnAgregar.style.display = "none";
     document.getElementById('btnGuardarForm').innerHTML = "Guardar";
     let tituloForm = document.querySelector("#tituloProveedores");
     tituloForm.innerHTML = "Modificar proveedor";

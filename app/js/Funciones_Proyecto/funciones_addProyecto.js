@@ -59,7 +59,7 @@ function AddProyectoFase1() {
 
     let nombreZona = document.querySelector('#inputZona');
     // Verificar si la zona es válida
-    const zonaValida = objZonas.some(z => z.zona.toLowerCase() === nombreZona.value.toLowerCase());
+    const zonaValida = objZonas.some(z => z.zona.toLowerCase() == nombreZona.value.toLowerCase());
     if (nombreZona.value == "" || !zonaValida) {
         nombreZona.classList.add("inputVacio");
         nombreZona.placeholder = nombreZona.value == "" ? "Requerida la zona" : "Zona no válida";
@@ -292,7 +292,7 @@ function setupPaginationProyectoProceso() {
         prevButton.style.backgroundColor = "#008e5a";
         prevButton.style.color = "#ffffff";
         prevButton.style.border = "3px solid #008e5a";
-        prevButton.disabled = currentPage === 1;
+        prevButton.disabled = currentPage == 1;
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -306,7 +306,7 @@ function setupPaginationProyectoProceso() {
             const button = document.createElement("button");
             button.innerText = i;
 
-            if (currentPage === i) {
+            if (currentPage == i) {
                 button.className = 'active';
                 button.style.color = "#ffffff";
                 button.style.border = "3px solid #008e5a";
@@ -330,7 +330,7 @@ function setupPaginationProyectoProceso() {
         nextButton.style.backgroundColor = "#008e5a";
         nextButton.style.color = "#ffffff";
         nextButton.style.border = "3px solid #008e5a";
-        nextButton.disabled = currentPage === totalPages;
+        nextButton.disabled = currentPage == totalPages;
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
@@ -408,7 +408,7 @@ function mostrarSugerenciasZonas(input) {
     sugerenciasDiv = document.getElementById('Addsugerencias');
     sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
     const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
-    const sugerenciasFiltradas = filtro === '' ? objZonas : objZonas.filter(zona =>
+    const sugerenciasFiltradas = filtro == '' ? objZonas : objZonas.filter(zona =>
         zona.zona.toLowerCase().includes(filtro)
     );
 
@@ -424,7 +424,7 @@ function mostrarSugerenciasZonas(input) {
     console.log(zonasUnicasArray);
 
     // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
-    if (zonasUnicasArray.length === 0 || (zonasUnicasArray.length === 1 && zonasUnicasArray[0].zona.toLowerCase() === filtro)) {
+    if (zonasUnicasArray.length == 0 || (zonasUnicasArray.length == 1 && zonasUnicasArray[0].zona.toLowerCase() == filtro)) {
         sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
         return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
     } else {
@@ -598,7 +598,7 @@ function setupPaginationProyectoTerminado() {
         prevButton.style.backgroundColor = "#008e5a";
         prevButton.style.color = "#ffffff";
         prevButton.style.border = "3px solid #008e5a";
-        prevButton.disabled = currentPage === 1;
+        prevButton.disabled = currentPage == 1;
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -612,7 +612,7 @@ function setupPaginationProyectoTerminado() {
             const button = document.createElement("button");
             button.innerText = i;
 
-            if (currentPage === i) {
+            if (currentPage == i) {
                 button.className = 'active';
                 button.style.color = "#ffffff";
                 button.style.border = "3px solid #008e5a";
@@ -636,7 +636,7 @@ function setupPaginationProyectoTerminado() {
         nextButton.style.backgroundColor = "#008e5a";
         nextButton.style.color = "#ffffff";
         nextButton.style.border = "3px solid #008e5a";
-        nextButton.disabled = currentPage === totalPages;
+        nextButton.disabled = currentPage == totalPages;
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
