@@ -24,9 +24,9 @@ function obtenerDatosProveedoresICM() {
     let url = "../ws/Proveedor/wsGetProveedor.php";
     $.post(url, json, (responseText, status) => {
         try {
-            if (status === "success") {
+            if (status == "success") {
                 let resp = JSON.parse(responseText);
-                if (resp.estado === "OK") {
+                if (resp.estado == "OK") {
                     llenarZonaFiltro();
                     ProveedoresICM = resp.datos;
                     llenarTablaProveedoresICM();
@@ -55,7 +55,7 @@ function displayTableProveedoresICM(page) {
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
                 <td class="Code">${record.idproveedor}</td>
-                <td>${record.nombreprov !== "" ? record.nombreprov : "---"}</td>
+                <td>${record.nombreprov != "" ? record.nombreprov : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `
@@ -119,7 +119,7 @@ function setupPaginationProveedorICM() {
         prevButton.style.backgroundColor = "#008e5a";
         prevButton.style.color = "#ffffff";
         prevButton.style.border = "3px solid #008e5a";
-        prevButton.disabled = currentPage === 1;
+        prevButton.disabled = currentPage == 1;
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -133,7 +133,7 @@ function setupPaginationProveedorICM() {
             const button = document.createElement("button");
             button.innerText = i;
 
-            if (currentPage === i) {
+            if (currentPage == i) {
                 button.className = 'active';
                 button.style.color = "#ffffff";
                 button.style.border = "3px solid #008e5a";
@@ -157,7 +157,7 @@ function setupPaginationProveedorICM() {
         nextButton.style.backgroundColor = "#008e5a";
         nextButton.style.color = "#ffffff";
         nextButton.style.border = "3px solid #008e5a";
-        nextButton.disabled = currentPage === totalPages;
+        nextButton.disabled = currentPage == totalPages;
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
@@ -340,9 +340,9 @@ function obtenerDatosPropuestasICM(idProveedor) {
     let url = "../ws/Propuestas/wsGetPropuesta.php";
     $.post(url, json, (responseText, status) => {
         try {
-            if (status === "success") {
+            if (status == "success") {
                 let resp = JSON.parse(responseText);
-                if (resp.estado === "OK") {
+                if (resp.estado == "OK") {
                     PropuestasICM = resp.datos;
                     llenarTablaPropuestaICM();
                     filterDataPropuestaICM();
@@ -397,7 +397,6 @@ function displayTablePropuestasICM(page) {
             const fila = document.createElement("tr");
             fila.classList.add('fila');
             fila.innerHTML = `
-            <td>${propuesta.nombreprov}</td>
             <td>${propuesta.nopropuesta}</td>
             <td>${propuesta.fecha}</td>
             <td>${propuesta.zona}</td>
@@ -430,14 +429,14 @@ function displayTablePropuestasICM(page) {
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", () => {
             const idPropuesta = parseInt(checkbox.value);
-            const propuesta = paginatedData.find(p => p.idpropuesta === idPropuesta);
+            const propuesta = paginatedData.find(p => p.idpropuesta == idPropuesta);
             if (checkbox.checked) {
                 selectedPropuestas.push(idPropuesta);
                 propuesta.inflacion = 0; // Agregar el atributo inflacion con valor 0
                 objetoPropuestasSeleccionadas.push(propuesta);
                 // Asegurarse de que los precios sean 0 si no existen
                 AuxPropuestas = AuxPropuestas.map(aux => {
-                    if (aux.idpropuesta == idPropuesta && aux.precio === undefined) {
+                    if (aux.idpropuesta == idPropuesta && aux.precio == undefined) {
                         return {
                             ...aux,
                             precio: 0
@@ -446,14 +445,14 @@ function displayTablePropuestasICM(page) {
                     return aux;
                 });
             } else {
-                selectedPropuestas = selectedPropuestas.filter(id => id !== idPropuesta);
-                objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => p.idpropuesta !== idPropuesta);
+                selectedPropuestas = selectedPropuestas.filter(id => id != idPropuesta);
+                objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => p.idpropuesta != idPropuesta);
                 // Restaurar los precios originales
                 AuxPropuestas = AuxPropuestas.map(aux => {
                     if (aux.idpropuesta == idPropuesta) {
                         return {
                             ...aux,
-                            precio: preciosOriginales[idPropuesta] && preciosOriginales[idPropuesta][aux.idconcepto] !== undefined
+                            precio: preciosOriginales[idPropuesta] && preciosOriginales[idPropuesta][aux.idconcepto] != undefined
                                 ? preciosOriginales[idPropuesta][aux.idconcepto]
                                 : 0 // Restablecer a 0 si no se encuentra en preciosOriginales
                         };
@@ -498,7 +497,7 @@ function setupPaginationPropuestaICM() {
         prevButton.style.backgroundColor = "#008e5a";
         prevButton.style.color = "#ffffff";
         prevButton.style.border = "3px solid #008e5a";
-        prevButton.disabled = currentPage === 1;
+        prevButton.disabled = currentPage == 1;
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -512,7 +511,7 @@ function setupPaginationPropuestaICM() {
             const button = document.createElement("button");
             button.innerText = i;
 
-            if (currentPage === i) {
+            if (currentPage == i) {
                 button.className = 'active';
                 button.style.color = "#ffffff";
                 button.style.border = "3px solid #008e5a";
@@ -536,7 +535,7 @@ function setupPaginationPropuestaICM() {
         nextButton.style.backgroundColor = "#008e5a";
         nextButton.style.color = "#ffffff";
         nextButton.style.border = "3px solid #008e5a";
-        nextButton.disabled = currentPage === totalPages;
+        nextButton.disabled = currentPage == totalPages;
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
@@ -855,13 +854,10 @@ function displayTablePropuestasICMPagina() {
 }
 
 function eliminarObjetoArregloPropuesta(idPropuesta) {
-    console.log(idPropuesta);
     // Eliminar el objeto del arreglo
-    objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => p.idpropuesta !== idPropuesta);
+    objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => p.idpropuesta != idPropuesta);
     // Eliminar el ID del arreglo selectedPropuestas
-    selectedPropuestas = selectedPropuestas.filter(id => id !== idPropuesta);
-    // Actualizar la tabla
-    console.log(objetoPropuestasSeleccionadas);
-    console.log(selectedPropuestas);
+    selectedPropuestas = selectedPropuestas.filter(id => id != idPropuesta);
+    // Actualizar la tabl
     displayTablePropuestasICMPagina();
 }

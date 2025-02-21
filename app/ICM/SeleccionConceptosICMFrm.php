@@ -10,7 +10,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlancoconceptos">
     <div class="bottom-rectangle-conceptos">
-        <div class="text-conceptos">Seleccion conceptos ICM</div>
+        <div class="text-conceptos">Selección conceptos ICM</div>
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
@@ -80,6 +80,20 @@ if (!isset($_SESSION['idusuario'])) {
                     <td colspan="8">Sin resultados</td>
                 </tbody>
             </table>
+            <div class="sk-circle" id="cargaModal">
+                <div class="sk-circle1 sk-child"></div>
+                <div class="sk-circle2 sk-child"></div>
+                <div class="sk-circle3 sk-child"></div>
+                <div class="sk-circle4 sk-child"></div>
+                <div class="sk-circle5 sk-child"></div>
+                <div class="sk-circle6 sk-child"></div>
+                <div class="sk-circle7 sk-child"></div>
+                <div class="sk-circle8 sk-child"></div>
+                <div class="sk-circle9 sk-child"></div>
+                <div class="sk-circle10 sk-child"></div>
+                <div class="sk-circle11 sk-child"></div>
+                <div class="sk-circle12 sk-child"></div>
+            </div>
         </div>
     </div>
     <div style="margin: 2rem 2rem 2rem 2rem; width: calc(100% - 4rem); display: flex; justify-content: end;">

@@ -1,6 +1,8 @@
 let conceptosICM;
 
-function obtenerDatosConceptosICM(valor) {
+async function obtenerDatosConceptosICM(valor) {
+    const spinner = document.querySelector(".sk-circle");
+    spinner.style.display = "block";
     if (!valor) {
         selectedRows = [];
         selectedCheckboxes = {};
@@ -10,7 +12,14 @@ function obtenerDatosConceptosICM(valor) {
     }
     let json = "";
     let url = "../ws/Conceptos/wsGetConcepto.php";
-
+    try {
+        // Espera a que termine `ActualizarTotalesConcepto`
+        await ActualizarTotalesConceptoProyecto();
+    } catch (error) {
+        console.error("Error en ActualizarTotalesConcepto:", error);
+        spinner.style.display = "none"; // Oculta el spinner en caso de error
+        return; // Sale de la función si hay un error
+    }
     $.post(url, json, (responseText, status) => {
         try {
             if (status === "success") {
@@ -27,6 +36,9 @@ function obtenerDatosConceptosICM(valor) {
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            // Oculta el spinner al finalizar
+            spinner.style.display = "none";
         }
     });
 }

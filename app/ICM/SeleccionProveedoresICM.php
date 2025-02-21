@@ -10,10 +10,10 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlanProveedores">
     <div class="bottom-rectangle-conceptos" style="gap: 1rem;">
-        <div class="text-conceptos">Seleccion proveedores ICM</div>
+        <div class="text-conceptos">Selección proveedores ICM</div>
         <button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AbrirApartadoAgregar();">Agregar proveedor</button>
-        <button type="button" class="btn btn-agregar-zonas" onclick="opcion('SeleccionConceptosICMReturn')">Seleccion
+        <button type="button" class="btn btn-agregar-zonas" onclick="opcion('SeleccionConceptosICMReturn')">Selección
             conceptos</button>
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
@@ -80,7 +80,7 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 <div class="titulo-materiales">
     <nav class="pSeccion-catalogo">
-        <div>Propuestas selecionadas</div>
+        <div>Propuestas seleccionadas</div>
     </nav>
 </div>
 <div class="contTabla-catalogo-conceptos">
@@ -353,9 +353,6 @@ if (!isset($_SESSION['idusuario'])) {
                         <table id="tabla-conceptos">
                             <thead class="">
                                 <tr>
-                                    <th>
-                                        Proveedor
-                                    </th>
                                     <th>
                                         Propuesta
                                     </th>
