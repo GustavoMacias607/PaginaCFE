@@ -589,7 +589,7 @@ async function ExportarTablaICMExcel() {
             }
 
             // Aplicar colores alternos en las filas
-            if (rowIndex % 2 === 0) {  // Filas pares
+            if (rowIndex % 2 == 0) {  // Filas pares
                 cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF0F0F0" } }; // Gris claro
             } else {  // Filas impares
                 cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } }; // Blanco

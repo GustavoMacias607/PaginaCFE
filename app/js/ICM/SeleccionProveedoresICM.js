@@ -407,7 +407,7 @@ function displayTablePropuestasICM(page) {
                            class="custom-checkbox" 
                            id="checkbox_${propuesta.idpropuesta}" 
                            value="${propuesta.idpropuesta}"
-                           ${selectedPropuestas.includes(propuesta.idpropuesta) ? 'checked' : ''}>
+                           ${selectedPropuestas.includes(Number(propuesta.idpropuesta)) ? 'checked' : ''}>
                     <label for="checkbox_${propuesta.idpropuesta}" class="checkbox-design"></label>
                     <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" 
                        onclick="modificarPropuesta(${propuesta.idpropuesta},'${propuesta.nopropuesta}','${propuesta.fecha}','${propuesta.zona}','${propuesta.obra}')"></i>
@@ -428,15 +428,15 @@ function displayTablePropuestasICM(page) {
     const checkboxes = document.querySelectorAll("#table-bodyPropuestas input[type='checkbox']");
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener("change", () => {
-            const idPropuesta = parseInt(checkbox.value);
-            const propuesta = paginatedData.find(p => p.idpropuesta == idPropuesta);
+            const idPropuesta = Number(checkbox.value);
+            const propuesta = paginatedData.find(p => Number(p.idpropuesta) === idPropuesta);
             if (checkbox.checked) {
                 selectedPropuestas.push(idPropuesta);
                 propuesta.inflacion = 0; // Agregar el atributo inflacion con valor 0
                 objetoPropuestasSeleccionadas.push(propuesta);
                 // Asegurarse de que los precios sean 0 si no existen
                 AuxPropuestas = AuxPropuestas.map(aux => {
-                    if (aux.idpropuesta == idPropuesta && aux.precio == undefined) {
+                    if (aux.idpropuesta === idPropuesta && aux.precio === undefined) {
                         return {
                             ...aux,
                             precio: 0
@@ -445,14 +445,14 @@ function displayTablePropuestasICM(page) {
                     return aux;
                 });
             } else {
-                selectedPropuestas = selectedPropuestas.filter(id => id != idPropuesta);
-                objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => p.idpropuesta != idPropuesta);
+                selectedPropuestas = selectedPropuestas.filter(id => id !== idPropuesta);
+                objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => Number(p.idpropuesta) !== idPropuesta);
                 // Restaurar los precios originales
                 AuxPropuestas = AuxPropuestas.map(aux => {
-                    if (aux.idpropuesta == idPropuesta) {
+                    if (aux.idpropuesta === idPropuesta) {
                         return {
                             ...aux,
-                            precio: preciosOriginales[idPropuesta] && preciosOriginales[idPropuesta][aux.idconcepto] != undefined
+                            precio: preciosOriginales[idPropuesta] && preciosOriginales[idPropuesta][aux.idconcepto] !== undefined
                                 ? preciosOriginales[idPropuesta][aux.idconcepto]
                                 : 0 // Restablecer a 0 si no se encuentra en preciosOriginales
                         };
@@ -463,7 +463,6 @@ function displayTablePropuestasICM(page) {
         });
     });
 }
-
 function setupPaginationPropuestaICM() {
     const paginationDiv = document.getElementById("paginationPropuestas");
     paginationDiv.innerHTML = "";
@@ -854,10 +853,11 @@ function displayTablePropuestasICMPagina() {
 }
 
 function eliminarObjetoArregloPropuesta(idPropuesta) {
+    const idPropuestaNum = Number(idPropuesta);
     // Eliminar el objeto del arreglo
-    objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => p.idpropuesta != idPropuesta);
+    objetoPropuestasSeleccionadas = objetoPropuestasSeleccionadas.filter(p => Number(p.idpropuesta) !== idPropuestaNum);
     // Eliminar el ID del arreglo selectedPropuestas
-    selectedPropuestas = selectedPropuestas.filter(id => id != idPropuesta);
-    // Actualizar la tabl
+    selectedPropuestas = selectedPropuestas.filter(id => Number(id) !== idPropuestaNum);
+    // Actualizar la tabla
     displayTablePropuestasICMPagina();
 }
