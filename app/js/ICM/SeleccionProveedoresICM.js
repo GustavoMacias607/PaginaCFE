@@ -60,7 +60,7 @@ function displayTableProveedoresICM(page) {
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" 
-                               onclick="modificarProveedor(${record.idproveedor},'${record.nombreprov}')"></i>
+                               onclick="llenarFormularioProveedores(${record.idproveedor},'${record.nombreprov}')"></i>
                         ` : ``}
                         ${record.estatus == 1 ?
                     `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idproveedor},${record.estatus})"></i>` :
