@@ -66,9 +66,9 @@ body {
 }
 
 /* Estilos para el buscador */
-.label-container-conceptos {
+.contenidoBuscador {
   margin: 7rem auto 0 auto;
-  width: 70vw; /* Ancho del label */
+  width: 45vw; /* Ancho del label */
   background-color: #ffffff; /* Fondo blanco */
   border: 3px solid rgb(0, 142, 90); /* Contorno de 3px color verde */
   border-radius: 5px; /* Bordes redondeados */
@@ -78,7 +78,7 @@ body {
   }
   margin-top: 70px;
 }
-.label-container-conceptos input[type="text"] {
+.contenidoBuscador input[type="text"] {
   width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
   border: none; /* Elimina el borde del input */
   outline: none; /* Elimina el borde de enfoque */
@@ -86,7 +86,7 @@ body {
   color: #303030; /* Color del texto */
   font-size: 20px; /* Tamaño del texto */
 }
-.label-container-conceptos input[type="text"]::placeholder {
+.contenidoBuscador input[type="text"]::placeholder {
   color: #858585; /* Color del texto del placeholder */
   font-size: 20px; /* Tamaño del texto del placeholder */
 }

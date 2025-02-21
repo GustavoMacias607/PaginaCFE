@@ -9,8 +9,6 @@ let objMaterialesSi;
 let totalProyecto;
 
 function llenarCamposPaginaPresupuesto() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'block';
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
     let zona = document.getElementById("lblZona").innerHTML = datosProyecto.zona;
     let tipoObra = document.getElementById("lblTipoObra").innerHTML = datosProyecto.obra;
@@ -32,11 +30,23 @@ function llenarCamposPaginaPresupuesto() {
 //     LlenarCamposAgregar();
 //     obtenerConceptosPresupuesto();
 // }
-function MostrarConceptosContenidosProyectoPresupuesto() {
+async function MostrarConceptosContenidosProyectoPresupuesto() {
+    // Selecciona el elemento del spinner
+    const spinner = document.querySelector("#spinnerPresupuesto");
+    // Muestra el spinner
+    spinner.style.display = "block";
     const datos = {};
     datos.idProyecto = datosProyecto.idProyecto;
     let json = JSON.stringify(datos);
     let url = "../ws/ConceptosProyecto/wsGetConceptos.php";
+    try {
+        // Espera a que termine `ActualizarTotalesConcepto`
+        await ActualizarTotalesConceptoProyecto();
+    } catch (error) {
+        console.error("Error en ActualizarTotalesConcepto:", error);
+        spinner.style.display = "none"; // Oculta el spinner en caso de error
+        return; // Sale de la función si hay un error
+    }
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -63,16 +73,13 @@ function MostrarConceptosContenidosProyectoPresupuesto() {
                 throw new Error(status);
             }
         } catch (error) {
-            alert("Error: " + error);
+            console.error(error);
+        } finally {
+            // Oculta el spinner al finalizar
+            spinner.style.display = "none";
         }
     });
 }
-
-function obtenerConceptosPresupuesto() {
-    MostrartablaConceptoPresupuesto();
-}
-
-
 function llenarTablaConceptoSeleccionadosPresupuesto() {
     llenarTablaConceptoPresupuesto();
     filterDataConceptoPresupuesto();

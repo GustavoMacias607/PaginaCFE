@@ -1,0 +1,94 @@
+.fondBlanProveedores {
+  background-color: white;
+  height: 4rem;
+  width: 100%;
+  position: fixed;
+  z-index: 500;
+  margin-top: 5rem;
+  @media (max-width: 1090px) {
+    position: static;
+    margin-top: 0;
+    padding-top: 5rem;
+  }
+}
+
+.contTabla-proveedores {
+  margin-top: 2rem;
+  width: calc(60% - 0.2rem);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.fa-solid-cerrarProveedores {
+  font-family: "LatoBold", sans-serif; /* tipografia */
+  --bs-btn-padding-y: 0.3rem;
+  --bs-btn-padding-x: 10px; /* largo del boton */
+  --bs-btn-font-size: 1.2rem; /* tamaño de la letra */
+  margin-left: 10px;
+  background-color: #6c6b6b;
+  border: 3px solid #6c6b6b;
+  border-radius: 5;
+  transition: all 0.3s ease; /* Transición suave */
+  color: #ffffff;
+}
+
+#tabla-propuestas {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead,
+th {
+  position: -webkit-sticky; /* Para Safari */
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Fondo para el encabezado */
+  z-index: 10; /* Asegura que el encabezado esté por encima del contenido */
+}
+#tabla-propuestas th,
+#tabla-propuestas td {
+  border: 3px solid #008e5a; /* Líneas divisorias de 3px de grosor en color verde */
+  padding: 8px;
+  text-align: left;
+}
+
+#tabla-propuestas th {
+  background-color: #008e5a; /* Encabezados con fondo verde */
+  color: white; /* Letras blancas en los encabezados */
+}
+
+#tabla-propuestas tbody td {
+  color: #303030; /* Texto de las filas en color #303030 */
+}
+
+.label-container-propuesta {
+  margin: 2rem auto 0 auto;
+  width: 70vw; /* Ancho del label */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 3px solid #008e5a; /* Contorno de 3px color verde */
+  border-radius: 5px; /* Bordes redondeados */
+  @media (max-width: 1090px) {
+    margin: 2rem auto 0 auto;
+  }
+}
+
+.label-container-propuesta input[type="text"] {
+  width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
+  border: none; /* Elimina el borde del input */
+  outline: none; /* Elimina el borde de enfoque */
+  padding: 3px; /* Espacio interno */
+  color: #303030; /* Color del texto */
+  font-size: 20px; /* Tamaño del texto */
+}
+.label-container-propuesta input[type="text"]::placeholder {
+  color: #858585; /* Color del texto del placeholder */
+  font-size: 20px; /* Tamaño del texto del placeholder */
+}
+
+/* Asegúrate de que el segundo modal tenga un z-index mayor */
+.modal-backdrop.show + .modal {
+  z-index: 1055; /* Ajusta este valor según sea necesario */
+}
+
+.modal-backdrop.show + .modal-backdrop {
+  z-index: 1050; /* Ajusta este valor según sea necesario */
+}

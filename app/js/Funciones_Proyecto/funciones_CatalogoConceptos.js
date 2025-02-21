@@ -1,7 +1,5 @@
 let editedRows = {};
 function llenarCamposPagina() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
     let zona = document.getElementById("lblZona").innerHTML = datosProyecto.zona;
     let tipoObra = document.getElementById("lblTipoObra").innerHTML = datosProyecto.obra;

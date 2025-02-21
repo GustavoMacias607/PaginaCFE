@@ -20,8 +20,6 @@ async function GetConceptoEspecificacion() {
     let nombrebtn = document.getElementById('exampleModalLabel');
     if (nombrebtn.innerHTML != "Modificar especificación") {
         try {
-            // Espera a que termine `ActualizarTotalesConcepto`
-            await ActualizarTotalesConcepto();
         } catch (error) {
             console.error("Error en ActualizarTotalesConcepto:", error);
             spinner.style.display = "none"; // Oculta el spinner en caso de error
@@ -33,14 +31,12 @@ async function GetConceptoEspecificacion() {
     datos.idEspecificacion = seleccion.idEspecificacion;
     let json = JSON.stringify(datos);
     let url = "../ws/TipoEsp/wsGetConceptosEsp.php";
-    console.log("OBTENER")
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
-
                     datosObjetoConcepto = resp.datos;
                     llenarTablaConceptoEspecificacion();
                     filterDataConceptoEspecificacion();
@@ -66,15 +62,6 @@ function displayTableConceptoEspecificacion(page) {
     const paginatedData = filteredData.slice(start, end);
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            const formatoMXN = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            });
-
-            const precioFormateado = (record.total !== undefined && record.total !== "")
-                ? formatoMXN.format(record.total)
-                : "---";
-
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.style.cursor = 'pointer';
@@ -82,8 +69,6 @@ function displayTableConceptoEspecificacion(page) {
                  <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${precioFormateado}</td>
-               
             `;
 
             // Evento para doble clic
@@ -276,15 +261,6 @@ function displayTableConceptoEspecificacionModal(page) {
 
     if (paginatedData2.length > 0) {
         paginatedData2.forEach(record => {
-            const formatoMXN = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            });
-
-            const precioFormateado = (record.total !== undefined && record.total !== "")
-                ? formatoMXN.format(record.total)
-                : "---";
-
             const row = document.createElement('tr');
             row.classList.add('fila');
             if (!record.estatus) {
@@ -294,14 +270,12 @@ function displayTableConceptoEspecificacionModal(page) {
                    <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${precioFormateado}</td>
                  <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">
                         <i class="coloresIcono fa-solid fa-x" style="cursor: pointer;" alt="Eliminar" onclick="eliminarFilaDelObjetoConcepto('${record.idconcepto}')"></i>
                     </div>
                      </td>
             `;
-
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
             tableBody.appendChild(row);

@@ -371,8 +371,6 @@ function CambioEstatusManoObra() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetManoObra() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
     let json = ""
     let url = "../ws/ManoObra/wsGetManoObra.php";
     $.post(url, json, (responseText, status) => {

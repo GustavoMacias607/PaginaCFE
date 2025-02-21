@@ -5,11 +5,6 @@ let filterDataTipoEspPrincipal = [...data];
 
 let msgActivarTipoEsp = "Especificación habilitada";
 let msgEliminarTipoEsp = "Especificación deshabilitada";
-
-function priEspe() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
-}
 function seleccionEspecificacion(valor) {
     seleccion.idEspecificacion = valor;
     rowsPerPage = 10;

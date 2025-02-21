@@ -505,7 +505,7 @@ if (!isset($_SESSION['idusuario'])) {
                     <td colspan="8">Sin resultados</td>
                 </tbody>
             </table>
-            <div class="sk-circle">
+            <div class="sk-circle" id="spinnerPresupuesto">
                 <div class="sk-circle1 sk-child"></div>
                 <div class="sk-circle2 sk-child"></div>
                 <div class="sk-circle3 sk-child"></div>

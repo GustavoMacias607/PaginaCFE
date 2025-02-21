@@ -61,14 +61,6 @@ function displayTableConceptoEspecificacionP(page) {
             if (!record.estatus) {
                 conceptoInactivo = true; // Si hay un concepto inactivo, cambiar a true
             }
-
-            const formatoMXN = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            });
-
-            const precioFormateado = record.total ? formatoMXN.format(record.total) : "---";
-
             const row = document.createElement('tr');
             row.classList.add('fila');
             if (!record.estatus) {
@@ -78,7 +70,6 @@ function displayTableConceptoEspecificacionP(page) {
                   <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${precioFormateado}</td>
                     <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">
                  ${tipoModal != 5 ? `<i class="coloresIcono fa-solid fa-x" style="cursor: pointer; " alt="Eliminar" onclick="eliminarFilaDelObjetoConceptoTipoEsp('${record.idconcepto}')"></i>` : ``}
@@ -196,8 +187,6 @@ async function MostrartablaConceptoEspecificacion(idTipoEsp, opc) {
         datos.idTipo = idTipoEsp;
         idTipoModificar = idTipoEsp;
         try {
-            // Espera a que termine `ActualizarTotalesConcepto`
-            await ActualizarTotalesConcepto();
         } catch (error) {
             console.error("Error en ActualizarTotalesConcepto:", error);
             spinner.style.display = "none"; // Oculta el spinner en caso de error

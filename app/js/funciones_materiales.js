@@ -334,8 +334,6 @@ function CambioEstatus() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function GetMateriales() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
     let json = "";
     let url = "../ws/Materiales/wsGetMateriales.php";
     $.post(url, json, (responseText, status) => {

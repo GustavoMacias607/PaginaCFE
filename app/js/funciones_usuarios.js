@@ -314,8 +314,6 @@ function CambioEstatusUsuario() {
 
 //Metodo para hacer la consulta de los usuarios tomando en cuanta los filtros
 function GetUsuario() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
     let json = "";
     let url = "../ws/Usuarios/wsGetUsuarios.php";
     $.post(url, json, (responseText, status) => {

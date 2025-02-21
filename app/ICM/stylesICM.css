@@ -1,6 +1,6 @@
 .fondBlancoICM {
   background-color: white;
-  height: 5rem;
+  height: 4rem;
   width: 100%;
   position: fixed;
   z-index: 500;
@@ -55,23 +55,22 @@
 .contTabla-ICM {
   padding-left: 2rem;
   margin-right: 2rem;
-  padding-top: 12rem;
+  padding-top: 25rem;
 }
 
 .tabla-container-ICM {
   text-align: center;
-  margin-bottom: 100px;
   /* Altura máxima del contenedor */
   /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
   /* Centrado horizontal */
   border-top: #008e5a solid 3px;
   border-top-width: 0px;
 
-  margin-top: 0px;
+  margin-top: 15rem;
 }
 
 .proveedores-container {
-  width: 50rem;
+  width: 75%;
   margin-left: 2rem;
   margin-right: 2rem;
 }
@@ -134,4 +133,150 @@
   background: #008e5a;
   z-index: 2;
   color: white;
+}
+
+/* Estilos para el buscador */
+.label-container-conceptos {
+  margin: 7rem auto 0 auto;
+  width: 70vw; /* Ancho del label */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 3px solid rgb(0, 142, 90); /* Contorno de 3px color verde */
+  border-radius: 5px; /* Bordes redondeados */
+  transition: all 0.3s ease;
+  @media (max-width: 1090px) {
+    margin: 4rem auto 0 auto;
+  }
+  margin-top: 70px;
+}
+.label-container-conceptos input[type="text"] {
+  width: calc(100% - 40px); /* Ancho del input menos el espacio del icono */
+  border: none; /* Elimina el borde del input */
+  outline: none; /* Elimina el borde de enfoque */
+  padding: 3px; /* Espacio interno */
+  color: #303030; /* Color del texto */
+  font-size: 20px; /* Tamaño del texto */
+}
+.label-container-conceptos input[type="text"]::placeholder {
+  color: #858585; /* Color del texto del placeholder */
+  font-size: 20px; /* Tamaño del texto del placeholder */
+}
+
+.contTabla-Proveedores {
+  width: calc(60% - 0.2rem);
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 12rem;
+  @media (min-width: 393px) {
+    padding-top: 8rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(60% - 0.2rem);
+  }
+  @media (min-width: 508px) {
+    padding-top: 7rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(60% - 0.2rem);
+  }
+  @media (min-width: 1090px) {
+    padding-top: 265px;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(60% - 4rem);
+  }
+}
+.pagRegistrosProveedores {
+  font-family: "LatoBold", sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 2rem 0 2rem;
+  align-items: center;
+  margin: 0.2rem auto 0 auto;
+  width: 60%;
+}
+
+.tabla-container-proveedores {
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+  position: fixed;
+  overflow-y: auto;
+  height: 30rem;
+  width: calc(60% - 4rem);
+}
+
+/***
+*
+*
+*
+*
+*Propuestas
+*
+*
+*/
+.tabla-container-ConceptosIcm {
+  text-align: center;
+  margin-bottom: 10px;
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+  position: relative;
+  width: 100%;
+  overflow-y: auto;
+  max-height: 50rem;
+}
+.contTabla-Propuestas {
+  width: calc(80% - 0.2rem);
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 12rem;
+  @media (min-width: 393px) {
+    padding-top: 8rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(80% - 0.2rem);
+  }
+  @media (min-width: 508px) {
+    padding-top: 7rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(80% - 0.2rem);
+  }
+  @media (min-width: 1090px) {
+    padding-top: 265px;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc(80% - 4rem);
+  }
+}
+.pagRegistrosPropuestas {
+  font-family: "LatoBold", sans-serif;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 2rem 0 2rem;
+  align-items: center;
+  margin: 0.2rem auto 0 auto;
+  width: 80%;
+}
+
+.tabla-container-Propuestas {
+  text-align: center;
+  margin-bottom: 100px;
+  /* Altura máxima del contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+  position: fixed;
+  overflow-y: auto;
+  height: 30rem;
+  width: calc(80% - 4rem);
 }

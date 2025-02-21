@@ -520,7 +520,7 @@ if (!isset($_SESSION['idusuario'])) {
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMateriales"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                             <option value="" selected>Todo</option>
-                                            <option value="PZA">PZA</option>
+                                            <option value="PZ">PZ</option>
                                             <option value="KG">KG</option>
                                             <option value="JG">JG</option>
                                             <option value="M">M</option>
@@ -571,7 +571,7 @@ if (!isset($_SESSION['idusuario'])) {
                                         <select class="form-select form-select-sm ml-2" id="selectUnidadMaterialesModal"
                                             style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; display: none;">
                                             <option value="" selected>Todo</option>
-                                            <option value="PZA">PZA</option>
+                                            <option value="PZ">PZ</option>
                                             <option value="KG">KG</option>
                                             <option value="JG">JG</option>
                                             <option value="M">M</option>

@@ -36,8 +36,6 @@ let filteredDataManoObra = [...data];
 let filteredDataMaquinaria = [...data];
 let filteredDataBasicos = [...data];
 
-
-
 //Resultado de sumas con decimales
 let suma1 = 0;
 let suma2 = 0;
@@ -53,7 +51,8 @@ let importeBasicos = 0;
 
 
 //Metodo para llenar la tabla con el catalogo
-function LlenarTablaConceptoTarjeta() {
+async function LlenarTablaConceptoTarjeta() {
+    await ActualizarTotalesConceptoBasico();
     //Llena tabla concepto de la pagina catalogo
     let tbody = document.getElementById("tabla-conceptosCatalogo").getElementsByTagName("tbody")[0];
     if (datosCatalogo.TipoConcepto) {
@@ -83,7 +82,12 @@ function LlenarTablaConceptoTarjeta() {
     suma5 = 0;
     obtenerDatosTablas();
     mostrarCosasBasicos();
+
+
+
 }
+
+
 
 function obtenerDatosTablas() {
     MostrartablaMaterialesTarjeta();
@@ -1252,13 +1256,17 @@ function AgregarTotalConcepto() {
     let datos = {}
     datos = datosCatalogo;
     datos.idAnterior = datosCatalogo.id;
+
+    console.log(datos)
     let total;
     const convertirAMoneda = (valor) => {
         return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
     }
-    let totalConcepto = convertirAMoneda(total)
+    const totalSumas = document.getElementById('TotalSumas').innerHTML;
+    let totalConcepto = convertirAMoneda(totalSumas)
     datos.total = totalConcepto;
     let json = JSON.stringify(datos);
+    console.log(json);
     let url = "";
     if (datosCatalogo.TipoConcepto) {
         url = "../ws/ConceptosBasicos/wsUpdConceptoBasico.php";

@@ -28,10 +28,6 @@ function AddProyectoFase1() {
     }
     datos.nombre = nombre.value;
     datos.fecha = ObtenerFechaActual();
-
-
-
-
     let periodo = document.querySelector('#inputPeriodo');
     if (periodo.value == "") {
         periodo.classList.add("inputVacio");
@@ -165,8 +161,6 @@ function calcularFechaTermino() {
     }
 }
 function GetProyectoProceso() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
     document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     ObtenerZonas();
@@ -421,7 +415,6 @@ function mostrarSugerenciasZonas(input) {
     // Convertir el objeto de zonas únicas de nuevo a un array
     const zonasUnicasArray = Object.values(zonasUnicas);
 
-    console.log(zonasUnicasArray);
 
     // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
     if (zonasUnicasArray.length == 0 || (zonasUnicasArray.length == 1 && zonasUnicasArray[0].zona.toLowerCase() == filtro)) {
@@ -432,6 +425,7 @@ function mostrarSugerenciasZonas(input) {
     }
 
     // Crear los elementos de sugerencia y agregarlos al cuadro
+
     zonasUnicasArray.forEach(zona => {
         const div = document.createElement('div');
         div.classList.add('sugerencia-itemZona');
@@ -446,7 +440,7 @@ function ocultarSugerenciasZonas() {
     setTimeout(() => {
         let sugerenciasDiv = document.getElementById('Addsugerencias');
         sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
-    }, 200);
+    }, 500);
 }
 
 function seleccionarSugerenciaZonas(unidad, sugerenciasDiv) {
@@ -483,7 +477,7 @@ function GetIdProyecto() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     // Llamar a la función para mostrar los datos en la tabla
-                    document.querySelector('#inputIdProyecto').value = resp.datos[0].idproyecto + 1;
+                    document.querySelector('#inputIdProyecto').value = parseInt(resp.datos[0].idproyecto) + 1;
                 } else {
                     document.querySelector('#inputIdProyecto').value = 1;
                 }

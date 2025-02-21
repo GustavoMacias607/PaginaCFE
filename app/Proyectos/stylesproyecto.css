@@ -346,3 +346,41 @@ asdasdasd
   background-color: #f0f0f0;
   font-weight: bold;
 }
+
+.contTabla-catConceptos {
+  width: calc(100% - 0.2rem);
+  margin-left: 0.2rem;
+  margin-right: 0.2rem;
+  padding-top: 28rem;
+  @media (min-width: 393px) {
+    padding-top: 28rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 508px) {
+    padding-top: 28rem;
+    margin-left: 0.2rem;
+    margin-right: 0.2rem;
+    width: calc(100% - 0.2rem);
+  }
+  @media (min-width: 1090px) {
+    padding-top: 28rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    width: calc(100% - 4rem);
+  }
+}
+.tabla-container-Catconceptos {
+  text-align: center;
+  /* Altura máxima del contenedor */
+  /* Scroll vertical cuando sea necesario */ /* Posición relativa para el contenedor */
+  /* Centrado horizontal */
+  border-top: #008e5a solid 3px;
+  border-top-width: 0px;
+  margin-top: 0px;
+  position: fixed;
+  overflow-y: auto;
+  height: 35rem;
+  width: calc(100% - 4rem);
+}

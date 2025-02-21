@@ -97,13 +97,10 @@ if (!isset($_SESSION['idusuario'])) {
                             </select>
                         </div>
                     </th>
-                    <th id="columFamilia" style="width: 8rem; ">
+                    <th id="columFamilia" style="width: 10rem; ">
                         Familia
                     </th>
-                    <th style="width: 8rem;">
-                        Precio unitario
-                    </th>
-                    <th style="width: 100px;">
+                    <th style="width: 12rem;">
                         <div style="display: flex; min-width: 144px; justify-content: space-between;">
                             <span>Acciones</span>
                         </div>

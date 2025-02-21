@@ -233,8 +233,6 @@ function CambioEstatusConcepto() {
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
 function PrincipalConcepto(tipoConcepto) {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'none';
     //vaciar el objeto
     selectedRows = [];
     selectedCheckboxes = {};
@@ -274,8 +272,6 @@ async function obtenerDatosConceptos(btnOpcion) {
         btnExportar.classList.remove("esconderBoton");
         txtNormal.classList.remove("esconderBoton");
         try {
-            // Espera a que termine `ActualizarTotalesConcepto`
-            await ActualizarTotalesConcepto();
         } catch (error) {
             console.error("Error en ActualizarTotalesConcepto:", error);
             spinner.style.display = "none"; // Oculta el spinner en caso de error
@@ -288,7 +284,6 @@ async function obtenerDatosConceptos(btnOpcion) {
         txtBasico.classList.remove("esconderBoton");
         try {
             // Espera a que termine `ActualizarTotalesConcepto`
-            await ActualizarTotalesConceptoBasico();
         } catch (error) {
             console.error("Error en ActualizarTotalesConcepto:", error);
             spinner.style.display = "none"; // Oculta el spinner en caso de error
@@ -393,12 +388,6 @@ function displayTableConcepto(page) {
         document.getElementById('columFamilia').style.display = 'table-cell';
         if (paginatedData.length > 0) {
             paginatedData.forEach(record => {
-                const formatoMXN = new Intl.NumberFormat('es-MX', {
-                    style: 'currency',
-                    currency: 'MXN'
-                });
-                const total = record.total || 0;
-                const precioFormateado = total ? formatoMXN.format(total) : "---";
                 const row = document.createElement('tr');
                 row.classList.add('fila');
                 // Establecer el contenido HTML de la fila
@@ -407,7 +396,6 @@ function displayTableConcepto(page) {
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
                     <td>${record.nombreespe !== "" ? record.nombreespe : "---"}</td>
-                    <td>${precioFormateado}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
                             ${record.estatus == 1 ? `
@@ -448,12 +436,6 @@ function displayTableConcepto(page) {
         document.getElementById('columFamilia').style.display = 'none';
         if (paginatedData.length > 0) {
             paginatedData.forEach(record => {
-                const formatoMXN = new Intl.NumberFormat('es-MX', {
-                    style: 'currency',
-                    currency: 'MXN'
-                });
-                const total = record.total || 0;
-                const precioFormateado = total ? formatoMXN.format(total) : "---";
                 const row = document.createElement('tr');
                 row.classList.add('fila');
                 // Establecer el contenido HTML de la fila
@@ -461,7 +443,6 @@ function displayTableConcepto(page) {
                     <td class="Code">${record.idconbasi}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${precioFormateado}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
                             ${record.estatus == 1 ? `
@@ -499,7 +480,7 @@ function toggleRowSelection(idconcepto, nombre, unidad, total, familia, isChecke
     if (isChecked) {
         // Agregar la fila seleccionada al array y al objeto
         selectedRows.push({
-            idconcepto, nombre, unidad, familia, total: total == "null" ? 0 : total,
+            idconcepto, nombre, unidad, familia, cantidad: 1, total: total == "null" ? 0 : total,
         });
         selectedCheckboxes[idconcepto] = true;
     } else {
@@ -703,16 +684,6 @@ function llenarModalModificarConcepto(id, nombre, unidad, total) {
     unidadC.classList.remove("inputVacio");
     const input = document.getElementById('UpdunidadInput');
 }
-
-//Metodo para abrir el modal dependiendo si se abre para activar o eliminar
-// function AbrirModalConfirm1() {
-//     let estatus = document.getElementById('ValCheEsta').checked;
-//     if (estatus) {
-//         $('#confirmDeleteModal').modal('show');
-//     } else {
-//         $('#confirmActivationModal').modal('show');
-//     }
-// }
 
 function Exportar() {
 

@@ -11,9 +11,9 @@ require_once("../../scripts/Conexion.php");
 require_once("../../scripts/Proveedores.php");
 
 $c = new Conexion($conData);
-$u = new AuxProveedores($c->getConnection());
+$u = new Propuestas($c->getConnection());
 
-$res = $u->addAuxProveedor($datos);
+$res = $u->addPropuesta($datos);
 if ($res['estado'] == "OK") {
     $resultado['estado'] = "OK";
 } else {

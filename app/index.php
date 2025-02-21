@@ -38,6 +38,7 @@ if (!isset($_SESSION['idusuario'])) {
     <link rel="stylesheet" href="./Zonas/styleszonas.css">
     <link rel="stylesheet" href="./Proyectos/stylesDiseñoPdf.css">
     <link rel="stylesheet" href="./ICM/stylesICM.css">
+    <link rel="stylesheet" href="./ICM/stylesProveedores.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <title></title>
@@ -134,8 +135,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <a class="opcionesMenu" onclick=" preciona(this);"
                     href="javascript:opcion('Especificaciones');">Especificaciones</a>
             </li>
-            <li id="btnICMNav" style="display: none;">
-                <a class="opcionesMenu" onclick=" preciona(this);" href="javascript:opcion('ICM');">ICM</a>
+            <li id="btnICMNav">
+                <a class="opcionesMenu" onclick=" preciona(this);"
+                    href="javascript:opcion('SeleccionConceptosICM');">ICM</a>
             </li>
         </ul>
         <ul class='usuApartado'>
@@ -207,63 +209,66 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/Funciones_Proyecto/funciones_ProyTerm.js"></script>
     <script src="js/Funciones_Proyecto/funciones_TarjetaProyecto.js"></script>
     <script src="js/Funciones_Proyecto/funciones_TarjetaProyectoDiseñoPdf.js"></script>
+    <script src="js/Funciones_Proyecto/funciones_ReescribirProyecto.js"></script>
 
     <script src="js/funciones_ICM.js"></script>
+    <script src="js/ICM/SeleccionConceptosICM.js"></script>
+    <script src="js/ICM/SeleccionProveedoresICM.js"></script>
 
 
     <script src="js/SubCarpetaEspecificaciones/tipoEsp.js"></script>
     <script src="js/SubCarpetaEspecificaciones/AgregarConceptoEspecificacion.js"></script>
     <script>
-    window.onload = function() {
-        opcion('proyecto');
-    };
+        window.onload = function() {
+            opcion('proyecto');
+        };
 
-    function mostrarOp() {
-        let opc = document.querySelector("#opc");
+        function mostrarOp() {
+            let opc = document.querySelector("#opc");
 
-        if (!opc.classList.contains("MenuOpcionesMostrar")) {
-            opc.classList.add("MenuOpcionesMostrar");
-        } else {
-            opc.classList.remove("MenuOpcionesMostrar");
-        }
-    }
-
-
-    function preciona(valor) {
-        console.log(valor);
-        let opciones = document.querySelectorAll(".opcionesMenu");
-        console.log(opciones);
-        opciones.forEach(opcion => {
-            opcion.classList.remove("precionado");
-        });
-        valor.classList.add('precionado');
-    }
-
-    function esconderMenu() {
-        let menu = document.querySelector(".menuDesplegable");
-        if (menu.classList.contains("esconder")) {
-            menu.classList.remove("esconder");
-        } else {
-            menu.classList.add("esconder");
-        }
-    }
-
-
-    document.addEventListener('click', function(event) {
-        const opc = document.getElementById('opc');
-
-        // Verifica si el clic ocurrió fuera del div
-        if (opc.classList.contains("MenuOpcionesMostrar")) {
-            if (!opc.contains(event.target)) {
+            if (!opc.classList.contains("MenuOpcionesMostrar")) {
+                opc.classList.add("MenuOpcionesMostrar");
+            } else {
                 opc.classList.remove("MenuOpcionesMostrar");
             }
         }
-    });
 
-    const toggleButton = document.getElementById('toggleButton');
-    toggleButton.addEventListener('click', function(event) {
-        event.stopPropagation(); // Detiene la propagación del evento
-    });
+
+        function preciona(valor) {
+            console.log(valor);
+            let opciones = document.querySelectorAll(".opcionesMenu");
+            console.log(opciones);
+            opciones.forEach(opcion => {
+                opcion.classList.remove("precionado");
+            });
+            valor.classList.add('precionado');
+        }
+
+        function esconderMenu() {
+            let menu = document.querySelector(".menuDesplegable");
+            if (menu.classList.contains("esconder")) {
+                menu.classList.remove("esconder");
+            } else {
+                menu.classList.add("esconder");
+            }
+        }
+
+
+        document.addEventListener('click', function(event) {
+            const opc = document.getElementById('opc');
+
+            // Verifica si el clic ocurrió fuera del div
+            if (opc.classList.contains("MenuOpcionesMostrar")) {
+                if (!opc.contains(event.target)) {
+                    opc.classList.remove("MenuOpcionesMostrar");
+                }
+            }
+        });
+
+        const toggleButton = document.getElementById('toggleButton');
+        toggleButton.addEventListener('click', function(event) {
+            event.stopPropagation(); // Detiene la propagación del evento
+        });
     </script>
 
 

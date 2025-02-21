@@ -19,7 +19,7 @@ function opcion(op) {
             break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
-            funcion = GetPerfilUsuario;
+            //funcion = GetPerfilUsuario;
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
@@ -63,11 +63,27 @@ function opcion(op) {
             break;
         case "Especificaciones":
             url = "Especificaciones/addEspecificaciones.php";
-            funcion = priEspe;
+            //funcion = priEspe;
             break;
         case "ICM":
             url = "ICM/ICMFrm.php";
             funcion = llenarCamposPaginaICM;
+            break;
+        case "SeleccionConceptosICM":
+            url = "ICM/SeleccionConceptosICMFrm.php";
+            funcion = function () {
+                obtenerDatosConceptosICM(0);
+            };
+            break;
+        case "SeleccionConceptosICMReturn":
+            url = "ICM/SeleccionConceptosICMFrm.php";
+            funcion = function () {
+                obtenerDatosConceptosICM(1);
+            };
+            break;
+        case "SeleccionProveedoresICM":
+            url = "ICM/SeleccionProveedoresICM.php";
+            funcion = obtenerDatosProveedoresICM;
             break;
         default: alert("Opción incorrecta"); return;
     }

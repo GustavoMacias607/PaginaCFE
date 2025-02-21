@@ -1,7 +1,7 @@
 let totalManoObraTarjeta;
 function llenarCamposPaginaTerminado() {
-    let btnICMNav = document.querySelector('#btnICMNav');
-    btnICMNav.style.display = 'block';
+    document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
+    document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
     let zona = document.getElementById("lblZona").innerHTML = datosProyecto.zona;
     let tipoObra = document.getElementById("lblTipoObra").innerHTML = datosProyecto.obra;

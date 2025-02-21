@@ -11,6 +11,7 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlanco" style="height: 4rem;">
     <div class="bottom-rectangle-proyecto">
+        <input type="text" class="form-control inputLleno d-none" id="idUsuario" value="<?= $_SESSION['idusuario'] ?>">
         <div class="text-materiales" style="margin-right: 1rem;">Proyecto terminado</div>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaConceptos', this)">Conceptos</button>
@@ -28,14 +29,15 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="mostrarTablaTerminado('tablaEquipoSeguridad', this)">Equipo de seguridad</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaMaquinaria', this)">Maquinaria</button>
-        <button type="button" class="btn btnTabla btnTerminadoBn">Reutilizar</button>
+        <button type="button" class="btn btnTabla btnTerminadoBn" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:addProyectoLimpiarModal();">Reutilizar</button>
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
 </div>
 
-<div style="">
+<div>
     <label for=""
         style="color:#303030; font-family: 'LatoBold', sans-serif; margin-left: 2rem; margin-top: 12rem; align-content: center;">Para
         la obra:</label>
@@ -536,6 +538,79 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="grid-container">
             <label class="subtotales_textos">Total:</label>
             <label id="TotalSumaImporteConceptos" class="subtotales_numeros_top">$0.00</label>
+        </div>
+    </div>
+</div>
+
+<!-- Modal insertar proyecto -->
+<div class="modal modal-maquinaria" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border: 3px solid #008E5A;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar proyecto</h1>
+                <button type="button" class="fa-solid fa-xmark btnclose-maquinaria" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body modal-body-maquinaria">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                <div class="row mb-3">
+
+                    <div class="col-6">
+                        <label for="precioInput" class="form-label" style="color: #303030;">Id</label>
+                        <input type="text" class="form-control inputLleno" id="inputIdProyecto" disabled>
+                    </div>
+                    <div class="col-6">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Zona*</label>
+                        <input type="text" class="form-control inputLleno" id="inputZona"
+                            oninput="mostrarSugerenciasZonas(this)" onfocus="mostrarSugerenciasZonas(this)"
+                            onblur="ocultarSugerenciasZonas();CompruebaTieneAlgoInput(this)" autocomplete="off">
+                        <div id="Addsugerencias" class="sugerencias-boxZona"
+                            style="font-family: 'latoBold', sans-serif;">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="unidadInput" class="form-label" style="color: #303030;">Tipo de obra*</label>
+                        <select class="form-select inputLleno" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            id="AddTipoObra">
+                            <option value="" selected>Selecciona</option>
+                            <option value="Nueva">Nueva</option>
+                            <option value="Mejora de red">Mejora de red</option>
+                            <option value="Solicitudes">Solicitudes</option>
+                        </select>
+                    </div>
+                    <div class="col-6">
+                        <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha posible de
+                            inicio*</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="AddfechaInicioInput">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <label for="precioInput" class="form-label" style="color: #303030;">Periodo*</label>
+                        <input type="number" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                            class="form-control inputLleno" id="inputPeriodo" min="1">
+                    </div>
+                    <div class="col-6">
+                        <label for="AddfechaPrecioInput" class="form-label" style="color: #303030;">Fecha de
+                            término</label>
+                        <input type="date" onblur="javascript:CompruebaTieneAlgoInput(this)" disabled
+                            class="form-control inputLleno" id="AddfechaTerminoInput">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre de la obra*</label>
+                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
+                        class="form-control inputLleno" id="inputNombreObra" rows="4"></textarea>
+                </div>
+                <div class="modal-footer modal-footer-maquinaria">
+                    <button type="button" class="btn btn-primary"
+                        onclick="javascript:AddReescribirProyecto();">Siguiente</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

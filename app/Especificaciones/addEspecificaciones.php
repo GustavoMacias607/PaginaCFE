@@ -188,9 +188,6 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th style="width: 8rem;">
-                                    Precio U
-                                </th>
                                 <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
                                         <span>Acciones</span>
@@ -286,9 +283,6 @@ if (!isset($_SESSION['idusuario'])) {
                                         </select>
                                     </div>
                                 </th>
-                                <th style="width: 9rem;">
-                                    Precio U
-                                </th>
                             </tr>
                         </thead>
                         <tbody id="table-bodyEspecificacionesModal">
@@ -337,9 +331,6 @@ if (!isset($_SESSION['idusuario'])) {
                                             <option value="PZA">PZA</option>
                                         </select>
                                     </div>
-                                </th>
-                                <th style="width: 9rem;">
-                                    Precio U
                                 </th>
                                 <th style="width: 100px;">
                                     <div style="display: flex; min-width: 144px; justify-content: space-between;">
