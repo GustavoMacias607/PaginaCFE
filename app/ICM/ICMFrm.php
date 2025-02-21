@@ -11,7 +11,7 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancoICM">
     <div class="bottom-rectangle-materiales">
         <div class="text-materiales">ICM</div>
-        <button type="button" class="btn btn-agregar-zonas" onclick="opcion('SeleccionProveedoresICM')">Seleccion
+        <button type="button" class="btn btn-agregar-zonas" onclick="opcion('SeleccionProveedoresICM')">Selección
             proveedores</button>
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
@@ -19,7 +19,7 @@ if (!isset($_SESSION['idusuario'])) {
         </a>
     </div>
 </div>
-<div style="padding-top: 20rem; justify-content: center; display: flex; justify-content: center;">
+<div style="padding-top: 11rem; justify-content: center; display: flex; justify-content: center;">
     <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
         onclick="ExportarTablaICMExcel();">Exportar a Excel</button>
     <button type="button" id="btnExportarPDF" class="btn fa-solid-Siguiente-catalogo"

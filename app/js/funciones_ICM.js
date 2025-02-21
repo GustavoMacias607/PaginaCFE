@@ -26,7 +26,7 @@ function generarEncabezados() {
     const fila1 = document.createElement("tr");
     fila1.innerHTML = `
         <th rowspan="6" style="min-width: 6rem; width: 6rem">Id</th>
-        <th rowspan="6" style="min-width: 36rem; width: 36rem">Descripcion</th>
+        <th rowspan="6" style="min-width: 36rem; width: 36rem">Descripción</th>
         <th rowspan="6" style="min-width: 6rem; width: 6rem">Cantidad</th>
         <th rowspan="6" style="min-width: 6rem; width: 6rem">Unidad</th>
         <th colspan="2" style="min-width: 16rem; width: 16rem">Proveedor</th>
@@ -65,7 +65,7 @@ function generarEncabezados() {
     fila4.innerHTML = `
         <th colspan="2" style="min-width: 12rem; width: 12rem;">Inflación INEGI</th>
         ${obtenerPropuestasSeleccionados().map(propuesta => `
-            <th style="min-width: 16rem; width: 16rem;" colspan="2" class="editable-inflacion" data-id="${propuesta.idpropuesta}" contenteditable="true">
+            <th style="background-color:rgba(0, 142, 90, 0.75); min-width: 16rem; width: 16rem; " colspan="2" class="editable-inflacion" data-id="${propuesta.idpropuesta}" contenteditable="true">
                 ${parseFloat(propuesta.inflacion).toFixed(2)}%
             </th>
         `).join("")}
@@ -176,7 +176,7 @@ function generarTabla() {
             const totalConInflacion = precio * parseFloat((1 + propuesta.inflacion / 100));
 
             fila.innerHTML += `
-                <td class="editable-pu textDer" data-id="${aux.idconcepto}" data-propuesta="${propuesta.idpropuesta}" contenteditable="true">${formatoMXN(precio)}</td>
+                <td class="editable-pu textDer" data-id="${aux.idconcepto}" style="background-color: #82f75780;" data-propuesta="${propuesta.idpropuesta}" contenteditable="true">${formatoMXN(precio)}</td>
                 <td class="textDer">${formatoMXN(totalConInflacion)}</td>
             `;
 
@@ -603,24 +603,6 @@ async function ExportarTablaICMExcel() {
                 bottom: { style: "none" }
             };
         });
-    });
-
-    // Agregar total como última fila
-    const total = document.querySelector(".total-promedio-pu-cantidad").innerText;
-    const totalRow = ["", "", "", "", "Total"];
-    for (let i = 0; i < obtenerPropuestasSeleccionados().length * 2; i++) {
-        totalRow.push("");
-    }
-    totalRow.push(total);
-    worksheet.addRow(totalRow).eachCell((cell, colNumber) => {
-        if (colNumber == totalRow.length) {
-            cell.font = { bold: true };
-            cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == totalRow.length - 1) {
-            cell.font = { bold: true };
-            cell.alignment = { horizontal: "center", vertical: "middle" };
-        }
     });
 
     // Ajustar el ancho de las columnas manualmente

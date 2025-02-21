@@ -44,7 +44,10 @@
 }
 
 #tabla-proveedores th {
-  background-color: #008e5a; /* Encabezados con fondo verde */
+  background-color: #008e5a;
+  /* Encabezados con fondo verde */
+
+  /* Encabezados con fondo verde */
   color: white; /* Letras blancas en los encabezados */
 }
 

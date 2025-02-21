@@ -288,12 +288,8 @@ if (!isset($_SESSION['idusuario'])) {
                     <input type="text" placeholder="Buscar" id="search-Propuestas">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
                 </div>
-                <button type="button" class="fa-solid fa-xmark btnclose-materiales_catalogo" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
             </div>
-
             <div>
-
                 <button type="button" onclick="abrirModalAddPropuesta();" class="btn fa-solid-agregar-materiales"
                     style="margin-left: 2rem; margin-top: 1rem;">Agregar</button>
                 <div class="pagRegistrosconceptos">
@@ -379,7 +375,7 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
 
             </div>
-            <div style="text-align: end; margin-right: 2rem; margin-top: 2rem;"><button type="button"
+            <div style="text-align: end; margin-right: 2rem; margin-top: 1rem;"><button type="button"
                     class="btn fa-solid-agregar-materiales" style="margin: 0 0 1rem 0" data-bs-dismiss="modal"
                     aria-label="Close" onclick="displayTablePropuestasICMPagina();">Aceptar</button>
             </div>
