@@ -213,6 +213,7 @@ function TraerMaterialesConceptoPDF(idConceptoProyecto, excel) {
 
 function GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto) {
     const container = document.getElementById(`materialesPDF-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -313,6 +314,7 @@ function TraerManoObrasConceptoPDF(idConceptoProyecto, excel) {
 
 function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
     const container = document.getElementById(`manoObraPDF-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -373,6 +375,7 @@ function GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto) {
 
 function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteManoObra) {
     const container = document.getElementById(`herramientaEquipoPDF-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -469,6 +472,7 @@ function TraerMaquinariaConceptoPDF(idConceptoProyecto, excel) {
 
 function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
     const container = document.getElementById(`maquinariaPDF-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -561,6 +565,7 @@ function TraerBasicoConceptoPDF(idConceptoProyecto, excel) {
 
 function GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto) {
     const container = document.getElementById(`basicoPDF-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -633,7 +638,6 @@ function actualizarCostoTotalPDF(idConceptoProyecto) {
     const precioUnitario = subTotal3 + cargosAdicionales;
 
     let letras = numeroALetras(precioUnitario.toString());
-    console.log(letras);
 
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',

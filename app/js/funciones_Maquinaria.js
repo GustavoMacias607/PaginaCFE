@@ -307,6 +307,8 @@ function GetMaquinaria() {
                     llenarTablaMaquinaria();
                     filterDataMaquinaria();
                     llenarUnidadTablaMaquinaria();
+                } else {
+                    data = [];
                 }
             } else {
                 throw e = status;
@@ -335,19 +337,20 @@ function displayTableMaquinaria(page) {
                 <td class="Code">${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${(!record.phm == "") ? record.phm : "---"}</td>
+                <td style="text-align: right;">${(!record.phm == "") ? record.phm : "---"}</td>
                 <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
-                        ${record.estatus == 1 ? `
+                        ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria('${record.idmaquinaria}','${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
                         ` : ``}
                           <!-- Ícono para ver PDF, llamando a la función verPDF -->
                         <i class="coloresIcono fa-regular fa-file-pdf" style="cursor: pointer;" alt="Ver PDF" onclick="verPDFMaquinaria('${record.idmaquinaria}')"></i>
-
-                        ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>`
+                        ${rolUsuarioSe == "Administrador" ?
+                    (record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmaquinaria}',${record.estatus})"></i>`
+                    ) : ``
                 }
                     </div>
                 </td>
@@ -697,7 +700,8 @@ function AddAgregarPDFMaquinaria() {
 
 
 function idMaquinariaAutomatico() {
-    if (data.length === 0) {
+    console.log(data)
+    if (data.length == 0) {
         return "Maq01";
     }
     // Extrae el último número de idconbasi en el arreglo de data

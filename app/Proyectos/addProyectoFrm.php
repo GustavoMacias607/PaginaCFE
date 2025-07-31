@@ -12,8 +12,14 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco-proyecto">
     <div class="bottom-rectangle-proyecto">
         <div class="text-materiales">Proyectos</div>
-        <button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:addProyectoLimpiarModal();">Agregar proyecto</button>
+
+        <?php
+        if ($_SESSION["rol"] != "Invitado") {
+            echo    '<button type="button" class="btn btn-agregar-Proyecto" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:addProyectoLimpiarModal();">Agregar proyecto</button>';
+        }
+        ?>
+
         <input type="text" class="form-control inputLleno d-none" id="idUsuario" value="<?= $_SESSION['idusuario'] ?>">
     </div>
     <div class="label-container-proyecto">
@@ -29,7 +35,6 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="contenedor-columnas">
     <!-- Primera columna -->
-
     <div class="columna">
         <div class="pagRegistroszonas" style="margin-top: 14rem;">
             <nav class="pSeccion">
@@ -43,13 +48,12 @@ if (!isset($_SESSION['idusuario'])) {
                     </select>
                     <div class="text2">Registros </div>
                 </div>
-
                 <ul class="pagination" id="paginationProceso">
                     <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                     <li class="page-item active"></li>
                 </ul>
-
             </nav>
+
         </div>
         <div class="contTabla-proyecto">
             <div class="tabla-container-proyecto">
@@ -108,8 +112,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <!-- Aquí se agregarán dinámicamente los enlaces de página -->
                     <li class="page-item active"></li>
                 </ul>
-
             </nav>
+            <div class="toggle-estatus-materiales">
+                <div class="text">Estatus</div>
+                <div class="">
+                    <input style="display: none;" type="checkbox" id="ValCheEsta" checked>
+                    <img id="ValEstatus" src="../img/toggle_on_35px.png" onclick="javascript:valStatusProyecto();">
+                </div>
+            </div>
         </div>
         <div class="contTabla-proyecto">
             <div class="tabla-container-proyecto">
@@ -124,6 +134,7 @@ if (!isset($_SESSION['idusuario'])) {
                             <th>Nombre</th>
                             <th style="width: 8rem;">Zona</th>
                             <th style="width: 8rem;">Tipo de obra</th>
+                            <th style="width: 8rem;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="table-bodyProyectosTerminados">
@@ -218,6 +229,63 @@ if (!isset($_SESSION['idusuario'])) {
                     <button type="button" class="btn btn-primary"
                         onclick="javascript:AddProyectoFase1();">Siguiente</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- modal para activar el registro de materiales -->
+<div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
+                <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
+                    ¿Habilitar este proyecto?</h5>
+                <button type="button" class="btn" id="confirmActivationButton"
+                    onclick="javascript:ActivarCerrarModal(); cambioEstatusProyecto();"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Habilitar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal de Confirmación de Eliminación -->
+<div class="modal" id="confirmDeleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style=" border: 3px solid #008e5a; border-radius: 5px;">
+                <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">
+                    ¿Deshabilitar este proyecto?</h5>
+                <button type="button" class="btn" data-bs-dismiss="modal" onclick="javascript:AbrirModalConfirm();"
+                    id="confirmDeleteButton"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Deshabilitar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmación Adicional -->
+<div class="modal" id="confirmAdditionalModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header"
+                style=" border: 3px solid #008e5a; border-radius: 5px; width: 700px; background-color: #ffffff; align-self: center;">
+                <h5 class="modal-title" id="exampleModalLabel" style="font-family: 'LatoBold', sans-serif;">¿Está
+                    seguro de que desea deshabilitar este proyecto?</h5>
+                <button type="button" onclick="javascript:EliminarCerrarModal(); cambioEstatusProyecto();" class="btn"
+                    id="confirmAdditionalButton"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Confirmar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
             </div>
         </div>
     </div>

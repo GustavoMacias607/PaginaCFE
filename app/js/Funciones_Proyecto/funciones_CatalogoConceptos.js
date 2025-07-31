@@ -11,6 +11,13 @@ function llenarCamposPagina() {
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     MostrarConceptosContenidosProyecto();
     llenarUnidadTablaCon();
+    document.getElementById("sort-id").addEventListener("click", function () {
+        toggleSort(this, "idconcepto", "Catalogo");
+    });
+    document.getElementById("sort-name").addEventListener("click", function () {
+        toggleSort(this, 'nombre', "Catalogo");
+    });
+
 }
 function formatearFecha(fecha) {
     const [year, month, day] = fecha.split('-');
@@ -64,7 +71,6 @@ function ActualizarTotalesConceptoProyecto() {
             try {
                 if (status === "success") {
                     let resp = JSON.parse(responseText);
-
                     resolve(); // La promesa se resuelve exitosamente
 
                 } else {
@@ -318,6 +324,7 @@ function AgregartablaConceptoProyecto() {
             try {
                 if (status === "success") {
                     let resp = JSON.parse(responseText);
+                    console.log(resp);
                     if (resp.estado === "OK") {
                         //mensajePantalla(mgsCatalogoAgregado, true);
                     } else {

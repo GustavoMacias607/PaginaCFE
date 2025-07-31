@@ -141,6 +141,7 @@ if (!isset($_SESSION['idusuario'])) {
             </li>
         </ul>
         <ul class='usuApartado'>
+            <input id="rolUsuarioSession" class="d-none" type="text" value="<?= $_SESSION['rol'] ?>">
             <div style="display: block;">
                 <a class="opcionesMenu" href="javascript:opcion('perfilUsu');"
                     onclick="preciona(this)"><?= $_SESSION['nombre'] ?> <i class=" fa-solid fa-user"></i></a>
@@ -151,10 +152,15 @@ if (!isset($_SESSION['idusuario'])) {
                         onclick="mostrarOp()" class="fas fa-bars"></i>
                 </div>
                 <ul id="opc" class='MenuOpciones'>
-                    <a class=" opcionesMenu tex" onclick="javascript:preciona(this);"
-                        href="javascript:opcion('usuarios');">Usuarios</a>
-                    <a class=" opcionesMenu tex" onclick="javascript:preciona(this);"
-                        href="javascript:opcion('zonas');">Zonas</a>
+                    <?php
+                    if ($_SESSION["rol"] == "Administrador") {
+                        echo    '<a class=" opcionesMenu tex" onclick="javascript:preciona(this);"
+                        href="javascript:opcion(`usuarios`);">Usuarios</a>';
+
+                        echo '<a class=" opcionesMenu tex" onclick="javascript:preciona(this);"
+                        href="javascript:opcion(`zonas`);">Zonas</a>';
+                    }
+                    ?>
                     <a class="tex" href="index.php?x=1">Cerrar sesión</a>
                 </ul>
             </li>
@@ -202,6 +208,7 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/SubCarpetaTarjeta/TarjetaManoObra.js"></script>
     <script src="js/SubCarpetaTarjeta/TarjetaMaquinaria.js"></script>
     <script src="js/SubCarpetaTarjeta/TarjetaBasicos.js"></script>
+    <script src="js/SubCarpetaTarjeta/ReutilizarTarjeta.js"></script>
 
     <script src="js/Funciones_Proyecto/funciones_addProyecto.js"></script>
     <script src="js/Funciones_Proyecto/funciones_CatalogoConceptos.js"></script>

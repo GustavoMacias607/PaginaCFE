@@ -79,13 +79,15 @@ function displayTableTipoEsp(page) {
                  ${record.estatus == 1 ? `
                         <i class="coloresIcono fa-regular fa-eye" style="cursor: pointer;" alt="Ver" data-bs-toggle="modal" data-bs-target="#AgregarModalEspecificaciones" onclick="llenarModalVerTipoEsp('${record.idtipo}','${record.idespecificacion}','${record.codigo}','${record.nombretipo}','${record.descripcion}')"></i>
                     ` : ``}
-                    ${record.estatus == 1 ? `
+                    ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                         <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#AgregarModalEspecificaciones" onclick="llenarModalModificarTipoEsp('${record.idtipo}','${record.idespecificacion}','${record.codigo}','${record.nombretipo}','${record.descripcion}')"></i>
                     ` : ``}
                    
-                    ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idtipo}',${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idtipo}',${record.estatus})"></i>`
+                     ${rolUsuarioSe == "Administrador" ?
+                    (record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idtipo}',${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idtipo}',${record.estatus})"></i>`
+                    ) : ``
                 }
                 </div>
             </td>

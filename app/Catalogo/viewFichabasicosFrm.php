@@ -11,11 +11,49 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancoCatalogo">
     <div class="bottom-rectangle-Catalogo">
         <div class="text-Catalogo">Agregar tarjeta</div>
+        <?php
+        if ($_SESSION["rol"] != "Invitado") {
+            echo    ' <button id="btnExportar" data-bs-toggle="modal" onclick="limpiarModalCopiar();" data-bs-target="#staticBackdrop"
+            class="btn btn-agregar-material">
+            Utilizar tarjeta
+        </button>';
+        }
+        ?>
+
         <a onclick="opcion('proyecto')" class="text-inicio-Catalogo">
             <div>Ir al inicio</div>
         </a>
     </div>
 </div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Copiar tarjeta existente</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <label for="idInput" class="form-label" style="color: #303030;">Ingrese id del concepto para copiar
+                        su tarjeta</label>
+                    <input type="text" class="form-control inputLleno" id="AddIdConceptoCopy"
+                        onblur="javascript:CompruebaTieneAlgoInput(this);">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn fa-solid-cancelar"
+                    onclick="ComprobarExisteConceptoCopiar();">Reutilizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="contenidoagg-catalogo">
     <div class="titulo-concepto">
@@ -54,8 +92,14 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Materiales</div>
-            <div><button type="button" onclick="javascript:AbrirModalMaterialesTarjeta();"
-                    class="btn fa-solid-agregar-materiales">Agregar</button></div>
+            <div>
+                <?php
+                if ($_SESSION["rol"] != "Invitado") {
+                    echo    ' <button type="button" onclick="javascript:AbrirModalMaterialesTarjeta();"
+                    class="btn fa-solid-agregar-materiales">Agregar</button>';
+                }
+                ?>
+            </div>
             <div id="LecturaMaterial" style="display: none;">Hay un material Inactivo</div>
 
         </nav>
@@ -116,11 +160,16 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Mano de obra</div>
-            <div><button type="button" onclick="javascript:AbrirModalManoObraTarjeta();"
+            <div>
+                <?php
+                if ($_SESSION["rol"] != "Invitado") {
+                    echo    '<button type="button" onclick="javascript:AbrirModalManoObraTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
-                    data-bs-target="#AgregarModalManodeobraesConcepto">Agregar</button></div>
+                    data-bs-target="#AgregarModalManodeobraesConcepto">Agregar</button>';
+                }
+                ?>
+            </div>
             <div id="LecturaManoObra" style="display: none;">Hay una mano de obra inactiva</div>
-
         </nav>
     </div>
 
@@ -208,15 +257,15 @@ if (!isset($_SESSION['idusuario'])) {
                 <tbody>
                     <tr class="fila">
                         <td class="Code">HERRAMIENTAS DE MANO</td>
-                        <td id="KhHerramientas">0.03</td>
-                        <td id="ActualizarPrecioMoHerramientas">0</td>
-                        <td id="importeHerramientas">0</td>
+                        <td style="text-align: right;" id="KhHerramientas">0.03</td>
+                        <td style="text-align: right;" id="ActualizarPrecioMoHerramientas">0</td>
+                        <td style="text-align: right;" id="importeHerramientas">0</td>
                     </tr>
                     <tr class="fila">
                         <td class="Code">EQUIPO Y SEGURIDAD</td>
-                        <td id="KhEquipo">0.02</td>
-                        <td id="ActualizarPrecioMoEquipo">0</td>
-                        <td id="importeEquipo">0</td>
+                        <td style="text-align: right;" id="KhEquipo">0.02</td>
+                        <td style="text-align: right;" id="ActualizarPrecioMoEquipo">0</td>
+                        <td style="text-align: right;" id="importeEquipo">0</td>
                     </tr>
                 </tbody>
             </table>
@@ -233,9 +282,15 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Maquinaria</div>
-            <div><button type="button" onclick="javascript:AbrirModalMaquinariaTarjeta();"
+            <div>
+                <?php
+                if ($_SESSION["rol"] != "Invitado") {
+                    echo    '<button type="button" onclick="javascript:AbrirModalMaquinariaTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
-                    data-bs-target="#AgregarModalMaquinariaesConcepto">Agregar</button></div>
+                    data-bs-target="#AgregarModalMaquinariaesConcepto">Agregar</button>';
+                }
+                ?>
+            </div>
             <div id="LecturaMaquinaria" style="display: none;">Hay una maquinaria inactiva</div>
 
         </nav>
@@ -287,13 +342,19 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
-
     <div id="btnAgregarBasicos" class="titulo-materiales" style="display: none;">
         <nav class="pSeccion-catalogo">
             <div>Básicos</div>
-            <div><button type="button" onclick="javascript:AbrirModalBasicosTarjeta();"
+            <div>
+                <?php
+                if ($_SESSION["rol"] != "Invitado") {
+                    echo '<button type="button" onclick="javascript:AbrirModalBasicosTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
-                    data-bs-target="#AgregarModalBasicosesConcepto">Agregar</button></div>
+                    data-bs-target="#AgregarModalBasicosesConcepto">Agregar</button>';
+                }
+                ?>
+
+            </div>
             <div id="LecturaBasicos" style="display: none;">Hay un concepto básico Inactivo</div>
 
         </nav>
@@ -425,9 +486,15 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 
     <div style="margin-top: 1.6rem; margin-bottom: 2rem; padding-bottom: 3rem;">
+
         <div class="grid-container">
-            <button type="button" class="btn fa-solid-Guardar-catalogo"
-                onclick="javascript:guardarTablasEnBD()">Guardar</button>
+            <?php
+            if ($_SESSION["rol"] != "Invitado") {
+                echo '<button type="button" class="btn fa-solid-Guardar-catalogo"
+                onclick="javascript:guardarTablasEnBD()">Guardar</button>';
+            }
+            ?>
+
         </div>
     </div>
 
@@ -602,8 +669,6 @@ if (!isset($_SESSION['idusuario'])) {
 </div>
 
 
-
-
 <!-- Modal insertar mano de obra -->
 <div class="modal fade modal-manodeobra_catalogo" id="AgregarModalManodeobraesConcepto" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -726,9 +791,6 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
-
-
-
 
 
 <!-- Modal insertar maquinaria -->
@@ -855,10 +917,6 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 
-
-
-
-
 <!-- Modal insertar basicos -->
 <div class="modal fade modal-basicos_catalogo" id="AgregarModalBasicosesConcepto" data-bs-backdrop="static"
     data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -982,6 +1040,23 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
+<!-- modal para activar el registro de materiales -->
+<div class="modal" id="confirmCopiarModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
+    style="z-index: 4000; color: #303030; top: 194px;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="border: 3px solid #008e5a; border-radius: 5px;">
+                <h5 class="modal-title" id="activationModalLabel" style="font-family: 'LatoBold', sans-serif;">
+                    ¿Esta seguro de reemplazar los datos? Los datos guardados anteriormente se perderan</h5>
+                <button type="button" class="btn" id="confirmActivationButton" data-bs-dismiss="modal"
+                    aria-label="Close" onclick="RemplazarDatosNuevo();"
+                    style="background-color: #008e5a; color: #ffffff; font-family: 'LatoBold', sans-serif; margin: 0 1rem 0 1rem;">Reemplazar</button>
+                <button type="button" class="btn" data-bs-dismiss="modal"
+                    style="background-color: #858585; color: #ffffff; font-family: 'LatoBold', sans-serif;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

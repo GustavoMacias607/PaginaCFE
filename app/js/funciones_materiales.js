@@ -358,7 +358,8 @@ function GetMateriales() {
                     llenarTablaMateriales();
                     filterDataMateriales();
                     llenarUnidadTablaMateriales();
-                    document.getElementById('upload').addEventListener('change', handleFile, false);
+                    if (document.getElementById("upload"))
+                        document.getElementById('upload').addEventListener('change', handleFile, false);
                 }
             } else {
                 throw e = status;
@@ -370,6 +371,7 @@ function GetMateriales() {
 }
 
 function displayTableMateriales(page) {
+
     const tableBody = document.getElementById("table-bodyMateriales");
     tableBody.innerHTML = "";
     const start = (page - 1) * rowsPerPage;
@@ -405,11 +407,11 @@ function displayTableMateriales(page) {
             }
 
             row.innerHTML = `
-                <td class="Code">${record.codigo}</td>
+                <td class="Code" style="text-align: right;">${record.codigo}</td>
                 <td>${record.norma ? record.norma : "Sin norma"}</td>
                 <td>${record.descripcion ? record.descripcion : "---"}</td>
-                <td>${precioFormateado}</td>
-                <td>${record.fechaprecio ? record.fechaprecio : "---"}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
+                <td >${record.fechaprecio ? record.fechaprecio : "---"}</td>
                 <td>${record.familia ? record.familia : "---"}</td>
                 <td>${record.unidad ? record.unidad : "---"}</td>
                 <td class="estatus">
@@ -420,10 +422,13 @@ function displayTableMateriales(page) {
                     </div>
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
-                        ${record.estatus == 1 ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
-                        ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>`
+                        ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
+
+                       ${rolUsuarioSe == "Administrador" ?
+                    (record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.codigo},${record.estatus})"></i>`
+                    ) : ``
                 }
                     </div>
                 </td>
@@ -913,7 +918,6 @@ async function obtenerArchivosEnCarpeta(rutaCarpeta) {
     return archivos;
 }
 
-
 //Metodo para cerrar el modal de agregar material
 function AddCerrarModal() {
     $('#AgregarModal').modal('hide');
@@ -950,7 +954,6 @@ function AbrirModalConfirm1() {
     }
 
 }
-
 
 // Exportar a Excel a partir de un objeto
 async function ExportarMateriales() {
@@ -1080,11 +1083,23 @@ async function ExportarMateriales() {
         { header: "", width: 12 }
     ];
     // Descargar el archivo Excel
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0'); // Asegura que el día tenga dos dígitos
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Asegura que el mes tenga dos dígitos
+    const year = today.getFullYear();
+
+    // Formatear la fecha como dd/mm/yyyy
+    const formattedDate = `${day}/${month}/${year}`;
+
+    // Crear el nombre del archivo
+    const fileName = `ListaMateriales${formattedDate}.xlsx`;
+
+    // Escribir el buffer y crear el archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "ExportarExcel.xlsx";
+    link.download = fileName; // Usar el nombre del archivo generado
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

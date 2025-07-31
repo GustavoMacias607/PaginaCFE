@@ -23,7 +23,7 @@ if (!isset($_SESSION['idusuario'])) {
     <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
         onclick="ExportarTablaICMExcel();">Exportar a Excel</button>
     <button type="button" id="btnExportarPDF" class="btn fa-solid-Siguiente-catalogo"
-        style="margin-left: 0.5rem; margin-right: 0.5rem;" onclick="ExportarTablaICMPDF()">Exportar a
+        style="margin-left: 0.5rem; margin-right: 0.5rem;" onclick="exportarPDFTablaICM()">Exportar a
         PDF</button>
 </div>
 <div class="contTabla-ICM">

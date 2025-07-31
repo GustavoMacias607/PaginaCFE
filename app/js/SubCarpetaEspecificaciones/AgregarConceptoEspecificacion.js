@@ -68,7 +68,7 @@ function displayTableConceptoEspecificacion(page) {
             row.innerHTML = `
                  <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                    <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                    <td style="text-align: left;">${record.unidad !== "" ? record.unidad : "---"}</td>
             `;
 
             // Evento para doble clic
@@ -269,7 +269,7 @@ function displayTableConceptoEspecificacionModal(page) {
             row.innerHTML = `
                    <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                    <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                    <td style="text-align: left;">${record.unidad !== "" ? record.unidad : "---"}</td>
                  <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">
                         <i class="coloresIcono fa-solid fa-x" style="cursor: pointer;" alt="Eliminar" onclick="eliminarFilaDelObjetoConcepto('${record.idconcepto}')"></i>

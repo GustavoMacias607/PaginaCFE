@@ -96,10 +96,14 @@ if (!isset($_SESSION['idusuario'])) {
                 <thead class="encabezadoTablasTarjeta">
                     <tr>
                         <th style="width: 8rem;">
-                            ID
+                            <button id="sort-id" class="sort-button">
+                                ID <i class="fa-solid fa-arrow-up-wide-short"></i>
+                            </button>
                         </th>
                         <th>
-                            Nombre
+                            <button id="sort-name" class="sort-button">
+                                Nombre <i class="fa-solid fa-arrow-up-wide-short"></i>
+                            </button>
                         </th>
                         <th style="width: 10rem;">
                             <div class="d-flex align-items-center">

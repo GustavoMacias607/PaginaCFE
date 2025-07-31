@@ -12,10 +12,16 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanco">
     <div class="bottom-rectangle-especificaciones">
         <div class="text-especificaciones">Especificaciones</div>
-        <button type="button" class="btn btn-agregar-especificaciones" data-bs-toggle="modal"
+
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo    ' <button type="button" class="btn btn-agregar-especificaciones" data-bs-toggle="modal"
             id="btnAgregarEspecificaciones" data-bs-target="#AgregarModalEspecificaciones"
             onclick="javascript:LlenarCamposAgregar(true);">Agregar
-            Especificación</button>
+            Especificación</button>';
+        }
+        ?>
+
         <a onclick="opcion('proyecto')" class="text-inicio-especificaciones">
             <div>Ir al inicio</div>
         </a>

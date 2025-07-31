@@ -33,7 +33,7 @@ async function GeneradorTablaConcepto() {
                                     <td>${concepto.idconcepto}</td>
                                     <td>${concepto.nombre}</td>
                                     <td>${concepto.unidad}</td>
-                                    <td>${concepto.familia || '---'}</td>
+                                    <td>${concepto.nombreespe}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -71,7 +71,7 @@ async function GeneradorTablaConcepto() {
                 <div id="basico-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
 
                 <div class="totalesTablas claseTotales">
-                    <label class="subtotales_textos">Costo Total:</label>
+                    <label class="subtotales_textos">Costo directo:</label>
                     <div>
                         <label id="CostoTotal-${concepto.idconcepto}" class="subtotales_numeros_top">0</label>
                     </div>
@@ -129,6 +129,7 @@ function TraerMaterialesConcepto(idConceptoProyecto) {
 
 function GeneradorTablaMateriales(MaterialesConcepto, idConceptoProyecto) {
     const container = document.getElementById(`materiales-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -153,13 +154,13 @@ function GeneradorTablaMateriales(MaterialesConcepto, idConceptoProyecto) {
                 <tbody>
                     ${MaterialesConcepto.length > 0 ? MaterialesConcepto.map(material => `
                         <tr>
-                            <td>${material.codigo}</td>
+                            <td style="text-align: right;">${material.codigo}</td>
                             <td>${material.descripcion}</td>
                             <td>${material.unidad}</td>
-                            <td>${formatoMXN.format(material.precio)}</td>
-                            <td>${material.cantidad}</td>
+                            <td style="text-align: right;">${formatoMXN.format(material.precio)}</td>
+                            <td style="text-align: right;">${material.cantidad}</td>
                             <td>${material.suministrado ? 'Sí' : 'No'}</td>
-                            <td>${formatoMXN.format(material.suministrado ? 0 : (material.precio * material.cantidad))}</td>
+                            <td style="text-align: right;">${formatoMXN.format(material.suministrado ? 0 : (material.precio * material.cantidad))}</td>
                         </tr>
                     `).join('') : `
                         <tr>
@@ -224,6 +225,7 @@ function TraerManoObrasConcepto(idConceptoProyecto) {
 
 function GeneradorTablaManoObra(ManoObraConcepto, idConceptoProyecto) {
     const container = document.getElementById(`manoObra-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -252,11 +254,11 @@ function GeneradorTablaManoObra(ManoObraConcepto, idConceptoProyecto) {
                             <td>${manoObra.idmanoobra}</td>
                             <td>${manoObra.categoria}</td>
                             <td>${manoObra.unidad}</td>
-                            <td>${formatoMXN.format(manoObra.salario)}</td>
-                            <td>${manoObra.rendimiento}</td>
-                            <td>${manoObra.cantidad.toFixed(2)}</td>
-                            <td>${formatoMXN.format(manoObra.sr)}</td>
-                            <td>${formatoMXN.format(manoObra.importe)}</td>
+                            <td style="text-align: right;">${formatoMXN.format(manoObra.salario)}</td>
+                            <td style="text-align: right;">${manoObra.rendimiento}</td>
+                            <td style="text-align: right;">${manoObra.cantidad.toFixed(2)}</td>
+                            <td style="text-align: right;">${formatoMXN.format(manoObra.sr)}</td>
+                            <td style="text-align: right;">${formatoMXN.format(manoObra.importe)}</td>
                         </tr>
                     `).join('') : `
                         <tr>
@@ -280,6 +282,7 @@ function GeneradorTablaManoObra(ManoObraConcepto, idConceptoProyecto) {
 
 function GeneradorTablaHerramientaEquipo(idConceptoProyecto, totalImporteManoObra) {
     const container = document.getElementById(`herramientaEquipo-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -307,15 +310,15 @@ function GeneradorTablaHerramientaEquipo(idConceptoProyecto, totalImporteManoObr
                 <tbody>
                     <tr class="fila">
                         <td class="Code">Herramientas de mano</td>
-                        <td>${khHerramientas}</td>
-                        <td>${formatoMXN.format(totalImporteManoObra)}</td>
-                        <td>${formatoMXN.format(importeHerramientas)}</td>
+                        <td style="text-align: right;">${khHerramientas}</td>
+                        <td style="text-align: right;">${formatoMXN.format(totalImporteManoObra)}</td>
+                        <td style="text-align: right;">${formatoMXN.format(importeHerramientas)}</td>
                     </tr>
                     <tr class="fila">
                         <td class="Code">Equipo y seguridad</td>
-                        <td>${khEquipo}</td>
-                        <td>${formatoMXN.format(totalImporteManoObra)}</td>
-                        <td>${formatoMXN.format(importeEquipo)}</td>
+                        <td style="text-align: right;">${khEquipo}</td>
+                        <td style="text-align: right;" >${formatoMXN.format(totalImporteManoObra)}</td>
+                        <td style="text-align: right;">${formatoMXN.format(importeEquipo)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -370,13 +373,13 @@ function TraerMaquinariaConcepto(idConceptoProyecto) {
 
 function GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto) {
     const container = document.getElementById(`maquinaria-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
     });
 
     let totalImporteMaquinaria = MaquinariaConcepto.reduce((total, maquinaria) => total + (maquinaria.phm / maquinaria.rhm), 0);
-
     let maquinariaHTML = `
         <div class="tabla-container-tablaTarjeta">
             <table id="tabla-MaterialesCatalogo">
@@ -396,9 +399,9 @@ function GeneradorTablaMaquinaria(MaquinariaConcepto, idConceptoProyecto) {
                             <td>${maquinaria.idmaquinaria}</td>
                             <td>${maquinaria.descripcion}</td>
                             <td>${maquinaria.unidad}</td>
-                            <td>${formatoMXN.format(maquinaria.phm)}</td>
-                            <td>${maquinaria.rhm}</td>
-                            <td>${formatoMXN.format(maquinaria.phm / maquinaria.rhm)}</td>
+                            <td style="text-align: right;">${formatoMXN.format(maquinaria.phm)}</td>
+                            <td style="text-align: right;">${maquinaria.rhm}</td>
+                            <td style="text-align: right;">${formatoMXN.format(maquinaria.phm / maquinaria.rhm)}</td>
                         </tr>
                     `).join('') : `
                         <tr>
@@ -457,6 +460,7 @@ function TraerBasicoConcepto(idConceptoProyecto) {
 
 function GeneradorTablaBasico(BasicoConcepto, idConceptoProyecto) {
     const container = document.getElementById(`basico-${idConceptoProyecto}`);
+    if (!container) return;
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -483,9 +487,9 @@ function GeneradorTablaBasico(BasicoConcepto, idConceptoProyecto) {
                             <td>${basico.idconbasi}</td>
                             <td>${basico.nombre}</td>
                             <td>${basico.unidad}</td>
-                            <td>${formatoMXN.format(basico.total)}</td>
-                            <td>${basico.cantconbasi}</td>
-                            <td>${formatoMXN.format(basico.total * basico.cantconbasi)}</td>
+                            <td style="text-align: right;">${formatoMXN.format(basico.total)}</td>
+                            <td style="text-align: right;">${basico.cantconbasi}</td>
+                            <td style="text-align: right;">${formatoMXN.format(basico.total * basico.cantconbasi)}</td>
                         </tr>
                     `).join('') : `
                         <tr>

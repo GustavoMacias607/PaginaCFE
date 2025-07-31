@@ -8,7 +8,17 @@ let objMaterialesSi;
 
 let totalProyecto;
 
+
+// Variables para controlar la visibilidad de las columnas
+let showCostoDirecto = true;
+let showPrecioUnitario = true;
+let showPUCantidad = true;
+
 function llenarCamposPaginaPresupuesto() {
+    PorsentajesZona(objZonas, true)
+    showCostoDirecto = true;
+    showPrecioUnitario = true;
+    showPUCantidad = true;
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
     let zona = document.getElementById("lblZona").innerHTML = datosProyecto.zona;
     let tipoObra = document.getElementById("lblTipoObra").innerHTML = datosProyecto.obra;
@@ -21,7 +31,37 @@ function llenarCamposPaginaPresupuesto() {
     getMaterialesNo();
     getMaquinarias();
     getManoObras();
+    document.getElementById('toggleCostoDirecto').addEventListener('click', () => {
+        showCostoDirecto = !showCostoDirecto;
+        updateColumnVisibility();
+    });
 
+    document.getElementById('togglePrecioUnitario').addEventListener('click', () => {
+        showPrecioUnitario = !showPrecioUnitario;
+        updateColumnVisibility();
+    });
+
+    document.getElementById('togglePUCantidad').addEventListener('click', () => {
+        showPUCantidad = !showPUCantidad;
+        updateColumnVisibility();
+    });
+}
+function updateColumnVisibility() {
+    const costoDirectoCols = document.querySelectorAll('.col-costo-directo');
+    const precioUnitarioCols = document.querySelectorAll('.col-precio-unitario');
+    const puCantidadCols = document.querySelectorAll('.col-pu-cantidad');
+    const totalContainer = document.getElementById('totalContainer');
+
+    costoDirectoCols.forEach(col => col.style.display = showCostoDirecto ? '' : 'none');
+    precioUnitarioCols.forEach(col => col.style.display = showPrecioUnitario ? '' : 'none');
+    puCantidadCols.forEach(col => col.style.display = showPUCantidad ? '' : 'none');
+
+    totalContainer.style.display = showPUCantidad ? 'block' : 'none';
+
+    // Update icons
+    document.getElementById('iconCostoDirecto').className = !showCostoDirecto ? 'fa fa-eye-slash' : 'fa fa-eye';
+    document.getElementById('iconPrecioUnitario').className = !showPrecioUnitario ? 'fa fa-eye-slash' : 'fa fa-eye';
+    document.getElementById('iconPUCantidad').className = !showPUCantidad ? 'fa fa-eye-slash' : 'fa fa-eye';
 }
 
 
@@ -52,7 +92,6 @@ async function MostrarConceptosContenidosProyectoPresupuesto() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                console.log(datosBd);
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         editedRows[datos.IdConcepto] = {
@@ -99,20 +138,25 @@ function displayTableConceptoPresupuesto(page) {
     });
     if (paginatedDataPresupuesto.length > 0) {
         paginatedDataPresupuesto.forEach((record, index) => {
-            const precioFormateado = record.total ? formatoMXN.format(record.total) : "---";
-            let importe = record.cantidad * record.total
-            totalProyecto += importe;
 
+            const precioFormateado = record.total ? formatoMXN.format(record.total) : "---";
+            let calculoPorcentaje = calculoConceptoPorcentaje(parseFloat(record.total))
+            let importe = record.cantidad * calculoPorcentaje
+            totalProyecto += importe;
+            const PrecioPorcentajeFormateado = record.total ? formatoMXN.format(calculoPorcentaje) : "---";
             const importeFormateado = record.total ? formatoMXN.format(importe) : "---";
+
+
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.innerHTML = `
                   <td class="Code">${record.idconcepto}</td>
-                    <td>${record.nombre !== "" ? record.nombre : "---"}</td>
+                    <td style="text-align: justify;">${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${record.cantidad !== "" ? record.cantidad : "---"}</td>
-                    <td>${precioFormateado}</td>
-                    <td>${importeFormateado}</td>
+                    <td style="text-align: right;">${record.cantidad !== "" ? record.cantidad : "---"}</td>
+                    <td style="text-align: right;" class="col-costo-directo">${precioFormateado}</td>
+                    <td style="text-align: right;" class="col-precio-unitario">${PrecioPorcentajeFormateado}</td>
+                    <td style="text-align: right;" class="col-pu-cantidad">${importeFormateado}</td>
                     `;
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
@@ -126,6 +170,9 @@ function displayTableConceptoPresupuesto(page) {
                         <td colspan="8" class="Code">Sin resultados</td>
                      </tr>`;
     }
+
+    // Update column visibility after rendering the table
+    updateColumnVisibility();
 }
 
 // Método para los filtros de la tabla
@@ -215,7 +262,6 @@ function setupPaginationConceptoPresupuesto() {
 function filterDataConceptoPresupuesto() {
     const searchText = document.getElementById("search-inputConceptos").value.toLowerCase();
     const statusFilter = 1;
-    console.log(editedRows)
     filteredDataPresupuesto = Object.values(editedRows).filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
@@ -440,17 +486,17 @@ function llenarTablaMaterialesSi() {
             const precioFormateado = record.Precio ? formatoMXN.format(record.Precio) : "---";
             let importe = record.Cantidad * record.Precio
             total += importe;
-            const importeFormateado = record.Precio ? formatoMXN.format(0) : "---";
+            const importeFormateado = record.Precio ? formatoMXN.format(importe) : "---";
             const row = document.createElement('tr');
             row.classList.add('fila');
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                    <td class="Code">${record.Codigo}</td>
+                    <td style="text-align: right;" class="Code">${record.Codigo}</td>
                     <td>${record.Descripcion !== "" ? record.Descripcion : "---"}</td>
                     <td>${record.Unidad !== "" ? record.Unidad : "---"}</td>
-                   <td>${precioFormateado}</td>
-                   <td>${record.Cantidad !== "" ? record.Cantidad : "---"}</td>
-                    <td>${importeFormateado}</td>
+                   <td style="text-align: right;">${precioFormateado}</td>
+                   <td style="text-align: right;">${record.Cantidad !== "" ? record.Cantidad : "---"}</td>
+                    <td style="text-align: right;">${importeFormateado}</td>
                 `;
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
@@ -460,7 +506,7 @@ function llenarTablaMaterialesSi() {
             tableBody.appendChild(row);
         });
         let totalImporteConcepto = document.getElementById("TotalSumaMaterialesSi");
-        totalImporteConcepto.innerHTML = formatoMXN.format(0);
+        totalImporteConcepto.innerHTML = formatoMXN.format(total);
     } else {
         const row = `
         <tr class="fila">
@@ -491,12 +537,12 @@ function llenarTablaMaterialesNo() {
             row.classList.add('fila');
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                    <td class="Code">${record.Codigo}</td>
+                    <td style="text-align: right;" class="Code">${record.Codigo}</td>
                     <td>${record.Descripcion !== "" ? record.Descripcion : "---"}</td>
                     <td>${record.Unidad !== "" ? record.Unidad : "---"}</td>
-                   <td>${precioFormateado}</td>
-                   <td>${record.Cantidad !== "" ? record.Cantidad : "---"}</td>
-                    <td>${importeFormateado}</td>
+                   <td style="text-align: right;">${precioFormateado}</td>
+                   <td style="text-align: right;">${record.Cantidad !== "" ? record.Cantidad : "---"}</td>
+                    <td style="text-align: right;">${importeFormateado}</td>
                 `;
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
@@ -540,9 +586,9 @@ function llenarTablaMaquinariasProyecto() {
                     <td class="Code">${record.ID}</td>
                     <td>${record.Descripcion !== "" ? record.Descripcion : "---"}</td>
                     <td>${record.Unidad !== "" ? record.Unidad : "---"}</td>
-                   <td>${precioFormateado}</td>
-                   <td>${record.RHM !== "" ? record.RHM : "---"}</td>
-                    <td>${importeFormateado}</td>
+                   <td style="text-align: right;">${precioFormateado}</td>
+                   <td style="text-align: right;">${record.RHM !== "" ? record.RHM : "---"}</td>
+                    <td style="text-align: right;">${importeFormateado}</td>
                 `;
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
@@ -585,10 +631,10 @@ function llenarTablaManoObraProyecto() {
                     <td class="Code">${record.ID}</td>
                     <td>${record.Nombre !== "" ? record.Nombre : "---"}</td>
                     <td>${record.Unidad !== "" ? record.Unidad : "---"}</td>
-                   <td>${SalarioFormateado}</td>
-                   <td>${record.Cantidad_Total !== "" ? record.Cantidad_Total : "---"}</td>
-                    <td>${SalarioRealFormateado}</td>
-                    <td>${importeFormateado}</td>
+                   <td style="text-align: right;">${SalarioFormateado}</td>
+                   <td style="text-align: right;">${record.Cantidad_Total !== "" ? record.Cantidad_Total : "---"}</td>
+                    <td style="text-align: right;">${SalarioRealFormateado}</td>
+                    <td style="text-align: right;">${importeFormateado}</td>
                                 
                 `;
             // Añadir eventos mouseover y mouseout
@@ -640,4 +686,13 @@ function llenarTablaEquipo(totalMano) {
     let imp = totalMano * 0.02;
     importe.innerHTML = formatoMXN.format(imp)
     sumaImporte.innerHTML = formatoMXN.format(imp)
+}
+
+
+function calculoConceptoPorcentaje(PrecioU) {
+    PrecioU += PrecioU * (parseFloat(costosAdicionales.CIndirecto) / 100);
+    PrecioU += PrecioU * (parseFloat(costosAdicionales.Financiamiento) / 100);
+    PrecioU += PrecioU * (parseFloat(costosAdicionales.utilidad) / 100);
+    PrecioU += PrecioU * (parseFloat(costosAdicionales.CAdicionales) / 100);
+    return PrecioU;
 }

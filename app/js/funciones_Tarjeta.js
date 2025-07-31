@@ -193,18 +193,29 @@ function displayTableMaterialesTarjetaP(page) {
                 row.classList.add('DatoInactivo');
             }
 
-            row.innerHTML = `<td class="Code"> ${record.codigo}</td>
+            row.innerHTML = `<td class="Code" style="text-align: right;"> ${record.codigo}</td>
                 <td>${record.descripcion || "---"}</td>
                 <td>${record.unidad || "---"}</td>
-                <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable" style="background-color: ${record.cantidad > 0 ? '#82f75780' : 'red'};">
+                <td style="text-align: right;">${precioFormateado}</td>
+                ${rolUsuarioSe == "Invitado" ?
+                    `  <td  class="editable" style="text-align: right; background-color: ${record.cantidad > 0 ? '#82f75780' : 'red'};">
                     ${record.cantidad || 0}
-                </td>
+                </td>`: `  <td contenteditable="true" class="editable" style="text-align: right; background-color: ${record.cantidad > 0 ? '#82f75780' : 'red'};">
+                    ${record.cantidad || 0}
+                </td>`
+                }
                 <td>
-                    <div style="display: flex; justify-content: center;">
+                  ${rolUsuarioSe == "Invitado" ?
+                    `  <div style="display: flex; justify-content: center;">
+                        <input type="checkbox" disabled class="custom-checkbox" id="checkbox_${record.codigo}" ${record.suministrado ? 'checked' : ''}>
+                        <label for="checkbox_${record.codigo}" class="checkbox-design"></label>
+                    </div>`:
+                    `   <div style="display: flex; justify-content: center;">
                         <input type="checkbox" class="custom-checkbox" id="checkbox_${record.codigo}" ${record.suministrado ? 'checked' : ''}>
                         <label for="checkbox_${record.codigo}" class="checkbox-design"></label>
-                    </div>
+                    </div>`
+                }
+                   
                 </td>
                 <td class="resultadoMaterial">---</td>
     `;
@@ -367,12 +378,18 @@ function displayTableManoObraTarjetaP(page) {
         <td class="Code" > ${record.idmanoobra}</td>
                 <td>${record.categoria || "---"}</td>
                 <td>${record.unidad || "---"}</td>
-                <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-rendimiento" style="background-color: ${record.rendimiento > 0 ? '#82f75780' : 'red'};">
+                <td style="text-align: right;">${precioFormateado}</td>
+
+                 ${rolUsuarioSe == "Invitado" ?
+                    `  <td class="editable-rendimiento" style="text-align: right;background-color: ${record.rendimiento > 0 ? '#82f75780' : 'red'};">
                     ${record.rendimiento || 0}
-                </td>
-                <td class="cantidad">---</td>
-                <td class="multiplicacion">---</td>
+                </td>`: ` <td contenteditable="true" class="editable-rendimiento" style="text-align: right;background-color: ${record.rendimiento > 0 ? '#82f75780' : 'red'};">
+                    ${record.rendimiento || 0}
+                </td>`
+                }
+               
+                <td style="text-align: right;" class="cantidad">---</td>
+                <td style="text-align: right;" class="multiplicacion">---</td>
                 <td class="resultadoMano">---</td>
     `;
 
@@ -613,10 +630,16 @@ function displayTableMaquinariaTarjetaP(page) {
         <td class="Code" > ${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-Rhm" style="background-color: ${record.rhm > 0 ? '#82f75780' : 'red'};">
+                <td style="text-align: right;">${precioFormateado}</td>
+
+                   ${rolUsuarioSe == "Invitado" ?
+                    ` <td class="editable-Rhm" style="text-align: right; background-color: ${record.rhm > 0 ? '#82f75780' : 'red'};">
                     ${record.rhm || 0}
-                </td>
+                </td>`: `  <td contenteditable="true" class="editable-Rhm" style="text-align: right; background-color: ${record.rhm > 0 ? '#82f75780' : 'red'};">
+                    ${record.rhm || 0}
+                </td>`
+                }
+               
                 <td class="resultadoMaqui">---</td>
     `;
 
@@ -783,10 +806,16 @@ function displayTableBasicosTarjetaP(page) {
         <td class="Code"> ${record.idconbasi}</td>
                 <td>${record.nombre != "" ? record.nombre : "---"}</td>
                 <td>${record.unidad != "" ? record.unidad : "---"}</td>
-                <td>${precioFormateado}</td>
-                <td contenteditable="true" class="editable-cantidadBasi" style="background-color: ${record.cantconbasi > 0 ? '#82f75780' : 'red'};">
+                <td style="text-align: right;">${precioFormateado}</td>
+   ${rolUsuarioSe == "Invitado" ?
+                    `<td  class="editable-cantidadBasi" style="text-align: right; background-color: ${record.cantconbasi > 0 ? '#82f75780' : 'red'};">
                     ${record.cantconbasi || 0}
-                </td>
+                </td>`: `<td contenteditable="true" class="editable-cantidadBasi" style="text-align: right; background-color: ${record.cantconbasi > 0 ? '#82f75780' : 'red'};">
+                    ${record.cantconbasi || 0}
+                </td>`
+                }
+
+                
                 <td class="resultadoBasi">---</td>
     `;
 

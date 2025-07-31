@@ -11,7 +11,6 @@ function llenarCamposPaginaICM() {
 
 // Función para obtener los proveedores seleccionados
 function obtenerPropuestasSeleccionados() {
-    console.log(selectedPropuestas)
     return objetoPropuestasSeleccionadas;
 }
 
@@ -88,8 +87,8 @@ function generarEncabezados() {
         <th style="min-width: 8rem; width: 8rem;">PU</th>
         <th style="min-width: 8rem; width: 8rem;">Importe</th>
         ${obtenerPropuestasSeleccionados().map(() => `
-            <th style="min-width: 8rem; width: 8rem;" rowspan="2">PU Propuesta</th>
-            <th style="min-width: 8rem; width: 8rem;" rowspan="2">PU Actualizado</th>
+            <th style="min-width: 8rem; width: 8rem;">PU Propuesta</th>
+            <th style="min-width: 8rem; width: 8rem;">PU Actualizado</th>
         `).join("")}
     `;
     thead.appendChild(fila6);
@@ -98,50 +97,6 @@ function generarEncabezados() {
     agregarEventosInflacion();
 }
 
-// Función para agregar eventos a la celda editable de inflación
-function agregarEventosInflacion() {
-    document.querySelectorAll(".editable-inflacion").forEach(celda => {
-        celda.addEventListener("input", () => {
-            // Permitir solo números y un máximo de dos decimales
-            let valor = celda.innerText.replace(/[^0-9.]/g, '');
-            const partes = valor.split('.');
-            if (partes.length > 1 && partes[1].length > 2) {
-                valor = partes[0] + '.' + partes[1].substring(0, 2);
-            }
-            const pos = window.getSelection().getRangeAt(0).startOffset;
-            celda.innerText = valor;
-            const range = document.createRange();
-            const sel = window.getSelection();
-            range.setStart(celda.childNodes[0], pos);
-            range.collapse(true);
-            sel.removeAllRanges();
-            sel.addRange(range);
-        });
-
-        celda.addEventListener("blur", () => {
-            // Asegurarse de que el valor tenga dos decimales y agregar el signo de %
-            let valor = parseFloat(celda.innerText) || 0;
-            celda.innerText = valor.toFixed(2) + '%';
-
-            // Actualizar la inflación en el array objetoPropuestasSeleccionadas
-            const idPropuesta = celda.getAttribute("data-id");
-            const propuesta = objetoPropuestasSeleccionadas.find(p => p.idpropuesta == idPropuesta);
-            if (propuesta) {
-                propuesta.inflacion = valor;
-            }
-
-            // Recalcular la tabla
-            generarTabla();
-        });
-
-        celda.addEventListener("keydown", (e) => {
-            if (e.key == "Enter") {
-                e.preventDefault();
-                celda.blur(); // Aplicar formato al presionar Enter
-            }
-        });
-    });
-}
 
 function generarTabla() {
     const tabla = document.getElementById("tabla-ICM");
@@ -205,8 +160,11 @@ function generarTabla() {
         ${obtenerPropuestasSeleccionados().map(propuesta => `
             <td class="textCen" colspan="2">
                 <div id="btnAgregarProvee" class="modal-footer-zonas">
-                    <button type="button" class="btn btn-primary btn-generar-datos" data-propuesta="${propuesta.idpropuesta}"
-                        style="background-color: #008E5A; border: 3px solid #008E5A;">Guardar</button>
+                ${(rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ?
+            ` <button type="button" class="btn btn-primary btn-generar-datos" data-propuesta="${propuesta.idpropuesta}"
+                        style="background-color: #008E5A; border: 3px solid #008E5A;">Guardar</button>`:
+            ``
+        }
                 </div>
             </td>
         `).join("")}
@@ -216,7 +174,9 @@ function generarTabla() {
 
     // Agregar fila de totales
     const filaTotales = document.createElement("tr");
+    filaTotales.id = "totalesICME";
     filaTotales.innerHTML = `
+    
         <td colspan="5" style="text-align: right;">Importe CFE:</td>
         <td style="text-align: right;" class="total-cantidad-total"></td>
         ${obtenerPropuestasSeleccionados().map(() => `
@@ -224,6 +184,7 @@ function generarTabla() {
         `).join("")}
         <td colspan="1" style="text-align: right;">Importe ICM:</td>
         <td colspan="1" style="text-align: right;" class="total-promedio-pu-cantidad"></td>
+        
     `;
     tbody.appendChild(filaTotales);
 
@@ -286,6 +247,51 @@ function generarTabla() {
     recalcularTotales();
 }
 
+// Función para agregar eventos a la celda editable de inflación
+function agregarEventosInflacion() {
+    document.querySelectorAll(".editable-inflacion").forEach(celda => {
+        celda.addEventListener("input", () => {
+            // Permitir solo números y un máximo de dos decimales
+            let valor = celda.innerText.replace(/[^0-9.]/g, '');
+            const partes = valor.split('.');
+            if (partes.length > 1 && partes[1].length > 2) {
+                valor = partes[0] + '.' + partes[1].substring(0, 2);
+            }
+            const pos = window.getSelection().getRangeAt(0).startOffset;
+            celda.innerText = valor;
+            const range = document.createRange();
+            const sel = window.getSelection();
+            range.setStart(celda.childNodes[0], pos);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+
+        celda.addEventListener("blur", () => {
+            // Asegurarse de que el valor tenga dos decimales y agregar el signo de %
+            let valor = parseFloat(celda.innerText) || 0;
+            celda.innerText = valor.toFixed(2) + '%';
+
+            // Actualizar la inflación en el array objetoPropuestasSeleccionadas
+            const idPropuesta = celda.getAttribute("data-id");
+            const propuesta = objetoPropuestasSeleccionadas.find(p => p.idpropuesta == idPropuesta);
+            if (propuesta) {
+                propuesta.inflacion = valor;
+            }
+
+            // Recalcular la tabla
+            generarTabla();
+        });
+
+        celda.addEventListener("keydown", (e) => {
+            if (e.key == "Enter") {
+                e.preventDefault();
+                celda.blur(); // Aplicar formato al presionar Enter
+            }
+        });
+    });
+}
+
 // Función para recalcular una fila
 function recalcularFila(idconcepto) {
     const fila = document.querySelector(`tr td[data-id="${idconcepto}"]`).closest("tr");
@@ -324,7 +330,8 @@ function recalcularFila(idconcepto) {
 
         // Calcular el promedio PU
         const sumaTotalesConInflacion = totalesConInflacion.reduce((a, b) => a + b, 0);
-        const promedioPU = (total + sumaTotalesConInflacion) / (totalesConInflacion.length + 1);
+        console.log(total)
+        const promedioPU = (total + sumaTotalesConInflacion) / (total != 0 ? totalesConInflacion.length + 1 : totalesConInflacion.length);
         const promedioPUCantidad = promedioPU * cantidad;
 
         // Actualizar las nuevas columnas
@@ -419,8 +426,6 @@ function formatoMXN(valor) {
 }
 
 
-
-
 async function ExportarTablaICMExcel() {
     // Crear un nuevo libro de trabajo
     const workbook = new ExcelJS.Workbook();
@@ -448,192 +453,420 @@ async function ExportarTablaICMExcel() {
         ext: { width: 150, height: 50 }, // Tamaño de la imagen
     });
 
-    // Obtener el número de columnas dinámicamente
-    const numColumns = 5 + obtenerPropuestasSeleccionados().length * 2 + 2;
+    // Obtener la tabla ICM
+    const tabla = document.getElementById("tabla-ICM");
+    const thead = tabla.querySelector("thead");
+    const tbody = tabla.querySelector("tbody");
 
-    // Agregar encabezado
-    worksheet.mergeCells(1, 2, 1, numColumns);
-    const line1 = worksheet.getCell(1, 2);
+    // Calcular el número de columnas dinámicamente
+    const numColumnas = thead.querySelector("tr").children.length;
+    const numProveedores = obtenerPropuestasSeleccionados().length;
+    const totalColumnas = numColumnas + numProveedores + 1; // Ajustar para considerar que cada proveedor abarca dos columnas
+
+    // Agregar encabezado dinámico
+    worksheet.mergeCells(`A1:${String.fromCharCode(65 + totalColumnas - 1)}1`);
+    const line1 = worksheet.getCell("A1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
-    line1.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
 
-    worksheet.mergeCells(2, 2, 2, numColumns);
-    const line2 = worksheet.getCell(2, 2);
-    line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
-    line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
-    line2.alignment = { horizontal: "right", vertical: "middle" };
-    line2.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
-
-    worksheet.mergeCells(3, 2, 3, numColumns);
-    const line3 = worksheet.getCell(3, 2);
+    worksheet.mergeCells(`A2:${String.fromCharCode(65 + totalColumnas - 1)}2`);
+    const line3 = worksheet.getCell("A2");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
     line3.alignment = { horizontal: "right", vertical: "middle" };
-    line3.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
 
-    // Agregar título
-    worksheet.mergeCells(5, 1, 5, numColumns);
-    const titleCell = worksheet.getCell(5, 1);
-    titleCell.value = "ICM";
+    // Agregar título dinámico
+    worksheet.mergeCells(`A5:${String.fromCharCode(65 + totalColumnas - 1)}5`);
+    const titleCell = worksheet.getCell("A5");
+    titleCell.value = "Investigación de Condiciones de Mercado";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
-    titleCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
 
-    // Crear las filas de encabezados
-    const fila1 = ["ID", "Descripción", "Cantidad", "Unidad", "Proveedor"];
+    // Agregar encabezados fijos
+    const headerRows = [
+        ["", "", "", "", "Proveedor", "Proveedor"],
+        ["", "", "", "", "No. de propuesta", ""],
+        ["Id", "Descripción", "Cantidad", "Unidad", "Fecha (mm/aaaa)", ""],
+        ["", "", "", "", "Inflación INEGI", ""],
+        ["", "", "", "", "CFE", ""],
+        ["", "", "", "", "PU", "Importe"]
+    ];
+
+    // Agregar encabezados dinámicos
     obtenerPropuestasSeleccionados().forEach(propuesta => {
-        fila1.push(propuesta.nombreprov, propuesta.nombreprov);
+        headerRows[0].push(propuesta.nombreprov, propuesta.nombreprov);
+        headerRows[1].push(propuesta.nopropuesta, propuesta.nopropuesta);
+        headerRows[2].push(propuesta.fecha.split('-').reverse().join('-'), propuesta.fecha.split('-').reverse().join('-'));
+        headerRows[3].push(`${parseFloat(propuesta.inflacion).toFixed(2)}%`, `${parseFloat(propuesta.inflacion).toFixed(2)}%`);
+        headerRows[4].push("Proveedor", "Proveedor");
+        headerRows[5].push("PU Propuesta", "PU Actualizado");
     });
-    fila1.push("Promedio PU", "Importe");
 
-    const fila2 = ["", "", "", "", "No. de propuesta"];
-    obtenerPropuestasSeleccionados().forEach(propuesta => {
-        fila2.push(propuesta.nopropuesta, propuesta.nopropuesta);
+    headerRows[0].push("", "");
+    headerRows[1].push("", "");
+    headerRows[2].push("Promedio PU", "Importe");
+    headerRows[3].push("", "");
+    headerRows[4].push("", "");
+    headerRows[5].push("", "");
+
+    // Agregar encabezados a la hoja de trabajo
+    headerRows.forEach((row, rowIndex) => {
+        const excelRow = worksheet.addRow(row);
+
+        // Aplicar estilo a los encabezados
+        excelRow.eachCell((cell) => {
+            cell.font = { bold: true };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
+            cell.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+            cell.border = {
+                top: { style: "thin" },
+                left: { style: "thin" },
+                bottom: { style: "thin" },
+                right: { style: "thin" },
+            };
+        });
+
+        // Ajustar las columnas de los proveedores para que abarquen 2 columnas
+        if (rowIndex >= 0 && rowIndex <= 4) {
+            let colIndex = 5; // Comenzar desde la columna 5 (Proveedor)
+            const rowNumber = rowIndex + 6; // Calcula dinámicamente la fila a fusionar
+            obtenerPropuestasSeleccionados().forEach(() => {
+                worksheet.mergeCells(`${String.fromCharCode(64 + colIndex)}${rowNumber}:${String.fromCharCode(64 + colIndex + 1)}${rowNumber}`);
+                colIndex += 2; // Saltar a la siguiente pareja de columnas
+            });
+
+            // Combinar las dos últimas columnas que quedaron fuera
+            worksheet.mergeCells(`${String.fromCharCode(64 + colIndex)}${rowNumber}:${String.fromCharCode(64 + colIndex + 1)}${rowNumber}`);
+        }
     });
-    fila2.push("", "");
 
-    const fila3 = ["", "", "", "", "Fecha (mm/aaaa)"];
-    obtenerPropuestasSeleccionados().forEach(propuesta => {
-        const [year, month] = propuesta.fecha.split('-');
-        const monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
-        fila3.push(`${monthNames[parseInt(month) - 1]}-${year.slice(-2)}`, `${monthNames[parseInt(month) - 1]}-${year.slice(-2)}`);
+    // Ajustar bordes de las celdas en las columnas Descripción, Cantidad, Unidad, Promedio PU e Importe
+    const columnsToAdjust = [1, 2, 3, 4, totalColumnas - 1, totalColumnas];
+    columnsToAdjust.forEach(col => {
+        for (let row = 6; row <= worksheet.rowCount; row++) {
+            const cell = worksheet.getCell(`${String.fromCharCode(64 + col)}${row}`);
+            cell.border = {
+                top: row === 6 ? { style: "thin" } : { style: "none" },
+                left: { style: "thin" },
+                bottom: row === worksheet.rowCount ? { style: "thin" } : { style: "none" },
+                right: { style: "thin" },
+            };
+        }
     });
-    fila3.push("", "");
 
-    const fila4 = ["", "", "", "", "Inflación INEGI"];
-    obtenerPropuestasSeleccionados().forEach(propuesta => {
-        fila4.push(`${parseFloat(propuesta.inflacion).toFixed(2)}%`, `${parseFloat(propuesta.inflacion).toFixed(2)}%`);
-    });
-    fila4.push("", "");
+    // Agregar datos de la tabla ICM (excluyendo las últimas dos filas)
+    const rows = tbody.querySelectorAll("tr");
+    rows.forEach((row, rowIndex) => {
+        // Excluir las últimas dos filas
+        if (rowIndex < rows.length - 2) {
+            const cells = row.querySelectorAll("td");
+            const rowData = Array.from(cells).map(cell => cell.innerText);
+            const excelRow = worksheet.addRow(rowData);
 
-    const fila5 = ["", "", "", "", "CFE"];
-    obtenerPropuestasSeleccionados().forEach(() => {
-        fila5.push("Proveedor", "Proveedor");
-    });
-    fila5.push("", "");
+            // Aplicar color alterno a las filas
+            excelRow.eachCell((cell, colNumber) => {
+                if (rowIndex % 2 === 0) {  // Filas pares
+                    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF0F0F0" } }; // Gris claro
+                } else {  // Filas impares
+                    cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } }; // Blanco
+                }
 
-    const fila6 = ["PU", "Importe"];
-    obtenerPropuestasSeleccionados().forEach(() => {
-        fila6.push("PU Propuesta", "PU Actualizado");
-    });
-    fila6.push("Promedio PU", "Importe");
-
-    // Agregar las filas de encabezados al worksheet
-    worksheet.addRow(fila1);
-    worksheet.addRow(fila2);
-    worksheet.addRow(fila3);
-    worksheet.addRow(fila4);
-    worksheet.addRow(fila5);
-    worksheet.addRow(fila6);
-
-    // Aplicar estilos a las filas de encabezados
-    worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-        if (rowNumber <= 6) {
-            row.eachCell((cell) => {
-                cell.font = { bold: true };
-                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
-                cell.alignment = { horizontal: "center", vertical: "middle" };
+                // Configurar bordes en todos los lados
                 cell.border = {
                     top: { style: "thin" },
                     left: { style: "thin" },
                     bottom: { style: "thin" },
-                    right: { style: "thin" },
+                    right: { style: "thin" }
                 };
+
+                // Ajustar alineación de las celdas
+                if (colNumber == 1 || colNumber == 2 || colNumber == 4) {
+                    cell.alignment = { horizontal: "left", vertical: "middle", wrapText: true };
+                } else {
+                    cell.alignment = { horizontal: "right", vertical: "middle", wrapText: true };
+                }
             });
+
+            // Ajustar el alto de la fila al contenido
+            const cellHeights = rowData.map(cell => cell.split('\n').length * 15); // Ajustar el multiplicador según sea necesario
+            const maxHeight = Math.max(...cellHeights);
+            excelRow.height = maxHeight;
         }
     });
 
-    // Obtener datos de la tabla
-    const tableBody = document.querySelector(".tbody-ICM");
-    const rows = tableBody.querySelectorAll("tr");
+    // Agregar fila de totales
+    const filaTotales = worksheet.addRow([]);
+    filaTotales.getCell(5).value = "Importe CFE:";
+    filaTotales.getCell(5).alignment = { horizontal: "right", vertical: "middle" };
+    filaTotales.getCell(5).font = { bold: true };
+    filaTotales.getCell(5).border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
 
-    rows.forEach((row, rowIndex) => {
-        // Excluir la fila de botones "Guardar"
-        if (row.querySelector("button.btn-generar-datos")) {
-            return;
-        }
+    const totalCFE = document.querySelector(".total-cantidad-total").innerText;
+    filaTotales.getCell(6).value = totalCFE;
+    filaTotales.getCell(6).alignment = { horizontal: "right", vertical: "middle" };
+    filaTotales.getCell(6).font = { bold: true };
+    filaTotales.getCell(6).border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
 
-        const cells = row.querySelectorAll("td");
-        const rowData = Array.from(cells).map(cell => cell.innerText);
+    const totalICM = document.querySelector(".total-promedio-pu-cantidad").innerText;
+    filaTotales.getCell(totalColumnas - 1).value = "Importe ICM:";
+    filaTotales.getCell(totalColumnas - 1).alignment = { horizontal: "right", vertical: "middle" };
+    filaTotales.getCell(totalColumnas - 1).font = { bold: true };
+    filaTotales.getCell(totalColumnas - 1).border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
 
-        // Agregar una fila al Excel
-        const excelRow = worksheet.addRow(rowData);
+    filaTotales.getCell(totalColumnas).value = totalICM;
+    filaTotales.getCell(totalColumnas).alignment = { horizontal: "right", vertical: "middle" };
+    filaTotales.getCell(totalColumnas).font = { bold: true };
+    filaTotales.getCell(totalColumnas).border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
 
-        // Aplicar color alterno a las filas
-        excelRow.eachCell((cell, colNumber) => {
-            // Configuración de alineación según la columna
-            switch (colNumber) {
-                case 1: // ID
-                    cell.alignment = { horizontal: "left", vertical: "middle" };
-                    break;
-                case 2: // Descripción
-                    cell.alignment = { horizontal: "left", vertical: "middle" };
-                    break;
-                case 3: // Cantidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
-                    break;
-                case 4: // Unidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
-                    break;
-                case 5: // Proveedor
-                    cell.alignment = { horizontal: "left", vertical: "middle" };
-                    break;
-                default:
-                    if (colNumber > 5 && colNumber <= fila1.length - 2) {
-                        cell.alignment = { horizontal: "right", vertical: "middle" };
-                    } else {
-                        cell.alignment = { horizontal: "center", vertical: "middle" }; // Por defecto
-                    }
-            }
-
-            // Aplicar colores alternos en las filas
-            if (rowIndex % 2 == 0) {  // Filas pares
-                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF0F0F0" } }; // Gris claro
-            } else {  // Filas impares
-                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } }; // Blanco
-            }
-
-            // Configurar bordes solo en los lados (izquierda y derecha)
-            cell.border = {
-                left: { style: "thin" },
-                right: { style: "thin" },
-                top: { style: "none" },
-                bottom: { style: "none" }
-            };
-        });
-    });
-
-    // Ajustar el ancho de las columnas manualmente
-    worksheet.columns = fila1.map(header => {
-        switch (header) {
-            case "ID":
-                return { key: 'ID', width: 13 };
-            case "Descripción":
-                return { key: 'Descripción', width: 40 };
-            case "Cantidad":
-                return { key: 'Cantidad', width: 13 };
-            case "Unidad":
-                return { key: 'Unidad', width: 13 };
-            case "Proveedor":
-                return { key: 'Proveedor', width: 20 };
-            case "Promedio PU":
-                return { key: 'Promedio PU', width: 20 };
-            case "Importe":
-                return { key: 'Importe', width: 25 };
-            default:
-                return { key: header, width: 20 };
-        }
-    });
+    // Ajustar el ancho de las columnas dinámicamente
+    worksheet.columns = Array.from({ length: totalColumnas }, (_, i) => ({
+        width: i === 1 ? 90 : 20, // Ajusta el ancho de la columna "Descripción" a 90, las demás a 20
+    }));
 
     // Descargar el archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaICM.xlsx";
+    link.download = "ReporteICMExcel.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+async function exportarPDFTablaICM() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF('landscape', 'pt', 'letter'); // Configurar el PDF en formato horizontal
+    const container = document.getElementById('tabla-ICM');
+
+    if (!container) {
+        console.error('Tabla "tabla-ICM" no encontrada');
+        return;
+    }
+
+    // Obtener encabezados y filas de la tabla
+    const headers = [];
+    const rows = [];
+
+    const thead = container.querySelector("thead");
+    const tbody = container.querySelector("tbody");
+
+    // Obtener encabezados
+    thead.querySelectorAll("tr").forEach(row => {
+        const rowData = Array.from(row.querySelectorAll("th")).map(cell => ({
+            content: cell.innerText,
+            colSpan: cell.colSpan,
+            rowSpan: cell.rowSpan,
+            styles: {
+                halign: 'center',
+                valign: 'middle',
+                fillColor: [0, 142, 90],
+                textColor: [255, 255, 255],
+                fontStyle: 'bold',
+                fontSize: 7, // Tamaño de fuente para los encabezados
+                lineWidth: 0.5,
+                lineColor: [0, 0, 0]
+            }
+        }));
+        headers.push(rowData);
+    });
+
+    // Obtener filas
+    const allRows = tbody.querySelectorAll("tr");
+    allRows.forEach((row, rowIndex) => {
+        // Excluir la penúltima fila
+        if (rowIndex !== allRows.length - 2 && rowIndex !== allRows.length - 1) {
+            const rowData = Array.from(row.querySelectorAll("td")).map((cell, cellIndex) => {
+                let halign = 'right'; // Alineación por defecto
+
+                // Configurar alineación específica para cada columna
+                if (cellIndex === 0) halign = 'left'; // Primera columna
+                else if (cellIndex === 1) halign = 'justify'; // Segunda columna
+                else if (cellIndex === 2) halign = 'right'; // Tercera columna
+                else if (cellIndex === 3) halign = 'left'; // Cuarta columna
+
+                return {
+                    content: cell.innerText,
+                    styles: {
+                        halign: halign,
+                        fontSize: 6, // Tamaño de fuente para el contenido
+                        lineWidth: 0.5,
+                        lineColor: [0, 0, 0],
+                        overflow: 'linebreak', // Ajustar el alto de la fila al contenido
+                        cellPadding: 2,
+                        minCellHeight: 10 // Ajustar el alto mínimo de las celdas
+                    }
+                };
+            });
+            rows.push(rowData);
+        }
+    });
+
+    // Agregar la tabla al PDF usando autoTable
+    doc.autoTable({
+        head: headers,
+        body: rows,
+        startY: 120, // Ajustar la posición de inicio de la tabla
+        styles: {
+            fontSize: 6,
+            cellPadding: 2,
+            overflow: 'linebreak', // Ajuste automático de texto
+            halign: 'center',
+            valign: 'middle',
+            lineWidth: 0.5,
+            lineColor: [0, 0, 0],
+            margin: { top: 5, right: 5, bottom: 5, left: 5 },
+            minCellHeight: 10 // Ajustar el alto mínimo de las celdas
+        },
+        headStyles: {
+            fillColor: [0, 142, 90],
+            textColor: [255, 255, 255],
+            fontStyle: 'bold',
+            fontSize: 7, // Tamaño de fuente para los encabezados
+            lineWidth: 0.5,
+            lineColor: [0, 0, 0]
+        },
+        alternateRowStyles: {
+            fillColor: [240, 240, 240],
+        },
+        margin: { top: 120, right: 23, bottom: 40, left: 23 },
+        columnStyles: {
+            0: { cellWidth: 35, halign: 'left' }, // Ajustar el ancho y alineación de la primera columna
+            1: { cellWidth: 200, halign: 'justify' }, // Ajustar el ancho y alineación de la segunda columna
+            2: { cellWidth: 35, halign: 'right' }, // Ajustar el ancho y alineación de la tercera columna
+            3: { cellWidth: 32, halign: 'left' }, // Ajustar el ancho y alineación de la cuarta columna
+        },
+        didDrawPage: (data) => {
+            addHeader(doc);
+            addImage(doc);
+            doc.setFontSize(13);
+            doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
+            doc.text("Investigación de Condiciones de Mercado", doc.internal.pageSize.width / 2, 80, { align: "center" });
+        },
+        didParseCell: (data) => {
+            // Si el contenido de la celda es demasiado grande, ajustar el alto de la celda
+            if (data.cell.raw.content.length > 100) { // Ajusta este valor según tus necesidades
+                data.cell.styles.minCellHeight = 20; // Aumentar el alto de la celda
+            }
+        },
+        willDrawCell: (data) => {
+            // Si no hay suficiente espacio en la página, forzar un salto de página
+            if (data.cell.raw.content.length > 100 && data.cursor.y + data.cell.height > doc.internal.pageSize.height - 40) {
+                doc.addPage();
+                data.cursor.y = 120; // Reiniciar la posición Y en la nueva página
+            }
+        },
+        pageBreak: 'auto' // Dividir celdas largas en múltiples páginas
+    });
+
+    // Agregar fila de totales
+    const totalCFE = document.querySelector(".total-cantidad-total").innerText;
+    const totalICM = document.querySelector(".total-promedio-pu-cantidad").innerText;
+
+    const totalRow = [
+        { content: 'Importe CFE:', colSpan: headers[0].length - 2, styles: { halign: 'right', fontSize: 8 } },
+        { content: totalCFE, styles: { halign: 'right', fontSize: 8 } },
+        { content: 'Importe ICM:', styles: { halign: 'right', fontSize: 8 } },
+        { content: totalICM, styles: { halign: 'right', fontSize: 8 } }
+    ];
+
+    doc.autoTable({
+        body: [totalRow],
+        startY: doc.lastAutoTable.finalY + 10,
+        styles: {
+            fontSize: 6,
+            cellPadding: 2,
+            overflow: 'linebreak',
+            halign: 'center',
+            valign: 'middle',
+            lineWidth: 0.5,
+            lineColor: [0, 0, 0],
+            minCellHeight: 10 // Ajustar el alto mínimo de las celdas
+        },
+        margin: { top: 120, right: 23, bottom: 40, left: 23 },
+        columnStyles: {
+            0: { cellWidth: 35, halign: 'left' },
+            1: { cellWidth: 150, halign: 'justify' },
+            2: { cellWidth: 35, halign: 'right' },
+            3: { cellWidth: 35, halign: 'left' },
+        },
+    });
+
+    // Obtener el número total de páginas
+    const totalPages = doc.internal.getNumberOfPages();
+
+    // Agregar pie de página a cada página
+    for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        addFooter(doc, i, totalPages);
+    }
+
+    doc.save('ReporteICMPDF.pdf');
+
+    // Encabezado sin espacio entre renglones
+    function addHeader(doc) {
+        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
+        const marginRight = 1.5 * 28.35; // Margen derecho (1.5 cm)
+        const headerX = pageWidth - marginRight; // Posición X del encabezado
+        const headerYStart = 50; // Posición Y del primer renglón (3 cm del margen superior)
+
+        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
+
+        // Línea 1
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        const line1 = "División de Distribución Jalisco";
+        doc.text(line1, headerX, headerYStart, { align: "right" });
+        // Línea 3
+        doc.setFontSize(9);
+        const line3 = "Departamento de Planeación, Proyectos y Construcción";
+        doc.text(line3, headerX, headerYStart + 10, { align: "right" }); // Solo 3.4 mm debajo del anterior
+    }
+
+    // Pie de página centrado
+    function addFooter(doc, pageNumber, totalPages) {
+        const pageHeight = doc.internal.pageSize.height; // Altura de la página
+        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
+        const footerY = pageHeight - 20; // Posición Y del pie de página (1 cm desde la parte inferior)
+
+        doc.setFontSize(10); // Tamaño de fuente
+        doc.setTextColor(0, 0, 0); // Color negro
+
+        const pageText = `Página ${pageNumber} de ${totalPages}`; // Texto del número de página
+        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+
+        // Centrar el texto en el pie de página
+        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
+    }
+
+    // Agregar imagen
+    function addImage(doc) {
+        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
+        const marginLeft = 1.5 * 28.35; // Margen izquierdo (1.5 cm)
+        const marginTop = 1.5 * 28.35; // Margen superior (1.5 cm)
+        const imageWidth = 135; // Ancho de la imagen (ajusta según sea necesario)
+        const imageHeight = 45; // Altura de la imagen (ajusta según sea necesario)
+
+        doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
+    }
 }

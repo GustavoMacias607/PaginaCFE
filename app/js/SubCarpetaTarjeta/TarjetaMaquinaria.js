@@ -51,7 +51,7 @@ function displayTableMaquinariaTarjeta(page) {
                 <td class="Code">${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${precioFormateado}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
                
             `;
 
@@ -262,7 +262,7 @@ function displayTableMaquinariaTarjetaModal(page) {
                  <td class="Code">${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${precioFormateado}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
                  <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">
                         <i class="coloresIcono fa-solid fa-x" style="cursor: pointer;" alt="Eliminar" onclick="eliminarFilaDelObjetoMaquinaria('${record.idmaquinaria}')"></i>

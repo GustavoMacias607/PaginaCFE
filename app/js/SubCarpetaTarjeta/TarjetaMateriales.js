@@ -48,10 +48,10 @@ function displayTableMaterialesTarjeta(page) {
             row.classList.add('fila');
             row.style.cursor = 'pointer';
             row.innerHTML = `
-                <td class="Code">${record.codigo}</td>
+                <td class="Code" style="text-align: right;">${record.codigo}</td>
                 <td>${(!record.norma == "") ? record.norma : "Sin norma"}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
-                <td>${precioFormateado}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
                 <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
                 <td>${(!record.familia == "") ? record.familia : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
@@ -296,10 +296,10 @@ function displayTableMaterialesTarjetaModal(page) {
                 row.classList.add('DatoInactivo')
             }
             row.innerHTML = `
-                <td class="Code">${record.codigo}</td>
+                <td class="Code" style="text-align: right;">${record.codigo}</td>
                 <td>${(!record.norma == "") ? record.norma : "Sin norma"}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
-                <td>${precioFormateado}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
                 <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td class="estatus">

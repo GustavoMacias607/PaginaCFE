@@ -11,8 +11,12 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlanProveedores">
     <div class="bottom-rectangle-conceptos" style="gap: 1rem;">
         <div class="text-conceptos">Selección proveedores ICM</div>
-        <button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:AbrirApartadoAgregar();">Agregar proveedor</button>
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo  '<button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AbrirApartadoAgregar();">Agregar proveedor</button>';
+        }
+        ?>
         <button type="button" class="btn btn-agregar-zonas" onclick="opcion('SeleccionConceptosICMReturn')">Selección
             conceptos</button>
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">

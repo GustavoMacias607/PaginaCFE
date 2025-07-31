@@ -275,6 +275,9 @@ function GetZona() {
                     llenarTablaZona();
                     filterDataZona();
                 }
+                else {
+                    data = [];
+                }
             } else {
                 throw e = status;
             }
@@ -299,13 +302,13 @@ function displayTableZona(page) {
 
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                <td class="Code">${record.idzona}</td>
+                <td class="Code" style="text-align: right;">${record.idzona}</td>
                 <td>${(!record.zona == "") ? record.zona : "---"}</td>
                 <td>${(!record.obra == "") ? record.obra : "---"}</td>
-                <td>${(!record.indirecto == "") ? record.indirecto : "---"}%</td>
-                <td>${(!record.financiamiento == "") ? record.financiamiento : "---"}%</td>
-                <td>${(!record.utilidad == "") ? record.utilidad : "---"}%</td>
-                <td>${(!record.adicionales == "") ? record.adicionales : "---"}%</td>
+                <td style="text-align: right;">${(!record.indirecto == "") ? record.indirecto : "---"}%</td>
+                <td style="text-align: right;">${(!record.financiamiento == "") ? record.financiamiento : "---"}%</td>
+                <td style="text-align: right;">${(!record.utilidad == "") ? record.utilidad : "---"}%</td>
+                <td style="text-align: right;">${(!record.adicionales == "") ? record.adicionales : "---"}%</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 ? `

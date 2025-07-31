@@ -351,7 +351,7 @@ function displayTableUsuario(page) {
 
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                <td class="Code">${record.idusuario}</td>
+                <td class="Code" style="text-align: right;">${record.idusuario}</td>
                 <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
                 <td>${(!record.usuario == "") ? record.usuario : "---"}</td>
                 <td>${(!record.rol == "") ? record.rol : "---"}</td>

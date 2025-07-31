@@ -58,13 +58,15 @@ function displayTableProveedoresICM(page) {
                 <td>${record.nombreprov != "" ? record.nombreprov : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
-                        ${record.estatus == 1 ? `
+                        ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" 
                                onclick="llenarFormularioProveedores(${record.idproveedor},'${record.nombreprov}')"></i>
                         ` : ``}
-                        ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idproveedor},${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idproveedor},${record.estatus})"></i>`
+                          ${rolUsuarioSe == "Administrador" ?
+                    (record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idproveedor},${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores(${record.idproveedor},${record.estatus})"></i>`
+                    ) : ``
                 }
                     </div>
                 </td>
@@ -409,8 +411,10 @@ function displayTablePropuestasICM(page) {
                            value="${propuesta.idpropuesta}"
                            ${selectedPropuestas.includes(Number(propuesta.idpropuesta)) ? 'checked' : ''}>
                     <label for="checkbox_${propuesta.idpropuesta}" class="checkbox-design"></label>
+                     ${(rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                     <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" 
                        onclick="modificarPropuesta(${propuesta.idpropuesta},'${propuesta.nopropuesta}','${propuesta.fecha}','${propuesta.zona}','${propuesta.obra}')"></i>
+                       ` : ``}
                 </div>
             </td>
             `;

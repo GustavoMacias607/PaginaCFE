@@ -116,7 +116,7 @@ let existe = false;
 let idEliminar;
 let ActivarS;
 
-
+let rolUsuarioSe;
 
 // let filteredData = [...data];
 // let rowsPerPage = 10;
@@ -132,6 +132,9 @@ function EstatusEntidades() {
     estatusMano = 1;
 }
 
+function verRolUsuario() {
+    rolUsuarioSe = document.getElementById("rolUsuarioSession").value;
+}
 
 //Metodo para imprimir un mensaje en pantalla
 //recibe dos valores el mensaje y si el mensaje es positivo se pone true, si es negativo false

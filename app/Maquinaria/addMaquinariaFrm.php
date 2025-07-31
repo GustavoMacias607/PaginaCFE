@@ -13,8 +13,12 @@ if (!isset($_SESSION['idusuario'])) {
 <div class="fondBlancomaquinaria">
     <div class="bottom-rectangle-maquinaria">
         <div class="text-maquinaria">Maquinaria</div>
-        <button type="button" class="btn btn-agregar-maquinaria" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:AddlimpiarModalMaquinaria();">Agregar maquinaria</button>
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo    '<button type="button" class="btn btn-agregar-maquinaria" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModalMaquinaria();">Agregar maquinaria</button>';
+        }
+        ?>
         <a onclick="opcion('proyecto')" class="text-inicio-maquinaria">
             <div>Ir al inicio</div>
         </a>

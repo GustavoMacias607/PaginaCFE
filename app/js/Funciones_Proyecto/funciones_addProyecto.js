@@ -7,6 +7,11 @@ let filterDataProyTerm = [...data];
 
 let costosAdicionales = {};
 
+
+let estatusProyecto = "Terminado";
+
+const datosProyectoCambio = {};
+
 function AddProyectoFase1() {
     let vacio = false;
     let PrimerValorVacio;
@@ -139,6 +144,7 @@ function addProyectoLimpiarModal() {
     fechaTermino.classList.remove("inputVacio");
     nombre.classList.remove("inputVacio");
 }
+
 function calcularFechaTermino() {
     const fechaInicioInput = document.getElementById('AddfechaInicioInput').value;
     const periodoInput = document.getElementById('inputPeriodo').value;
@@ -160,7 +166,12 @@ function calcularFechaTermino() {
         document.getElementById('AddfechaTerminoInput').value = fechaTermino;
     }
 }
+
 function GetProyectoProceso() {
+    verRolUsuario();
+    datosProyecto = {};
+    editedRows = {};
+    conceptosDProyecto = [];
     document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     ObtenerZonas();
@@ -181,6 +192,8 @@ function GetProyectoProceso() {
                     filterDataProyectoProceso();
                     llenarTablaProyectoTerminado();
                     filterDataProyectoTerminado();
+                } else {
+                    data = [];
                 }
             } else {
                 throw e = status;
@@ -189,9 +202,8 @@ function GetProyectoProceso() {
             console.error(error);
         }
     });
+
 }
-
-
 
 function displayTableProyectoProceso(page) {
     const tableBody = document.getElementById("table-bodyProyectosProceso");
@@ -340,17 +352,25 @@ function filterDataProyectoProceso() {
     const searchText = document.getElementById("search-inputProyecto").value.toLowerCase();
     const statusFilterCuadro = "Catalogo Conceptos";
     const statusFilterPresupuesto = "Presupuesto";
-    console.log(data);
     filteredData = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
         );
         let matchesStatus;
-        if (record.estatus == statusFilterCuadro || record.estatus == statusFilterPresupuesto) {
-            matchesStatus = true;
+        if (rolUsuarioSe == "Invitado") {
+            if (record.estatus == statusFilterPresupuesto) {
+                matchesStatus = true;
+            } else {
+                matchesStatus = false;
+            }
         } else {
-            matchesStatus = false;
+            if (record.estatus == statusFilterCuadro || record.estatus == statusFilterPresupuesto) {
+                matchesStatus = true;
+            } else {
+                matchesStatus = false;
+            }
         }
+
 
         console.log(record.estatus == statusFilterCuadro, record.estatus == statusFilterPresupuesto)
         return matchesSearch && matchesStatus;
@@ -375,7 +395,6 @@ function llenarTablaProyectoProceso() {
     });
 }
 
-
 function ObtenerZonas() {
     let json = "";
     let url = "";
@@ -386,7 +405,7 @@ function ObtenerZonas() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     objZonas = resp.datos;
-                    PorsentajesZona(objZonas);
+                    PorsentajesZona(objZonas, false);
                 }
             } else {
                 throw e = status;
@@ -524,8 +543,17 @@ function displayTableProyectoTerminado(page) {
                 <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
                 <td>${(!record.NombreZona == "") ? record.NombreZona : "---"}</td>
                 <td>${(!record.TipoObra == "") ? record.TipoObra : "---"}</td>
+                <td class="estatus">
+                 <div style="display: flex; justify-content: space-around; align-items: center;">
+                    ${rolUsuarioSe == "Administrador" ?
+                    (record.estatus == "Terminado" ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="abrirModalBaja('${record.estatus}');creacionObjCambioEstatus(${record.idproyecto},${record.idusuario},'${encodeURIComponent(record.nombre)}','${record.fecha}','${record.periodo}','${record.fechainicio}','${record.fechatermino}',${record.idzona},${record.total},'${record.estatus}')"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="abrirModalBaja('${record.estatus}');creacionObjCambioEstatus(${record.idproyecto},${record.idusuario},'${encodeURIComponent(record.nombre)}','${record.fecha}','${record.periodo}','${record.fechainicio}','${record.fechatermino}',${record.idzona},${record.total},'${record.estatus}')"></i>`
+                    ) : ``
+                }
+                </div>
+                </td>
             `;
-
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
@@ -644,7 +672,7 @@ function setupPaginationProyectoTerminado() {
 
 function filterDataProyectoTerminado() {
     const searchText = document.getElementById("search-inputProyecto").value.toLowerCase();
-    const statusFilter = 'Terminado';
+    const statusFilter = estatusProyecto;
     console.log(data)
     filterDataProyTerm = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
@@ -669,5 +697,70 @@ function llenarTablaProyectoTerminado() {
         currentPage = 1;
         displayTableProyectoTerminado(currentPage);
         setupPaginationProyectoTerminado();
+    });
+}
+
+function creacionObjCambioEstatus(IdProyecto, idUsuario, Nombre, Fecha, Periodo, FechaInicio, FechaTermino, IdZona, Total, estatus) {
+
+    datosProyectoCambio.idProyecto = IdProyecto;
+    datosProyectoCambio.idUsuario = idUsuario;
+    datosProyectoCambio.nombre = decodeURIComponent(Nombre);
+    datosProyectoCambio.fecha = Fecha;
+    datosProyectoCambio.periodo = Periodo;
+    datosProyectoCambio.fechaInicio = FechaInicio;
+    datosProyectoCambio.fechaTermino = FechaTermino;
+    datosProyectoCambio.idZona = IdZona;
+    datosProyectoCambio.total = Total;
+    if (estatus == 'Terminado') {
+        datosProyectoCambio.estatus = "Inactivo";
+    } else {
+        datosProyectoCambio.estatus = "Terminado";
+    }
+
+}
+
+function abrirModalBaja(estatus) {
+    console.log(estatus)
+    if (estatus == "Terminado") {
+        $('#confirmDeleteModal').modal('show');
+    } else {
+        $('#confirmActivationModal').modal('show');
+    }
+}
+
+function valStatusProyecto() {
+    var checkbox = document.getElementById('ValCheEsta');
+    var imgcheck = document.getElementById('ValEstatus');
+    // Deseleccionar el checkbox
+    checkbox.checked = !checkbox.checked;
+    if (checkbox.checked) {
+        imgcheck.src = "../img/toggle_on_35px.png";
+        estatusProyecto = "Terminado";
+    } else {
+        imgcheck.src = "../img/toggle_off_35px.png";
+        estatusProyecto = "Inactivo";
+    }
+    GetProyectoProceso();
+}
+
+
+function cambioEstatusProyecto() {
+    let json = JSON.stringify(datosProyectoCambio);
+    console.log(json)
+    let url = "../ws/Proyecto/wsUpdProyecto.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                console.log(resp);
+                if (resp.estado == "OK") {
+                    GetProyectoProceso();
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            alert("Error: " + error)
+        }
     });
 }

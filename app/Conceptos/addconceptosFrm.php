@@ -13,19 +13,30 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="bottom-rectangle-conceptos">
         <div class="text-conceptos esconderBoton" id="textoConceptoNormal">Conceptos</div>
         <div class="text-conceptos esconderBoton" id="textoConceptoBasicos">Básicos</div>
-        <button type="button" class="btn btn-agregar-conceptos esconderBoton" id="btnConceptoNormal"
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo   '<button type="button" class="btn btn-agregar-conceptos esconderBoton" id="btnConceptoNormal"
             data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalConcepto();">Agregar
-            concepto</button>
-        <button type="button" class="btn btn-agregar-conceptos esconderBoton" data-bs-toggle="modal"
+            concepto</button>';
+        }
+        ?>
+
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo   '<button type="button" class="btn btn-agregar-conceptos esconderBoton" data-bs-toggle="modal"
             data-bs-target="#AgregarModalBasi" id="btnConceptoBasicos"
-            onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar básico</button>
+            onclick="javascript:AddlimpiarModalConceptoBasico();">Agregar básico</button>';
+        }
+        ?>
+
+
         <button id="btnExportar" onclick="javascript:ExportarExcelTarjetas(false)"
             class="btn btn-agregar-conceptos esconderBoton">
             Exportar datos a Excel
         </button>
         <button id="btnExportarPDF" onclick="javascript:GeneradorTarjetasConceptoPdf(true)"
-            class="btn btn-agregar-conceptos">
+            class="btn btn-agregar-conceptos esconderBoton">
             Exportar datos a PDF
         </button>
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">

@@ -232,20 +232,20 @@ function CambioEstatusConcepto() {
 }
 
 //Metodo para hacer la consulta de los materiales tomando en cuanta los filtros
+
 function PrincipalConcepto(tipoConcepto) {
-    //vaciar el objeto
+    // Vaciar el objeto
     selectedRows = [];
     selectedCheckboxes = {};
 
     estatusConcepto = 1;
-    document.getElementById("sort-id").addEventListener("click", () => sortData('idconbasi'));
-    document.getElementById("sort-name").addEventListener("click", () => sortData('nombre'));
-    // Eventos de clic para los botones
+    let variId = !tipoConcepto ? "idconbasi" : "idconcepto";
+
     document.getElementById("sort-id").addEventListener("click", function () {
-        toggleSort(this, 'idconbasi');
+        toggleSort(this, variId, "Conceptos");
     });
     document.getElementById("sort-name").addEventListener("click", function () {
-        toggleSort(this, 'nombre');
+        toggleSort(this, 'nombre', "Conceptos");
     });
     obtenerDatosConceptos(tipoConcepto);
 }
@@ -263,14 +263,19 @@ async function obtenerDatosConceptos(btnOpcion) {
     let btnBasico = document.getElementById("btnConceptoBasicos");
     let txtBasico = document.getElementById("textoConceptoBasicos");
     let btnExportar = document.getElementById("btnExportar");
+    let btnExportarPdf = document.getElementById("btnExportarPDF");
     let json = "";
     let url = "";
-
-    if (btnOpcion === 1) {
+    if (btnOpcion == 1) {
         url = "../ws/Conceptos/wsGetConcepto.php";
-        btnNormal.classList.remove("esconderBoton");
-        btnExportar.classList.remove("esconderBoton");
-        txtNormal.classList.remove("esconderBoton");
+        if (btnNormal)
+            btnNormal.classList.remove("esconderBoton");
+        if (btnExportar)
+            btnExportar.classList.remove("esconderBoton");
+        if (txtNormal)
+            txtNormal.classList.remove("esconderBoton");
+        if (btnExportarPdf)
+            btnExportarPdf.classList.remove("esconderBoton");
         try {
         } catch (error) {
             console.error("Error en ActualizarTotalesConcepto:", error);
@@ -280,8 +285,11 @@ async function obtenerDatosConceptos(btnOpcion) {
 
     } else {
         url = "../ws/ConceptosBasicos/wsGetConceptoBasico.php";
-        btnBasico.classList.remove("esconderBoton");
-        txtBasico.classList.remove("esconderBoton");
+        if (btnBasico)
+            btnBasico.classList.remove("esconderBoton");
+        if (btnExportar)
+            txtBasico.classList.remove("esconderBoton");
+
         try {
             // Espera a que termine `ActualizarTotalesConcepto`
         } catch (error) {
@@ -291,19 +299,21 @@ async function obtenerDatosConceptos(btnOpcion) {
         }
 
     }
-
-
     // Realiza la solicitud POST y oculta el spinner al finalizar
     $.post(url, json, (responseText, status) => {
         try {
-            if (status === "success") {
+            if (status == "success") {
                 let resp = JSON.parse(responseText);
-                if (resp.estado === "OK") {
+                if (resp.estado == "OK") {
                     conceptoTipoSeleccionado = btnOpcion;
                     llenarUnidadTabla(btnOpcion);
                     data = resp.datos;
+                    console.log(data)
+                    todosLosConceptos = data;
                     llenarTablaConcepto();
                     filterDataConcepto();
+                } else {
+                    data = [];
                 }
             } else {
                 throw status;
@@ -318,51 +328,22 @@ async function obtenerDatosConceptos(btnOpcion) {
 }
 
 
-function sortData(field) {
-    if (currentSortField === field) {
-        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-    } else {
-        currentSortField = field;
-        currentSortOrder = 'asc';
-    }
-
-    filteredData.sort((a, b) => {
-        const valA = a[field] !== null && a[field] !== undefined ? a[field] : '';
-        const valB = b[field] !== null && b[field] !== undefined ? b[field] : '';
-
-        if (field === 'idconbasi') {
-            // Extraer la parte numérica después de 'ba' y convertirla en número
-            const numA = parseInt(valA.replace('ba', ''), 10);
-            const numB = parseInt(valB.replace('ba', ''), 10);
-            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
-        } else if (typeof valA === 'number' && typeof valB === 'number') {
-            return currentSortOrder === 'asc' ? valA - valB : valB - valA;
-        } else {
-            return currentSortOrder === 'asc'
-                ? valA.toString().localeCompare(valB.toString(), undefined, { sensitivity: 'base' })
-                : valB.toString().localeCompare(valA.toString(), undefined, { sensitivity: 'base' });
-        }
-    });
-
-    currentPage = 1;
-    displayTableConcepto(currentPage);
-    setupPaginationConcepto();
-}
-
-function toggleSort(button, field) {
-    // Desactiva los otros botones de ordenación
-    document.querySelectorAll('.sort-button').forEach(btn => btn.classList.remove('active'));
-
+function toggleSort(button, field, pantalla) {
     // Alterna la dirección del orden
-    if (currentSortField === field) {
-        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+    if (currentSortField == field) {
+        console.log(currentSortOrder, " asc")
+        if (currentSortOrder == "desc") {
+            currentSortOrder = "desc";
+        } else {
+            currentSortOrder = "asc";
+        }
+
     } else {
         currentSortField = field;
         currentSortOrder = 'asc'; // Por defecto, cuando selecciona un nuevo campo
     }
-
     // Actualiza el icono visual según la dirección
-    if (currentSortOrder === 'asc') {
+    if (currentSortOrder == 'asc') {
         button.querySelector('i').classList.remove('fa-arrow-down-wide-short');
         button.querySelector('i').classList.add('fa-arrow-up-wide-short');
     } else {
@@ -371,10 +352,70 @@ function toggleSort(button, field) {
     }
 
     // Añade la clase active al botón actual
+    document.querySelectorAll('.sort-button').forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
 
     // Llama a la función de ordenación
-    sortData(field);
+    sortData(field, pantalla);
+}
+
+function sortData(field, pantalla) {
+    if (currentSortField === field) {
+        if (currentSortOrder == "asc") {
+            currentSortOrder = "desc";
+        } else {
+            currentSortOrder = "asc";
+        }
+    } else {
+        currentSortField = field;
+        currentSortOrder = 'asc';
+    }
+
+    filteredData.sort((a, b) => {
+        const valA = a[field] !== null && a[field] !== undefined ? a[field].toString() : '';
+        const valB = b[field] !== null && b[field] !== undefined ? b[field].toString() : '';
+
+        const compare = (a, b) => {
+            const regex = /(\d+|\D+)/g;
+            const aChunks = a.match(regex);
+            const bChunks = b.match(regex);
+
+            for (let i = 0; i < Math.max(aChunks.length, bChunks.length); i++) {
+                if (!aChunks[i]) return -1;
+                if (!bChunks[i]) return 1;
+
+                const aChunk = aChunks[i];
+                const bChunk = bChunks[i];
+
+                if (aChunk !== bChunk) {
+                    const aNum = parseInt(aChunk, 10);
+                    const bNum = parseInt(bChunk, 10);
+
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return aNum - bNum;
+                    } else {
+                        return aChunk.localeCompare(bChunk, undefined, { sensitivity: 'base' });
+                    }
+                }
+            }
+            return 0;
+        };
+
+        return currentSortOrder === 'asc' ? compare(valA, valB) : compare(valB, valA);
+    });
+
+    currentPage = 1;
+
+    if (pantalla == "Conceptos") {
+        setupPaginationConcepto();
+        displayTableConcepto(currentPage);
+    }
+
+    if (pantalla == "Catalogo") {
+        setupPaginationConceptoProyecto();
+        displayTableConceptoProyecto(currentPage)
+
+    }
 }
 
 function displayTableConcepto(page) {
@@ -393,27 +434,29 @@ function displayTableConcepto(page) {
                 // Establecer el contenido HTML de la fila
                 row.innerHTML = `
                     <td class="Code">${record.idconcepto}</td>
-                    <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                    <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${record.nombreespe !== "" ? record.nombreespe : "---"}</td>
+                    <td>${record.nombre ? record.nombre.replace(/\n/g, "<br>") : "---"}</td>
+                    <td>${record.unidad ? record.unidad : "---"}</td>
+                    <td>${record.nombreespe ? record.nombreespe : "---"}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
                             ${record.estatus == 1 ? `
                                 <input type="checkbox" 
                                        class="custom-checkbox" 
                                        id="checkbox_${record.idconcepto}" 
-                                       onchange="toggleRowSelection('${record.idconcepto}', '${record.nombre}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
+                                       onchange="toggleRowSelection('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
                                        ${selectedCheckboxes[record.idconcepto] ? 'checked' : ''}>
                                 <label for="checkbox_${record.idconcepto}" class="checkbox-design"></label>
                             ` : ``}
-                            ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto('${record.idconcepto}', '${record.nombre}', '${record.unidad}','${record.total}')"></i>
+                            ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
+                                <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.total}')"></i>
                             ` : ``}
                             ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconcepto}', '${record.nombre}', '${record.unidad}','${record.nombreespe}',0)"></i>
+                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.nombreespe}',0)"></i>
                             ` : ``}
-                            <i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconcepto}', ${record.estatus})"></i>
-                        </div>
+                            ${rolUsuarioSe == "Administrador" ?
+                        `<i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconcepto}', ${record.estatus})"></i>`
+
+                        : ''}    </div>
                     </td>
                 `;
 
@@ -441,17 +484,19 @@ function displayTableConcepto(page) {
                 // Establecer el contenido HTML de la fila
                 row.innerHTML = `
                     <td class="Code">${record.idconbasi}</td>
-                    <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                    <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                    <td>${record.nombre ? record.nombre.replace(/\n/g, "<br>") : "---"}</td>
+                    <td>${record.unidad ? record.unidad : "---"}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
-                            ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModalBasi" onclick="llenarModalModificarConceptoBasico('${record.idconbasi}', '${record.nombre}', '${record.unidad}','${record.total}')"></i>
+                            ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
+                                <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModalBasi" onclick="llenarModalModificarConceptoBasico('${record.idconbasi}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.total}')"></i>
                             ` : ``}
                             ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconbasi}', '${record.nombre}', '${record.unidad}','---',1)"></i>
+                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconbasi}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','---',1)"></i>
                             ` : ``}
-                            <i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconbasi}', ${record.estatus})"></i>
+                            ${rolUsuarioSe == "Administrador" ?
+                        `<i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconbasi}', ${record.estatus})"></i>`
+                        : ''}
                         </div>
                     </td>
                 `;
@@ -480,12 +525,12 @@ function toggleRowSelection(idconcepto, nombre, unidad, total, familia, isChecke
     if (isChecked) {
         // Agregar la fila seleccionada al array y al objeto
         selectedRows.push({
-            idconcepto, nombre, unidad, familia, cantidad: 1, total: total == "null" ? 0 : total,
+            idconcepto, nombre: decodeURIComponent(nombre), unidad, familia, cantidad: 1, total: total == "null" ? 0 : total,
         });
         selectedCheckboxes[idconcepto] = true;
     } else {
         // Remover la fila del array y del objeto si se desmarca el checkbox
-        selectedRows = selectedRows.filter(row => row.idconcepto !== idconcepto);
+        selectedRows = selectedRows.filter(row => row.idconcepto != idconcepto);
         delete selectedCheckboxes[idconcepto];
     }
     console.log(selectedRows); // Muestra las filas seleccionadas
@@ -524,7 +569,7 @@ function setupPaginationConcepto() {
         prevButton.style.backgroundColor = "#008e5a";
         prevButton.style.color = "#ffffff";
         prevButton.style.border = "3px solid #008e5a";
-        prevButton.disabled = currentPage === 1;
+        prevButton.disabled = currentPage == 1;
         prevButton.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -538,7 +583,7 @@ function setupPaginationConcepto() {
             const button = document.createElement("button");
             button.innerText = i;
 
-            if (currentPage === i) {
+            if (currentPage == i) {
                 button.className = 'active';
                 button.style.color = "#ffffff";
                 button.style.border = "3px solid #008e5a";
@@ -562,7 +607,7 @@ function setupPaginationConcepto() {
         nextButton.style.backgroundColor = "#008e5a";
         nextButton.style.color = "#ffffff";
         nextButton.style.border = "3px solid #008e5a";
-        nextButton.disabled = currentPage === totalPages;
+        nextButton.disabled = currentPage == totalPages;
         nextButton.addEventListener("click", () => {
             if (currentPage < totalPages) {
                 currentPage++;
@@ -615,7 +660,7 @@ function llenarTablaConcepto() {
 function InfoTarjeta(id, nombre, unidad, familia, tipoConcp) {
     datosCatalogo = {
         id,
-        nombre,
+        nombre: decodeURIComponent(nombre),
         unidad,
         familia,
         TipoConcepto: tipoConcp
@@ -671,7 +716,7 @@ function llenarModalModificarConcepto(id, nombre, unidad, total) {
     let totalC = document.querySelector('#UpdTotal');
     idAnterior.value = id;
     idC.value = id;
-    nombreC.value = nombre;
+    nombreC.value = decodeURIComponent(nombre);
     unidadC.value = unidad;
     totalC.value = total;
 
@@ -769,12 +814,12 @@ function mostrarSugerencias(input, inputUnidad) {
     sugerenciasDiv.innerHTML = ''; // Limpiar sugerencias previas
 
     const filtro = input.value.toLowerCase(); // Texto que está escribiendo el usuario
-    const sugerenciasFiltradas = filtro === '' ? unidades : unidades.filter(unidad =>
+    const sugerenciasFiltradas = filtro == '' ? unidades : unidades.filter(unidad =>
         unidad.unidad.toLowerCase().includes(filtro)
     );
 
     // Ocultar el cuadro de sugerencias si no hay coincidencias o si la única coincidencia es exactamente igual al texto ingresado
-    if (sugerenciasFiltradas.length === 0 || (sugerenciasFiltradas.length === 1 && sugerenciasFiltradas[0].unidad.toLowerCase() === filtro)) {
+    if (sugerenciasFiltradas.length == 0 || (sugerenciasFiltradas.length == 1 && sugerenciasFiltradas[0].unidad.toLowerCase() == filtro)) {
         sugerenciasDiv.classList.remove('activado'); // Ocultar el cuadro de sugerencias
         return; // Salir de la función si no hay sugerencias o la única sugerencia coincide exactamente
     } else {
@@ -831,7 +876,7 @@ function ActualizarTotalesConcepto() {
 
         $.post(url, json, (responseText, status) => {
             try {
-                if (status === "success") {
+                if (status == "success") {
                     let resp = JSON.parse(responseText);
                     console.log(resp);
 
@@ -855,7 +900,7 @@ function ActualizarTotalesConceptoBasico() {
 
         $.post(url, json, (responseText, status) => {
             try {
-                if (status === "success") {
+                if (status == "success") {
                     let resp = JSON.parse(responseText);
                     console.log(resp);
 
@@ -1088,7 +1133,7 @@ function llenarModalModificarConceptoBasico(id, nombre, unidad, total) {
     let totalC = document.querySelector('#UpdTotalBasicos');
     idAnterior.value = id;
     idC.value = id;
-    nombreC.value = nombre;
+    nombreC.value = decodeURIComponent(nombre);
     unidadC.value = unidad;
     totalC.value = total;
 
@@ -1102,7 +1147,7 @@ function llenarModalModificarConceptoBasico(id, nombre, unidad, total) {
 }
 
 function idConceptoBasicoAutomatico() {
-    if (data.length === 0) {
+    if (data.length == 0) {
         return "ba001";
     }
     // Extrae el último número de idconbasi en el arreglo de data

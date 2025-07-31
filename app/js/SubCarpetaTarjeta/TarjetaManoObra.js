@@ -52,7 +52,7 @@ function displayTableManoObraTarjeta(page) {
                 <td class="Code">${record.idmanoobra}</td>
                 <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${precioFormateado}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
                
             `;
 
@@ -265,7 +265,7 @@ function displayTableManoObraTarjetaModal(page) {
                  <td class="Code">${record.idmanoobra}</td>
                 <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${precioFormateado}</td>
+                <td style="text-align: right;">${precioFormateado}</td>
                  <td class="estatus">
                   <div style="display: flex; justify-content: space-around; align-items: center;">
                         <i class="coloresIcono fa-solid fa-x" style="cursor: pointer;" alt="Eliminar" onclick="eliminarFilaDelObjetoManoObra('${record.idmanoobra}')"></i>

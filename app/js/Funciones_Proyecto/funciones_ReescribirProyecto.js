@@ -76,13 +76,11 @@ function AddReescribirProyecto() {
     datos.total = 0;
     datosProyecto = datos;
     let json = JSON.stringify(datos);
-    console.log(json)
     let url = "../ws/Proyecto/wsAddProyecto.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     AgregarConceptosProyectoReescribido(idProyecto.value)
                 }

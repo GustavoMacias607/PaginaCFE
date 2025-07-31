@@ -18,9 +18,9 @@ if (!isset($_SESSION['idusuario'])) {
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaTarjetasProyecto', this)">Tarjetas</button>
         <button type=" button" class="btn btnTabla btnTerminadoBn"
-            onclick="mostrarTablaTerminado('tablaMaterialesSuministrados', this)">Materiales suministrados</button>
+            onclick="mostrarTablaTerminado('tablaMaterialesSuministrados', this)">Materiales CFE</button>
         <button type=" button" class="btn btnTabla btnTerminadoBn"
-            onclick="mostrarTablaTerminado('tablaMaterialesNoSuministrados', this)">Materiales fuera de CFE</button>
+            onclick="mostrarTablaTerminado('tablaMaterialesNoSuministrados', this)">Materiales contratista</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaManoObra', this)">Mano de obra</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
@@ -29,8 +29,13 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="mostrarTablaTerminado('tablaEquipoSeguridad', this)">Equipo de seguridad</button>
         <button type="button" class="btn btnTabla btnTerminadoBn"
             onclick="mostrarTablaTerminado('tablaMaquinaria', this)">Maquinaria</button>
-        <button type="button" class="btn btnTabla btnTerminadoBn" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:addProyectoLimpiarModal();">Reutilizar</button>
+        <?php
+        if ($_SESSION["rol"] != "Invitado") {
+            echo    ' <button type="button" class="btn btnTabla btnTerminadoBn" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:addProyectoLimpiarModal();">Reutilizar</button>';
+        }
+        ?>
+
         <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
@@ -380,9 +385,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <tbody id="table-bodyHerramientas">
                     <tr class="fila">
                         <td class="Code">Herramientas de mano</td>
-                        <td id="KhHerramientas">0.03</td>
-                        <td id="ActualizarPrecioMoHerramientas">0</td>
-                        <td id="importeHerramientas">0</td>
+                        <td style="text-align: right;" id="KhHerramientas">0.03</td>
+                        <td style="text-align: right;" id="ActualizarPrecioMoHerramientas">0</td>
+                        <td style="text-align: right;" id="importeHerramientas">0</td>
                     </tr>
                 </tbody>
             </table>
@@ -440,9 +445,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <tbody id="table-bodyEquipoSeguridad">
                     <tr class="fila">
                         <td class="Code">Equipo y seguridad</td>
-                        <td id="KhEquipo">0.02</td>
-                        <td id="ActualizarPrecioMoEquipo">0</td>
-                        <td id="importeEquipo">0</td>
+                        <td style="text-align: right;" id="KhEquipo">0.02</td>
+                        <td style="text-align: right;" id="ActualizarPrecioMoEquipo">0</td>
+                        <td style="text-align: right;" id="importeEquipo">0</td>
                     </tr>
                 </tbody>
             </table>
@@ -469,7 +474,6 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
-
 <div id="tablaConceptos" style="display: none;">
     <div style="margin: 1rem 2rem 0px 2rem; display: flex; justify-content: center;">
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
@@ -477,20 +481,28 @@ if (!isset($_SESSION['idusuario'])) {
         <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
             onclick="ExportarPDFConceptos()">Exportar a PDF</button>
     </div>
+    <div
+        style="margin-bottom: 1rem; margin-top: 1rem; display: flex; justify-content: end; gap: 1rem; margin-right: 2rem;">
+        <button id="toggleCostoDirecto" class=" btn fa-solid-Siguiente-catalogo">
+            <i class="fa fa-eye-slash" id="iconCostoDirecto"></i> CD
+        </button>
+        <button id="togglePrecioUnitario" class=" btn fa-solid-Siguiente-catalogo">
+            <i class="fa fa-eye-slash" id="iconPrecioUnitario"></i> PU
+        </button>
+        <button id="togglePUCantidad" class=" btn fa-solid-Siguiente-catalogo">
+            <i class="fa fa-eye-slash" id="iconPUCantidad"></i> PU * C
+        </button>
+    </div>
     <div class="contTabla-catalogo-conceptos">
         <div class="tabla-container-catalogo-conceptos">
             <table id="tabla-conceptos">
                 <thead class="">
                     <tr>
                         <th style="width: 8rem;">
-                            <button id="sort-id" class="sort-button">
-                                ID <i class="fa-solid fa-arrow-up-wide-short"></i>
-                            </button>
+                            ID
                         </th>
                         <th>
-                            <button id="sort-name" class="sort-button">
-                                Nombre <i class="fa-solid fa-arrow-up-wide-short"></i>
-                            </button>
+                            Nombre
                         </th>
                         <th style="width: 10rem;">
                             <div class="d-flex align-items-center">
@@ -504,11 +516,14 @@ if (!isset($_SESSION['idusuario'])) {
                         <th style="width: 8rem;">
                             Cantidad
                         </th>
-                        <th style="width: 8rem;">
-                            Precio Unitario
+                        <th style="width: 8rem;" class="col-costo-directo">
+                            Costo directo
                         </th>
-                        <th style="width: 8rem;">
-                            Importe
+                        <th style="width: 8rem;" class="col-precio-unitario">
+                            Precio unitario
+                        </th>
+                        <th style="width: 8rem;" class="col-pu-cantidad">
+                            PU * Cantidad
                         </th>
                     </tr>
                 </thead>
@@ -534,14 +549,14 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 
-    <div style="padding-top: 1rem; margin-bottom: 5rem; display: block;">
+    <!-- Total -->
+    <div id="totalContainer" style="padding-top: 1rem; padding-bottom: 3rem; margin-bottom: 3rem; display: block;">
         <div class="grid-container">
             <label class="subtotales_textos">Total:</label>
             <label id="TotalSumaImporteConceptos" class="subtotales_numeros_top">$0.00</label>
         </div>
     </div>
 </div>
-
 <!-- Modal insertar proyecto -->
 <div class="modal modal-maquinaria" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">

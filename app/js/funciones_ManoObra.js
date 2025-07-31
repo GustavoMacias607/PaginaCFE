@@ -383,6 +383,8 @@ function GetManoObra() {
                     llenarTablaManoObra();
                     filterDataManoObra();
                     llenarUnidadTablaManoObra();
+                } else {
+                    data = [];
                 }
             } else {
                 throw e = status;
@@ -411,20 +413,22 @@ function displayTableManoObra(page) {
                 <td class="Code">${record.idmanoobra}</td>
                 <td>${(!record.categoria == "") ? record.categoria : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
-                <td>${(!record.salario == "") ? record.salario : "---"}</td>
+                <td style="text-align: right;">${(!record.salario == "") ? record.salario : "---"}</td>
                 <td>${(!record.fechasalario == "") ? record.fechasalario : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
-                        ${record.estatus == 1 ? `
+                        ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarManoObra('${record.idmanoobra}','${record.categoria}','${record.unidad}',${record.salario},'${record.fechasalario}')"></i>
                         ` : ``}
                         
                         <!-- Ícono para ver PDF, llamando a la función verPDF -->
                         <i class="coloresIcono fa-regular fa-file-pdf" style="cursor: pointer;" alt="Ver PDF" onclick="verPDF('${record.idmanoobra}')"></i>
 
-                        ${record.estatus == 1 ?
-                    `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>` :
-                    `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>`
+                           ${rolUsuarioSe == "Administrador" ?
+                    (record.estatus == 1 ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>` :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idmanoobra}',${record.estatus})"></i>`
+                    ) : ``
                 }
                     </div>
                 </td>

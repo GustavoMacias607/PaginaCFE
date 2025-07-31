@@ -1,5 +1,9 @@
 let totalManoObraTarjeta;
 function llenarCamposPaginaTerminado() {
+    showCostoDirecto = true;
+    showPrecioUnitario = true;
+    showPUCantidad = true;
+    PorsentajesZona(objZonas, true)
     document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
@@ -15,20 +19,34 @@ function llenarCamposPaginaTerminado() {
     getMaquinarias();
     getManoObras();
     ObtenerZonas();
+    document.getElementById('toggleCostoDirecto').addEventListener('click', () => {
+        showCostoDirecto = !showCostoDirecto;
+        updateColumnVisibility();
+    });
+
+    document.getElementById('togglePrecioUnitario').addEventListener('click', () => {
+        showPrecioUnitario = !showPrecioUnitario;
+        updateColumnVisibility();
+    });
+
+    document.getElementById('togglePUCantidad').addEventListener('click', () => {
+        showPUCantidad = !showPUCantidad;
+        updateColumnVisibility();
+    });
 }
-function PorsentajesZona(zonis) {
+function PorsentajesZona(zonis, calculoConcepto) {
     zonis.forEach((zona) => {
-        console.log(zona.idzona, datosProyecto.idZona)
         if (zona.idzona == datosProyecto.idZona) {
             costosAdicionales.CIndirecto = zona.indirecto;
             costosAdicionales.Financiamiento = zona.financiamiento;
             costosAdicionales.utilidad = zona.utilidad;
             costosAdicionales.CAdicionales = zona.adicionales;
-            GeneradorTablaConceptoPDF();
-            return
+            if (!calculoConcepto) {
+                GeneradorTablaConceptoPDF();
+            }
+            return;
         }
     })
-
 }
 
 function mostrarTablaTerminado(tablaId, boton) {
@@ -80,7 +98,6 @@ function MostrarConceptosContenidosProyectoTerminado() {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
-                console.log(datosBd);
                 if (datosBd) {
                     datosBd.forEach((datos) => {
                         editedRows[datos.IdConcepto] = {
@@ -88,7 +105,7 @@ function MostrarConceptosContenidosProyectoTerminado() {
                             estatus: datos.EstatusConcepto,
                             idconcepto: datos.IdConcepto,
                             nombre: datos.NombreConcepto,
-                            nombreespe: "",
+                            nombreespe: datos.Familia,
                             total: datos.TotalConcepto,
                             unidad: datos.UnidadConcepto,
                         };
@@ -96,6 +113,7 @@ function MostrarConceptosContenidosProyectoTerminado() {
                 } else {
                     editedRows = {};
                 }
+                console.log(editedRows);
                 GeneradorTablaConcepto();
                 llenarTablaConceptosTerminado();
             } else {
@@ -131,7 +149,6 @@ function precionadoBtnExportarPdf() {
  * 
  * 
  */
-
 function llenarTablaConceptosTerminado() {
     let total = 0;
     const tableBody = document.getElementById("table-bodyConceptos");
@@ -143,40 +160,44 @@ function llenarTablaConceptosTerminado() {
     });
     if (editedRowsArray.length > 0) {
         editedRowsArray.forEach(record => {
+
             const precioFormateado = record.total ? formatoMXN.format(record.total) : "---";
-            let importe = record.cantidad * record.total
+            let calculoPorcentaje = calculoConceptoPorcentaje(parseFloat(record.total))
+            let importe = record.cantidad * calculoPorcentaje
             total += importe;
+            const PrecioPorcentajeFormateado = record.total ? formatoMXN.format(calculoPorcentaje) : "---";
             const importeFormateado = record.total ? formatoMXN.format(importe) : "---";
+
             const row = document.createElement('tr');
             row.classList.add('fila');
-            // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                    <td class="Code">${record.idconcepto}</td>
+                  <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td>${record.cantidad !== "" ? record.cantidad : "---"}</td>
-                    <td>${precioFormateado}</td>
-                    <td>${importeFormateado}</td>
-                `;
-            // Añadir eventos mouseover y mouseout
+                    <td style="text-align: right;" >${record.cantidad !== "" ? record.cantidad : "---"}</td>
+                    <td style="text-align: right;" class="col-costo-directo">${precioFormateado}</td>
+                    <td style="text-align: right;" class="col-precio-unitario">${PrecioPorcentajeFormateado}</td>
+                    <td style="text-align: right;" class="col-pu-cantidad">${importeFormateado}</td>
+                    `;
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
-
-            // Añadir la fila al tbody
             tableBody.appendChild(row);
         });
+
         let totalImporteConcepto = document.getElementById("TotalSumaImporteConceptos");
         totalImporteConcepto.innerHTML = formatoMXN.format(total);
     } else {
         const row = `
         <tr class="fila">
-            <td colspan="6" class="Code">Sin resultados</td>
+            <td colspan="8" class="Code">Sin resultados</td>
         </tr>
     `;
         tableBody.innerHTML += row;
     }
-}
 
+    // Update column visibility after rendering the table
+    updateColumnVisibility();
+}
 
 /***
  * 
@@ -238,7 +259,7 @@ function ExportarPDFMaterialesSi() {
 
         doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
         doc.setFontSize(10); // Tamaño de la fuente
-        const title = "Materiales suministrados por CFE";
+        const title = "Materiales CFE";
         doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
     };
 
@@ -290,7 +311,7 @@ function ExportarPDFMaterialesSi() {
             1: { halign: 'justify' },
             2: { halign: 'left' },
             3: { halign: 'right' },
-            4: { halign: 'left' },
+            4: { halign: 'right' },
             5: { halign: 'right' }
         },
 
@@ -322,7 +343,7 @@ function ExportarPDFMaterialesSi() {
         }
     });
 
-    doc.save("tablaMaterialesSuministrados.pdf");
+    doc.save("ListaMaterialesSuministradorCFEProy.pdf");
 }
 
 function ExportarPDFMaterialesNo() {
@@ -373,7 +394,7 @@ function ExportarPDFMaterialesNo() {
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        const title = "Materiales no suministrados por CFE";
+        const title = "Materiales contratista";
         doc.text(title, titleX, titleY, { align: "center" });
     };
 
@@ -424,7 +445,7 @@ function ExportarPDFMaterialesNo() {
             1: { halign: 'justify' },
             2: { halign: 'left' },
             3: { halign: 'right' },
-            4: { halign: 'left' },
+            4: { halign: 'right' },
             5: { halign: 'right' }
         },
 
@@ -456,7 +477,7 @@ function ExportarPDFMaterialesNo() {
         }
     });
 
-    doc.save("tablaMaterialesNoSuministrados.pdf");
+    doc.save("ListaMaterialesSuministradorContratistaProy.pdf");
 }
 function ExportarPDFManoObra() {
     let total = document.getElementById("TotalSumaManoObra").innerHTML;
@@ -559,7 +580,7 @@ function ExportarPDFManoObra() {
             1: { halign: 'left' }, // Justificar contenido de la columna "Nombre"
             2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
             3: { halign: 'right' }, // Centrar contenido de la columna "Cantidad"
-            4: { halign: 'left' }, // Centrar contenido de la columna "Precio U"
+            4: { halign: 'right' }, // Centrar contenido de la columna "Precio U"
             5: { halign: 'right' }, // Alinear a la derecha contenido de la columna "Importe"
             6: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
@@ -593,7 +614,7 @@ function ExportarPDFManoObra() {
         }
     });
 
-    doc.save("tablaManoObra.pdf");
+    doc.save("ListaManoObraProy.pdf");
 }
 
 function ExportarPDFHerramientasMano() {
@@ -697,7 +718,7 @@ function ExportarPDFHerramientasMano() {
         },
         columnStyles: {
             0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'left' }, // Justificar contenido de la columna "Nombre"
+            1: { halign: 'right' }, // Justificar contenido de la columna "Nombre"
             2: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
             3: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
@@ -731,7 +752,7 @@ function ExportarPDFHerramientasMano() {
         }
     });
 
-    doc.save("tablaHerramientasMano.pdf");
+    doc.save("ListaHerramientasManoProy.pdf");
 }
 
 function ExportarPDFEquipoSeguirdad() {
@@ -834,7 +855,7 @@ function ExportarPDFEquipoSeguirdad() {
         },
         columnStyles: {
             0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'left' }, // Justificar contenido de la columna "Nombre"
+            1: { halign: 'right' }, // Justificar contenido de la columna "Nombre"
             2: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
             3: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
@@ -868,7 +889,7 @@ function ExportarPDFEquipoSeguirdad() {
         }
     });
 
-    doc.save("tablaEquipoSeguridad.pdf");
+    doc.save("ListaEquipoSeguridadProy.pdf");
 }
 function ExportarPDFMaquinarias() {
     let total = document.getElementById("TotalSumaMaquinaria").innerHTML;
@@ -973,7 +994,7 @@ function ExportarPDFMaquinarias() {
             1: { halign: 'justify' }, // Justificar contenido de la columna "Nombre"
             2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
             3: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
-            4: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
+            4: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
             5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
         },
         didDrawPage: (data) => {
@@ -1006,7 +1027,7 @@ function ExportarPDFMaquinarias() {
         }
     });
 
-    doc.save("tablaMaquinarias.pdf");
+    doc.save("ListaMaquinariasProy.pdf");
 }
 
 function ExportarPDFConceptos() {
@@ -1017,12 +1038,27 @@ function ExportarPDFConceptos() {
     const tableBody = document.getElementById("table-bodyConceptos");
     const rows = tableBody.querySelectorAll("tr");
 
-    const tableColumn = ["ID", "Nombre", "Unidad", "Cantidad", "Precio U", "Importe"];
+    // Determinar las columnas visibles
+    const visibleColumns = ["ID", "Nombre", "Unidad", "Cantidad"];
+    if (showCostoDirecto) visibleColumns.push("Costo directo");
+    if (showPrecioUnitario) visibleColumns.push("Precio unitario");
+    if (showPUCantidad) visibleColumns.push("PU * Cantidad");
+
     const tableRows = [];
 
     rows.forEach(row => {
         const cells = row.querySelectorAll("td");
-        const rowData = Array.from(cells).map(cell => cell.innerText);
+        const rowData = [
+            cells[0].innerText, // ID
+            cells[1].innerText, // Nombre
+            cells[2].innerText, // Unidad
+            cells[3].innerText, // Cantidad
+        ];
+
+        if (showCostoDirecto) rowData.push(cells[4].innerText); // Costo directo
+        if (showPrecioUnitario) rowData.push(cells[5].innerText); // Precio unitario
+        if (showPUCantidad) rowData.push(cells[6].innerText); // PU * Cantidad
+
         tableRows.push(rowData);
     });
 
@@ -1070,7 +1106,6 @@ function ExportarPDFConceptos() {
     };
 
     // Agregar título de la tabla
-
     const addTitle = (doc) => {
         const pageWidth = doc.internal.pageSize.width; // Ancho de la página
         const titleX = pageWidth / 2; // Posición centrada en el ancho
@@ -1095,26 +1130,28 @@ function ExportarPDFConceptos() {
 
     // Generar la tabla y configurar estilos
     doc.autoTable({
-        head: [tableColumn],
+        head: [visibleColumns],
         body: tableRows,
         margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
         headStyles: {
             fillColor: "#008e5a", // Color de fondo del encabezado
             textColor: "#FFFFFF", // Color del texto en el encabezado
             fontStyle: "bold",   // Texto en negrita
+            fontSize: 8,
         },
         bodyStyles: {
             font: "helvetica", // Fuente Helvetica Roman
             fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            fontSize: 7, // Tamaño de letra 8
         },
         columnStyles: {
             0: { halign: 'left' }, // Centrar contenido de la columna "ID"
             1: { halign: 'justify' }, // Justificar contenido de la columna "Nombre"
             2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'left' }, // Centrar contenido de la columna "Cantidad"
-            4: { halign: 'right' }, // Centrar contenido de la columna "Precio U"
-            5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            3: { halign: 'right' }, // Centrar contenido de la columna "Cantidad"
+            4: { halign: 'right' }, // Centrar contenido de la columna "Costo directo"
+            5: { halign: 'right' }, // Centrar contenido de la columna "Precio unitario"
+            6: { halign: 'right' } // Centrar contenido de la columna "PU * Cantidad"
         },
         didDrawPage: (data) => {
             addImage(doc); // Agregar imagen
@@ -1124,7 +1161,7 @@ function ExportarPDFConceptos() {
             addFooter(doc, pageNumber); // Agregar el pie de página numerado
         },
         didDrawCell: (data) => {
-            if (data.section === 'body' && data.row.index === tableRows.length - 1) {
+            if (data.section === 'body' && data.row.index === tableRows.length - 1 && showPUCantidad) {
                 const pageWidth = doc.internal.pageSize.width; // Ancho de la página
                 const marginRight = 23; // Margen derecho (2.3 cm)
                 const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
@@ -1146,7 +1183,7 @@ function ExportarPDFConceptos() {
         }
     });
 
-    doc.save("tablaConceptos.pdf");
+    doc.save("ListaConceptosProy.pdf");
 }
 
 async function exportarPDFConHtml(conc) {
@@ -1176,9 +1213,9 @@ async function exportarPDFConHtml(conc) {
     for (let i = 0; i < tarjetas.length; i++) {
         const tarjeta = tarjetas[i];
 
-        // Usar html2canvas para convertir el contenido HTML de cada tarjeta a una imagen
-        await html2canvas(tarjeta).then(canvas => {
-            const imgData = canvas.toDataURL('image/png');
+        // Usar html2canvas con escala reducida
+        await html2canvas(tarjeta, { scale: 0.8 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/jpeg', 0.6); // JPEG con calidad 60%
             const imgWidth = contentWidth;
             const imgHeight = canvas.height * imgWidth / canvas.width;
             let position = marginY;
@@ -1186,12 +1223,12 @@ async function exportarPDFConHtml(conc) {
             if (i > 0) {
                 doc.addPage();
             }
-            const pageNumber = doc.internal.getNumberOfPages();
-            // Agregar encabezado, imagen, título y pie de página
+
             addHeader(doc, conc);
             addImage(doc);
 
-            doc.addImage(imgData, 'PNG', marginX, position, imgWidth, imgHeight);
+            // Agregar imagen con compresión rápida
+            doc.addImage(imgData, 'JPEG', marginX, position, imgWidth, imgHeight, null, 'FAST');
         });
     }
 
@@ -1200,83 +1237,70 @@ async function exportarPDFConHtml(conc) {
     container.style.position = '';
     container.style.left = '';
 
-    let btn = document.getElementById("btnExportarPDF");;
+    let btn = document.getElementById("btnExportarPDF");
     btn.removeAttribute("disabled");
     btn.classList.remove("btnClickeadoExportar");
+
     // Obtener el número total de páginas
     const totalPages = doc.internal.getNumberOfPages();
 
-    // Iterar por cada página y agregar el pie de página con "Página X de Y"
+    // Agregar pie de página a cada página
     for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i); // Cambiar a la página actual
-        addFooter(doc, i, totalPages); // Pasar el total de páginas al pie de página
+        doc.setPage(i);
+        addFooter(doc, i, totalPages);
     }
 
-    doc.save('proyecto.pdf');
+    doc.save('TarjetaPrecioUnitario.pdf');
 }
+
 // Encabezado sin espacio entre renglones
 const addHeader = (doc, conc) => {
-    const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-    const marginRight = 1.5 * 28.35; // Margen derecho (2.3 cm)
-    const headerX = pageWidth - marginRight; // Posición X del encabezado
-    const headerYStart = 50; // Posición Y del primer renglón (3 cm del margen superior)
+    const pageWidth = doc.internal.pageSize.width;
+    const marginRight = 1.5 * 28.35;
+    const headerX = pageWidth - marginRight;
+    const headerYStart = 50;
 
-    doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-    // Línea 1
+    doc.setTextColor(0, 142, 90);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
-    const line1 = "División de Distribución Jalisco";
-    doc.text(line1, headerX, headerYStart, { align: "right" });
+    doc.text("División de Distribución Jalisco", headerX, headerYStart, { align: "right" });
 
-    // Línea 2
-    if (conc) {
-        // Línea 3
-        doc.setFontSize(9);
-        const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 10, { align: "right" }); // Solo 3.4 mm debajo del anterior
-    } else {
+    doc.setFontSize(9);
+    const line3 = "Departamento de Planeación, Proyectos y Construcción";
+    doc.text(line3, headerX, headerYStart + 10, { align: "right" });
+
+    if (!conc) {
         doc.setFontSize(10);
-        const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 10, { align: "right" }); // Solo 3.6 mm debajo del anterior
-
-        // Línea 3
-        doc.setFontSize(9);
-        const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 20, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text("Zona " + datosProyecto.zona, headerX, headerYStart + 20, { align: "right" });
     }
-
 };
 
 // Pie de página centrado
 const addFooter = (doc, pageNumber, totalPages) => {
-    const pageHeight = doc.internal.pageSize.height; // Altura de la página
-    const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-    const footerY = pageHeight - 20; // Posición Y del pie de página (1 cm desde la parte inferior)
+    const pageHeight = doc.internal.pageSize.height;
+    const pageWidth = doc.internal.pageSize.width;
+    const footerY = pageHeight - 20;
 
-    doc.setFontSize(10); // Tamaño de fuente
-    doc.setTextColor(0, 0, 0); // Color negro
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
 
-    const pageText = `Página ${pageNumber} de ${totalPages}`; // Texto del número de página
-    const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+    const pageText = `Página ${pageNumber} de ${totalPages}`;
+    const textWidth = doc.getTextWidth(pageText);
 
-    // Centrar el texto en el pie de página
     doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
 };
 
-// Agregar título de la tabla
-
-
-// Agregar imagen
+// Agregar imagen optimizada
 const addImage = (doc) => {
-    const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-    const marginLeft = 1.5 * 28.35; // Margen izquierdo (1.5 cm)
-    const marginTop = 1.5 * 28.35; // Margen superior (1.5 cm)
-    const imageWidth = 135; // Ancho de la imagen (ajusta según sea necesario)
-    const imageHeight = 45; // Altura de la imagen (ajusta según sea necesario)
+    const imageUrl = '/paginacfe/app/img/LogoPdf.jpg'; // Asegúrate de que el logo esté en JPEG comprimido
+    const marginLeft = 1.5 * 28.35;
+    const marginTop = 1.5 * 28.35;
+    const imageWidth = 135;
+    const imageHeight = 45;
 
-    doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
+    doc.addImage(imageUrl, 'JPEG', marginLeft, marginTop, imageWidth, imageHeight, null, 'FAST');
 };
+
 
 
 
@@ -1339,7 +1363,7 @@ async function ExportarExcelMaterialesSi() {
     // Agregar título
     worksheet.mergeCells("A5:F5");
     const titleCell = worksheet.getCell("A5");
-    titleCell.value = "Materiales suministrados por CFE";
+    titleCell.value = "Materiales CFE";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
 
@@ -1379,7 +1403,7 @@ async function ExportarExcelMaterialesSi() {
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 3: // Unidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 4: // Precio U
                     cell.alignment = { horizontal: "right", vertical: "middle" };
@@ -1427,7 +1451,7 @@ async function ExportarExcelMaterialesSi() {
     // Ajustar el ancho de las columnas automáticamente
     worksheet.columns.forEach((column) => {
         const maxLength = column.values.reduce((max, curr) => (curr && curr.toString().length > max ? curr.toString().length : max), 10);
-        column.width = maxLength - 20; // Ancho basado en el contenido
+        column.width = maxLength - 2; // Ancho basado en el contenido
     });
 
     // Descargar el archivo Excel
@@ -1435,7 +1459,7 @@ async function ExportarExcelMaterialesSi() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaMaterialesSuministrados.xlsx";
+    link.download = "ListaMaterialesSuministradoCFEProy.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1490,7 +1514,7 @@ async function ExportarExcelMaterialesNo() {
     // Agregar título
     worksheet.mergeCells("A5:F5");
     const titleCell = worksheet.getCell("A5");
-    titleCell.value = "Materiales no suministrados por CFE";
+    titleCell.value = "Materiales contratista";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
 
@@ -1530,7 +1554,7 @@ async function ExportarExcelMaterialesNo() {
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 3: // Unidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.alignment = { horizontal: "right", vertical: "middle" };
                     break;
                 case 4: // Precio U
                     cell.alignment = { horizontal: "right", vertical: "middle" };
@@ -1577,7 +1601,7 @@ async function ExportarExcelMaterialesNo() {
     // Ajustar el ancho de las columnas automáticamente
     worksheet.columns.forEach((column) => {
         const maxLength = column.values.reduce((max, curr) => (curr && curr.toString().length > max ? curr.toString().length : max), 10);
-        column.width = maxLength - 20; // Ancho basado en el contenido
+        column.width = maxLength - 2; // Ancho basado en el contenido
     });
 
     // Descargar el archivo Excel
@@ -1585,7 +1609,7 @@ async function ExportarExcelMaterialesNo() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaMaterialesNoSuministrados.xlsx";
+    link.download = "ListaMaterialesSuministradoContratistaProy.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1681,7 +1705,7 @@ async function ExportarExcelManoObra() {
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 3: // Unidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 4: // Salario
                     cell.alignment = { horizontal: "right", vertical: "middle" };
@@ -1745,7 +1769,7 @@ async function ExportarExcelManoObra() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaManoObra.xlsx";
+    link.download = "ListaManoObrasProy.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1893,7 +1917,7 @@ async function ExportarExcelHerramientasMano() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaHerramientasMano.xlsx";
+    link.download = "ListaHerramientasMano.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -2041,7 +2065,7 @@ async function ExportarExcelEquipoSeguridad() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaEquipoSeguridad.xlsx";
+    link.download = "ListaEquipoSeguridad.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -2136,7 +2160,7 @@ async function ExportarExcelMaquinarias() {
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 3: // Unidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 4: // PhM
                     cell.alignment = { horizontal: "right", vertical: "middle" };
@@ -2196,12 +2220,11 @@ async function ExportarExcelMaquinarias() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaMaquinarias.xlsx";
+    link.download = "ListaMaquinariasProy.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 }
-
 async function ExportarExcelConceptosProyecto() {
     // Crear un nuevo libro de trabajo
     const workbook = new ExcelJS.Workbook();
@@ -2229,34 +2252,41 @@ async function ExportarExcelConceptosProyecto() {
         ext: { width: 150, height: 50 }, // Tamaño de la imagen
     });
 
-    // Agregar encabezado
-    worksheet.mergeCells("B1:F1");
+    // Determinar las columnas visibles
+    const visibleColumns = [];
+    if (showCostoDirecto) visibleColumns.push("Costo directo");
+    if (showPrecioUnitario) visibleColumns.push("Precio unitario");
+    if (showPUCantidad) visibleColumns.push("PU * Cantidad");
+
+    // Ajustar el rango de celdas combinadas según las columnas visibles
+    const mergeRange = `B1:${String.fromCharCode(65 + 3 + visibleColumns.length)}1`;
+    worksheet.mergeCells(mergeRange);
     const line1 = worksheet.getCell("B1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:F2");
+    worksheet.mergeCells(`B2:${String.fromCharCode(65 + 3 + visibleColumns.length)}2`);
     const line2 = worksheet.getCell("B2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B3:F3");
+    worksheet.mergeCells(`B3:${String.fromCharCode(65 + 3 + visibleColumns.length)}3`);
     const line3 = worksheet.getCell("B3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
     line3.alignment = { horizontal: "right", vertical: "middle" };
 
     // Agregar título
-    worksheet.mergeCells("A5:F5");
+    worksheet.mergeCells(`A5:${String.fromCharCode(65 + 3 + visibleColumns.length)}5`);
     const titleCell = worksheet.getCell("A5");
     titleCell.value = "Conceptos";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
 
     // Agregar encabezados
-    const headers = ["ID", "Nombre", "Unidad", "Cantidad", "Precio U", "Importe"];
+    const headers = ["ID", "Nombre", "Unidad", "Cantidad", ...visibleColumns];
     worksheet.addRow(headers).eachCell((cell) => {
         cell.font = { bold: true };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
@@ -2275,7 +2305,16 @@ async function ExportarExcelConceptosProyecto() {
 
     rows.forEach((row, rowIndex) => {
         const cells = row.querySelectorAll("td");
-        const rowData = Array.from(cells).map(cell => cell.innerText);
+        const rowData = [
+            cells[0].innerText, // ID
+            cells[1].innerText, // Nombre
+            cells[2].innerText, // Unidad
+            cells[3].innerText, // Cantidad
+        ];
+
+        if (showCostoDirecto) rowData.push(cells[4].innerText); // Costo directo
+        if (showPrecioUnitario) rowData.push(cells[5].innerText); // Precio unitario
+        if (showPUCantidad) rowData.push(cells[6].innerText); // PU * Cantidad
 
         // Agregar una fila al Excel
         const excelRow = worksheet.addRow(rowData);
@@ -2291,19 +2330,13 @@ async function ExportarExcelConceptosProyecto() {
                     cell.alignment = { horizontal: "justify", vertical: "middle" };
                     break;
                 case 3: // Unidad
-                    cell.alignment = { horizontal: "center", vertical: "middle" };
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
                 case 4: // Cantidad
                     cell.alignment = { horizontal: "right", vertical: "middle" };
                     break;
-                case 5: // Precio U
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
-                    break;
-                case 6: // Importe
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
-                    break;
                 default:
-                    cell.alignment = { horizontal: "center", vertical: "middle" }; // Por defecto
+                    cell.alignment = { horizontal: "right", vertical: "middle" }; // Por defecto
             }
 
             // Aplicar colores alternos en las filas
@@ -2323,18 +2356,21 @@ async function ExportarExcelConceptosProyecto() {
         });
     });
 
-    // Agregar total como última fila
-    const total = document.getElementById("TotalSumaImporteConceptos").innerHTML;
-    worksheet.addRow(["", "", "", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 6) {
-            cell.font = { bold: true };
-            cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 5) {
-            cell.font = { bold: true };
-            cell.alignment = { horizontal: "center", vertical: "middle" };
-        }
-    });
+    // Agregar total como última fila si la columna PU * Cantidad está visible
+    if (showPUCantidad) {
+        const total = document.getElementById("TotalSumaImporteConceptos").innerHTML;
+        const totalRowData = ["", "", "", ...Array(visibleColumns.length - 1).fill(""), "Total", total];
+        worksheet.addRow(totalRowData).eachCell((cell, colNumber) => {
+            if (colNumber == 4 + visibleColumns.length) {
+                cell.font = { bold: true };
+                cell.alignment = { horizontal: "right", vertical: "middle" };
+            }
+            if (colNumber == 3 + visibleColumns.length) {
+                cell.font = { bold: true };
+                cell.alignment = { horizontal: "center", vertical: "middle" };
+            }
+        });
+    }
 
     // Ajustar el ancho de las columnas manualmente
     worksheet.columns = [
@@ -2342,8 +2378,7 @@ async function ExportarExcelConceptosProyecto() {
         { key: 'Nombre', width: 90 },
         { key: 'Unidad', width: 13 },
         { key: 'Cantidad', width: 15 },
-        { key: 'Precio U', width: 20 },
-        { key: 'Importe', width: 25 }
+        ...visibleColumns.map(() => ({ width: 20 }))
     ];
 
     // Descargar el archivo Excel
@@ -2351,7 +2386,7 @@ async function ExportarExcelConceptosProyecto() {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "tablaConceptos.xlsx";
+    link.download = "ListaConceptosProy.xlsx";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -2364,7 +2399,7 @@ async function ExportarExcelTarjetas(pantalla) {
     const container = document.getElementById('contenedor-cfe');
     const workbook = new ExcelJS.Workbook();
     let conceptos
-    if (pantalla == true) {
+    if (pantalla) {
         conceptos = Object.values(editedRows);
     } else {
         GeneradorTarjetasConceptoPdf(false);
@@ -2560,7 +2595,12 @@ async function ExportarExcelTarjetas(pantalla) {
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "Conceptos.xlsx";
+    if (pantalla) {
+        link.download = "TarjetasPrecioUnitarioProyecto.xlsx";
+    } else {
+        link.download = "TarjetasPrecioUnitario.xlsx";
+    }
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

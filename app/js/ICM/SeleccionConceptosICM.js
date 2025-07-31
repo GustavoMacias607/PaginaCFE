@@ -55,7 +55,7 @@ function displayTableConceptoICM(page) {
         paginatedData.forEach(record => {
             const row = document.createElement('tr');
             row.classList.add('fila');
-            // Establecer el contenido HTML de la fila
+            const checkboxId = `checkbox_${(record.idconcepto || "").replace(/[^a-zA-Z0-9-_]/g, "_")}`; // Reemplaza caracteres especiales
             row.innerHTML = `
                     <td class="Code">${record.idconcepto}</td>
                     <td>${record.nombre !== "" ? record.nombre : "---"}</td>
@@ -63,33 +63,36 @@ function displayTableConceptoICM(page) {
                     <td>${record.nombreespe !== "" ? record.nombreespe : "---"}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
-                            ${record.estatus == 1 ? `
+                            ${record.estatus == 1 ? ` 
                                 <input type="checkbox" 
                                        class="custom-checkbox" 
-                                       id="checkbox_${record.idconcepto}" 
-                                       onchange="toggleRowSelection('${record.idconcepto}', '${record.nombre}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
+                                       id="${checkboxId}" 
+                                       onchange="toggleRowSelection('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
                                        ${selectedCheckboxes[record.idconcepto] ? 'checked' : ''}>
-                                <label for="checkbox_${record.idconcepto}" class="checkbox-design"></label>
+                                <label for="${checkboxId}" class="checkbox-design"></label>
                             ` : ``}
                         </div>
                     </td>
                 `;
+
+
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
+
             // Añadir la fila al tbody
             tableBody.appendChild(row);
         });
     } else {
-        const row = `
-                <tr class="fila">
-                    <td colspan="6" class="Code">Sin resultados</td>
-                </tr>
-            `;
-        tableBody.innerHTML += row;
+        tableBody.innerHTML = `
+            <tr class="fila">
+                <td colspan="6" class="Code">Sin resultados</td>
+            </tr>
+        `;
     }
-
 }
+
+
 
 function setupPaginationConceptoICM() {
     const paginationDiv = document.getElementById("pagination");

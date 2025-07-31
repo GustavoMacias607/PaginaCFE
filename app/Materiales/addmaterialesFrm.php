@@ -12,24 +12,31 @@ require("../../scripts/Conexion.php");
 require("../../scripts/Materiales.php");
 
 ?>
-
-
 <div class="fondBlanco">
     <div class="bottom-rectangle-materiales">
         <div class="text-materiales">Materiales</div>
-        <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
-            onclick="javascript:AddlimpiarModal();">Agregar material</button>
-
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo  '<button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
+            onclick="javascript:AddlimpiarModal();">Agregar material</button>';
+        }
+        ?>
         <button id="btnExportar" onclick="javascript:ExportarMateriales()" class="btn btn-agregar-material">
             Exportar a Excel
         </button>
 
-        <input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls" />
+        <?php
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo   '<input type="file" id="upload" class="btn btn-agregar-material" accept=".xlsx, .xls" />';
 
-        <button id="btnGuardarMatBD" onclick="javascript:guardarCambios()" style="display: none;"
-            class="btn btn-agregar-material">
-            Reescribir Materiales
-        </button>
+            echo '<button id="btnGuardarMatBD" onclick="javascript:guardarCambios()" style="display: none;"
+                class="btn btn-agregar-material">
+                Reescribir Materiales
+                </button>';
+        }
+        ?>
+
+
         <a onclick="opcion('proyecto')" class="text-inicio-materiales">
             <div>Ir al inicio</div>
         </a>
@@ -413,20 +420,20 @@ require("../../scripts/Materiales.php");
 </script>
 
 <script>
-    window.addEventListener('resize', function() {
-        const logoImage = document.getElementById('logoImage');
-        const windowWidth = window.innerWidth;
-        const originalWidth = logoImage.naturalWidth;
+window.addEventListener('resize', function() {
+    const logoImage = document.getElementById('logoImage');
+    const windowWidth = window.innerWidth;
+    const originalWidth = logoImage.naturalWidth;
 
-        if (windowWidth < originalWidth) {
-            logoImage.src =
-                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+    if (windowWidth < originalWidth) {
+        logoImage.src =
+            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-        } else {
-            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-            logoImage.alt = 'Logo'; // Restaura el atributo alt
-        }
-    });
+    } else {
+        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+        logoImage.alt = 'Logo'; // Restaura el atributo alt
+    }
+});
 </script>
