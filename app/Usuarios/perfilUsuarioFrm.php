@@ -9,7 +9,7 @@ if (!isset($_SESSION['idusuario'])) {
 ?>
 <div class="bottom-rectangle-perfil">
     <div class="text-perfil">Perfil de usuario</div>
-    <a onclick="opcion('proyecto')" class="text-inicio-perfil">
+    <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-perfil">
         <div>Ir al inicio</div>
     </a>
 </div>

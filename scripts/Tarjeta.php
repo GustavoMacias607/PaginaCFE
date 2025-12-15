@@ -124,12 +124,14 @@ class TarjetaManoObra
         $R['estado'] = "OK";
         $c = $this->conn;
         try {
-            $consulta = "call spAuxManoObraInsertar(:IdManoObra,:IdConcepto,:Rendimiento);";
+            // Llamamos al SP actualizado que ahora acepta cantidad
+            $consulta = "call spAuxManoObraInsertar(:IdManoObra, :IdConcepto, :Rendimiento, :Cantidad);";
             $sql = $c->prepare($consulta);
             $sql->execute(array(
                 "IdManoObra" => $datos->idmanoobra,
                 "IdConcepto" => $datos->idConcepto,
-                "Rendimiento" => $datos->rendimiento
+                "Rendimiento" => $datos->rendimiento,
+                "Cantidad" => $datos->cantidad  // <-- NUEVO
             ));
             unset($c);
         } catch (PDOException $e) {
@@ -137,6 +139,7 @@ class TarjetaManoObra
         }
         return $R;
     }
+
 
     /*Método para obtener todos los ManoObra que le corresponden al concepto
  Recibe el id del concepto para hacer la busqueda*/
@@ -147,15 +150,13 @@ class TarjetaManoObra
         try {
             $consulta = "call spAuxManoObraMostrar(:IdConcepto);";
             $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "IdConcepto" => $datos->idConcepto
-            ));
+            $sql->execute(array("IdConcepto" => $datos->idConcepto));
 
             $R['filas'] = $sql->rowCount();
             if ($R['filas'] <= 0) {
                 $R['estado'] = "Sin Resultados";
             } else {
-                $R['datos'] = $sql->fetchAll();
+                $R['datos'] = $sql->fetchAll(PDO::FETCH_ASSOC);
             }
             $c = null;
         } catch (PDOException $e) {
@@ -163,6 +164,7 @@ class TarjetaManoObra
         }
         return $R;
     }
+
 
     /*Metodo para eliminar los ManoObra que tiene asignado el concepto
     recibe el id del concepto*/

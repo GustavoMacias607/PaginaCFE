@@ -13,6 +13,7 @@ if (!isset($_SESSION['idusuario'])) {
     header("Location: ../");
     die();
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,7 +23,7 @@ if (!isset($_SESSION['idusuario'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="../bootstrap-5.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../fontawesome-free-6.4.2-web/css/all.min.css" rel="stylesheet">
-    <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet">
+    <!-- <link href="../DataTables-1.11.3/datatables.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="Navbar.css">
     <link rel="stylesheet" href="NavbarMovile.css">
     <link rel="stylesheet" href="./Materiales/stylesmateriales.css">
@@ -46,13 +47,12 @@ if (!isset($_SESSION['idusuario'])) {
 
 <body>
 
-
     <!-- Navbar movil -->
     <div style="width: 100%;">
         <nav class="navMovil" id="navbar-mobil">
             <div class="logoMovil">
                 <a href="index.php" class="linkIcono">
-                    <img src="../img/cfedistribucionblanco.png" height="100%" alt="">
+                    <img src="img/LogoPrincipal.png" height="100%" alt="">
                 </a>
                 <div class="desMenu">
                     <div>
@@ -108,12 +108,12 @@ if (!isset($_SESSION['idusuario'])) {
 
     <!-- Navbar normal -->
     <nav class="nav">
-        <div class='logo'>
+        <div class='logo' style="transform: translateY(-3px);">
             <div style="text-decoration: none; height: 100%;">
-                <img src="../img/cfedistribucionblanco.png" height="60rem">
+                <img src="img/LogoPrincipal.png" height=60rem">
             </div>
         </div>
-        <ul class='menu'>
+        <ul class='menu' style="transform: translateY(-6px);">
             <li>
                 <a class="opcionesMenu" onclick="preciona(this);"
                     href="javascript:opcion('conceptos');">Conceptos<br>Tarjetas PU</a>
@@ -159,6 +159,8 @@ if (!isset($_SESSION['idusuario'])) {
 
                         echo '<a class=" opcionesMenu tex" onclick="javascript:preciona(this);"
                         href="javascript:opcion(`zonas`);">Zonas</a>';
+
+                        echo '<a class="opcionesMenu tex" onclick="respaldarBd();" style="cursor: pointer;">Respaldar BD</a>';
                     }
                     ?>
                     <a class="tex" href="index.php?x=1">Cerrar sesión</a>
@@ -169,9 +171,11 @@ if (!isset($_SESSION['idusuario'])) {
     </nav>
 
 
+
     <!-- Inicio del contenido principal -->
     <div id="mainContent">
     </div>
+
     <!-- Final del contenido principal -->
 
     <script src="https://unpkg.com/xlsx@0.16.9/dist/xlsx.full.min.js"></script>
@@ -198,11 +202,10 @@ if (!isset($_SESSION['idusuario'])) {
     <script src="js/funciones_ManoObra.js"></script>
     <script src="js/funciones_Maquinaria.js"></script>
     <script src="js/funciones_Tarjeta.js"></script>
-    <script src="js/funciones_Basicos.js"></script>
     <script src="js/funciones_Zonas.js"></script>
     <script src="js/funciones_Especificaciones.js"></script>
 
-    <script src="../DataTables-1.11.3/datatables.min.js"></script>
+    <!-- <script src="../DataTables-1.11.3/datatables.min.js"></script> -->
 
     <script src="js/SubCarpetaTarjeta/TarjetaMateriales.js"></script>
     <script src="js/SubCarpetaTarjeta/TarjetaManoObra.js"></script>
@@ -242,13 +245,20 @@ if (!isset($_SESSION['idusuario'])) {
 
 
         function preciona(valor) {
-            console.log(valor);
+
             let opciones = document.querySelectorAll(".opcionesMenu");
-            console.log(opciones);
+
             opciones.forEach(opcion => {
                 opcion.classList.remove("precionado");
             });
             valor.classList.add('precionado');
+        }
+
+        function deseleccionar() {
+            let opciones = document.querySelectorAll(".opcionesMenu");
+            opciones.forEach(opcion => {
+                opcion.classList.remove("precionado");
+            });
         }
 
         function esconderMenu() {

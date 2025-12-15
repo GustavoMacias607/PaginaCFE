@@ -72,7 +72,7 @@ function displayTableTipoEsp(page) {
 
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                <td class="Code">${record.codigo}</td>
+                <td class="Code" style="text-align: right;">${record.codigo}</td>
                 <td>${(!record.nombretipo == "") ? record.nombretipo : "---"}</td>
                      <td class="estatus">
                 <div style="display: flex; justify-content: space-around; align-items: center;">

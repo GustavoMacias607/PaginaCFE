@@ -1,14 +1,25 @@
 async function GeneradorTablaConceptoPDF() {
     const container = document.getElementById('contenedor-cfe');
+    const divCarga = document.getElementById("divCargaExport");
+    const textoCarga = document.getElementById("porcentajeExportacion");
+
     if (!container) {
         console.error('Contenedor "contenedor-cfe" no encontrado');
         return;
     }
+    // Mostrar mensaje de carga
+    divCarga.style.display = "flex";
+    textoCarga.textContent = "Cargando para exportar... 0%";
+
     container.innerHTML = '';
     let conceptos = Object.values(editedRows);
-    contador = 0;
+
+    const total = conceptos.length;
+    let procesadas = 0;
+
     for (const concepto of conceptos) {
-        contador++;
+        if (pantallaFuncion != "addProyTermFrm") return;
+        // Construir HTML de la tarjeta del concepto
         let conceptoHTML = `
             <div id="concepto-${concepto.idconcepto}" class="tarjeta-concepto">
                 <div class="contTabla-materialesmodal_catalogo">
@@ -16,15 +27,17 @@ async function GeneradorTablaConceptoPDF() {
                         <table style="width: 100rem">
                             <thead>
                                 <tr class="todosBordes">
-                                    <td class="textIzq" style="text-align: justify; height: fit-content; ">Para: ${datosProyecto.nombre}</td>
+                                    <td class="textIzq" style="text-align: justify; height: fit-content;">Para: ${datosProyecto.nombre}</td>
                                 </tr>
                             </thead>
                         </table>
                         <table style="width: 100rem">
                             <thead>
                                 <tr class="todosBordes">
-                                    <th class="textIzq" style="width: 9rem;  text-align: justify;  ">No. Concepto</th>
-                                    <td class="textDer" style="width:4rem; border: 1px solid #000;">${String(contador).padStart(3, '0')}</td>
+                                    <th class="textIzq" style="width: 9rem;">No. Concepto</th>
+                                    <td class="textDer" style="width:4rem; border: 1px solid #000;">${String(procesadas + 1).padStart(3, '0')}</td>
+                                    <th class="textIzq" style="width: 9rem;">Fecha</th>
+                                    <td class="textDer" style="width:10rem; border: 1px solid #000;">${ObtenerFechaActualDMY()}</td>
                                     <td class="textCen" style="border: 1px solid #000;">Análisis de los precios unitarios de los conceptos de trabajo</td>
                                 </tr>
                             </thead>
@@ -35,13 +48,13 @@ async function GeneradorTablaConceptoPDF() {
                                     <th class="textCen" style="width: 9rem;">ID</th>
                                     <th class="textCen">Concepto</th>
                                     <th class="textCen" style="width: 10rem;">Unidad</th>
-                                    <th class="textCen" style="width: 8rem; display: table-cell;">Cantidad</th>
+                                    <th class="textCen" style="width: 8rem;">Cantidad</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="todosBordes"> 
+                                <tr class="todosBordes">
                                     <td class="textIzq">${concepto.idconcepto}</td>
-                                    <td class="textJus" style="height: fit-content; text-align: justify;">${concepto.nombre}</td>
+                                    <td class="textJus" style="text-align: justify;">${concepto.nombre}</td>
                                     <td class="textIzq">${concepto.unidad}</td>
                                     <td class="textDer">${concepto.cantidad}</td>
                                 </tr>
@@ -49,39 +62,27 @@ async function GeneradorTablaConceptoPDF() {
                         </table>
                     </div>
                 </div>
-                <div class="titulo-conceptoPDF">
-                    <div class="pSeccion-catalogo">
-                        <div>Materiales</div>
-                    </div>
-                </div>
+
+                <!-- Secciones -->
+                <div class="titulo-conceptoPDF"><div class="pSeccion-catalogo"><div>Materiales</div></div></div>
                 <div id="materialesPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-conceptoPDF">
-                    <div class="pSeccion-catalogo">
-                        <div>Mano de obra</div>
-                    </div>
-                </div>
+
+                <div class="titulo-conceptoPDF"><div class="pSeccion-catalogo"><div>Mano de obra</div></div></div>
                 <div id="manoObraPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-conceptoPDF">
-                    <div class="pSeccion-catalogo">
-                        <div>Herramienta y equipo de seguridad</div>
-                    </div>
-                </div>
+
+                <div class="titulo-conceptoPDF"><div class="pSeccion-catalogo"><div>Herramienta y equipo de seguridad</div></div></div>
                 <div id="herramientaEquipoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-conceptoPDF">
-                    <div class="pSeccion-catalogo">
-                        <div>Maquinaria</div>
-                    </div>
-                </div>
+
+                <div class="titulo-conceptoPDF"><div class="pSeccion-catalogo"><div>Maquinaria</div></div></div>
                 <div id="maquinariaPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                <div class="titulo-conceptoPDF">
-                    <div class="pSeccion-catalogo">
-                        <div>Basico</div>
-                    </div>
-                </div>
+
+                <div class="titulo-conceptoPDF"><div class="pSeccion-catalogo"><div>Basico</div></div></div>
                 <div id="basicoPDF-${concepto.idconcepto}" class="contTabla-materialesmodal_catalogo"></div>
-                      <div class="contTabla-materialesmodal_catalogo">
+
+                <!-- Tabla de costos -->
+                <div class="contTabla-materialesmodal_catalogo">
                     <div>
-                        <table class="todosBordesCuadro">
+                     <table class="todosBordesCuadro">
                                  <tr> 
                                     <td></td>
                                     <td></td>
@@ -154,33 +155,56 @@ async function GeneradorTablaConceptoPDF() {
                                     <td class="terceraColumna"></td>
                                     <td></td>
                                 </tr>
-
                         </table>
                     </div>
                 </div>
             </div>
         `;
+
+        // Agregar al contenedor
         container.innerHTML += conceptoHTML;
+
+        // Cargar datos específicos
         await TraerMaterialesConceptoPDF(concepto.idconcepto, false);
         await TraerManoObrasConceptoPDF(concepto.idconcepto, false);
         await TraerMaquinariaConceptoPDF(concepto.idconcepto, false);
         await TraerBasicoConceptoPDF(concepto.idconcepto, false);
+
+        // Actualizar progreso
+        procesadas++;
+        const porcentaje = Math.round((procesadas / total) * 100);
+        textoCarga.textContent = `Cargando para exportar... ${porcentaje}%`;
     }
+
+    // Todo cargado
+    textoCarga.textContent = "Listo para exportar - 100% ";
+    await new Promise(resolve => setTimeout(resolve, 400));
+
+    let btn = document.getElementById("btnExportarPDF");
+    btn.removeAttribute("disabled");
+    btn.classList.remove("btnClickeadoExportar");
+
+    let btnExcel = document.getElementById("btnExportar");
+    btnExcel.removeAttribute("disabled");
+    btnExcel.classList.remove("btnClickeadoExportar");
+    document.getElementById("divCargaExport").style.display = "none";
+
+    divCarga.style.display = "none";
 }
 
 function TraerMaterialesConceptoPDF(idConceptoProyecto, excel) {
+    const excelFlag = excel;
     return new Promise((resolve, reject) => {
         let MaterialesConcepto = [];
-        const datos = {};
-        datos.idConcepto = idConceptoProyecto;
+        const datos = { idConcepto: idConceptoProyecto };
         let json = JSON.stringify(datos);
         let url = "../ws/TarjetaMateriales/wsGetMaterialesTarjeta.php";
+
         $.post(url, json, (responseText, status) => {
             try {
                 if (status == "success") {
                     let resp = JSON.parse(responseText);
                     let datosBd = resp.datos;
-
                     if (datosBd) {
                         datosBd.forEach((datos) => {
                             MaterialesConcepto.push({
@@ -191,12 +215,13 @@ function TraerMaterialesConceptoPDF(idConceptoProyecto, excel) {
                                 fechaprecio: datos.fechaprecio,
                                 unidad: datos.unidad,
                                 cantidad: datos.cantmaterial,
-                                suministrado: datos.suministrado == 1 ? true : false,
+                                suministrado: datos.suministrado == 1,
                                 estatus: datos.estatus
                             });
                         });
                     }
-                    if (!excel) {
+
+                    if (!excelFlag) {
                         GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto);
                     }
                     resolve(MaterialesConcepto);
@@ -268,6 +293,7 @@ function GeneradorTablaMaterialesPDF(MaterialesConcepto, idConceptoProyecto) {
 }
 
 function TraerManoObrasConceptoPDF(idConceptoProyecto, excel) {
+    const excelFlag = excel; // <-- capturamos el valor
     return new Promise((resolve, reject) => {
         let ManoObraConcepto = [];
         const datos = {};
@@ -281,23 +307,28 @@ function TraerManoObrasConceptoPDF(idConceptoProyecto, excel) {
                     let datosBd = resp.datos;
                     if (datosBd) {
                         datosBd.forEach((datos) => {
-                            const cantidad = 1 / datos.rendimiento;
-                            const sr = datos.salario * cantidad;
-                            const importe = datos.rendimiento === 0 ? 0 : sr / datos.rendimiento;
+                            const salario = parseFloat(datos.salario) || 0;
+                            const rendimiento = parseFloat(datos.rendimiento) || 0;
+                            const cantidad = parseFloat(datos.cantidad) || 0;
+
+                            const sr = parseFloat((salario * cantidad).toFixed(2));
+                            const importe = rendimiento === 0 ? 0 : parseFloat((sr / rendimiento).toFixed(2));
+
                             ManoObraConcepto.push({
                                 idmanoobra: datos.idmanoobra,
                                 categoria: datos.categoria,
                                 unidad: datos.unidad,
-                                salario: datos.salario,
-                                rendimiento: datos.rendimiento,
+                                salario: salario,
+                                rendimiento: rendimiento,
                                 cantidad: cantidad,
                                 sr: sr,
                                 importe: importe,
                                 estatus: datos.estatus,
                             });
                         });
+
                     }
-                    if (!excel) {
+                    if (!excelFlag) {
                         GeneradorTablaManoObraPDF(ManoObraConcepto, idConceptoProyecto);
                     }
                     resolve(ManoObraConcepto);
@@ -430,6 +461,7 @@ function GeneradorTablaHerramientaEquipoPDF(idConceptoProyecto, totalImporteMano
 }
 
 function TraerMaquinariaConceptoPDF(idConceptoProyecto, excel) {
+    const excelFlag = excel;
     return new Promise((resolve, reject) => {
         let MaquinariaConcepto = [];
         const datos = {};
@@ -454,7 +486,7 @@ function TraerMaquinariaConceptoPDF(idConceptoProyecto, excel) {
                             });
                         });
                     }
-                    if (!excel) {
+                    if (!excelFlag) {
                         GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto);
                     }
 
@@ -525,6 +557,7 @@ function GeneradorTablaMaquinariaPDF(MaquinariaConcepto, idConceptoProyecto) {
 }
 
 function TraerBasicoConceptoPDF(idConceptoProyecto, excel) {
+    const excelFlag = excel;
     return new Promise((resolve, reject) => {
         let BasicoConcepto = [];
         const datos = {};
@@ -548,7 +581,7 @@ function TraerBasicoConceptoPDF(idConceptoProyecto, excel) {
                             });
                         });
                     }
-                    if (!excel) {
+                    if (!excelFlag) {
                         GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto);
                     }
                     resolve(BasicoConcepto);
@@ -575,7 +608,7 @@ function GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto) {
 
     let basicoHTML = `
         <div>
-            <table>
+            <table style="width: 100rem">
                 <thead>
                     <tr class="todosBordes">
                         <th  class="textCen" style="width: 8rem;">ID</th>
@@ -620,45 +653,85 @@ function GeneradorTablaBasicoPDF(BasicoConcepto, idConceptoProyecto) {
     actualizarCostoTotalPDF(idConceptoProyecto);
 }
 
-function actualizarCostoTotalPDF(idConceptoProyecto) {
-    const totalMateriales = parseFloat(document.getElementById(`SumaImporteMaterialesPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalManoObra = parseFloat(document.getElementById(`SumaImporteManoObraPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalHerramientaEquipo = parseFloat(document.getElementById(`SumaImporteHerramientaEquipoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalMaquinaria = parseFloat(document.getElementById(`SumaImporteMaquinariaPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalBasico = parseFloat(document.getElementById(`SumaImporteBasicoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-
-    const costoDirecto = totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico;
-    const costoIndirecto = costoDirecto * (costosAdicionales.CIndirecto / 100);
-    const subTotal1 = costoDirecto + costoIndirecto;
-    const financiamiento = subTotal1 * (costosAdicionales.Financiamiento / 100);;
-    const subTotal2 = financiamiento + subTotal1;
-    const utilidad = subTotal2 * (costosAdicionales.utilidad / 100);
-    const subTotal3 = utilidad + subTotal2;
-    const cargosAdicionales = subTotal3 * (costosAdicionales.CAdicionales / 100);
-    const precioUnitario = subTotal3 + cargosAdicionales;
-
-    let letras = numeroALetras(precioUnitario.toString());
-
-    const formatoMXN = new Intl.NumberFormat('es-MX', {
-        style: 'currency',
-        currency: 'MXN'
-    });
-
-    document.getElementById(`CostoDirectoPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(costoDirecto);
-    document.getElementById(`costoIndirectoPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(costoIndirecto);
-    document.getElementById(`subTotal1PDF-${idConceptoProyecto}`).innerText = formatoMXN.format(subTotal1);
-    document.getElementById(`financiamientoPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(financiamiento);
-    document.getElementById(`subTotal2PDF-${idConceptoProyecto}`).innerText = formatoMXN.format(subTotal2);
-    document.getElementById(`utilidadPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(utilidad);
-    document.getElementById(`subTotal3PDF-${idConceptoProyecto}`).innerText = formatoMXN.format(subTotal3);
-    document.getElementById(`cargosAdicionalesPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(cargosAdicionales);
-    document.getElementById(`precioUnitarioPDF-${idConceptoProyecto}`).innerText = formatoMXN.format(precioUnitario);
-    document.getElementById(`LecturaPrecioUnitarioPDF-${idConceptoProyecto}`).innerText = `(" ${letras}")`;
+async function actualizarCostoTotalPDF(idConceptoProyecto) {
+    try {
+        // Helper para obtener el valor numérico seguro de un elemento
+        const obtenerValorElemento = async (id) => {
+            const elemento = document.getElementById(id);
+            if (!elemento) {
+                console.warn(`Elemento no encontrado: ${id}`);
+                return 0;
+            }
+            const texto = elemento.innerText || elemento.textContent || "";
+            const numero = parseFloat(texto.replace(/[^0-9.-]+/g, "")) || 0;
+            return numero;
+        };
 
 
+        // Obtener todos los totales (esperando a que existan)
+        const totalMateriales = await obtenerValorElemento(`SumaImporteMaterialesPDF-${idConceptoProyecto}`);
+        const totalManoObra = await obtenerValorElemento(`SumaImporteManoObraPDF-${idConceptoProyecto}`);
+        const totalHerramientaEquipo = await obtenerValorElemento(`SumaImporteHerramientaEquipoPDF-${idConceptoProyecto}`);
+        const totalMaquinaria = await obtenerValorElemento(`SumaImporteMaquinariaPDF-${idConceptoProyecto}`);
+        const totalBasico = await obtenerValorElemento(`SumaImporteBasicoPDF-${idConceptoProyecto}`);
+        // Validar que costosAdicionales exista y tenga valores numéricos
+        if (typeof costosAdicionales !== "object" || costosAdicionales === null) {
+            throw new Error("El objeto 'costosAdicionales' no está definido o es inválido.");
+        }
 
+        const {
+            CIndirecto = 0,
+            Financiamiento = 0,
+            utilidad = 0,
+            CAdicionales = 0
+        } = costosAdicionales;
+
+        // Calcular totales
+        const costoDirecto = totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico;
+        const costoIndirecto = costoDirecto * (CIndirecto / 100);
+        const subTotal1 = costoDirecto + costoIndirecto;
+        const financiamiento = subTotal1 * (Financiamiento / 100);
+        const subTotal2 = subTotal1 + financiamiento;
+        const utilidadCalc = subTotal2 * (utilidad / 100);
+        const subTotal3 = subTotal2 + utilidadCalc;
+        const cargosAdicionales = subTotal3 * (CAdicionales / 100);
+        const precioUnitario = subTotal3 + cargosAdicionales;
+
+        // Convertir a letras
+        const letras = numeroALetras(precioUnitario.toFixed(2).toString());
+
+        // Formato de moneda
+        const formatoMXN = new Intl.NumberFormat("es-MX", {
+            style: "currency",
+            currency: "MXN"
+        });
+
+        // Helper para actualizar texto de forma segura
+        const actualizarTexto = (id, valor) => {
+            const elemento = document.getElementById(id);
+            if (!elemento) {
+                console.warn(`No se encontró el elemento con ID: ${id}`);
+                return;
+            }
+            elemento.innerText = valor;
+        };
+
+        // Actualizar campos en pantalla
+        actualizarTexto(`CostoDirectoPDF-${idConceptoProyecto}`, formatoMXN.format(costoDirecto));
+        actualizarTexto(`costoIndirectoPDF-${idConceptoProyecto}`, formatoMXN.format(costoIndirecto));
+        actualizarTexto(`subTotal1PDF-${idConceptoProyecto}`, formatoMXN.format(subTotal1));
+        actualizarTexto(`financiamientoPDF-${idConceptoProyecto}`, formatoMXN.format(financiamiento));
+        actualizarTexto(`subTotal2PDF-${idConceptoProyecto}`, formatoMXN.format(subTotal2));
+        actualizarTexto(`utilidadPDF-${idConceptoProyecto}`, formatoMXN.format(utilidadCalc));
+        actualizarTexto(`subTotal3PDF-${idConceptoProyecto}`, formatoMXN.format(subTotal3));
+        actualizarTexto(`cargosAdicionalesPDF-${idConceptoProyecto}`, formatoMXN.format(cargosAdicionales));
+        actualizarTexto(`precioUnitarioPDF-${idConceptoProyecto}`, formatoMXN.format(precioUnitario));
+        actualizarTexto(`LecturaPrecioUnitarioPDF-${idConceptoProyecto}`, `("${letras}")`);
+
+    } catch (error) {
+        console.error("Error en actualizarCostoTotalPDF:", error);
+    }
 }
-
 
 function numeroALetras(precioUnitario) {
     const unidades = [

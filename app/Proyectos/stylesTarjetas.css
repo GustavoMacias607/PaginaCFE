@@ -1,0 +1,286 @@
+.pagRegistrosTarjetas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 2rem;
+}
+
+.cantregTarjetas {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cantregistrosTarjetas {
+  padding: 0.25rem;
+  border: 1px solid #008e5a;
+  border-radius: 4px;
+  background-color: white;
+  color: #008e5a;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 0.25rem;
+}
+
+.pagination button {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.text1,
+.text2 {
+  color: #333;
+  font-weight: bold;
+}
+
+/* Estilos para las tarjetas de concepto */
+.tarjeta-concepto {
+  margin-bottom: 2rem;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.titulo-concepto {
+  margin: 1rem 0 0.5rem 0;
+}
+
+.pSeccion-catalogo {
+  background-color: #008e5a;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.contTabla-materialesmodal_catalogo {
+  margin: 0.5rem 0;
+}
+
+.tabla-container-tablaTarjeta {
+  overflow-x: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.tabla-container-tablaTarjeta table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.encabezadoTablasTarjeta th {
+  background-color: #008e5a;
+  color: white;
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid #dee2e6;
+}
+
+.tabla-container-tablaTarjeta td {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.tabla-container-tablaTarjeta tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.tabla-container-tablaTarjeta tr:hover {
+  background-color: #e9ecef;
+}
+
+/* Estilos para totales */
+.totalesTablas {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+.subtotales_textos {
+  font-weight: bold;
+  color: #333;
+  font-size: 1rem;
+}
+
+.subtotales_numeros_top {
+  font-weight: bold;
+  color: #008e5a;
+  font-size: 1.1rem;
+}
+
+.claseTotales {
+  background-color: #e8f5e8 !important;
+  border: 2px solid #008e5a !important;
+}
+
+/* Separador */
+.separador-tarjetas {
+  border: none;
+  border-top: 2px dashed #008e5a;
+  margin: 2rem 0;
+}
+
+/* Estilos para tablas específicas */
+#tabla-MaterialesCatalogo th,
+#tabla-MaterialesCatalogo td {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+#tabla-conceptosCatalogo th,
+#tabla-conceptosCatalogo td {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+}
+
+/* Estilos para texto alineado a la derecha */
+.text-align-right {
+  text-align: right !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .pagRegistrosTarjetas {
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1rem;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .tarjeta-concepto {
+    margin: 1rem;
+    padding: 0.5rem;
+  }
+
+  .tabla-container-tablaTarjeta {
+    font-size: 0.8rem;
+  }
+}
+
+/* Estilos para el estado de carga */
+.tarjeta-cargando {
+  opacity: 0.7;
+  background-color: #f8f9fa;
+}
+
+.tarjeta-cargando::after {
+  content: "Cargando...";
+  display: block;
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Botones de exportación */
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.fa-solid-Siguiente-catalogo {
+  background-color: #008e5a;
+  color: white;
+}
+
+.btnClickeadoExportar {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Iconos */
+.coloresIcono {
+  color: #008e5a;
+  font-size: 1.2rem;
+}
+
+.coloresIcono:hover {
+  color: #006b47;
+}
+
+/* Estados de las filas */
+.fila {
+  transition: background-color 0.2s ease;
+}
+
+.fila:hover {
+  background-color: #e8f5e8 !important;
+}
+
+.Code {
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+}
+
+.estatus {
+  text-align: center;
+}
+
+/* Filtros y búsqueda */
+.label-container-manodeobra {
+  position: relative;
+  display: inline-block;
+}
+
+#search-input {
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  border: 1px solid #008e5a;
+  border-radius: 4px;
+  width: 250px;
+}
+
+.icon-manodeobra {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #008e5a;
+}
+
+/* Toggle estatus */
+.toggle-estatus-manodeobra {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-estatus-manodeobra img {
+  cursor: pointer;
+  width: 35px;
+  height: 20px;
+}

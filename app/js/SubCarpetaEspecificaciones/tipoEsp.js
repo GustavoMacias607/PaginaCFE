@@ -206,6 +206,7 @@ async function MostrartablaConceptoEspecificacion(idTipoEsp, opc) {
                         objTabla2ModalConceptoPrincipal.push({
                             idtipo: datos.idtipo,
                             idespecificacion: datos.idespecificacion,
+                            idconteo: datos.idconteo,
                             codigo: datos.codigo,
                             nombretipo: datos.nombretipo,
                             descripcion: datos.descripcion,
@@ -312,12 +313,10 @@ function AddTipoValidar() {
 
     }
     let json = JSON.stringify(datos);
-    console.log(json);
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     guardarTipoEspEnBD(msg);
                 }
@@ -335,7 +334,6 @@ function LlenarCamposAgregar(valor) {
     if (valor) {
         const lecturaConcepto = document.querySelector('#LecturaConcepto');
         lecturaConcepto.style.display = 'none';
-        console.log(lecturaConcepto);
         let familia = document.getElementById("addFamilia");
         familia.value = "";
         familia.disabled = false;

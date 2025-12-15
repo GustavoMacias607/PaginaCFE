@@ -13,7 +13,7 @@ if (!isset($_SESSION['idusuario'])) {
         <div class="text-usuarios">Usuarios</div>
         <button type="button" class="btn btn-agregar-material" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AddlimpiarModalUsuario();">Agregar usuario</button>
-        <a onclick="opcion('proyecto')" class="text-inicio-usuarios">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-usuarios">
             <div>Ir al inicio</div>
         </a>
     </div>

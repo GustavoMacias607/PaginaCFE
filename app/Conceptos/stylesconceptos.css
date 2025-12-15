@@ -379,12 +379,23 @@ th {
   background-color: #cccccc;
   cursor: not-allowed;
 }
+/* 🔹 Nuevo contenedor para aislar el checkbox */
+.checkbox-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 24px; /* Ajusta según el tamaño del checkbox */
+  height: 24px;
+  z-index: 1; /* Evita que tape otros elementos */
+}
 
 /* Ocultamos el checkbox original */
 .custom-checkbox {
   position: absolute;
   opacity: 0;
   cursor: pointer;
+  z-index: 2;
 }
 
 /* Estilos del diseño del checkbox */
@@ -397,6 +408,7 @@ th {
   transition: background-color 0.3s ease;
   cursor: pointer;
   position: relative;
+  z-index: 3; /* Asegura que esté encima solo de su área */
 }
 
 /* Cambiamos el color del checkbox cuando está marcado */
@@ -411,6 +423,7 @@ th {
   display: none;
 }
 
+/* Mostramos la palomita cuando está marcado */
 .custom-checkbox:checked + .checkbox-design:after {
   display: block;
 }
@@ -425,6 +438,7 @@ th {
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
 }
+
 /*
 *
 *

@@ -39,7 +39,11 @@ if (!isset($_SESSION['idusuario'])) {
             class="btn btn-agregar-conceptos esconderBoton">
             Exportar datos a PDF
         </button>
-        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
+        <div id="divCargaExport"
+            style="font-size: larger; text-align: center; display:flex; align-items: center; margin-left: 2rem;">
+            <div id="textoCargaDiv" style="margin: auto 0 auto 0;"> <span id="porcentajeExportacion">0%</span> </div>
+        </div>
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -87,7 +91,7 @@ if (!isset($_SESSION['idusuario'])) {
         <table id="tabla-conceptos">
             <thead class="">
                 <tr>
-                    <th style="width: 8rem;">
+                    <th style="width: 12rem;">
                         <button id="sort-id" class="sort-button">
                             ID <i class="fa-solid fa-arrow-up-wide-short"></i>
                         </button>
@@ -140,91 +144,100 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
-<div id="contenedor-cfe" style="margin-top: 50rem; font-size: 20px;">
+<div id="contenedor-cfe" style="font-size: 20px; display: none;">
 
 </div>
+
 <!-- Modal insertar conceptos -->
 <div class="modal modal-conceptos fade" id="AgregarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Agregar concepto</h1>
+                <h1 class="modal-title fs-5" style="color: #303030;">Agregar concepto</h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-conceptosbasicos">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
+                <h1 class="modal-title fs-5" style="color: #303030;">Es requerido: *</h1>
+
                 <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddidInputConcepto" onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('Add');">
+                    <label for="AddidInputConcepto" class="form-label" style="color: #303030;">ID*</label>
+                    <input type="text" class="form-control inputLleno" id="AddidInputConcepto"
+                        onblur="CompruebaTieneAlgoInput(this);checkConcepto('Add');">
                 </div>
+
                 <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddnombreInputConcepto" rows="4"></textarea>
+                    <label for="AddnombreInputConcepto" class="form-label" style="color: #303030;">Nombre*</label>
+                    <textarea class="form-control inputLleno" id="AddnombreInputConcepto" rows="4" maxlength="1500"
+                        oninput="actualizarContador('Add')" onblur="CompruebaTieneAlgoInput(this)"></textarea>
+                    <div id="AddcontadorNombre" class="text-end" style="font-size: 0.9rem; color: #555;">0/1500</div>
                 </div>
+
                 <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerencias(this, 'AddUnidad')"
-                        onfocus="mostrarSugerencias(this, 'AddUnidad')"
-                        onblur="ocultarSugerencias('AddUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        id="AddunidadInputConcepto" autocomplete="off">
-                    <div id="Addsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    <label for="AddunidadInputConcepto" class="form-label" style="color: #303030;">Unidad*</label>
+                    <input type="text" class="form-control inputLleno" id="AddunidadInputConcepto"
+                        oninput="mostrarSugerencias(this, 'AddUnidad');"
+                        onfocus="mostrarSugerencias(this, 'AddUnidad');"
+                        onblur="ocultarSugerencias('AddUnidad');CompruebaTieneAlgoInput(this)" autocomplete="off">
+                    <div id="Addsugerencias" class="sugerencias-box"></div>
                 </div>
+
                 <div class="modal-footer modal-footer-conceptos">
-                    <button type="button" class="btn btn-primary"
-                        onclick="javascript:AddConceptoValidar();">Guardar</button>
+                    <button type="button" class="btn btn-primary" onclick="AddConceptoValidar()">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Modal modificar conceptos-->
+
+<!-- Modal modificar conceptos -->
 <div class="modal fade modal-conceptos" id="EditarModal" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border: 3px solid #008E5A;">
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0;">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Modificar concepto
-                </h1>
+                <h1 class="modal-title fs-5" style="color: #303030;">Modificar concepto</h1>
                 <button type="button" class="fa-solid fa-xmark btnclose-conceptos" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
             <div class="modal-body modal-body-conceptosbasicos">
-                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030;">Es requerido: *</h1>
-                <input type="text" class="form-control d-none" id="UpdidAnterior" style="border: 3px solid #008E5A;">
-                <input type="text" class="form-control d-none" id="UpdTotal" style="border: 3px solid #008E5A;">
+                <h1 class="modal-title fs-5" style="color: #303030;">Es requerido: *</h1>
+
+                <input type="text" class="form-control d-none" id="UpdidAnterior">
+                <input type="text" class="form-control d-none" id="UpdTotal">
+
                 <div class="mb-3">
-                    <label for="idInput" class="form-label" style="color: #303030;">ID*</label>
-                    <input type="text" class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);checkConcepto('upd');" id="UpdidInput">
+                    <label for="UpdidInput" class="form-label" style="color: #303030;">ID*</label>
+                    <input type="text" class="form-control inputLleno" id="UpdidInput"
+                        onblur="CompruebaTieneAlgoInput(this);checkConcepto('upd');">
                 </div>
+
                 <div class="mb-3">
-                    <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <textarea type="text" class="form-control inputLleno"
-                        onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnombreInput" rows="4"></textarea>
+                    <label for="UpdnombreInput" class="form-label" style="color: #303030;">Nombre*</label>
+                    <textarea class="form-control inputLleno" id="UpdnombreInput" rows="4" maxlength="1500"
+                        oninput="actualizarContador('Upd')" onblur="CompruebaTieneAlgoInput(this)"></textarea>
+                    <div id="UpdcontadorNombre" class="text-end" style="font-size: 0.9rem; color: #555;">0/1500</div>
                 </div>
+
                 <div class="mb-3">
-                    <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
-                    <input type="text" oninput="mostrarSugerencias(this, 'UpdUnidad')"
-                        onfocus="mostrarSugerencias(this, 'UpdUnidad')"
-                        onblur="ocultarSugerencias('UpdUnidad');CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" style="font-family: 'latoBold', sans-serif;" id="UpdunidadInput"
-                        autocomplete="off">
-                    <div id="Updsugerencias" class="sugerencias-box" style="font-family: 'latoBold', sans-serif;"></div>
+                    <label for="UpdunidadInput" class="form-label" style="color: #303030;">Unidad*</label>
+                    <input type="text" class="form-control inputLleno" id="UpdunidadInput"
+                        oninput="mostrarSugerencias(this, 'UpdUnidad');"
+                        onfocus="mostrarSugerencias(this, 'UpdUnidad');"
+                        onblur="ocultarSugerencias('UpdUnidad');CompruebaTieneAlgoInput(this)" autocomplete="off">
+                    <div id="Updsugerencias" class="sugerencias-box"></div>
                 </div>
-                <div class=" modal-footer modal-footer-conceptos">
-                    <button type="button" class="btn btn-primary"
-                        onclick="javascript:UpdConceptoValidar()">Guardar</button>
+
+                <div class="modal-footer modal-footer-conceptos">
+                    <button type="button" class="btn btn-primary" onclick="UpdConceptoValidar()">Guardar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- Modal insertar conceptos de basicos -->
 <div class="modal modal-conceptos" id="AgregarModalBasi" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -247,7 +260,10 @@ if (!isset($_SESSION['idusuario'])) {
                 <div class="mb-3">
                     <label for="normaInputConceptoBasico" class="form-label" style="color: #303030;">Nombre*</label>
                     <textarea type="text" onblur="javascript:CompruebaTieneAlgoInput(this)"
-                        class="form-control inputLleno" id="AddnombreInputConceptoBasico" rows="3"></textarea>
+                        oninput="actualizarContadorBasico('Add')" class="form-control inputLleno"
+                        id="AddnombreInputConceptoBasico" rows="3"></textarea>
+                    <small id="AddcontadorNombreBasico" class="form-text text-muted"
+                        style="text-align:right; display:block;">0/1500</small>
                 </div>
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
@@ -292,9 +308,12 @@ if (!isset($_SESSION['idusuario'])) {
                 </div>
                 <div class="mb-3">
                     <label for="normaInput" class="form-label" style="color: #303030;">Nombre*</label>
-                    <textarea type="text" class="form-control inputLleno"
+                    <textarea type="text" class="form-control inputLleno" oninput="actualizarContadorBasico('Upd')"
                         onblur="javascript:CompruebaTieneAlgoInput(this)" id="UpdnombreInputBasico" rows="3"></textarea>
+                    <small id="UpdcontadorNombreBasico" class="form-text text-muted"
+                        style="text-align:right; display:block;">0/1500</small>
                 </div>
+
                 <div class="mb-3">
                     <label for="unidadInput" class="form-label" style="color: #303030;">Unidad*</label>
                     <input type="text" oninput="mostrarSugerencias(this, 'UpdUnidadBasico')"

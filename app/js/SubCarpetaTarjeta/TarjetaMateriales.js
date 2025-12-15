@@ -343,7 +343,6 @@ function eliminarFilaDelObjeto(codigo) {
 //Metodo para los filtros de la tabla
 function filterDataMaterialesTarjetaModal() {
     const unidadFilter = document.getElementById("selectUnidadMaterialesModal").value;
-    console.log(objTabla2Modal)
     filteredData2 = objTabla2Modal.filter(record => {
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
         return matchesUnidad;

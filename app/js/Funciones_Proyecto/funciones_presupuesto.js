@@ -15,7 +15,7 @@ let showPrecioUnitario = true;
 let showPUCantidad = true;
 
 function llenarCamposPaginaPresupuesto() {
-    PorsentajesZona(objZonas, true)
+    porcentajeZona(objZonas, true)
     showCostoDirecto = true;
     showPrecioUnitario = true;
     showPUCantidad = true;
@@ -45,6 +45,8 @@ function llenarCamposPaginaPresupuesto() {
         showPUCantidad = !showPUCantidad;
         updateColumnVisibility();
     });
+
+
 }
 function updateColumnVisibility() {
     const costoDirectoCols = document.querySelectorAll('.col-costo-directo');
@@ -64,12 +66,6 @@ function updateColumnVisibility() {
     document.getElementById('iconPUCantidad').className = !showPUCantidad ? 'fa fa-eye-slash' : 'fa fa-eye';
 }
 
-
-// function LlenarTablaConceptoPresupuesto() {
-//     conceptosDProyecto = [];
-//     LlenarCamposAgregar();
-//     obtenerConceptosPresupuesto();
-// }
 async function MostrarConceptosContenidosProyectoPresupuesto() {
     // Selecciona el elemento del spinner
     const spinner = document.querySelector("#spinnerPresupuesto");
@@ -97,6 +93,7 @@ async function MostrarConceptosContenidosProyectoPresupuesto() {
                         editedRows[datos.IdConcepto] = {
                             cantidad: datos.CantidadTotal,
                             estatus: datos.EstatusConcepto,
+                            idconteo: datos.IdConteo,
                             idconcepto: datos.IdConcepto,
                             nombre: datos.NombreConcepto,
                             nombreespe: "",
@@ -136,6 +133,7 @@ function displayTableConceptoPresupuesto(page) {
         style: 'currency',
         currency: 'MXN'
     });
+    let contador = 1;
     if (paginatedDataPresupuesto.length > 0) {
         paginatedDataPresupuesto.forEach((record, index) => {
 
@@ -150,6 +148,7 @@ function displayTableConceptoPresupuesto(page) {
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.innerHTML = `
+             <td style="text-align: right;">${contador}</td>
                   <td class="Code">${record.idconcepto}</td>
                     <td style="text-align: justify;">${record.nombre !== "" ? record.nombre : "---"}</td>
                     <td>${record.unidad !== "" ? record.unidad : "---"}</td>
@@ -160,11 +159,13 @@ function displayTableConceptoPresupuesto(page) {
                     `;
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
+            contador++;
             tableBody.appendChild(row);
         });
 
         let totalImporteConcepto = document.getElementById("TotalSumaImporteConceptos");
         totalImporteConcepto.innerHTML = formatoMXN.format(totalProyecto);
+
     } else {
         tableBody.innerHTML += `<tr>
                         <td colspan="8" class="Code">Sin resultados</td>
@@ -262,6 +263,7 @@ function setupPaginationConceptoPresupuesto() {
 function filterDataConceptoPresupuesto() {
     const searchText = document.getElementById("search-inputConceptos").value.toLowerCase();
     const statusFilter = 1;
+
     filteredDataPresupuesto = Object.values(editedRows).filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value != null && value.toString().toLowerCase().includes(searchText)
@@ -269,10 +271,10 @@ function filterDataConceptoPresupuesto() {
         const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesStatus;
     });
-
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableConceptoPresupuesto(currentPage);
     setupPaginationConceptoPresupuesto();
+
 }
 
 function llenarTablaConceptoPresupuesto() {
@@ -351,8 +353,6 @@ function TerminacionProyecto() {
             alert("Error: " + error)
         }
     });
-
-
 }
 
 
@@ -565,98 +565,149 @@ function llenarTablaMaterialesNo() {
 
 
 function llenarTablaMaquinariasProyecto() {
-    let total = 0;
     const tableBody = document.getElementById("table-bodyMaquinaria");
-    tableBody.innerHTML = "";
+    tableBody.innerHTML = ""; // Limpiar tabla
     const editedRowsArray = Object.values(objMaquinarias);
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
     });
+
+    let total = 0;
+
     if (editedRowsArray.length > 0) {
         editedRowsArray.forEach(record => {
-            const precioFormateado = record.PHM ? formatoMXN.format(record.PHM) : "---";
-            let importe = record.RHM * record.PHM
-            total += importe;
-            const importeFormateado = record.PHM ? formatoMXN.format(importe) : "---";
+            // Convertir valores a número seguro
+            const phm = parseFloat(record.PHM) || 0;
+            const rhm = parseFloat(record.RHM) || 0;
+            const importeTotal = parseFloat(record.Importe_Total) || 0;
+
+            // Formateos para mostrar
+            const phmFormateado = phm ? formatoMXN.format(phm) : "---";
+            const rhmFormateado = rhm ? rhm.toFixed(2) : "---";
+            const importeFormateado = importeTotal ? formatoMXN.format(importeTotal) : "---";
+
+            // Sumar al total
+            total += importeTotal;
+
+            // Crear fila
             const row = document.createElement('tr');
             row.classList.add('fila');
-            // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                    <td class="Code">${record.ID}</td>
-                    <td>${record.Descripcion !== "" ? record.Descripcion : "---"}</td>
-                    <td>${record.Unidad !== "" ? record.Unidad : "---"}</td>
-                   <td style="text-align: right;">${precioFormateado}</td>
-                   <td style="text-align: right;">${record.RHM !== "" ? record.RHM : "---"}</td>
-                    <td style="text-align: right;">${importeFormateado}</td>
-                `;
-            // Añadir eventos mouseover y mouseout
+                <td class="Code">${record.ID || "---"}</td>
+                <td>${record.Descripcion || "---"}</td>
+                <td>${record.Unidad || "---"}</td>
+                <td style="text-align: right;">${phmFormateado}</td>
+                <td style="text-align: right;">${rhmFormateado}</td>
+                <td style="text-align: right;">${importeFormateado}</td>
+            `;
+
+            // Eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
 
-            // Añadir la fila al tbody
+            // Añadir fila al tbody
             tableBody.appendChild(row);
         });
-        let totalImporteConcepto = document.getElementById("TotalSumaMaquinaria");
+
+        // Actualizar total en la etiqueta
+        const totalImporteConcepto = document.getElementById("TotalSumaMaquinaria");
         totalImporteConcepto.innerHTML = formatoMXN.format(total);
+
     } else {
-        const row = `
-        <tr class="fila">
-            <td colspan="6" class="Code">Sin resultados</td>
-        </tr>
-    `;
-        tableBody.innerHTML += row;
+        // Si no hay resultados
+        tableBody.innerHTML = `<tr class="fila"><td colspan="6" class="Code">Sin resultados</td></tr>`;
     }
 }
 
+
+
+
 function llenarTablaManoObraProyecto() {
-    let total = 0;
     const tableBody = document.getElementById("table-bodyManoObra");
     tableBody.innerHTML = "";
-    const editedRowsArray = Object.values(objManoObra);
+
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
     });
-    if (editedRowsArray.length > 0) {
-        editedRowsArray.forEach(record => {
-            const SalarioFormateado = record.Salario ? formatoMXN.format(record.Salario) : "---";
-            const SalarioRealFormateado = record.Salario_Real ? formatoMXN.format(record.Salario_Real) : "---";
-            const importeFormateado = record.Importe_Total ? formatoMXN.format(record.Importe_Total) : "---";
-            total += parseInt(record.Importe_Total);
-            const row = document.createElement('tr');
-            row.classList.add('fila');
-            // Establecer el contenido HTML de la fila
-            row.innerHTML = `
-                    <td class="Code">${record.ID}</td>
-                    <td>${record.Nombre !== "" ? record.Nombre : "---"}</td>
-                    <td>${record.Unidad !== "" ? record.Unidad : "---"}</td>
-                   <td style="text-align: right;">${SalarioFormateado}</td>
-                   <td style="text-align: right;">${record.Cantidad_Total !== "" ? record.Cantidad_Total : "---"}</td>
-                    <td style="text-align: right;">${SalarioRealFormateado}</td>
-                    <td style="text-align: right;">${importeFormateado}</td>
-                                
-                `;
-            // Añadir eventos mouseover y mouseout
-            row.addEventListener("mouseover", () => mostrarValores(row));
-            row.addEventListener("mouseout", () => ocultarValores(row));
 
-            // Añadir la fila al tbody
-            tableBody.appendChild(row);
-        });
-        let totalImporteConcepto = document.getElementById("TotalSumaManoObra");
-        totalImporteConcepto.innerHTML = formatoMXN.format(total);
-        llenarTablaHerramientas(total);
-        llenarTablaEquipo(total);
-    } else {
-        const row = `
-        <tr class="fila">
-            <td colspan="6" class="Code">Sin resultados</td>
-        </tr>
-    `;
-        tableBody.innerHTML += row;
+    const editedRowsArray = Object.values(objManoObra);
+
+    if (editedRowsArray.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="Code">Sin resultados</td></tr>`;
+        return;
     }
+
+    // 🔹 Agrupar por ID
+    const agrupado = {};
+    editedRowsArray.forEach(record => {
+        const id = record.ID;
+
+        if (!agrupado[id]) {
+            agrupado[id] = {
+                ID: id,
+                Nombre: record.Nombre,
+                Unidad: record.Unidad,
+                Salario: record.Salario,
+                Cantidad_Total: 0,
+                Salario_Real: 0,
+                Importe_Total: 0,
+                Importe_Normal: 0, // solo los normales
+                TipoConcepto: record.TipoConcepto // lo guardamos por si quieres mostrarlo
+            };
+        }
+
+        // Suma cantidades
+        agrupado[id].Cantidad_Total += parseFloat(record.Cantidad_Total) || 0;
+        agrupado[id].Salario_Real += parseFloat(record.Salario_Real) || 0;
+        agrupado[id].Importe_Total += parseFloat(record.Importe_Total) || 0;
+
+        // 🔸 Si es “Normal”, también lo sumamos a Importe_Normal
+        if (record.TipoConcepto === "Normal") {
+            agrupado[id].Importe_Normal += parseFloat(record.Importe_Total) || 0;
+        }
+    });
+
+    // 🔹 Convertir a arreglo
+    const filas = Object.values(agrupado);
+
+    let totalGeneral = 0;
+    let totalSoloNormales = 0;
+
+    filas.forEach(record => {
+        totalGeneral += record.Importe_Total;
+        totalSoloNormales += record.Importe_Normal;
+
+        const row = document.createElement("tr");
+        row.classList.add("fila");
+
+        row.innerHTML = `
+            <td class="Code">${record.ID}</td>
+            <td>${record.Nombre || "---"}</td>
+            <td>${record.Unidad || "---"}</td>
+            <td style="text-align: right;">${formatoMXN.format(record.Salario)}</td>
+            <td style="text-align: right;">${record.Cantidad_Total.toFixed(2)}</td>
+            <td style="text-align: right;">${formatoMXN.format(record.Salario_Real)}</td>
+            <td style="text-align: right;">${formatoMXN.format(record.Importe_Total)}</td>
+        `;
+
+        row.addEventListener("mouseover", () => mostrarValores(row));
+        row.addEventListener("mouseout", () => ocultarValores(row));
+
+        tableBody.appendChild(row);
+    });
+
+    // Mostrar totales
+    document.getElementById("TotalSumaManoObra").innerHTML = formatoMXN.format(totalGeneral);
+
+    // 🔹 Solo usar los “Normales” para Herramientas y Equipo
+    llenarTablaHerramientas(totalSoloNormales);
+    llenarTablaEquipo(totalSoloNormales);
 }
+
+
+
 
 
 function llenarTablaHerramientas(totalMano) {
@@ -694,5 +745,12 @@ function calculoConceptoPorcentaje(PrecioU) {
     PrecioU += PrecioU * (parseFloat(costosAdicionales.Financiamiento) / 100);
     PrecioU += PrecioU * (parseFloat(costosAdicionales.utilidad) / 100);
     PrecioU += PrecioU * (parseFloat(costosAdicionales.CAdicionales) / 100);
+    return PrecioU;
+}
+function calculoConceptoPorcentajeSinProyecto(PrecioU) {
+    PrecioU += PrecioU * (parseFloat(15) / 100);
+    PrecioU += PrecioU * (parseFloat(1) / 100);
+    PrecioU += PrecioU * (parseFloat(10) / 100);
+    PrecioU += PrecioU * (parseFloat(0.5) / 100);
     return PrecioU;
 }

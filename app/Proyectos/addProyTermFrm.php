@@ -34,14 +34,41 @@ if (!isset($_SESSION['idusuario'])) {
             echo    ' <button type="button" class="btn btnTabla btnTerminadoBn" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:addProyectoLimpiarModal();">Reutilizar</button>';
         }
+        if ($_SESSION["rol"] != "Invitado") {
+            echo    ' <button type="button" class="btn btnTabla btnTerminadoBn" data-bs-toggle="modal" data-bs-target="#confirmacionReabrir">Regresar estado</button>';
+        }
         ?>
 
-        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
 </div>
 
+
+<!-- Modal -->
+<div class="modal fade" id="confirmacionReabrir" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Cambiar estado del proyecto</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12">
+                    <label for="idInput" class="form-label" style="color: #303030;">¿Esta seguro de que desea cambiar el
+                        estado del proyecto a presupuesto?</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn fa-solid-cancelar" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="RegresarEstatusProyecto();">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div>
     <label for=""
         style="color:#303030; font-family: 'LatoBold', sans-serif; margin-left: 2rem; margin-top: 12rem; align-content: center;">Para
@@ -499,6 +526,9 @@ if (!isset($_SESSION['idusuario'])) {
                 <thead class="">
                     <tr>
                         <th style="width: 8rem;">
+                            No.
+                        </th>
+                        <th style="width: 8rem;">
                             ID
                         </th>
                         <th>
@@ -633,17 +663,113 @@ if (!isset($_SESSION['idusuario'])) {
 <!-- Tarjetas del proyecto -->
 <div>
     <div id="mostrarBtnPdf" style="margin: 1rem 2rem 0px 2rem; display: none; justify-content: center;">
-        <button type="button" class="btn fa-solid-Siguiente-catalogo" style="margin-left: 0.5rem; margin-right: 0.5rem;"
-            onclick="ExportarExcelTarjetas(true);">Exportar a Excel</button>
-        <button type="button" id="btnExportarPDF" class="btn fa-solid-Siguiente-catalogo"
-            style="margin-left: 0.5rem; margin-right: 0.5rem;" onclick="exportarPDFConHtml(false)">Exportar a
+        <button type="button" id="btnExportar" class="btn fa-solid-Siguiente-catalogo btnClickeadoExportar"
+            style="margin-left: 0.5rem; margin-right: 0.5rem;" disabled="disabled"
+            onclick="ExportarExcelTarjetas(true);">Exportar a
+            Excel</button>
+        <button type="button" id="btnExportarPDF" class="btn fa-solid-Siguiente-catalogo btnClickeadoExportar"
+            style="margin-left: 0.5rem; margin-right: 0.5rem;" disabled="disabled"
+            onclick="exportarPDFConHtml(false)">Exportar a
             PDF</button>
+        <div id="divCargaExport"
+            style="font-size: larger; text-align: center; display:none; align-items: center; margin-left: 2rem;">
+            <div id="textoCargaDiv" style="margin: auto 0 auto 0;"> <span id="porcentajeExportacion"></span> </div>
+        </div>
     </div>
-    <div id="tablaTarjetasProyecto" style="display: none;">
 
+    <!-- Controles de paginación -->
+
+    <div id="mostrarBtnPaginacion">
+        <div class="pagRegistrosTarjetas" style="margin: 1rem 2rem; display: none;" id="controlesPaginacion">
+            <nav class="pSeccion">
+                <div class="cantregTarjetas">
+                    <div class="text1">Mostrar</div>
+                    <select class="cantregistrosTarjetas" id="tarjetas-per-page">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                    <div class="text2">Tarjetas</div>
+                </div>
+
+                <ul class="pagination" id="pagination-tarjetas">
+                    <!-- Aquí se agregarán dinámicamente los enlaces de página -->
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- NUEVO: Mensaje de carga de tarjetas -->
+    <div id="cargaTarjetas"
+        style="display: none; text-align: center; padding: 3rem; background-color: #f8f9fa; border-radius: 8px; margin: 1rem 2rem; border: 2px dashed #008E5A;">
+        <div style="font-size: 1.5rem; color: #008E5A; margin-bottom: 1rem;">
+            <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <div style="font-size: 1.2rem; color: #333; font-weight: bold; margin-bottom: 0.5rem;">
+            Cargando tarjetas...
+        </div>
+        <div style="font-size: 1rem; color: #666;">
+            <span id="infoCarga">Cargando 0 de 0 conceptos</span>
+        </div>
+        <div style="margin-top: 1rem; width: 100%; background-color: #e9ecef; border-radius: 4px; overflow: hidden;">
+            <div id="barraProgreso"
+                style="height: 8px; background-color: #008E5A; width: 0%; transition: width 0.3s ease;"></div>
+        </div>
     </div>
 
+    <div id="tablaTarjetasProyecto" style="display: none;"></div>
 </div>
+
+<style>
+    /* Estilos para la paginación de tarjetas */
+    .pagRegistrosTarjetas {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 1rem 2rem;
+    }
+
+    .cantregTarjetas {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .cantregistrosTarjetas {
+        padding: 0.25rem;
+        border: 1px solid #008E5A;
+        border-radius: 4px;
+        background-color: white;
+        color: #008E5A;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 0.25rem;
+    }
+
+    .pagination button {
+        padding: 0.5rem 0.75rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .pagination button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .text1,
+    .text2 {
+        color: #333;
+        font-weight: bold;
+    }
+</style>
 
 
 <div id="contenedor-cfe" style="font-size: 20px; display: none;">

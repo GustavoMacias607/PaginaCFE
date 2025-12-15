@@ -37,7 +37,7 @@ require("../../scripts/Materiales.php");
         ?>
 
 
-        <a onclick="opcion('proyecto')" class="text-inicio-materiales">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-materiales">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -420,20 +420,20 @@ require("../../scripts/Materiales.php");
 </script>
 
 <script>
-window.addEventListener('resize', function() {
-    const logoImage = document.getElementById('logoImage');
-    const windowWidth = window.innerWidth;
-    const originalWidth = logoImage.naturalWidth;
+    window.addEventListener('resize', function() {
+        const logoImage = document.getElementById('logoImage');
+        const windowWidth = window.innerWidth;
+        const originalWidth = logoImage.naturalWidth;
 
-    if (windowWidth < originalWidth) {
-        logoImage.src =
-            'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
-        logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
+        if (windowWidth < originalWidth) {
+            logoImage.src =
+                'img/Logocfeverde.png'; // Cambia la ruta por la imagen que deseas mostrar al hacer zoom
+            logoImage.alt = 'Otra imagen'; // Cambia el atributo alt de la imagen
 
 
-    } else {
-        logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
-        logoImage.alt = 'Logo'; // Restaura el atributo alt
-    }
-});
+        } else {
+            logoImage.src = 'img/Logocfelargo.png'; // Vuelve a la imagen original
+            logoImage.alt = 'Logo'; // Restaura el atributo alt
+        }
+    });
 </script>

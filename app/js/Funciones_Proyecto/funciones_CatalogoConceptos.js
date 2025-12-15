@@ -1,4 +1,5 @@
 let editedRows = {};
+let mostrandoSeleccionados = false;
 function llenarCamposPagina() {
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
     let zona = document.getElementById("lblZona").innerHTML = datosProyecto.zona;
@@ -89,18 +90,26 @@ function displayTableConceptoProyecto(page) {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
+
+    // ELIMINAR ESTA LÍNEA:
+    // let contador = 1;
+
     if (paginatedData.length > 0) {
-        paginatedData.forEach(record => {
+        paginatedData.forEach((record, index) => {
             const row = document.createElement('tr');
             row.classList.add('fila');
-            // Establecer el contenido HTML de la fila
+
+            // CALCULAR EL NÚMERO SECUENCIAL CORRECTO:
+            const numeroSecuencial = start + index + 1;
+
             const editableValue = editedRows[record.idconcepto] ? editedRows[record.idconcepto].cantidad : "";
             row.innerHTML = `
-                    <td class="Code">${record.idconcepto}</td>
-                    <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                    <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td style="text-align: center;" contenteditable="true" class="editable">${editableValue}</td>
-                `;
+                <td style="text-align: right;">${numeroSecuencial}</td>
+                <td class="Code">${record.idconcepto}</td>
+                <td>${record.nombre !== "" ? record.nombre : "---"}</td>
+                <td>${record.unidad !== "" ? record.unidad : "---"}</td>
+                <td style="text-align: center;" contenteditable="true" class="editable">${editableValue}</td>
+            `;
 
             // Añadir eventos mouseover y mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
@@ -119,6 +128,9 @@ function displayTableConceptoProyecto(page) {
                 console.log(editedRows);
             });
 
+            // ELIMINAR ESTA LÍNEA:
+            // contador++;
+
             // Añadir la fila al tbody
             tableBody.appendChild(row);
         });
@@ -127,7 +139,7 @@ function displayTableConceptoProyecto(page) {
         <tr class="fila">
             <td colspan="6" class="Code">Sin resultados</td>
         </tr>
-    `;
+        `;
         tableBody.innerHTML += row;
     }
 }
@@ -365,10 +377,36 @@ function EliminartablaConceptoProyecto() {
 
 function irPresupuesto() {
     if (Object.keys(editedRows).length > 0) {
+        // Ordenar los conceptos por ID alfabéticamente antes de continuar
+        ordenarEditedRowsPorID();
         EliminartablaConceptoProyecto();
     } else {
         mensajePantalla("Agrega un concepto", false);
     }
+}
+
+// Función para ordenar editedRows por ID alfabéticamente
+function ordenarEditedRowsPorID() {
+    // 1. Convertir el objeto a un array de pares [key, value]
+    const entries = Object.entries(editedRows);
+
+    // 2. Ordenar el array por el ID del concepto (que es la key)
+    entries.sort(([idA,], [idB,]) => {
+        // Comparación alfabética de strings
+        if (idA < idB) return -1;
+        if (idA > idB) return 1;
+        return 0;
+    });
+
+    // 3. Reconstruir el objeto en el nuevo orden
+    const orderedRows = {};
+    entries.forEach(([id, concepto]) => {
+        orderedRows[id] = concepto;
+    });
+
+    // 4. Reemplazar el objeto original con el ordenado
+    editedRows = orderedRows;
+    console.log("Conceptos ordenados por ID:", editedRows);
 }
 
 function UpdProyectoCatalogo() {
@@ -448,7 +486,7 @@ function UpdProyectoCatalogo() {
     datos.idZona = obtenerIdZona();
     inputTotal = document.querySelector('#inputTotal');
     datos.total = inputTotal.value;
-    datos.estatus = "Carga Cuadro Dispositivos";
+    datos.estatus = "Catalogo Conceptos";
     datosProyecto = datos;
     let json = JSON.stringify(datos);
     console.log(json)
@@ -549,6 +587,7 @@ function MostrarConceptosContenidosProyecto() {
                         editedRows[datos.IdConcepto] = {
                             cantidad: datos.CantidadTotal,
                             estatus: datos.EstatusConcepto,
+                            idconteo: datos.IdConteo,
                             idconcepto: datos.IdConcepto,
                             nombre: datos.NombreConcepto,
                             nombreespe: "",
@@ -568,4 +607,32 @@ function MostrarConceptosContenidosProyecto() {
             alert("Error: " + error);
         }
     });
+}
+
+
+
+function cambiarConSeleccionados() {
+    mostrandoSeleccionados = !mostrandoSeleccionados; // Alternar estado
+
+    if (mostrandoSeleccionados) {
+        // Mostrar solo los seleccionados
+        const seleccionados = Object.values(editedRows); // Obtener objetos editados
+        if (seleccionados.length === 0) {
+            alert("No hay conceptos seleccionados con cantidad.");
+            mostrandoSeleccionados = false;
+            return;
+        }
+        filteredData = seleccionados; // Solo mostrar los seleccionados
+        btnConSeleccionados.textContent = "Mostrar todos";
+    } else {
+        // Volver a mostrar todo
+        filterDataConceptoProyecto(); // Restaura la vista con filtro normal
+        btnConSeleccionados.textContent = "Mostrar solo seleccionados";
+        return; // Salir para no volver a mostrar tabla dos veces
+    }
+
+    // Actualizar tabla con los datos seleccionados
+    currentPage = 1;
+    displayTableConceptoProyecto(currentPage);
+    setupPaginationConceptoProyecto();
 }

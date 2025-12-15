@@ -69,7 +69,7 @@ function displayTableManoObraTarjeta(page) {
                         fechasalario: record.fechasalario,
                         unidad: record.unidad,
                         categoria: record.categoria,
-                        cantidad: 0,
+                        cantidad: 1,
                         rendimiento: 0,
                         estatus: true,
                     });

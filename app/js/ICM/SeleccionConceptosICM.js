@@ -3,13 +3,23 @@ let conceptosICM;
 async function obtenerDatosConceptosICM(valor) {
     const spinner = document.querySelector(".sk-circle");
     spinner.style.display = "block";
-    if (!valor) {
+    if (isProyecto) {
+        resetearDatosConceptosICM();
+        selectedRows = filteredDataPresupuesto;
+        selectedRows.forEach(row => {
+            selectedCheckboxes[row.idconcepto] = true;
+        });
+        isExpProy = true;
+
+    } else if (valor == 0) {
         selectedRows = [];
         selectedCheckboxes = {};
         objetoPropuestasSeleccionadas = [];
         PropuestasICM = [];
         selectedPropuestas = [];
+        isExpProy = false;
     }
+    console.log(selectedRows);
     let json = "";
     let url = "../ws/Conceptos/wsGetConcepto.php";
     try {
@@ -27,7 +37,6 @@ async function obtenerDatosConceptosICM(valor) {
                 if (resp.estado === "OK") {
                     llenarUnidadTabla(2);
                     conceptosICM = resp.datos;
-                    console.log(conceptosICM);
                     llenarTablaConceptoICM();
                     filterDataConceptoICM();
                 }
@@ -41,6 +50,14 @@ async function obtenerDatosConceptosICM(valor) {
             spinner.style.display = "none";
         }
     });
+
+}
+function resetearDatosConceptosICM() {
+    selectedRows = [];
+    selectedCheckboxes = {};
+    objetoPropuestasSeleccionadas = [];
+    PropuestasICM = [];
+    selectedPropuestas = [];
 }
 
 function displayTableConceptoICM(page) {
@@ -67,7 +84,7 @@ function displayTableConceptoICM(page) {
                                 <input type="checkbox" 
                                        class="custom-checkbox" 
                                        id="${checkboxId}" 
-                                       onchange="toggleRowSelection('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
+                                       onchange="toggleRowSelection('${record.idconcepto}','${record.idconteo}', '${encodeURIComponent(record.nombre)}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
                                        ${selectedCheckboxes[record.idconcepto] ? 'checked' : ''}>
                                 <label for="${checkboxId}" class="checkbox-design"></label>
                             ` : ``}
@@ -91,8 +108,6 @@ function displayTableConceptoICM(page) {
         `;
     }
 }
-
-
 
 function setupPaginationConceptoICM() {
     const paginationDiv = document.getElementById("pagination");
@@ -213,3 +228,4 @@ function llenarTablaConceptoICM() {
         setupPaginationConceptoICM();
     });
 }
+

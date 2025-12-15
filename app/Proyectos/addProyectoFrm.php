@@ -61,13 +61,14 @@ if (!isset($_SESSION['idusuario'])) {
                     <thead>
                         <tr>
                             <th style="width: 8rem;">
-                                <button id="sort-id" class="sort-button">
-                                    ID <i class="fa-solid fa-arrow-up-wide-short"></i>
-                                </button>
+                                ID
                             </th>
                             <th>Nombre</th>
+                            <th style="width: 8rem;">Fecha registro</th>
                             <th style="width: 8rem;">Zona</th>
+
                             <th style="width: 8rem;">Tipo de obra</th>
+                            <th style="width: 8rem;">Estado</th>
                         </tr>
                     </thead>
                     <tbody id="table-bodyProyectosProceso">
@@ -127,11 +128,10 @@ if (!isset($_SESSION['idusuario'])) {
                     <thead>
                         <tr>
                             <th style="width: 8rem;">
-                                <button id="sort-id" class="sort-button">
-                                    ID <i class="fa-solid fa-arrow-up-wide-short"></i>
-                                </button>
+                                ID
                             </th>
                             <th>Nombre</th>
+                            <th style="width: 8rem;">Fecha registro</th>
                             <th style="width: 8rem;">Zona</th>
                             <th style="width: 8rem;">Tipo de obra</th>
                             <th style="width: 8rem;">Acciones</th>
@@ -234,7 +234,12 @@ if (!isset($_SESSION['idusuario'])) {
     </div>
 </div>
 
+<div id="loading" style="display:none; background: #f0f0f0; padding: 10px; margin: 10px 0;">
+    <p>🔄 Creando respaldo de la base de datos, por favor espere...</p>
+</div>
 
+
+<div id="resultado" style="display:none; padding: 10px; margin: 10px 0;"></div>
 <!-- modal para activar el registro de materiales -->
 <div class="modal" id="confirmActivationModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"
     style="z-index: 4000; color: #303030; top: 194px;">

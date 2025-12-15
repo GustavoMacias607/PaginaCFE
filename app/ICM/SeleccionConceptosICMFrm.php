@@ -10,8 +10,8 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlancoconceptos">
     <div class="bottom-rectangle-conceptos">
-        <div class="text-conceptos">Selección conceptos ICM</div>
-        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
+        <div class="text-conceptos">Selección de conceptos ICM</div>
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>

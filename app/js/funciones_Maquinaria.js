@@ -306,7 +306,6 @@ function GetMaquinaria() {
                     data = resp.datos;
                     llenarTablaMaquinaria();
                     filterDataMaquinaria();
-                    llenarUnidadTablaMaquinaria();
                 } else {
                     data = [];
                 }
@@ -335,14 +334,14 @@ function displayTableMaquinaria(page) {
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
                 <td class="Code">${record.idmaquinaria}</td>
-                <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
+                <td>${(!record.descripcion == "") ? record.descripcion.replace(/\n/g, "<br>") : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td style="text-align: right;">${(!record.phm == "") ? record.phm : "---"}</td>
                 <td>${(!record.fechaprecio == "") ? record.fechaprecio : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
-                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria('${record.idmaquinaria}','${record.descripcion}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
+                            <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarMaquinaria('${record.idmaquinaria}','${encodeURIComponent(record.descripcion)}','${record.unidad}',${record.phm},'${record.fechaprecio}')"></i>
                         ` : ``}
                           <!-- Ícono para ver PDF, llamando a la función verPDF -->
                         <i class="coloresIcono fa-regular fa-file-pdf" style="cursor: pointer;" alt="Ver PDF" onclick="verPDFMaquinaria('${record.idmaquinaria}')"></i>
@@ -578,7 +577,7 @@ function llenarModalModificarMaquinaria(id, descripcion, unidad, phM, fechaPreci
     InputPDF.value = "";
     idAnterior.value = id;
     idMa.value = id;
-    descripcionMa.value = descripcion;
+    descripcionMa.value = decodeURIComponent(descripcion);
     phm.value = phM;
     UnidadMa.value = unidad;
 

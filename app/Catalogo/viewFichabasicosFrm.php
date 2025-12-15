@@ -12,15 +12,15 @@ if (!isset($_SESSION['idusuario'])) {
     <div class="bottom-rectangle-Catalogo">
         <div class="text-Catalogo">Agregar tarjeta</div>
         <?php
-        if ($_SESSION["rol"] != "Invitado") {
-            echo    ' <button id="btnExportar" data-bs-toggle="modal" onclick="limpiarModalCopiar();" data-bs-target="#staticBackdrop"
+        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+            echo    ' <button data-bs-toggle="modal" onclick="AbrirModalReutilizar();" data-bs-target="#UtilizarTarjeta"
             class="btn btn-agregar-material">
-            Utilizar tarjeta
+        Reutilizar tarjeta
         </button>';
         }
         ?>
 
-        <a onclick="opcion('proyecto')" class="text-inicio-Catalogo">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-Catalogo">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -29,26 +29,24 @@ if (!isset($_SESSION['idusuario'])) {
 
 
 <!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div class="modal fade" id="confirmacionReutilizar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Copiar tarjeta existente</h1>
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmar Reutilizacion</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="col-12">
-                    <label for="idInput" class="form-label" style="color: #303030;">Ingrese id del concepto para copiar
-                        su tarjeta</label>
-                    <input type="text" class="form-control inputLleno" id="AddIdConceptoCopy"
-                        onblur="javascript:CompruebaTieneAlgoInput(this);">
+                    <label for="idInput" class="form-label" style="color: #303030;">¿Esta seguro de que desea reemplazar
+                        la información de la tarjeta?</label>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn fa-solid-cancelar"
-                    onclick="ComprobarExisteConceptoCopiar();">Reutilizar</button>
+                <button type="button" class="btn fa-solid-cancelar" data-bs-dismiss="modal" aria-label="Close"
+                    onclick="RemplazarDatosNuevo();">Reutilizar</button>
             </div>
         </div>
     </div>
@@ -94,7 +92,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div>Materiales</div>
             <div>
                 <?php
-                if ($_SESSION["rol"] != "Invitado") {
+                if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
                     echo    ' <button type="button" onclick="javascript:AbrirModalMaterialesTarjeta();"
                     class="btn fa-solid-agregar-materiales">Agregar</button>';
                 }
@@ -162,7 +160,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div>Mano de obra</div>
             <div>
                 <?php
-                if ($_SESSION["rol"] != "Invitado") {
+                if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
                     echo    '<button type="button" onclick="javascript:AbrirModalManoObraTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
                     data-bs-target="#AgregarModalManodeobraesConcepto">Agregar</button>';
@@ -226,65 +224,65 @@ if (!isset($_SESSION['idusuario'])) {
             <label id="Suma2" class="subtotales_numeros_top">$0.00</label>
         </div>
     </div>
+    <div id="SeccionHerramientasEquipo">
+        <div class="titulo-materiales">
+            <nav class="pSeccion-catalogo">
+                <div>Herramienta y equipo de seguridad</div>
+            </nav>
+        </div>
 
-    <div class="titulo-materiales">
-        <nav class="pSeccion-catalogo">
-            <div>Herramienta y equipo de seguridad</div>
-        </nav>
-    </div>
 
-
-    <div class="contTabla-materialesmodal_catalogo">
-        <div class="tabla-container-tablaTarjeta">
-            <table id="tabla-MaterialesCatalogo">
-                <thead class="encabezadoTablasTarjeta">
-                    <tr>
-                        <th>
-                            Descripción
-                        </th>
-                        <th style="width: 8rem;">
-                            Kh o Ks
-                        </th>
-                        <th style="width: 8rem;">
-                            Mo
-                        </th>
-                        </th>
-                        <th style="width: 9rem;">
-                            importe
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="fila">
-                        <td class="Code">HERRAMIENTAS DE MANO</td>
-                        <td style="text-align: right;" id="KhHerramientas">0.03</td>
-                        <td style="text-align: right;" id="ActualizarPrecioMoHerramientas">0</td>
-                        <td style="text-align: right;" id="importeHerramientas">0</td>
-                    </tr>
-                    <tr class="fila">
-                        <td class="Code">EQUIPO Y SEGURIDAD</td>
-                        <td style="text-align: right;" id="KhEquipo">0.02</td>
-                        <td style="text-align: right;" id="ActualizarPrecioMoEquipo">0</td>
-                        <td style="text-align: right;" id="importeEquipo">0</td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="contTabla-materialesmodal_catalogo">
+            <div class="tabla-container-tablaTarjeta">
+                <table id="tabla-MaterialesCatalogo">
+                    <thead class="encabezadoTablasTarjeta">
+                        <tr>
+                            <th>
+                                Descripción
+                            </th>
+                            <th style="width: 8rem;">
+                                Kh o Ks
+                            </th>
+                            <th style="width: 8rem;">
+                                Mo
+                            </th>
+                            </th>
+                            <th style="width: 9rem;">
+                                importe
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="fila">
+                            <td class="Code">HERRAMIENTAS DE MANO</td>
+                            <td style="text-align: right;" id="KhHerramientas">0.03</td>
+                            <td style="text-align: right;" id="ActualizarPrecioMoHerramientas">0</td>
+                            <td style="text-align: right;" id="importeHerramientas">0</td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="Code">EQUIPO Y SEGURIDAD</td>
+                            <td style="text-align: right;" id="KhEquipo">0.02</td>
+                            <td style="text-align: right;" id="ActualizarPrecioMoEquipo">0</td>
+                            <td style="text-align: right;" id="importeEquipo">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="grid-container">
+            <label class="subtotales_textos">Suma 3:</label>
+            <div>
+                <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
+            </div>
         </div>
     </div>
-    <div class="grid-container">
-        <label class="subtotales_textos">Suma 3:</label>
-        <div>
-            <label id="Suma3" class="subtotales_numeros_top">$0.00</label>
-        </div>
-    </div>
-
 
     <div class="titulo-materiales">
         <nav class="pSeccion-catalogo">
             <div>Maquinaria</div>
             <div>
                 <?php
-                if ($_SESSION["rol"] != "Invitado") {
+                if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
                     echo    '<button type="button" onclick="javascript:AbrirModalMaquinariaTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
                     data-bs-target="#AgregarModalMaquinariaesConcepto">Agregar</button>';
@@ -347,7 +345,7 @@ if (!isset($_SESSION['idusuario'])) {
             <div>Básicos</div>
             <div>
                 <?php
-                if ($_SESSION["rol"] != "Invitado") {
+                if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
                     echo '<button type="button" onclick="javascript:AbrirModalBasicosTarjeta();"
                     class="btn fa-solid-agregar-materiales" data-bs-toggle="modal"
                     data-bs-target="#AgregarModalBasicosesConcepto">Agregar</button>';
@@ -489,7 +487,7 @@ if (!isset($_SESSION['idusuario'])) {
 
         <div class="grid-container">
             <?php
-            if ($_SESSION["rol"] != "Invitado") {
+            if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
                 echo '<button type="button" class="btn fa-solid-Guardar-catalogo"
                 onclick="javascript:guardarTablasEnBD()">Guardar</button>';
             }
@@ -1039,6 +1037,98 @@ if (!isset($_SESSION['idusuario'])) {
         </div>
     </div>
 </div>
+
+<div class="modal fade modal-especificaciones" id="UtilizarTarjeta" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog_catalogo">
+        <div class="modal-content" style="border: 3px solid #008E5A;">
+            <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; padding:0px 0px 0px 1rem;">
+                    Reutilizar concepto</h1>
+
+                <button type="button" class="fa-solid fa-xmark btnclose-especificaciones" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="label-container-materiales_catalogo">
+                <input type="text" placeholder="Buscar" id="search-inputConcepto">
+                <i class="fas fa-search icon-materiales" id="searchIcon"></i>
+            </div>
+            <div class="pagRegistrosespecificaciones">
+                <nav class="pSeccion">
+                    <div class="cantregespecificaciones">
+                        <div class="text1">Mostrar</div>
+                        <select class="cantregistrosespecificaciones" id="rows-per-pageReutilizar">
+                            <option value="10" selected>10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <div class="text2">Registros </div>
+                    </div>
+
+                    <ul class="pagination" id="paginationModalReutilizar">
+                        <!-- Aquí se agregarán dinámicamente los enlaces de página -->
+                        <li class="page-item active"></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="contTabla-conceptosmodal_especificaciones">
+                <div class="tabla-container-concepto-especificaciones">
+                    <table id="tabla-MaterialesCatalogo">
+                        <thead class="">
+                            <tr>
+                                <th style="width: 8rem;">
+                                    ID
+                                </th>
+                                <th>
+                                    Nombre
+                                </th>
+                                <th style="width: 10rem;">
+                                    <div class="d-flex align-items-center">
+                                        <span>Unidad: </span>
+                                        <select class="form-select form-select-sm ml-2" id="unidad-filterConcepto"
+                                            style="background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                            <option value="" selected>Todo</option>
+                                            <option value="Estructuras">Estructura</option>
+                                            <option value="PZA">PZA</option>
+                                        </select>
+                                    </div>
+                                </th>
+                                <th id="columFamilia" style="width: 10rem; ">
+                                    Familia
+                                </th>
+                                <th style="width: 12rem;">
+                                    <div style="display: flex; min-width: 144px; justify-content: space-between;">
+                                        <span>Acciones</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-bodyReutilizacionModal">
+                            <td colspan="8">Sin resultados</td>
+                        </tbody>
+                    </table>
+                    <div class="sk-circle" id="cargaModal">
+                        <div class="sk-circle1 sk-child"></div>
+                        <div class="sk-circle2 sk-child"></div>
+                        <div class="sk-circle3 sk-child"></div>
+                        <div class="sk-circle4 sk-child"></div>
+                        <div class="sk-circle5 sk-child"></div>
+                        <div class="sk-circle6 sk-child"></div>
+                        <div class="sk-circle7 sk-child"></div>
+                        <div class="sk-circle8 sk-child"></div>
+                        <div class="sk-circle9 sk-child"></div>
+                        <div class="sk-circle10 sk-child"></div>
+                        <div class="sk-circle11 sk-child"></div>
+                        <div class="sk-circle12 sk-child"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- modal para activar el registro de materiales -->
 <div class="modal" id="confirmCopiarModal" tabindex="-1" aria-labelledby="activationModalLabel" aria-hidden="true"

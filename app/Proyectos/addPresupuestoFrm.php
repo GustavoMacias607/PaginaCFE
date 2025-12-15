@@ -18,7 +18,7 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="javascript:opcion(`addCatConFrm`);">Catálogo de conceptos</button>';
         }
         ?>
-        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -90,6 +90,7 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-conceptos">
                 <thead class="">
                     <tr>
+
                         <th style="width: 8rem;">
                             ID
                         </th>
@@ -488,6 +489,9 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-conceptos">
                 <thead class="">
                     <tr>
+                        <th style="width: 8rem;">
+                            No.
+                        </th>
                         <th style="width: 8rem;">
                             ID
                         </th>

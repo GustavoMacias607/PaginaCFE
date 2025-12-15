@@ -1,84 +1,107 @@
+var pantallaFuncion;
 
 function opcion(op) {
-
+    pantallaFuncion = op;
     let url = "";
     let json = "";
     var funcion;
+
     switch (op) {
         case "materiales":
             url = "Materiales/addmaterialesFrm.php";
+            isProyecto = false;
             funcion = GetMateriales;
             break;
         case "usuarios":
             url = "Usuarios/addUsuariosFrm.php";
+            isProyecto = false;
             funcion = GetUsuario;
             break;
         case "zonas":
             url = "Zonas/addZonasFrm.php";
+            isProyecto = false;
             funcion = GetZona;
             break;
         case "perfilUsu":
             url = "Usuarios/perfilUsuarioFrm.php";
+            isProyecto = false;
             //funcion = GetPerfilUsuario;
             break;
         case "conceptos":
             url = "Conceptos/addconceptosFrm.php";
+            isProyecto = false;
             funcion = function () {
                 PrincipalConcepto(1);
             };;
             break;
         case "proyecto":
             url = "Proyectos/addProyectoFrm.php";
+            isProyecto = false;
             funcion = GetProyectoProceso;
             break;
         case "addCatConFrm":
+            isProyecto = false;
             url = "Proyectos/addCatConFrm.php";
             funcion = llenarCamposPagina;
             break;
         case "addPresupuestoFrm":
+            isProyecto = true;
             url = "Proyectos/addPresupuestoFrm.php";
             funcion = llenarCamposPaginaPresupuesto;
             break;
         case "addProyTermFrm":
+            isProyecto = true;
             url = "Proyectos/addProyTermFrm.php";
             funcion = llenarCamposPaginaTerminado;
             break;
         case "ManoObra":
+            isProyecto = false;
             url = "ManoObra/addManoObraFrm.php";
             funcion = GetManoObra;
             break;
         case "Tarjeta":
+            isProyecto = false;
             url = "Catalogo/viewFichabasicosFrm.php";
             funcion = LlenarTablaConceptoTarjeta;
             break;
         case "Maquinaria":
+            isProyecto = false;
             url = "Maquinaria/addMaquinariaFrm.php";
             funcion = GetMaquinaria;
             break;
         case "Basicos":
+            isProyecto = false;
             url = "Conceptos/addconceptosFrm.php";
             funcion = function () {
                 PrincipalConcepto(0);
             };
             break;
         case "Especificaciones":
+            isProyecto = false;
             url = "Especificaciones/addEspecificaciones.php";
             //funcion = priEspe;
             break;
         case "ICM":
+            isProyecto = false;
             url = "ICM/ICMFrm.php";
             funcion = llenarCamposPaginaICM;
             break;
         case "SeleccionConceptosICM":
             url = "ICM/SeleccionConceptosICMFrm.php";
             funcion = function () {
-                obtenerDatosConceptosICM(0);
+                if (isProyecto) {
+                    obtenerDatosConceptosICM(1);
+                } else {
+                    obtenerDatosConceptosICM(0);
+                }
             };
             break;
+
         case "SeleccionConceptosICMReturn":
             url = "ICM/SeleccionConceptosICMFrm.php";
             funcion = function () {
                 obtenerDatosConceptosICM(1);
+                console.log("SeleccionConceptosICMReturn");
             };
             break;
         case "SeleccionProveedoresICM":
@@ -97,7 +120,6 @@ function opcion(op) {
                 rowsPerPage = 10;
                 EstatusEntidades();
                 funcion();
-
             } else {
                 throw e = status;
             }
@@ -118,12 +140,11 @@ let ActivarS;
 
 let rolUsuarioSe;
 
-// let filteredData = [...data];
-// let rowsPerPage = 10;
-// let currentPage = 1;
-// Para aplicar orden y filtros
-// let currentSortField = null;
-// let currentSortOrder = 'asc'; // ascendente o descendente
+let urlImagenLogo = "./img/LogoPdf.PNG"; // Ruta de la imagen del logo
+let urlSinImagenMaterial = "./img/sinimagen.png"; // Ruta de la imagen del logo
+
+let isExpProy;
+let isProyecto = false;
 //Funciones globales
 
 function EstatusEntidades() {
@@ -135,6 +156,7 @@ function EstatusEntidades() {
 function verRolUsuario() {
     rolUsuarioSe = document.getElementById("rolUsuarioSession").value;
 }
+
 
 //Metodo para imprimir un mensaje en pantalla
 //recibe dos valores el mensaje y si el mensaje es positivo se pone true, si es negativo false
@@ -250,5 +272,36 @@ function ObtenerFechaActual() {
     return fechaFormateada;
 }
 
+const formatDateDMY = (fecha) => {
+    if (!fecha || fecha.trim() === "" || fecha === "0000-00-00") return "---";
+    const partes = fecha.split("-");
+    if (partes.length !== 3) return fecha; // por si viene en otro formato
+    const [anio, mes, dia] = partes;
+    return `${dia}/${mes}/${anio}`;
+};
 
 
+function ObtenerFechaActualDMY() {
+    let fechaActual = new Date();
+    let año = fechaActual.getFullYear();
+    let mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+    let dia = fechaActual.getDate().toString().padStart(2, '0');
+    let fechaFormateada = `${dia}-${mes}-${año}`;
+    return fechaFormateada;
+}
+
+
+function respaldarBd() {
+    if (confirm('¿Estás seguro de que quieres respaldar TODA la base de datos?\nEsto incluye: Tablas, Vistas, Procedimientos, Funciones y Triggers.')) {
+        // Crear un enlace temporal para la descarga
+        const downloadLink = document.createElement('a');
+        downloadLink.href = '../scripts/respaldar.php';
+        downloadLink.target = '_blank';
+        downloadLink.style.display = 'none';
+
+        // Agregar timestamp para evitar cache
+        downloadLink.href += '?t=' + new Date().getTime();
+
+        downloadLink.click();
+    }
+}

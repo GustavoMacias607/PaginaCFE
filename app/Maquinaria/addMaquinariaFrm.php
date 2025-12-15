@@ -19,7 +19,7 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="javascript:AddlimpiarModalMaquinaria();">Agregar maquinaria</button>';
         }
         ?>
-        <a onclick="opcion('proyecto')" class="text-inicio-maquinaria">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-maquinaria">
             <div>Ir al inicio</div>
         </a>
     </div>

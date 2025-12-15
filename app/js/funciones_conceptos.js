@@ -68,7 +68,7 @@ function AddConceptoValidar() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp)
+
                 if (resp.estado == "OK") {
                     AddCerrarModal();
                     PrincipalConcepto(1);
@@ -136,14 +136,14 @@ function UpdConceptoValidar() {
         id.focus();
         return;
     }
-    console.log(datos)
+
     let json = JSON.stringify(datos);
     let url = "../ws/Conceptos/wsUpdConcepto.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp)
+
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
                     mensajePantalla(msgModificarCon, true);
@@ -156,6 +156,36 @@ function UpdConceptoValidar() {
             alert("Error: " + error)
         }
     });
+}
+
+function actualizarContador(tipo) {
+    // Detecta el textarea según el tipo (Add o Upd)
+    const textarea =
+        document.querySelector(`#${tipo}nombreInputConcepto`) ||
+        document.querySelector(`#${tipo}nombreInput`);
+
+    const contador = document.querySelector(`#${tipo}contadorNombre`);
+    const max = 1500;
+
+    if (!textarea || !contador) return; // seguridad
+
+    // Asegura que no supere el máximo
+    if (textarea.value.length > max) {
+        textarea.value = textarea.value.substring(0, max);
+    }
+
+    // Actualiza el texto del contador
+    const length = textarea.value.length;
+    contador.textContent = `${length}/${max}`;
+
+    // Cambia color al acercarse al límite
+    if (length > max * 0.9) {
+        contador.style.color = "red";
+    } else if (length > max * 0.7) {
+        contador.style.color = "#ff9800";
+    } else {
+        contador.style.color = "#555";
+    }
 }
 
 function checkConcepto(modal) {
@@ -216,7 +246,6 @@ function CambioEstatusConcepto() {
     }
 
     let json = JSON.stringify(datos);
-    console.log(json);
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
@@ -235,17 +264,60 @@ function CambioEstatusConcepto() {
 
 function PrincipalConcepto(tipoConcepto) {
     // Vaciar el objeto
+    costosAdicionales.CIndirecto = 15;
+    costosAdicionales.Financiamiento = 1;
+    costosAdicionales.utilidad = 10;
+    costosAdicionales.CAdicionales = 0.5;
     selectedRows = [];
     selectedCheckboxes = {};
 
     estatusConcepto = 1;
-    let variId = !tipoConcepto ? "idconbasi" : "idconcepto";
+    let variId = !tipoConcepto ? "idconbasi" : "idconteo";
 
     document.getElementById("sort-id").addEventListener("click", function () {
         toggleSort(this, variId, "Conceptos");
     });
     document.getElementById("sort-name").addEventListener("click", function () {
         toggleSort(this, 'nombre', "Conceptos");
+    });
+
+
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // Cuando se abre el modal de agregar
+        const agregarModal = document.getElementById("AgregarModal");
+        if (agregarModal) {
+            agregarModal.addEventListener("shown.bs.modal", function () {
+                actualizarContador("Add");
+            });
+        }
+
+        // Cuando se abre el modal de editar
+        const editarModal = document.getElementById("EditarModal");
+        if (editarModal) {
+            editarModal.addEventListener("shown.bs.modal", function () {
+                actualizarContador("Upd");
+            });
+        }
+    });
+
+    // =========================
+    // ACTUALIZAR AL ABRIR LOS MODALES
+    // =========================
+    document.addEventListener("DOMContentLoaded", function () {
+        const modalAgregarBasico = document.getElementById("AgregarModalBasi");
+        if (modalAgregarBasico) {
+            modalAgregarBasico.addEventListener("shown.bs.modal", function () {
+                actualizarContadorBasico("Add");
+            });
+        }
+
+        const modalEditarBasico = document.getElementById("EditarModalBasi");
+        if (modalEditarBasico) {
+            modalEditarBasico.addEventListener("shown.bs.modal", function () {
+                actualizarContadorBasico("Upd");
+            });
+        }
     });
     obtenerDatosConceptos(tipoConcepto);
 }
@@ -308,7 +380,6 @@ async function obtenerDatosConceptos(btnOpcion) {
                     conceptoTipoSeleccionado = btnOpcion;
                     llenarUnidadTabla(btnOpcion);
                     data = resp.datos;
-                    console.log(data)
                     todosLosConceptos = data;
                     llenarTablaConcepto();
                     filterDataConcepto();
@@ -331,7 +402,6 @@ async function obtenerDatosConceptos(btnOpcion) {
 function toggleSort(button, field, pantalla) {
     // Alterna la dirección del orden
     if (currentSortField == field) {
-        console.log(currentSortOrder, " asc")
         if (currentSortOrder == "desc") {
             currentSortOrder = "desc";
         } else {
@@ -434,24 +504,26 @@ function displayTableConcepto(page) {
                 // Establecer el contenido HTML de la fila
                 row.innerHTML = `
                     <td class="Code">${record.idconcepto}</td>
-                    <td>${record.nombre ? record.nombre.replace(/\n/g, "<br>") : "---"}</td>
+                    <td >${record.nombre ? record.nombre.replace(/\n/g, "<br>") : "---"}</td>
                     <td>${record.unidad ? record.unidad : "---"}</td>
                     <td>${record.nombreespe ? record.nombreespe : "---"}</td>
                     <td class="estatus">
                         <div style="display: flex; justify-content: space-around; align-items: center;">
-                            ${record.estatus == 1 ? `
-                                <input type="checkbox" 
-                                       class="custom-checkbox" 
-                                       id="checkbox_${record.idconcepto}" 
-                                       onchange="toggleRowSelection('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
-                                       ${selectedCheckboxes[record.idconcepto] ? 'checked' : ''}>
-                                <label for="checkbox_${record.idconcepto}" class="checkbox-design"></label>
-                            ` : ``}
+                           ${record.estatus == 1 ? `
+                                <div class="checkbox-container">
+                                    <input type="checkbox" 
+                                        class="custom-checkbox" 
+                                        id="checkbox_${record.idconcepto}" 
+                                        onchange="toggleRowSelection('${record.idconcepto}', '${record.idconteo}','${encodeURIComponent(record.nombre)}',  '${record.unidad}', '${record.total}', '${record.nombreespe}', this.checked)"
+                                        ${selectedCheckboxes[record.idconcepto] ? 'checked' : ''}>
+                                    <label for="checkbox_${record.idconcepto}" class="checkbox-design"></label>
+                                </div>
+                                ` : ``}
                             ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                                 <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificarConcepto('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.total}')"></i>
                             ` : ``}
                             ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconcepto}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.nombreespe}',0)"></i>
+                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconcepto}','${record.idconteo}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.nombreespe}',0)"></i>
                             ` : ``}
                             ${rolUsuarioSe == "Administrador" ?
                         `<i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconcepto}', ${record.estatus})"></i>`
@@ -492,7 +564,7 @@ function displayTableConcepto(page) {
                                 <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" data-bs-toggle="modal" data-bs-target="#EditarModalBasi" onclick="llenarModalModificarConceptoBasico('${record.idconbasi}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','${record.total}')"></i>
                             ` : ``}
                             ${record.estatus == 1 ? `
-                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconbasi}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','---',1)"></i>
+                                <i class="coloresIcono fa-solid fa-file-circle-plus" style="cursor: pointer;" alt="Catalogo" onclick="opcion('Tarjeta'); InfoTarjeta('${record.idconbasi}','${record.idconteo}', '${encodeURIComponent(record.nombre)}', '${record.unidad}','---',1)"></i>
                             ` : ``}
                             ${rolUsuarioSe == "Administrador" ?
                         `<i class="coloresIcono fa-solid fa-${record.estatus == 1 ? 'square-check' : 'square'}" style="cursor: pointer;" onclick="AbrirModalConfirm1(); AsignarValores('${record.idconbasi}', ${record.estatus})"></i>`
@@ -521,11 +593,11 @@ function displayTableConcepto(page) {
 }
 
 //Se agrega o quita del arreglo los conceptos seleccionados para su exportacion
-function toggleRowSelection(idconcepto, nombre, unidad, total, familia, isChecked) {
+function toggleRowSelection(idconcepto, idconteo, nombre, unidad, total, familia, isChecked) {
     if (isChecked) {
         // Agregar la fila seleccionada al array y al objeto
         selectedRows.push({
-            idconcepto, nombre: decodeURIComponent(nombre), unidad, familia, cantidad: 1, total: total == "null" ? 0 : total,
+            idconcepto, idconteo, nombre: decodeURIComponent(nombre), unidad, familia, cantidad: 1, total: total == "null" ? 0 : total,
         });
         selectedCheckboxes[idconcepto] = true;
     } else {
@@ -657,9 +729,10 @@ function llenarTablaConcepto() {
 }
 
 //Datos para la tarjeta
-function InfoTarjeta(id, nombre, unidad, familia, tipoConcp) {
+function InfoTarjeta(id, idconteo, nombre, unidad, familia, tipoConcp) {
     datosCatalogo = {
         id,
+        idconteo,
         nombre: decodeURIComponent(nombre),
         unidad,
         familia,
@@ -686,6 +759,8 @@ function AddlimpiarModalConcepto() {
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
     const input = document.getElementById('AddunidadInputConcepto');
+
+    actualizarContador("Add");
 }
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
@@ -707,7 +782,6 @@ function valStatusConcepto() {
 //Metodo para que se llene el modal de modificar con los datos seleccionados de la fila
 //Recibe los datos del material
 function llenarModalModificarConcepto(id, nombre, unidad, total) {
-    console.log(id, nombre, unidad, total)
     //Llenado de datos en el modal
     let idC = document.querySelector('#UpdidInput');
     let nombreC = document.querySelector('#UpdnombreInput');
@@ -728,6 +802,7 @@ function llenarModalModificarConcepto(id, nombre, unidad, total) {
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
     const input = document.getElementById('UpdunidadInput');
+    actualizarContador("Upd");
 }
 
 function Exportar() {
@@ -751,7 +826,6 @@ function llenarUnidadTabla(btnOpcion) {
     const unidadFilter = document.getElementById("unidad-filterConcepto"); // El select donde agregarás las opciones
     let json = "";
     let url = "";
-    console.log(btnOpcion)
     if (btnOpcion) {
         url = "../ws/Conceptos/wsGetUnidades.php";
     } else {
@@ -878,7 +952,6 @@ function ActualizarTotalesConcepto() {
             try {
                 if (status == "success") {
                     let resp = JSON.parse(responseText);
-                    console.log(resp);
 
                     resolve(); // La promesa se resuelve exitosamente
 
@@ -902,7 +975,6 @@ function ActualizarTotalesConceptoBasico() {
             try {
                 if (status == "success") {
                     let resp = JSON.parse(responseText);
-                    console.log(resp);
 
                     resolve(); // La promesa se resuelve exitosamente
 
@@ -1005,14 +1077,12 @@ function AddConceptoBasicoValidar() {
         id.focus();
         return;
     }
-    console.log(datos)
     let json = JSON.stringify(datos);
     let url = "../ws/ConceptosBasicos/wsAddConceptoBasico.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp)
                 if (resp.estado == "OK") {
                     AddCerrarModal();
                     PrincipalConcepto(0);
@@ -1079,14 +1149,12 @@ function UpdConceptoBasicoValidar() {
         id.focus();
         return;
     }
-    console.log(datos)
     let json = JSON.stringify(datos);
     let url = "../ws/ConceptosBasicos/wsUpdConceptoBasico.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp)
                 if (resp.estado == "OK") {
                     UpdateCerrarModal();
                     mensajePantalla(msgModificarCon, true);
@@ -1117,7 +1185,7 @@ function AddlimpiarModalConceptoBasico() {
 
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
-
+    actualizarContadorBasico("Add");
 }
 
 
@@ -1144,6 +1212,7 @@ function llenarModalModificarConceptoBasico(id, nombre, unidad, total) {
     idC.classList.remove("inputVacio");
     nombreC.classList.remove("inputVacio");
     unidadC.classList.remove("inputVacio");
+    actualizarContadorBasico("Upd");
 }
 
 function idConceptoBasicoAutomatico() {
@@ -1163,6 +1232,34 @@ function idConceptoBasicoAutomatico() {
     return newId;
 }
 
+function actualizarContadorBasico(tipo) {
+    const textarea =
+        document.querySelector(`#${tipo}nombreInputConceptoBasico`) ||
+        document.querySelector(`#${tipo}nombreInputBasico`);
+
+    const contador = document.querySelector(`#${tipo}contadorNombreBasico`);
+    const max = 500;
+
+    if (!textarea || !contador) return;
+
+    // Evita sobrepasar el límite
+    if (textarea.value.length > max) {
+        textarea.value = textarea.value.substring(0, max);
+    }
+
+    const length = textarea.value.length;
+    contador.textContent = `${length}/${max}`;
+
+    // Cambia el color si se acerca al límite
+    if (length > max * 0.9) {
+        contador.style.color = "red";
+    } else if (length > max * 0.7) {
+        contador.style.color = "#ff9800";
+    } else {
+        contador.style.color = "#555";
+    }
+}
+
 
 
 async function GeneradorTarjetasConceptoPdf(value) {
@@ -1178,12 +1275,9 @@ async function GeneradorTarjetasConceptoPdf(value) {
         costosAdicionales.utilidad = 10;
         costosAdicionales.CAdicionales = 0.5;
 
-
+        let contador = 1;
         containerCon.innerHTML = '';
-        contador = 0;
         for (const concepto of conceptos) {
-            contador++;
-            console.log(concepto);
             let conceptoHTML = `
         
             <div id="concepto-${concepto.idconcepto}" class="tarjeta-concepto">
@@ -1194,6 +1288,8 @@ async function GeneradorTarjetasConceptoPdf(value) {
                                 <tr class="todosBordes">
                                     <th class="textIzq" style="width: 9rem;  text-align: justify;  ">No. Concepto</th>
                                     <td class="textDer" style="width:4rem; border: 1px solid #000;">${String(contador).padStart(3, '0')}</td>
+                                     <th class="textIzq" style="width: 9rem;  text-align: justify;  ">Fecha</th>
+                                    <td class="textDer" style="width:10rem; border: 1px solid #000;">${ObtenerFechaActualDMY()}</td>
                                     <td class="textCen" style="border: 1px solid #000;">Análisis de los precios unitarios de los conceptos de trabajo</td>
                                 </tr>
                             </thead>
@@ -1329,11 +1425,12 @@ async function GeneradorTarjetasConceptoPdf(value) {
                 </div>
             </div>
         `;
+            contador++;
             containerCon.innerHTML += conceptoHTML;
-            await TraerMaterialesConceptoPDF(concepto.idconcepto);
-            await TraerManoObrasConceptoPDF(concepto.idconcepto);
-            await TraerMaquinariaConceptoPDF(concepto.idconcepto);
-            await TraerBasicoConceptoPDF(concepto.idconcepto);
+            await TraerMaterialesConceptoPDF(concepto.idconcepto, false);
+            await TraerManoObrasConceptoPDF(concepto.idconcepto, false);
+            await TraerMaquinariaConceptoPDF(concepto.idconcepto, false);
+            await TraerBasicoConceptoPDF(concepto.idconcepto, false);
         }
         if (value) {
             exportarPDFConHtml(true);
@@ -1344,3 +1441,4 @@ async function GeneradorTarjetasConceptoPdf(value) {
     }
 
 }
+

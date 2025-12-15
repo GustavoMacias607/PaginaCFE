@@ -92,14 +92,11 @@ function AddProyectoFase1() {
     datos.total = 0;
     datosProyecto = datos;
     let json = JSON.stringify(datos);
-    console.log(json)
-
     let url = "../ws/Proyecto/wsAddProyecto.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     AddCerrarModal();
                     opcion("addCatConFrm")
@@ -174,7 +171,7 @@ function GetProyectoProceso() {
     conceptosDProyecto = [];
     document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
-    ObtenerZonas();
+    ObtenerZonas(false);
     let datos = {};
     let idUsuario = document.querySelector('#idUsuario');
     datos.idUsuario = idUsuario.value;
@@ -184,10 +181,8 @@ function GetProyectoProceso() {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     data = resp.datos;
-                    console.log(data)
                     llenarTablaProyectoProceso();
                     filterDataProyectoProceso();
                     llenarTablaProyectoTerminado();
@@ -214,23 +209,37 @@ function displayTableProyectoProceso(page) {
 
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            console.log(record);
+            // Función para formatear fecha
+            const formatDate = (fecha) => {
+                if (!fecha || fecha.trim() === "" || fecha === "0000-00-00") return "---";
+                const partes = fecha.split("-");
+                if (partes.length !== 3) return fecha; // por si viene en otro formato
+                const [anio, mes, dia] = partes;
+                return `${dia}/${mes}/${anio}`;
+            };
+
+            const fechaFormateada = formatDate(record.fecha);
+
             // Crear un elemento de fila (tr)
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.style.cursor = "pointer";
+
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                <td class="Code">${record.idproyecto}</td>
-                <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
-                <td>${(!record.NombreZona == "") ? record.NombreZona : "---"}</td>
-                <td>${(!record.TipoObra == "") ? record.TipoObra : "---"}</td>
+                <td class="Code" style="text-align: right;">${record.idproyecto}</td>
+                <td>${record.nombre?.trim() || "---"}</td>
+                <td>${fechaFormateada}</td>
+                <td>${record.NombreZona?.trim() || "---"}</td>
+                <td>${record.TipoObra?.trim() || "---"}</td>
+                <td>${record.estatus || "---"}</td>
             `;
 
-            // Añadir eventos mouseover y mouseout
+            // Eventos mouseover / mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
 
+            // Evento doble clic
             row.addEventListener("dblclick", () => {
                 datosProyecto = {
                     idProyecto: record.idproyecto,
@@ -250,7 +259,6 @@ function displayTableProyectoProceso(page) {
                 } else {
                     opcion("addPresupuestoFrm");
                 }
-
             });
 
             // Añadir la fila al tbody
@@ -262,8 +270,8 @@ function displayTableProyectoProceso(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
-
 }
+
 
 function setupPaginationProyectoProceso() {
     const paginationDiv = document.getElementById("paginationProceso");
@@ -372,10 +380,8 @@ function filterDataProyectoProceso() {
         }
 
 
-        console.log(record.estatus == statusFilterCuadro, record.estatus == statusFilterPresupuesto)
         return matchesSearch && matchesStatus;
     });
-    console.log(filteredData);
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableProyectoProceso(currentPage);
     setupPaginationProyectoProceso();
@@ -395,7 +401,8 @@ function llenarTablaProyectoProceso() {
     });
 }
 
-function ObtenerZonas() {
+function ObtenerZonas(tarjetas) {
+    let tarjetaConcepto = tarjetas;
     let json = "";
     let url = "";
     url = "../ws/Zonas/wsGetZona.php";
@@ -405,7 +412,10 @@ function ObtenerZonas() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     objZonas = resp.datos;
-                    PorsentajesZona(objZonas, false);
+
+                    if (tarjetaConcepto)
+                        console.log("tarjetas");
+                    porcentajeZona(objZonas, false);
                 }
             } else {
                 throw e = status;
@@ -463,7 +473,6 @@ function ocultarSugerenciasZonas() {
 }
 
 function seleccionarSugerenciaZonas(unidad, sugerenciasDiv) {
-    console.log(unidad, sugerenciasDiv);
     let input = document.getElementById('inputZona');
     input.value = unidad; // Colocar la unidad seleccionada en el input
     sugerenciasDiv.innerHTML = ''; // Limpiar las sugerencias
@@ -473,12 +482,9 @@ function seleccionarSugerenciaZonas(unidad, sugerenciasDiv) {
 function obtenerIdZona() {
     let zona = document.getElementById('inputZona').value.toLowerCase();
     let obra = document.getElementById('AddTipoObra').value.toLowerCase();
-    console.log(objZonas);
-    console.log(zona, obra);
 
     // Encontrar el objeto que coincida con la zona y la obra
     const resultado = objZonas.find(z => z.zona.toLowerCase() == zona && z.obra.toLowerCase() == obra);
-    console.log(resultado);
     // Si se encuentra el objeto, devolver el idzona, de lo contrario, devolver null o un valor por defecto
     if (resultado) {
         return resultado.idzona;
@@ -530,34 +536,52 @@ function displayTableProyectoTerminado(page) {
     const end = start + rowsPerPage;
     const paginatedData = filterDataProyTerm.slice(start, end);
 
+    // Función para formatear fechas (YYYY-MM-DD → DD/MM/YYYY)
+    const formatDate = (fecha) => {
+        if (!fecha || fecha.trim() === "" || fecha === "0000-00-00") return "---";
+        const partes = fecha.split("-");
+        if (partes.length !== 3) return fecha; // por si viene en otro formato
+        const [anio, mes, dia] = partes;
+        return `${dia}/${mes}/${anio}`;
+    };
+
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
-            console.log(record);
+            const fechaFormateada = formatDate(record.fecha);
+
             // Crear un elemento de fila (tr)
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.style.cursor = "pointer";
+
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                <td class="Code">${record.idproyecto}</td>
-                <td>${(!record.nombre == "") ? record.nombre : "---"}</td>
-                <td>${(!record.NombreZona == "") ? record.NombreZona : "---"}</td>
-                <td>${(!record.TipoObra == "") ? record.TipoObra : "---"}</td>
+                <td class="Code" style="text-align: right;">${record.idproyecto}</td>
+                <td>${record.nombre?.trim() || "---"}</td>
+                <td>${fechaFormateada}</td>
+                <td>${record.NombreZona?.trim() || "---"}</td>
+                <td>${record.TipoObra?.trim() || "---"}</td>
                 <td class="estatus">
-                 <div style="display: flex; justify-content: space-around; align-items: center;">
-                    ${rolUsuarioSe == "Administrador" ?
-                    (record.estatus == "Terminado" ?
-                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;" onclick="abrirModalBaja('${record.estatus}');creacionObjCambioEstatus(${record.idproyecto},${record.idusuario},'${encodeURIComponent(record.nombre)}','${record.fecha}','${record.periodo}','${record.fechainicio}','${record.fechatermino}',${record.idzona},${record.total},'${record.estatus}')"></i>` :
-                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;" onclick="abrirModalBaja('${record.estatus}');creacionObjCambioEstatus(${record.idproyecto},${record.idusuario},'${encodeURIComponent(record.nombre)}','${record.fecha}','${record.periodo}','${record.fechainicio}','${record.fechatermino}',${record.idzona},${record.total},'${record.estatus}')"></i>`
-                    ) : ``
-                }
-                </div>
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        ${rolUsuarioSe == "Administrador" ? (
+                    record.estatus == "Terminado" ?
+                        `<i class="coloresIcono fa-solid fa-square-check" style="cursor: pointer;"
+                                onclick="abrirModalBaja('${record.estatus}');
+                                creacionObjCambioEstatus(${record.idproyecto}, ${record.idusuario}, '${encodeURIComponent(record.nombre)}', '${record.fecha}', '${record.periodo}', '${record.fechainicio}', '${record.fechatermino}', ${record.idzona}, ${record.total}, '${record.estatus}')"></i>`
+                        :
+                        `<i class="coloresIcono fa-solid fa-square" style="cursor: pointer;"
+                                onclick="abrirModalBaja('${record.estatus}');
+                                creacionObjCambioEstatus(${record.idproyecto}, ${record.idusuario}, '${encodeURIComponent(record.nombre)}', '${record.fecha}', '${record.periodo}', '${record.fechainicio}', '${record.fechatermino}', ${record.idzona}, ${record.total}, '${record.estatus}')"></i>`
+                ) : ``}
+                    </div>
                 </td>
             `;
-            // Añadir eventos mouseover y mouseout
+
+            // Eventos mouseover / mouseout
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
 
+            // Evento doble clic
             row.addEventListener("dblclick", () => {
                 datosProyecto = {
                     idProyecto: record.idproyecto,
@@ -572,7 +596,7 @@ function displayTableProyectoTerminado(page) {
                     total: record.total,
                     estatus: record.estatus
                 };
-                opcion('addProyTermFrm')
+                opcion('addProyTermFrm');
             });
 
             // Añadir la fila al tbody
@@ -584,8 +608,8 @@ function displayTableProyectoTerminado(page) {
                      </tr>`;
         tableBody.innerHTML += row;
     }
-
 }
+
 
 function setupPaginationProyectoTerminado() {
     const paginationDiv = document.getElementById("paginationTerminados");
@@ -673,7 +697,6 @@ function setupPaginationProyectoTerminado() {
 function filterDataProyectoTerminado() {
     const searchText = document.getElementById("search-inputProyecto").value.toLowerCase();
     const statusFilter = estatusProyecto;
-    console.log(data)
     filterDataProyTerm = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
@@ -720,7 +743,6 @@ function creacionObjCambioEstatus(IdProyecto, idUsuario, Nombre, Fecha, Periodo,
 }
 
 function abrirModalBaja(estatus) {
-    console.log(estatus)
     if (estatus == "Terminado") {
         $('#confirmDeleteModal').modal('show');
     } else {
@@ -746,13 +768,11 @@ function valStatusProyecto() {
 
 function cambioEstatusProyecto() {
     let json = JSON.stringify(datosProyectoCambio);
-    console.log(json)
     let url = "../ws/Proyecto/wsUpdProyecto.php";
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
                 if (resp.estado == "OK") {
                     GetProyectoProceso();
                 }

@@ -54,13 +54,13 @@ function displayTableProveedoresICM(page) {
             row.style.cursor = "pointer";
             // Establecer el contenido HTML de la fila
             row.innerHTML = `
-                <td class="Code">${record.idproveedor}</td>
-                <td>${record.nombreprov != "" ? record.nombreprov : "---"}</td>
+                <td class="Code" style="text-align: right;">${record.idproveedor}</td>
+                <td>${record.nombreprov != "" ? record.nombreprov.replace(/\n/g, "<br>") : "---"}</td>
                 <td class="estatus">
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `
                             <i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" alt="Modificar" 
-                               onclick="llenarFormularioProveedores(${record.idproveedor},'${record.nombreprov}')"></i>
+                               onclick="llenarFormularioProveedores(${record.idproveedor},'${encodeURIComponent(record.nombreprov)}')"></i>
                         ` : ``}
                           ${rolUsuarioSe == "Administrador" ?
                     (record.estatus == 1 ?
@@ -305,7 +305,7 @@ function llenarFormularioProveedores(idproveedor, nombre) {
     let Nombre = document.querySelector('#txtNombreProveedor');
     let id = document.querySelector('#inputIdProv');
     id.value = idproveedor;
-    Nombre.value = nombre;
+    Nombre.value = decodeURIComponent(nombre);
     Nombre.placeholder = "";
     Nombre.classList.remove("inputVacio");
     $('#AgregarModal').modal('show');
@@ -700,12 +700,12 @@ function AgregarPropuesta() {
         msg = "Propuesta modificada";
     }
     let json = JSON.stringify(datos);
-    console.log(json);
+
     $.post(url, json, (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
-                console.log(resp);
+
                 if (resp.estado == "OK") {
                     $('#AgregarModalPropuesta').modal('hide');
                     mensajePantalla(msg, true);
@@ -784,15 +784,16 @@ function llenarSelectAnios() {
 
 
 function GetAuxPropuestas() {
-    let json = "";
+    preciosOriginales = {}; // 👈 reset seguro
+
     let url = "../ws/AuxPropuestas/wsGetAuxPropuestas.php";
-    $.post(url, json, (responseText, status) => {
+    $.post(url, "", (responseText, status) => {
         try {
-            if (status == "success") {
+            if (status === "success") {
                 let resp = JSON.parse(responseText);
-                if (resp.estado == "OK") {
+                if (resp.estado === "OK") {
                     AuxPropuestas = resp.datos;
-                    // Guardar los precios originales
+
                     AuxPropuestas.forEach(aux => {
                         if (!preciosOriginales[aux.idpropuesta]) {
                             preciosOriginales[aux.idpropuesta] = {};
@@ -801,13 +802,14 @@ function GetAuxPropuestas() {
                     });
                 }
             } else {
-                throw e = status;
+                throw status;
             }
         } catch (error) {
             console.error(error);
         }
     });
 }
+
 
 
 

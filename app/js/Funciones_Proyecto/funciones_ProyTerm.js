@@ -1,9 +1,9 @@
-let totalManoObraTarjeta;
+
 function llenarCamposPaginaTerminado() {
     showCostoDirecto = true;
     showPrecioUnitario = true;
     showPUCantidad = true;
-    PorsentajesZona(objZonas, true)
+
     document.getElementById('AddfechaInicioInput').addEventListener('blur', calcularFechaTermino);
     document.getElementById('inputPeriodo').addEventListener('blur', calcularFechaTermino);
     let id = document.getElementById("lblId").innerHTML = datosProyecto.idProyecto;
@@ -18,7 +18,10 @@ function llenarCamposPaginaTerminado() {
     getMaterialesNo();
     getMaquinarias();
     getManoObras();
-    ObtenerZonas();
+    currentPageTarjetas = 1;
+    tarjetasPerPage = 5;
+    allConceptos = [];
+    precionadoBtnExportarPdf();
     document.getElementById('toggleCostoDirecto').addEventListener('click', () => {
         showCostoDirecto = !showCostoDirecto;
         updateColumnVisibility();
@@ -34,14 +37,18 @@ function llenarCamposPaginaTerminado() {
         updateColumnVisibility();
     });
 }
-function PorsentajesZona(zonis, calculoConcepto) {
+function porcentajeZona(zonis, calculoConcepto) {
     zonis.forEach((zona) => {
         if (zona.idzona == datosProyecto.idZona) {
+            console.log("entro")
             costosAdicionales.CIndirecto = zona.indirecto;
             costosAdicionales.Financiamiento = zona.financiamiento;
             costosAdicionales.utilidad = zona.utilidad;
             costosAdicionales.CAdicionales = zona.adicionales;
+            console.log(calculoConcepto);
             if (!calculoConcepto) {
+                console.log("imprimiendo las tarjetas");
+                llenarTablaConceptosTerminado();
                 GeneradorTablaConceptoPDF();
             }
             return;
@@ -54,10 +61,14 @@ function mostrarTablaTerminado(tablaId, boton) {
     const isVisible = tabla.style.display === 'block';
     if (tablaId == "tablaTarjetasProyecto" && !isVisible) {
         let btns = document.getElementById("mostrarBtnPdf");
+        let btns2 = document.getElementById("mostrarBtnPaginacion");
         btns.style.display = 'flex';
+        btns2.style.display = 'flex';
     } else {
         let btns = document.getElementById("mostrarBtnPdf");
+        let btns2 = document.getElementById("mostrarBtnPaginacion");
         btns.style.display = 'none';
+        btns2.style.display = 'none';
     }
     // Ocultar todas las tablas
     const tablas = document.querySelectorAll('div[id^="tabla"]');
@@ -89,20 +100,33 @@ function mostrarTablaTerminado(tablaId, boton) {
 
 
 function MostrarConceptosContenidosProyectoTerminado() {
-    const datos = {};
-    datos.idProyecto = datosProyecto.idProyecto;
-    let json = JSON.stringify(datos);
-    let url = "../ws/ConceptosProyecto/wsGetConceptos.php";
+    const datos = { idProyecto: datosProyecto.idProyecto };
+    const json = JSON.stringify(datos);
+    const url = "../ws/ConceptosProyecto/wsGetConceptos.php";
+
     $.post(url, json, (responseText, status) => {
         try {
-            if (status == "success") {
-                let resp = JSON.parse(responseText);
-                let datosBd = resp.datos;
-                if (datosBd) {
+            if (status === "success") {
+                const resp = JSON.parse(responseText);
+                const datosBd = resp.datos;
+
+                if (datosBd && datosBd.length > 0) {
+                    // 🔹 Ordenar antes de procesar
+                    datosBd.sort((a, b) => {
+                        // Si idconteo es numérico, ordenar como número
+                        if (!isNaN(a.IdConteo) && !isNaN(b.IdConteo)) {
+                            return Number(a.IdConteo) - Number(b.IdConteo);
+                        }
+                        // Si tiene letras (alfanumérico), usar orden alfabético
+                        return a.IdConteo.localeCompare(b.IdConteo, 'es', { numeric: true });
+                    });
+
+                    // 🔹 Llenar el objeto editedRows con el orden correcto
                     datosBd.forEach((datos) => {
                         editedRows[datos.IdConcepto] = {
                             cantidad: datos.CantidadTotal,
                             estatus: datos.EstatusConcepto,
+                            idconteo: datos.IdConteo,
                             idconcepto: datos.IdConcepto,
                             nombre: datos.NombreConcepto,
                             nombreespe: datos.Familia,
@@ -113,9 +137,11 @@ function MostrarConceptosContenidosProyectoTerminado() {
                 } else {
                     editedRows = {};
                 }
-                console.log(editedRows);
+                ObtenerZonas(true);
+                // 🔹 Convertir a arreglo (ya ordenado)
+                filteredDataPresupuesto = Object.values(editedRows);
                 GeneradorTablaConcepto();
-                llenarTablaConceptosTerminado();
+
             } else {
                 throw new Error(status);
             }
@@ -125,10 +151,52 @@ function MostrarConceptosContenidosProyectoTerminado() {
     });
 }
 
+
 function precionadoBtnExportarPdf() {
+    texto = document.getElementById("textoCargaDiv");
+    if (pantallaFuncion == "addProyTermFrm") {
+        texto.style.color = "black";
+    } else {
+        texto.style.color = "white";
+    }
+
     let btn = document.getElementById("btnExportarPDF");;
     btn.setAttribute("disabled", "disabled");
     btn.classList.add("btnClickeadoExportar");
+
+    let btnE = document.getElementById("btnExportar");
+    btnE.setAttribute("disabled", "disabled");
+    btnE.classList.add("btnClickeadoExportar");
+}
+
+function RegresarEstatusProyecto() {
+    const datos = {};
+    datos.idProyecto = datosProyecto.idProyecto;
+    datos.nombre = datosProyecto.nombre;
+    datos.fecha = datosProyecto.fecha;
+    datos.periodo = datosProyecto.periodo;
+    datos.fechaInicio = datosProyecto.fechaInicio;
+    datos.fechaTermino = datosProyecto.fechaTermino;
+    datos.idZona = datosProyecto.idZona;
+    datos.total = datosProyecto.total;
+    datos.estatus = 'Presupuesto';
+    let json = JSON.stringify(datos);
+
+    let url = "../ws/Proyecto/wsUpdProyecto.php";
+    $.post(url, json, (responseText, status) => {
+        try {
+            if (status == "success") {
+                let resp = JSON.parse(responseText);
+                if (resp.estado == "OK") {
+                    opcion('addPresupuestoFrm')
+                }
+            } else {
+                throw e = status;
+            }
+        } catch (error) {
+            alert("Error: " + error)
+        }
+    });
 }
 
 
@@ -153,51 +221,70 @@ function llenarTablaConceptosTerminado() {
     let total = 0;
     const tableBody = document.getElementById("table-bodyConceptos");
     tableBody.innerHTML = "";
-    const editedRowsArray = Object.values(editedRows);
+    const editedRowsArray = Object.values(editedRows || []); // Protección por si editedRows es null o undefined
+
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
     });
+    let contador = 1;
     if (editedRowsArray.length > 0) {
         editedRowsArray.forEach(record => {
-
-            const precioFormateado = record.total ? formatoMXN.format(record.total) : "---";
-            let calculoPorcentaje = calculoConceptoPorcentaje(parseFloat(record.total))
-            let importe = record.cantidad * calculoPorcentaje
+            // Normalizar y validar tipos numéricos
+            const totalNum = parseFloat(record.total) || 0;
+            const cantidadNum = parseFloat(record.cantidad) || 0;
+            // Evita fallos si la función de porcentaje no devuelve número
+            const calculoPorcentaje = parseFloat(calculoConceptoPorcentaje(totalNum)) || 0;
+            const importe = cantidadNum * calculoPorcentaje;
             total += importe;
-            const PrecioPorcentajeFormateado = record.total ? formatoMXN.format(calculoPorcentaje) : "---";
-            const importeFormateado = record.total ? formatoMXN.format(importe) : "---";
+
+            // Formateos seguros
+            const precioFormateado = totalNum > 0 ? formatoMXN.format(totalNum) : "$0.00";
+            const PrecioPorcentajeFormateado = calculoPorcentaje > 0 ? formatoMXN.format(calculoPorcentaje) : "$0.00";
+            const importeFormateado = importe > 0 ? formatoMXN.format(importe) : "$0.00";
+
+
+
+            // Sanitizar texto (evita errores si vienen null o undefined)
+            const idconteo = record.idconteo ?? "---";
+            const idconcepto = record.idconcepto ?? "---";
+            const nombre = record.nombre?.toString().trim() || "---";
+            const unidad = record.unidad?.toString().trim() || "---";
+            const cantidadTexto = record.cantidad !== "" && record.cantidad != null ? cantidadNum : "---";
 
             const row = document.createElement('tr');
             row.classList.add('fila');
             row.innerHTML = `
-                  <td class="Code">${record.idconcepto}</td>
-                    <td>${record.nombre !== "" ? record.nombre : "---"}</td>
-                    <td>${record.unidad !== "" ? record.unidad : "---"}</td>
-                    <td style="text-align: right;" >${record.cantidad !== "" ? record.cantidad : "---"}</td>
-                    <td style="text-align: right;" class="col-costo-directo">${precioFormateado}</td>
-                    <td style="text-align: right;" class="col-precio-unitario">${PrecioPorcentajeFormateado}</td>
-                    <td style="text-align: right;" class="col-pu-cantidad">${importeFormateado}</td>
-                    `;
+                <td style="text-align: right;">${contador}</td>
+                <td class="Code">${idconcepto}</td>
+                <td>${nombre}</td>
+                <td>${unidad}</td>
+                <td style="text-align: right;">${cantidadTexto}</td>
+                <td style="text-align: right;" class="col-costo-directo">${precioFormateado}</td>
+                <td style="text-align: right;" class="col-precio-unitario">${PrecioPorcentajeFormateado}</td>
+                <td style="text-align: right;" class="col-pu-cantidad">${importeFormateado}</td>
+            `;
             row.addEventListener("mouseover", () => mostrarValores(row));
             row.addEventListener("mouseout", () => ocultarValores(row));
             tableBody.appendChild(row);
+
+            contador++;
         });
 
-        let totalImporteConcepto = document.getElementById("TotalSumaImporteConceptos");
+        const totalImporteConcepto = document.getElementById("TotalSumaImporteConceptos");
         totalImporteConcepto.innerHTML = formatoMXN.format(total);
     } else {
-        const row = `
-        <tr class="fila">
-            <td colspan="8" class="Code">Sin resultados</td>
-        </tr>
-    `;
-        tableBody.innerHTML += row;
+        tableBody.innerHTML = `
+            <tr class="fila">
+                <td colspan="8" class="Code">Sin resultados</td>
+            </tr>
+        `;
     }
 
-    // Update column visibility after rendering the table
+    // Actualizar visibilidad de columnas al final
     updateColumnVisibility();
 }
+
 
 /***
  * 
@@ -248,24 +335,61 @@ function ExportarPDFMaterialesSi() {
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
         doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+
+            const obraText = "Obra: " + datosProyecto.nombre;
+
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
+    };
 
     // Agregar título de la tabla
-    const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const titleX = pageWidth / 2; // Posición centrada en el ancho
-        const titleY = 45; // Posición Y del título
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de la fuente
-        const title = "Materiales CFE";
-        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        const title = "Materiales Suministrados por CFE";
+        doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG';
+        const imageUrl = urlImagenLogo;
         const marginLeft = 15;
         const marginTop = 15;
         const imageWidth = 45;
@@ -274,8 +398,6 @@ function ExportarPDFMaterialesSi() {
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
 
-    // Generar la tabla con pie de página dinámico
-    let pageNumber = 0;
     // Pie de página dinámico
     const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height;
@@ -292,10 +414,26 @@ function ExportarPDFMaterialesSi() {
         doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
     };
 
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
+
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
+        // Usar un margin.top base y controlar con startY
         margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
             fillColor: "#008e5a",
             textColor: "#FFFFFF",
@@ -316,11 +454,30 @@ function ExportarPDFMaterialesSi() {
         },
 
         didDrawPage: (data) => {
-            pageNumber += 1; // Incrementar el número de página
+            pageNumber += 1;
+
             addImage(doc);
             addHeader(doc);
-            addTitle(doc);
-            addFooter(doc, pageNumber); // Pasar el número de página al pie
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                // Esto forzará a que la tabla en páginas siguientes comience en 53
+                data.settings.startY = otherPagesStartY;
+            }
+
+            addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -384,23 +541,61 @@ function ExportarPDFMaterialesNo() {
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
         doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
-    // Agregar título
-    const addTitle = (doc) => {
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
+
+            const obraText = "Obra: " + datosProyecto.nombre;
+
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
+    };
+
+    // Agregar título de la tabla
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
         const pageWidth = doc.internal.pageSize.width;
         const titleX = pageWidth / 2;
-        const titleY = 45;
 
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
-        const title = "Materiales contratista";
+        const title = "Materiales Suministrados por contratista";
         doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG';
+        const imageUrl = urlImagenLogo;
         const marginLeft = 15;
         const marginTop = 15;
         const imageWidth = 45;
@@ -410,7 +605,6 @@ function ExportarPDFMaterialesNo() {
     };
 
     // Pie de página dinámico
-    let pageNumber = 0;
     const addFooter = (doc, pageNumber) => {
         const pageHeight = doc.internal.pageSize.height;
         const pageWidth = doc.internal.pageSize.width;
@@ -426,10 +620,25 @@ function ExportarPDFMaterialesNo() {
         doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
     };
 
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
+
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
         margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
             fillColor: "#008e5a",
             textColor: "#FFFFFF",
@@ -451,10 +660,28 @@ function ExportarPDFMaterialesNo() {
 
         didDrawPage: (data) => {
             pageNumber += 1;
+
             addImage(doc);
             addHeader(doc);
-            addTitle(doc);
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
+
             addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
@@ -496,119 +723,186 @@ function ExportarPDFManoObra() {
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
         const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
-    const addFooter = (doc, pageNumber) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de fuente
-        doc.setTextColor(0, 0, 0); // Color negro
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
 
-        const pageText = `Página ${pageNumber}`; // Texto del número de página
-        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+            const obraText = "Obra: " + datosProyecto.nombre;
 
-        // Centrar el texto en el pie de página
-        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
     };
 
-    const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const titleX = pageWidth / 2; // Posición centrada en el ancho
-        const titleY = 45; // Posición Y del título
+    // Agregar título de la tabla
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de la fuente
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
         const title = "Mano de obra";
-        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
+        doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
+
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = urlImagenLogo;
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
+
+    // Pie de página dinámico
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
 
     // Generar la tabla y configurar estilos
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 8,
         },
         columnStyles: {
-            0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'left' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' }, // Centrar contenido de la columna "Cantidad"
-            4: { halign: 'right' }, // Centrar contenido de la columna "Precio U"
-            5: { halign: 'right' }, // Alinear a la derecha contenido de la columna "Importe"
-            6: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            0: { halign: 'left' },
+            1: { halign: 'left' },
+            2: { halign: 'left' },
+            3: { halign: 'right' },
+            4: { halign: 'right' },
+            5: { halign: 'right' },
+            6: { halign: 'right' }
         },
         didDrawPage: (data) => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
-            addFooter(doc, pageNumber); // Agregar el pie de página numerado
+            pageNumber += 1;
+
+            addImage(doc);
+            addHeader(doc);
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
+
+            addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -634,119 +928,183 @@ function ExportarPDFHerramientasMano() {
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
         const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
-    const addFooter = (doc, pageNumber) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de fuente
-        doc.setTextColor(0, 0, 0); // Color negro
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
 
-        const pageText = `Página ${pageNumber}`; // Texto del número de página
-        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+            const obraText = "Obra: " + datosProyecto.nombre;
 
-        // Centrar el texto en el pie de página
-        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
     };
 
     // Agregar título de la tabla
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
 
-    const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const titleX = pageWidth / 2; // Posición centrada en el ancho
-        const titleY = 45; // Posición Y del título
-
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de la fuente
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
         const title = "Herramientas de mano de obra";
-        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
+        doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = urlImagenLogo;
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
+
+    // Pie de página dinámico
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
 
     // Generar la tabla y configurar estilos
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 8,
         },
         columnStyles: {
-            0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'right' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            0: { halign: 'left' },
+            1: { halign: 'right' },
+            2: { halign: 'right' },
+            3: { halign: 'right' }
         },
         didDrawPage: (data) => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
-            addFooter(doc, pageNumber); // Agregar el pie de página numerado
+            pageNumber += 1;
+
+            addImage(doc);
+            addHeader(doc);
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
+
+            addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -772,118 +1130,183 @@ function ExportarPDFEquipoSeguirdad() {
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
         const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
-    const addFooter = (doc, pageNumber) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de fuente
-        doc.setTextColor(0, 0, 0); // Color negro
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
 
-        const pageText = `Página ${pageNumber}`; // Texto del número de página
-        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+            const obraText = "Obra: " + datosProyecto.nombre;
 
-        // Centrar el texto en el pie de página
-        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
     };
 
     // Agregar título de la tabla
-    const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const titleX = pageWidth / 2; // Posición centrada en el ancho
-        const titleY = 45; // Posición Y del título
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de la fuente
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
         const title = "Equipo y seguridad";
-        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
+        doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = urlImagenLogo;
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
+
+    // Pie de página dinámico
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
 
     // Generar la tabla y configurar estilos
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 8,
         },
         columnStyles: {
-            0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'right' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            0: { halign: 'left' },
+            1: { halign: 'right' },
+            2: { halign: 'right' },
+            3: { halign: 'right' }
         },
         didDrawPage: (data) => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
-            addFooter(doc, pageNumber); // Agregar el pie de página numerado
+            pageNumber += 1;
+
+            addImage(doc);
+            addHeader(doc);
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
+
+            addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -908,120 +1331,185 @@ function ExportarPDFMaquinarias() {
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
         const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
-    const addFooter = (doc, pageNumber) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de fuente
-        doc.setTextColor(0, 0, 0); // Color negro
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
 
-        const pageText = `Página ${pageNumber}`; // Texto del número de página
-        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+            const obraText = "Obra: " + datosProyecto.nombre;
 
-        // Centrar el texto en el pie de página
-        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
     };
 
     // Agregar título de la tabla
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
 
-    const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const titleX = pageWidth / 2; // Posición centrada en el ancho
-        const titleY = 45; // Posición Y del título
-
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de la fuente
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
         const title = "Maquinarias";
-        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
+        doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
+
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = urlImagenLogo;
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
+
+    // Pie de página dinámico
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
 
     // Generar la tabla y configurar estilos
     doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 8, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 8,
         },
         columnStyles: {
-            0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'justify' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
-            4: { halign: 'right' }, // Centrar contenido de la columna "Unidad"
-            5: { halign: 'right' } // Alinear a la derecha contenido de la columna "Importe"
+            0: { halign: 'left' },
+            1: { halign: 'justify' },
+            2: { halign: 'left' },
+            3: { halign: 'right' },
+            4: { halign: 'right' },
+            5: { halign: 'right' }
         },
         didDrawPage: (data) => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
-            addFooter(doc, pageNumber); // Agregar el pie de página numerado
+            pageNumber += 1;
+
+            addImage(doc);
+            addHeader(doc);
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
+
+            addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -1039,7 +1527,7 @@ function ExportarPDFConceptos() {
     const rows = tableBody.querySelectorAll("tr");
 
     // Determinar las columnas visibles
-    const visibleColumns = ["ID", "Nombre", "Unidad", "Cantidad"];
+    const visibleColumns = ["No. concepto", "ID", "Nombre", "Unidad", "Cantidad"];
     if (showCostoDirecto) visibleColumns.push("Costo directo");
     if (showPrecioUnitario) visibleColumns.push("Precio unitario");
     if (showPUCantidad) visibleColumns.push("PU * Cantidad");
@@ -1053,131 +1541,198 @@ function ExportarPDFConceptos() {
             cells[1].innerText, // Nombre
             cells[2].innerText, // Unidad
             cells[3].innerText, // Cantidad
+            cells[4].innerText, // Cantidad
         ];
 
-        if (showCostoDirecto) rowData.push(cells[4].innerText); // Costo directo
-        if (showPrecioUnitario) rowData.push(cells[5].innerText); // Precio unitario
-        if (showPUCantidad) rowData.push(cells[6].innerText); // PU * Cantidad
+        if (showCostoDirecto) rowData.push(cells[5].innerText); // Costo directo
+        if (showPrecioUnitario) rowData.push(cells[6].innerText); // Precio unitario
+        if (showPUCantidad) rowData.push(cells[7].innerText); // PU * Cantidad
 
         tableRows.push(rowData);
     });
 
-    // Encabezado sin espacio entre renglones
+    // Encabezado
     const addHeader = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const marginRight = 15; // Margen derecho (2.3 cm)
-        const headerX = pageWidth - marginRight; // Posición X del encabezado
-        const headerYStart = 25; // Posición Y del primer renglón (3 cm del margen superior)
+        const pageWidth = doc.internal.pageSize.width;
+        const marginRight = 15;
+        const headerX = pageWidth - marginRight;
+        const headerYStart = 25;
 
-        doc.setTextColor(0, 142, 90); // Verde CFE (#008e5a)
-
-        // Línea 1
-        doc.setFont("helvetica", "boldoblique"); // Helvetica Bold Condensed Oblique
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "boldoblique");
         doc.setFontSize(12);
         const line1 = "División de Distribución Jalisco";
         doc.text(line1, headerX, headerYStart, { align: "right" });
 
-        // Línea 2
-        doc.setFont("helvetica", "oblique"); // Helvetica Condensed Oblique
+        doc.setFont("helvetica", "oblique");
         doc.setFontSize(10);
         const line2 = "Zona " + datosProyecto.zona;
-        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" }); // Solo 3.6 mm debajo del anterior
+        doc.text(line2, headerX, headerYStart + 3.6, { align: "right" });
 
-        // Línea 3
         doc.setFontSize(9);
         const line3 = "Departamento de Planeación, Proyectos y Construcción";
-        doc.text(line3, headerX, headerYStart + 7, { align: "right" }); // Solo 3.4 mm debajo del anterior
+        doc.text(line3, headerX, headerYStart + 7, { align: "right" });
+
+        doc.setFontSize(9);
+        const line4 = "Fecha: " + ObtenerFechaActualDMY();
+        doc.text(line4, headerX, headerYStart + 10.7, { align: "right" });
     };
 
-    const addFooter = (doc, pageNumber) => {
-        const pageHeight = doc.internal.pageSize.height; // Altura de la página
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const footerY = pageHeight - 10; // Posición Y del pie de página (1 cm desde la parte inferior)
+    // Agregar título de la obra (solo en primera página)
+    const addObraTitle = (doc, pageNumber) => {
+        if (pageNumber === 1) {
+            const pageWidth = doc.internal.pageSize.width;
+            const titleX = pageWidth / 2;
+            const titleY = 45;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de fuente
-        doc.setTextColor(0, 0, 0); // Color negro
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(0, 0, 0);
 
-        const pageText = `Página ${pageNumber}`; // Texto del número de página
-        const textWidth = doc.getTextWidth(pageText); // Ancho del texto
+            const obraText = "Obra: " + datosProyecto.nombre;
 
-        // Centrar el texto en el pie de página
-        doc.text(pageText, (pageWidth - textWidth) / 2, footerY);
+            // Dividir el texto en líneas si es muy largo
+            const maxWidth = pageWidth - 46; // 23mm de margen a cada lado
+            const splitObraText = doc.splitTextToSize(obraText, maxWidth);
+
+            doc.text(splitObraText, titleX, titleY, { align: "center" });
+
+            // Retornar la altura ocupada por el texto de la obra
+            return splitObraText.length * 5; // Aproximadamente 5mm por línea
+        }
+        return 0;
     };
 
     // Agregar título de la tabla
-    const addTitle = (doc) => {
-        const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-        const titleX = pageWidth / 2; // Posición centrada en el ancho
-        const titleY = 45; // Posición Y del título
+    const addTitle = (doc, pageNumber, obraTitleHeight) => {
+        const pageWidth = doc.internal.pageSize.width;
+        const titleX = pageWidth / 2;
 
-        doc.setFont("helvetica", "normal"); // Fuente Helvetica Roman
-        doc.setFontSize(10); // Tamaño de la fuente
-        const title = "Conceptos";
-        doc.text(title, titleX, titleY, { align: "center" }); // Alinear al centro
+        // Ajustar posición Y según si es primera página o no
+        let titleY;
+        if (pageNumber === 1) {
+            titleY = 48 + obraTitleHeight;
+        } else {
+            titleY = 43; // Posición del título para páginas siguientes
+        }
+        doc.setTextColor(0, 142, 90);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(10);
+        const title = "Catalogo de conceptos";
+        doc.text(title, titleX, titleY, { align: "center" });
+
+        return titleY;
     };
 
     // Agregar imagen
     const addImage = (doc) => {
-        const imageUrl = '/paginacfe/app/img/LogoPdf.PNG'; // Reemplaza con la URL o base64 de tu imagen
-        const marginLeft = 15; // Margen izquierdo (1.5 cm)
-        const marginTop = 15; // Margen superior (1.5 cm)
-        const imageWidth = 45; // Ancho de la imagen (ajusta según sea necesario)
-        const imageHeight = 15; // Altura de la imagen (ajusta según sea necesario)
+        const imageUrl = urlImagenLogo;
+        const marginLeft = 15;
+        const marginTop = 15;
+        const imageWidth = 45;
+        const imageHeight = 15;
 
         doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight);
     };
+
+    // Pie de página dinámico
+    const addFooter = (doc, pageNumber) => {
+        const pageHeight = doc.internal.pageSize.height;
+        const pageWidth = doc.internal.pageSize.width;
+        const footerY = pageHeight - 15;
+
+        doc.setFont("helvetica", "oblique");
+        doc.setTextColor(0, 0, 0, 0.8);
+        doc.setFontSize(10);
+
+        const footerText = `Página ${pageNumber}`;
+        const textWidth = doc.getTextWidth(footerText);
+
+        doc.text(footerText, (pageWidth - textWidth) / 2, footerY);
+    };
+
+    let pageNumber = 0;
+    let obraTitleHeight = 0;
+
+    // Calcular la altura del título de la obra ANTES de crear la tabla
+    const tempDoc = new jsPDF();
+    const pageWidth = tempDoc.internal.pageSize.width;
+    const maxWidth = pageWidth - 46;
+    const splitObraText = tempDoc.splitTextToSize("Obra: " + datosProyecto.nombre, maxWidth);
+    obraTitleHeight = splitObraText.length * 4;
+
+    // Calcular startY para la primera página
+    const firstPageStartY = 52 + obraTitleHeight;
+    const otherPagesStartY = 53; // 43 (titleY) + 10 = 53
 
     // Generar la tabla y configurar estilos
     doc.autoTable({
         head: [visibleColumns],
         body: tableRows,
-        margin: { top: 50, right: 23, bottom: 40, left: 23 }, // Margen en milímetros (5 cm en Y, 2.3 cm en X)
+        margin: { top: 50, right: 23, bottom: 40, left: 23 },
+        startY: firstPageStartY, // Posición inicial para la primera página
         headStyles: {
-            fillColor: "#008e5a", // Color de fondo del encabezado
-            textColor: "#FFFFFF", // Color del texto en el encabezado
-            fontStyle: "bold",   // Texto en negrita
+            fillColor: "#008e5a",
+            textColor: "#FFFFFF",
+            fontStyle: "bold",
             fontSize: 8,
         },
         bodyStyles: {
-            font: "helvetica", // Fuente Helvetica Roman
-            fontStyle: "normal", // Estilo de fuente normal
-            fontSize: 7, // Tamaño de letra 8
+            font: "helvetica",
+            fontStyle: "normal",
+            fontSize: 7,
         },
         columnStyles: {
-            0: { halign: 'left' }, // Centrar contenido de la columna "ID"
-            1: { halign: 'justify' }, // Justificar contenido de la columna "Nombre"
-            2: { halign: 'left' }, // Centrar contenido de la columna "Unidad"
-            3: { halign: 'right' }, // Centrar contenido de la columna "Cantidad"
-            4: { halign: 'right' }, // Centrar contenido de la columna "Costo directo"
-            5: { halign: 'right' }, // Centrar contenido de la columna "Precio unitario"
-            6: { halign: 'right' } // Centrar contenido de la columna "PU * Cantidad"
+            0: { halign: 'right' },
+            1: { halign: 'left' },
+            2: { halign: 'justify' },
+            3: { halign: 'left' },
+            4: { halign: 'right' },
+            5: { halign: 'right' },
+            6: { halign: 'right' },
+            7: { halign: 'right' }
         },
         didDrawPage: (data) => {
-            addImage(doc); // Agregar imagen
-            addHeader(doc); // Agregar encabezado
-            addTitle(doc); // Agregar título
-            const pageNumber = doc.internal.getNumberOfPages(); // Número de página actual
-            addFooter(doc, pageNumber); // Agregar el pie de página numerado
+            pageNumber += 1;
+
+            addImage(doc);
+            addHeader(doc);
+
+            // Agregar título de la obra (solo primera página) y obtener su altura
+            const currentObraTitleHeight = addObraTitle(doc, pageNumber);
+
+            // Agregar título de la tabla con posición ajustada
+            const titleY = addTitle(doc, pageNumber, currentObraTitleHeight);
+
+            // Para páginas siguientes, ajustar startY
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
+
+            addFooter(doc, pageNumber);
+        },
+        willDrawPage: (data) => {
+            // Asegurar que las páginas siguientes usen el startY correcto
+            if (pageNumber > 1) {
+                data.settings.startY = otherPagesStartY;
+            }
         },
         didDrawCell: (data) => {
             if (data.section === 'body' && data.row.index === tableRows.length - 1 && showPUCantidad) {
-                const pageWidth = doc.internal.pageSize.width; // Ancho de la página
-                const marginRight = 23; // Margen derecho (2.3 cm)
-                const totalX = pageWidth - marginRight - 1; // Posición X del texto "Total:" con margen adicional
-                const totalY = data.cell.y + data.cell.height + 10; // Posición Y del texto "Total:"
+                const pageWidth = doc.internal.pageSize.width;
+                const marginRight = 23;
+                const totalX = pageWidth - marginRight - 1;
+                const totalY = data.cell.y + data.cell.height + 10;
 
-                doc.setFont("helvetica", "normal"); // Helvetica Roman
+                doc.setFont("helvetica", "normal");
                 doc.setFontSize(8);
                 const totalText = "Total: " + total;
                 const textWidth = doc.getTextWidth(totalText);
 
-                // Dibujar el borde superior
-                doc.setDrawColor(0, 142, 90); // Color del borde (#008e5a)
-                doc.setLineWidth(0.5); // Ancho de la línea
-                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4); // Dibujar la línea
+                doc.setDrawColor(0, 142, 90);
+                doc.setLineWidth(0.5);
+                doc.line(totalX - textWidth, totalY - 4, totalX, totalY - 4);
 
-                // Dibujar el texto
                 doc.text(totalText, totalX, totalY, { align: "right" });
             }
         }
@@ -1187,13 +1742,20 @@ function ExportarPDFConceptos() {
 }
 
 async function exportarPDFConHtml(conc) {
+    // Mostrar el contenedor de progreso
+
+    document.getElementById("divCargaExport").style.display = "flex";
+    document.getElementById("porcentajeExportacion").textContent = "0% - Exportando a PDF...";
+
     precionadoBtnExportarPdf();
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF('p', 'pt', 'letter');
     const container = document.getElementById('contenedor-cfe');
 
     if (!container) {
         console.error('Contenedor "contenedor-cfe" no encontrado');
+        document.getElementById("divCargaExport").style.display = "none";
         return;
     }
 
@@ -1204,14 +1766,23 @@ async function exportarPDFConHtml(conc) {
 
     const tarjetas = container.getElementsByClassName('tarjeta-concepto');
     const marginX = 2 * 28.35; // 2.3 cm en puntos
-    const marginY = 4.5 * 28.35; // 4.5 cm en puntos
+    const marginY = 4.5 * 22; // 4.5 cm en puntos
     const pageWidth = doc.internal.pageSize.getWidth();
     const pageHeight = doc.internal.pageSize.getHeight();
     const contentWidth = pageWidth - 2 * marginX;
     const contentHeight = pageHeight - 2 * marginY;
 
+    // Función para actualizar el progreso
+    function actualizarProgreso(procesadas, total) {
+        const porcentaje = Math.round((procesadas / total) * 100);
+        document.getElementById("porcentajeExportacion").textContent = `Exportando a PDF ${porcentaje}%`;
+    }
     for (let i = 0; i < tarjetas.length; i++) {
         const tarjeta = tarjetas[i];
+
+        // Actualizar progreso antes de procesar cada tarjeta
+
+        actualizarProgreso(i, tarjetas.length);
 
         // Usar html2canvas con escala reducida
         await html2canvas(tarjeta, { scale: 0.8 }).then(canvas => {
@@ -1228,18 +1799,20 @@ async function exportarPDFConHtml(conc) {
             addImage(doc);
 
             // Agregar imagen con compresión rápida
-            doc.addImage(imgData, 'JPEG', marginX, position, imgWidth, imgHeight, null, 'FAST');
+            doc.addImage(imgData, 'PNG', marginX, position, imgWidth, imgHeight, null, 'FAST');
         });
     }
+
+    // Actualizar al 100% antes de guardar
+
+    actualizarProgreso(tarjetas.length, tarjetas.length);
 
     // Restaurar los estilos originales del contenedor
     container.style.display = 'none';
     container.style.position = '';
     container.style.left = '';
 
-    let btn = document.getElementById("btnExportarPDF");
-    btn.removeAttribute("disabled");
-    btn.classList.remove("btnClickeadoExportar");
+
 
     // Obtener el número total de páginas
     const totalPages = doc.internal.getNumberOfPages();
@@ -1251,9 +1824,24 @@ async function exportarPDFConHtml(conc) {
     }
 
     doc.save('TarjetaPrecioUnitario.pdf');
+
+
+    setTimeout(() => {
+        let btn = document.getElementById("btnExportarPDF");
+        btn.removeAttribute("disabled");
+        btn.classList.remove("btnClickeadoExportar");
+
+        let btnExcel = document.getElementById("btnExportar");
+        btnExcel.removeAttribute("disabled");
+        btnExcel.classList.remove("btnClickeadoExportar");
+        document.getElementById("divCargaExport").style.display = "none";
+    }, 1000);
+
+    // Ocultar el contenedor de progreso después de completar
+
 }
 
-// Encabezado sin espacio entre renglones
+
 const addHeader = (doc, conc) => {
     const pageWidth = doc.internal.pageSize.width;
     const marginRight = 1.5 * 28.35;
@@ -1292,13 +1880,13 @@ const addFooter = (doc, pageNumber, totalPages) => {
 
 // Agregar imagen optimizada
 const addImage = (doc) => {
-    const imageUrl = '/paginacfe/app/img/LogoPdf.jpg'; // Asegúrate de que el logo esté en JPEG comprimido
+    const imageUrl = urlImagenLogo; // Asegúrate de que el logo esté en JPEG comprimido
     const marginLeft = 1.5 * 28.35;
     const marginTop = 1.5 * 28.35;
     const imageWidth = 135;
     const imageHeight = 45;
 
-    doc.addImage(imageUrl, 'JPEG', marginLeft, marginTop, imageWidth, imageHeight, null, 'FAST');
+    doc.addImage(imageUrl, 'PNG', marginLeft, marginTop, imageWidth, imageHeight, null, 'FAST');
 };
 
 
@@ -1320,7 +1908,7 @@ async function ExportarExcelMaterialesSi() {
     const worksheet = workbook.addWorksheet("Materiales Suministrados");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -1342,33 +1930,85 @@ async function ExportarExcelMaterialesSi() {
     });
 
     // Agregar encabezado
-    worksheet.mergeCells("B1:F1");
-    const line1 = worksheet.getCell("B1");
+    worksheet.mergeCells("B1:E1");
+    const cen1 = worksheet.getCell("B1");
+    cen1.value = "División de Distribución Jalisco";
+    cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("F1:G1");
+    const line1 = worksheet.getCell("F1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:F2");
-    const line2 = worksheet.getCell("B2");
+    //****************************************************************** */
+    worksheet.mergeCells("B2:E2");
+    const cen2 = worksheet.getCell("B2");
+    cen2.value = "Subgerencia de Distribución";
+    cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("F2:G2");
+    const line2 = worksheet.getCell("F2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
+    //****************************************************************** */
+    worksheet.mergeCells("B3:E3");
+    const cen3 = worksheet.getCell("B3");
+    cen3.value = "Departamento Divisional de Planeación";
+    cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+    cen3.alignment = { horizontal: "center", vertical: "middle" };
+    //---------------------------------------------------------------- */   
+    worksheet.mergeCells("A4");
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
 
-    worksheet.mergeCells("B3:F3");
-    const line3 = worksheet.getCell("B3");
+    worksheet.mergeCells("B4:E4");
+    const lincen4 = worksheet.getCell("B4");
+    lincen4.value = datosProyecto.nombre;
+    lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+    lincen4.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+
+    worksheet.mergeCells("F3:G4");
+    const line3 = worksheet.getCell("F3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    line3.alignment = {
+        horizontal: "right",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+    //****************************************************************** */
+    worksheet.mergeCells("A5:E5");
+    const cellFecha = worksheet.getCell("A5");
+    cellFecha.value = "Fecha:";
+    cellFecha.font = { size: 10, color: { argb: "#000" } };
+    cellFecha.alignment = { horizontal: "right", vertical: "middle" };
 
+    worksheet.mergeCells("F5:G5");
+    const cellFechaD = worksheet.getCell("F5");
+    cellFechaD.value = ObtenerFechaActualDMY();
+    cellFechaD.font = { size: 10, color: { argb: "#000" } };
+    cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
     // Agregar título
-    worksheet.mergeCells("A5:F5");
-    const titleCell = worksheet.getCell("A5");
-    titleCell.value = "Materiales CFE";
+    worksheet.mergeCells("A6:G6");
+    const titleCell = worksheet.getCell("A6");
+    titleCell.value = "Materiales suminitrados por CFE";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
 
     // Agregar encabezados
-    const headers = ["ID", "Descripción", "Unidad", "Precio U", "Cantidad", "Importe"];
+    const headers = ["No.", "ID", "Descripción", "Unidad", "Precio U", "Cantidad", "Importe"];
     worksheet.addRow(headers).eachCell((cell) => {
         cell.font = { bold: true };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
@@ -1389,6 +2029,9 @@ async function ExportarExcelMaterialesSi() {
         const cells = row.querySelectorAll("td");
         const rowData = Array.from(cells).map(cell => cell.innerText);
 
+        // Insertar número autoincremental al inicio del arreglo
+        rowData.unshift(rowIndex + 1); // ← aquí agregamos el número (1, 2, 3, ...)
+
         // Agregar una fila al Excel
         const excelRow = worksheet.addRow(rowData);
 
@@ -1396,22 +2039,18 @@ async function ExportarExcelMaterialesSi() {
         excelRow.eachCell((cell, colNumber) => {
             // Configuración de alineación según la columna
             switch (colNumber) {
-                case 1: // ID
+                case 2: // ID
                     cell.alignment = { horizontal: "right", vertical: "middle" };
                     break;
-                case 2: // Descripción
+                case 3: // Descripción
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
-                case 3: // Unidad
+                case 4: // Unidad
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
-                case 4: // Precio U
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
-                    break;
-                case 5: // Cantidad
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
-                    break;
-                case 6: // Importe
+                case 5: // Precio U
+                case 6: // Cantidad
+                case 7: // Importe
                     cell.alignment = { horizontal: "right", vertical: "middle" };
                     break;
                 default:
@@ -1435,23 +2074,49 @@ async function ExportarExcelMaterialesSi() {
         });
     });
 
+    worksheet.columns = [
+        { key: "no", width: 10 },      // Columna "No."
+        { key: "id", width: 10 },     // Columna "ID"
+        { key: "descripcion", width: 45 }, // Columna "Descripción"
+        { key: "unidad", width: 12 },  // Columna "Unidad"
+        { key: "precioU", width: 15 }, // Columna "Precio U"
+        { key: "cantidad", width: 12 }, // Columna "Cantidad"
+        { key: "importe", width: 18 },  // Columna "Importe"
+    ];
+
+
+
+
     // Agregar total como última fila
     const total = document.getElementById("TotalSumaMaterialesSi").innerHTML;
-    worksheet.addRow(["", "", "", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 6) {
-            cell.font = { bold: true };
+
+    // Agregar la fila del total
+    const totalRow = worksheet.addRow(["Total", "", "", "", "", "Total", total]);
+    const lastRowNumber = totalRow.number;
+    worksheet.mergeCells(`A${lastRowNumber}:F${lastRowNumber}`);
+
+    // Aplicar formato a todas las celdas de la fila
+    totalRow.eachCell((cell, colNumber) => {
+        // Negritas para toda la fila
+        cell.font = { bold: true };
+
+        // Bordes alrededor de la fila completa
+        //borde grueso
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin", }
+        };
+
+        // Alineación personalizada según la columna
+        if (colNumber === 6) { // Columna "Total"
             cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 5) {
-            cell.font = { bold: true };
+        } else if (colNumber === 7) { // Columna "Importe total"
+            cell.alignment = { horizontal: "right", vertical: "middle" };
+        } else {
             cell.alignment = { horizontal: "center", vertical: "middle" };
         }
-    });
-
-    // Ajustar el ancho de las columnas automáticamente
-    worksheet.columns.forEach((column) => {
-        const maxLength = column.values.reduce((max, curr) => (curr && curr.toString().length > max ? curr.toString().length : max), 10);
-        column.width = maxLength - 2; // Ancho basado en el contenido
     });
 
     // Descargar el archivo Excel
@@ -1471,7 +2136,7 @@ async function ExportarExcelMaterialesNo() {
     const worksheet = workbook.addWorksheet("Materiales No Suministrados");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -1493,33 +2158,89 @@ async function ExportarExcelMaterialesNo() {
     });
 
     // Agregar encabezado
-    worksheet.mergeCells("B1:F1");
-    const line1 = worksheet.getCell("B1");
+    worksheet.mergeCells("B1:E1");
+    const cen1 = worksheet.getCell("B1");
+    cen1.value = "División de Distribución Jalisco";
+    cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("F1:G1");
+    const line1 = worksheet.getCell("F1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:F2");
-    const line2 = worksheet.getCell("B2");
+    //****************************************************************** */
+    worksheet.mergeCells("B2:E2");
+    const cen2 = worksheet.getCell("B2");
+    cen2.value = "Subgerencia de Distribución";
+    cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("F2:G2");
+    const line2 = worksheet.getCell("F2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
+    //****************************************************************** */
+    worksheet.mergeCells("B3:E3");
+    const cen3 = worksheet.getCell("B3");
+    cen3.value = "Departamento Divisional de Planeación";
+    cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+    cen3.alignment = { horizontal: "center", vertical: "middle" };
+    //---------------------------------------------------------------- */   
+    worksheet.mergeCells("A4");
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
 
-    worksheet.mergeCells("B3:F3");
-    const line3 = worksheet.getCell("B3");
+    worksheet.mergeCells("B4:E4");
+    const lincen4 = worksheet.getCell("B4");
+    lincen4.value = datosProyecto.nombre;
+    lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+    lincen4.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+
+    worksheet.mergeCells("F3:G4");
+    const line3 = worksheet.getCell("F3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    line3.alignment = {
+        horizontal: "right",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+    //****************************************************************** */
+    worksheet.mergeCells("A5:E5");
+    const cellFecha = worksheet.getCell("A5");
+    cellFecha.value = "Fecha:";
+    cellFecha.font = { size: 10, color: { argb: "#000" } };
+    cellFecha.alignment = { horizontal: "right", vertical: "middle" };
 
+    worksheet.mergeCells("F5:G5");
+    const cellFechaD = worksheet.getCell("F5");
+    cellFechaD.value = ObtenerFechaActualDMY();
+    cellFechaD.font = { size: 10, color: { argb: "#000" } };
+    cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
     // Agregar título
-    worksheet.mergeCells("A5:F5");
-    const titleCell = worksheet.getCell("A5");
-    titleCell.value = "Materiales contratista";
+    worksheet.mergeCells("A6:G6");
+    const titleCell = worksheet.getCell("A6");
+    titleCell.value = "Materiales a suministrar por el contratista";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
+
+
+
+
 
     // Agregar encabezados
-    const headers = ["ID", "Descripción", "Unidad", "Precio U", "Cantidad", "Importe"];
+    const headers = ["No.", "ID", "Descripción", "Unidad", "Precio U", "Cantidad", "Importe"];
     worksheet.addRow(headers).eachCell((cell) => {
         cell.font = { bold: true };
         cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
@@ -1540,6 +2261,9 @@ async function ExportarExcelMaterialesNo() {
         const cells = row.querySelectorAll("td");
         const rowData = Array.from(cells).map(cell => cell.innerText);
 
+        // Insertar número autoincremental al inicio del arreglo
+        rowData.unshift(rowIndex + 1); // ← aquí agregamos el número (1, 2, 3, ...)
+
         // Agregar una fila al Excel
         const excelRow = worksheet.addRow(rowData);
 
@@ -1547,22 +2271,18 @@ async function ExportarExcelMaterialesNo() {
         excelRow.eachCell((cell, colNumber) => {
             // Configuración de alineación según la columna
             switch (colNumber) {
-                case 1: // ID
+                case 2: // ID
                     cell.alignment = { horizontal: "right", vertical: "middle" };
                     break;
-                case 2: // Descripción
+                case 3: // Descripción
                     cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
-                case 3: // Unidad
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
+                case 4: // Unidad
+                    cell.alignment = { horizontal: "left", vertical: "middle" };
                     break;
-                case 4: // Precio U
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
-                    break;
-                case 5: // Cantidad
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
-                    break;
-                case 6: // Importe
+                case 5: // Precio U
+                case 6: // Cantidad
+                case 7: // Importe
                     cell.alignment = { horizontal: "right", vertical: "middle" };
                     break;
                 default:
@@ -1585,24 +2305,54 @@ async function ExportarExcelMaterialesNo() {
             };
         });
     });
+
+    worksheet.columns = [
+        { key: "no", width: 10 },      // Columna "No."
+        { key: "id", width: 10 },     // Columna "ID"
+        { key: "descripcion", width: 45 }, // Columna "Descripción"
+        { key: "unidad", width: 12 },  // Columna "Unidad"
+        { key: "precioU", width: 15 }, // Columna "Precio U"
+        { key: "cantidad", width: 12 }, // Columna "Cantidad"
+        { key: "importe", width: 18 },  // Columna "Importe"
+    ];
+
+
+
+
+
     // Agregar total como última fila
     const total = document.getElementById("TotalSumaMaterialesNo").innerHTML;
-    worksheet.addRow(["", "", "", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 6) {
-            cell.font = { bold: true };
+
+    // Agregar la fila del total
+    const totalRow = worksheet.addRow(["Total", "", "", "", "", "Total", total]);
+    const lastRowNumber = totalRow.number;
+    worksheet.mergeCells(`A${lastRowNumber}:F${lastRowNumber}`);
+
+    // Aplicar formato a todas las celdas de la fila
+    totalRow.eachCell((cell, colNumber) => {
+        // Negritas para toda la fila
+        cell.font = { bold: true };
+
+        // Bordes alrededor de la fila completa
+        //borde grueso
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin", }
+        };
+
+        // Alineación personalizada según la columna
+        if (colNumber === 6) { // Columna "Total"
             cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 5) {
-            cell.font = { bold: true };
+        } else if (colNumber === 7) { // Columna "Importe total"
+            cell.alignment = { horizontal: "right", vertical: "middle" };
+        } else {
             cell.alignment = { horizontal: "center", vertical: "middle" };
         }
     });
 
     // Ajustar el ancho de las columnas automáticamente
-    worksheet.columns.forEach((column) => {
-        const maxLength = column.values.reduce((max, curr) => (curr && curr.toString().length > max ? curr.toString().length : max), 10);
-        column.width = maxLength - 2; // Ancho basado en el contenido
-    });
 
     // Descargar el archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();
@@ -1622,7 +2372,7 @@ async function ExportarExcelManoObra() {
     const worksheet = workbook.addWorksheet("Mano de Obra");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -1644,30 +2394,83 @@ async function ExportarExcelManoObra() {
     });
 
     // Agregar encabezado
-    worksheet.mergeCells("B1:G1");
-    const line1 = worksheet.getCell("B1");
+    worksheet.mergeCells("B1:E1");
+    const cen1 = worksheet.getCell("B1");
+    cen1.value = "División de Distribución Jalisco";
+    cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("F1:G1");
+    const line1 = worksheet.getCell("F1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:G2");
-    const line2 = worksheet.getCell("B2");
+    //****************************************************************** */
+    worksheet.mergeCells("B2:E2");
+    const cen2 = worksheet.getCell("B2");
+    cen2.value = "Subgerencia de Distribución";
+    cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("F2:G2");
+    const line2 = worksheet.getCell("F2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
+    //****************************************************************** */
+    worksheet.mergeCells("B3:E3");
+    const cen3 = worksheet.getCell("B3");
+    cen3.value = "Departamento Divisional de Planeación";
+    cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+    cen3.alignment = { horizontal: "center", vertical: "middle" };
+    //---------------------------------------------------------------- */   
+    worksheet.mergeCells("A4");
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
 
-    worksheet.mergeCells("B3:G3");
-    const line3 = worksheet.getCell("B3");
+    worksheet.mergeCells("B4:E4");
+    const lincen4 = worksheet.getCell("B4");
+    lincen4.value = datosProyecto.nombre;
+    lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+    lincen4.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+
+    worksheet.mergeCells("F3:G4");
+    const line3 = worksheet.getCell("F3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    line3.alignment = {
+        horizontal: "right",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+    //****************************************************************** */
+    worksheet.mergeCells("A5:E5");
+    const cellFecha = worksheet.getCell("A5");
+    cellFecha.value = "Fecha:";
+    cellFecha.font = { size: 10, color: { argb: "#000" } };
+    cellFecha.alignment = { horizontal: "right", vertical: "middle" };
 
+    worksheet.mergeCells("F5:G5");
+    const cellFechaD = worksheet.getCell("F5");
+    cellFechaD.value = ObtenerFechaActualDMY();
+    cellFechaD.font = { size: 10, color: { argb: "#000" } };
+    cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
     // Agregar título
-    worksheet.mergeCells("A5:G5");
-    const titleCell = worksheet.getCell("A5");
+    worksheet.mergeCells("A6:G6");
+    const titleCell = worksheet.getCell("A6");
     titleCell.value = "Mano de obra";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
+
 
     // Agregar encabezados
     const headers = ["ID", "Categoría", "Unidad", "Salario", "Cantidad", "Sr", "Importe"];
@@ -1742,13 +2545,31 @@ async function ExportarExcelManoObra() {
 
     // Agregar total como última fila
     const total = document.getElementById("TotalSumaManoObra").innerHTML;
-    worksheet.addRow(["", "", "", "", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 7) {
-            cell.font = { bold: true };
+    // Agregar la fila del total
+    const totalRow = worksheet.addRow(["Total", "", "", "", "", "Total", total]);
+    const lastRowNumber = totalRow.number;
+    worksheet.mergeCells(`A${lastRowNumber}:F${lastRowNumber}`);
+
+    // Aplicar formato a todas las celdas de la fila
+    totalRow.eachCell((cell, colNumber) => {
+        // Negritas para toda la fila
+        cell.font = { bold: true };
+
+        // Bordes alrededor de la fila completa
+        //borde grueso
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin", }
+        };
+
+        // Alineación personalizada según la columna
+        if (colNumber === 6) { // Columna "Total"
             cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 6) {
-            cell.font = { bold: true };
+        } else if (colNumber === 7) { // Columna "Importe total"
+            cell.alignment = { horizontal: "right", vertical: "middle" };
+        } else {
             cell.alignment = { horizontal: "center", vertical: "middle" };
         }
     });
@@ -1782,7 +2603,7 @@ async function ExportarExcelHerramientasMano() {
     const worksheet = workbook.addWorksheet("Herramientas de Mano");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -1804,30 +2625,82 @@ async function ExportarExcelHerramientasMano() {
     });
 
     // Agregar encabezado
-    worksheet.mergeCells("B1:D1");
-    const line1 = worksheet.getCell("B1");
+    worksheet.mergeCells("B1:C1");
+    const cen1 = worksheet.getCell("B1");
+    cen1.value = "División de Distribución Jalisco";
+    cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("D1");
+    const line1 = worksheet.getCell("D1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:D2");
-    const line2 = worksheet.getCell("B2");
+    //****************************************************************** */
+    worksheet.mergeCells("B2:C2");
+    const cen2 = worksheet.getCell("B2");
+    cen2.value = "Subgerencia de Distribución";
+    cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("D2");
+    const line2 = worksheet.getCell("D2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
+    //****************************************************************** */
+    worksheet.mergeCells("B3:C3");
+    const cen3 = worksheet.getCell("B3");
+    cen3.value = "Departamento Divisional de Planeación";
+    cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+    cen3.alignment = { horizontal: "center", vertical: "middle" };
+    //---------------------------------------------------------------- */   
+    worksheet.mergeCells("A4");
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
 
-    worksheet.mergeCells("B3:D3");
-    const line3 = worksheet.getCell("B3");
+    worksheet.mergeCells("B4:C4");
+    const lincen4 = worksheet.getCell("B4");
+    lincen4.value = datosProyecto.nombre;
+    lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+    lincen4.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+
+    worksheet.mergeCells("D3:D4");
+    const line3 = worksheet.getCell("D3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    line3.alignment = {
+        horizontal: "right",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+    //****************************************************************** */
+    worksheet.mergeCells("A5:C5");
+    const cellFecha = worksheet.getCell("A5");
+    cellFecha.value = "Fecha:";
+    cellFecha.font = { size: 10, color: { argb: "#000" } };
+    cellFecha.alignment = { horizontal: "right", vertical: "middle" };
 
+    worksheet.mergeCells("D5");
+    const cellFechaD = worksheet.getCell("D5");
+    cellFechaD.value = ObtenerFechaActualDMY();
+    cellFechaD.font = { size: 10, color: { argb: "#000" } };
+    cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
     // Agregar título
-    worksheet.mergeCells("A5:D5");
-    const titleCell = worksheet.getCell("A5");
+    worksheet.mergeCells("A6:D6");
+    const titleCell = worksheet.getCell("A6");
     titleCell.value = "Herramientas de mano de obra";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
 
     // Agregar encabezados
     const headers = ["Descripción", "Kh", "Mano de obra", "Importe"];
@@ -1893,23 +2766,40 @@ async function ExportarExcelHerramientasMano() {
 
     // Agregar total como última fila
     const total = document.getElementById("TotalSumaHerramientas").innerHTML;
-    worksheet.addRow(["", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 4) {
-            cell.font = { bold: true };
+    const totalRow = worksheet.addRow(["Total", "", "Total", total]);
+    const lastRowNumber = totalRow.number;
+    worksheet.mergeCells(`A${lastRowNumber}:C${lastRowNumber}`);
+
+    // Aplicar formato a todas las celdas de la fila
+    totalRow.eachCell((cell, colNumber) => {
+        // Negritas para toda la fila
+        cell.font = { bold: true };
+
+        // Bordes alrededor de la fila completa
+        //borde grueso
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin", }
+        };
+
+        // Alineación personalizada según la columna
+        if (colNumber === 3) { // Columna "Total"
             cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 3) {
-            cell.font = { bold: true };
+        } else if (colNumber === 4) { // Columna "Importe total"
+            cell.alignment = { horizontal: "right", vertical: "middle" };
+        } else {
             cell.alignment = { horizontal: "center", vertical: "middle" };
         }
     });
 
     // Ajustar el ancho de las columnas manualmente
     worksheet.columns = [
-        { key: 'Descripción', width: 30 },
-        { key: 'Kh', width: 13 },
-        { key: 'Mano de obra', width: 20 },
-        { key: 'Importe', width: 25 }
+        { key: 'Descripción', width: 25 },
+        { key: 'Kh', width: 20 },
+        { key: 'Mano de obra', width: 25 },
+        { key: 'Importe', width: 30 }
     ];
 
     // Descargar el archivo Excel
@@ -1930,7 +2820,7 @@ async function ExportarExcelEquipoSeguridad() {
     const worksheet = workbook.addWorksheet("Equipo y Seguridad");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -1952,30 +2842,83 @@ async function ExportarExcelEquipoSeguridad() {
     });
 
     // Agregar encabezado
-    worksheet.mergeCells("B1:D1");
-    const line1 = worksheet.getCell("B1");
+    worksheet.mergeCells("B1:C1");
+    const cen1 = worksheet.getCell("B1");
+    cen1.value = "División de Distribución Jalisco";
+    cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("D1");
+    const line1 = worksheet.getCell("D1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:D2");
-    const line2 = worksheet.getCell("B2");
+    //****************************************************************** */
+    worksheet.mergeCells("B2:C2");
+    const cen2 = worksheet.getCell("B2");
+    cen2.value = "Subgerencia de Distribución";
+    cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("D2");
+    const line2 = worksheet.getCell("D2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
+    //****************************************************************** */
+    worksheet.mergeCells("B3:C3");
+    const cen3 = worksheet.getCell("B3");
+    cen3.value = "Departamento Divisional de Planeación";
+    cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+    cen3.alignment = { horizontal: "center", vertical: "middle" };
+    //---------------------------------------------------------------- */   
+    worksheet.mergeCells("A4");
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
 
-    worksheet.mergeCells("B3:D3");
-    const line3 = worksheet.getCell("B3");
+    worksheet.mergeCells("B4:C4");
+    const lincen4 = worksheet.getCell("B4");
+    lincen4.value = datosProyecto.nombre;
+    lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+    lincen4.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+
+    worksheet.mergeCells("D3:D4");
+    const line3 = worksheet.getCell("D3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    line3.alignment = {
+        horizontal: "right",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+    //****************************************************************** */
+    worksheet.mergeCells("A5:C5");
+    const cellFecha = worksheet.getCell("A5");
+    cellFecha.value = "Fecha:";
+    cellFecha.font = { size: 10, color: { argb: "#000" } };
+    cellFecha.alignment = { horizontal: "right", vertical: "middle" };
 
+    worksheet.mergeCells("D5");
+    const cellFechaD = worksheet.getCell("D5");
+    cellFechaD.value = ObtenerFechaActualDMY();
+    cellFechaD.font = { size: 10, color: { argb: "#000" } };
+    cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
     // Agregar título
-    worksheet.mergeCells("A5:D5");
-    const titleCell = worksheet.getCell("A5");
+    worksheet.mergeCells("A6:D6");
+    const titleCell = worksheet.getCell("A6");
     titleCell.value = "Equipo y seguridad";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
+
 
     // Agregar encabezados
     const headers = ["Descripción", "Ks", "Mano de obra", "Importe"];
@@ -2041,13 +2984,30 @@ async function ExportarExcelEquipoSeguridad() {
 
     // Agregar total como última fila
     const total = document.getElementById("TotalSumaEquipo").innerHTML;
-    worksheet.addRow(["", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 4) {
-            cell.font = { bold: true };
+    const totalRow = worksheet.addRow(["Total", "", "Total", total]);
+    const lastRowNumber = totalRow.number;
+    worksheet.mergeCells(`A${lastRowNumber}:C${lastRowNumber}`);
+
+    // Aplicar formato a todas las celdas de la fila
+    totalRow.eachCell((cell, colNumber) => {
+        // Negritas para toda la fila
+        cell.font = { bold: true };
+
+        // Bordes alrededor de la fila completa
+        //borde grueso
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin", }
+        };
+
+        // Alineación personalizada según la columna
+        if (colNumber === 3) { // Columna "Total"
             cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 3) {
-            cell.font = { bold: true };
+        } else if (colNumber === 4) { // Columna "Importe total"
+            cell.alignment = { horizontal: "right", vertical: "middle" };
+        } else {
             cell.alignment = { horizontal: "center", vertical: "middle" };
         }
     });
@@ -2055,9 +3015,9 @@ async function ExportarExcelEquipoSeguridad() {
     // Ajustar el ancho de las columnas manualmente
     worksheet.columns = [
         { key: 'Descripción', width: 30 },
-        { key: 'Ks', width: 13 },
-        { key: 'Mano de obra', width: 20 },
-        { key: 'Importe', width: 25 }
+        { key: 'Ks', width: 20 },
+        { key: 'Mano de obra', width: 25 },
+        { key: 'Importe', width: 30 }
     ];
 
     // Descargar el archivo Excel
@@ -2077,7 +3037,7 @@ async function ExportarExcelMaquinarias() {
     const worksheet = workbook.addWorksheet("Maquinarias");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {
@@ -2099,30 +3059,83 @@ async function ExportarExcelMaquinarias() {
     });
 
     // Agregar encabezado
-    worksheet.mergeCells("B1:F1");
-    const line1 = worksheet.getCell("B1");
+    // Agregar encabezado
+    worksheet.mergeCells("A1:D1");
+    const cen1 = worksheet.getCell("A1");
+    cen1.value = "División de Distribución Jalisco";
+    cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("E1:F1");
+    const line1 = worksheet.getCell("E1");
     line1.value = "División de Distribución Jalisco";
     line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
     line1.alignment = { horizontal: "right", vertical: "middle" };
 
-    worksheet.mergeCells("B2:F2");
-    const line2 = worksheet.getCell("B2");
+    //****************************************************************** */
+    worksheet.mergeCells("A2:D2");
+    const cen2 = worksheet.getCell("A2");
+    cen2.value = "Subgerencia de Distribución";
+    cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+    cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+    worksheet.mergeCells("E2:F2");
+    const line2 = worksheet.getCell("E2");
     line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
     line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
     line2.alignment = { horizontal: "right", vertical: "middle" };
+    //****************************************************************** */
+    worksheet.mergeCells("A3:D3");
+    const cen3 = worksheet.getCell("A3");
+    cen3.value = "Departamento Divisional de Planeación";
+    cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+    cen3.alignment = { horizontal: "center", vertical: "middle" };
+    //---------------------------------------------------------------- */   
+    worksheet.mergeCells("A4");
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
 
-    worksheet.mergeCells("B3:F3");
-    const line3 = worksheet.getCell("B3");
+    worksheet.mergeCells("B4:D4");
+    const lincen4 = worksheet.getCell("B4");
+    lincen4.value = datosProyecto.nombre;
+    lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+    lincen4.alignment = {
+        horizontal: "center",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+
+    worksheet.mergeCells("E3:F4");
+    const line3 = worksheet.getCell("E3");
     line3.value = "Departamento de Planeación, Proyectos y Construcción";
     line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    line3.alignment = {
+        horizontal: "right",
+        vertical: "middle",
+        wrapText: true // ← Ajustar texto
+    };
+    //****************************************************************** */
+    worksheet.mergeCells("A5:D5");
+    const cellFecha = worksheet.getCell("A5");
+    cellFecha.value = "Fecha:";
+    cellFecha.font = { size: 10, color: { argb: "#000" } };
+    cellFecha.alignment = { horizontal: "right", vertical: "middle" };
 
+    worksheet.mergeCells("E5:F5");
+    const cellFechaD = worksheet.getCell("F5");
+    cellFechaD.value = ObtenerFechaActualDMY();
+    cellFechaD.font = { size: 10, color: { argb: "#000" } };
+    cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
     // Agregar título
-    worksheet.mergeCells("A5:F5");
-    const titleCell = worksheet.getCell("A5");
+    worksheet.mergeCells("A6:F6");
+    const titleCell = worksheet.getCell("A6");
     titleCell.value = "Maquinarias";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
+    //****************************************************************** */
 
     // Agregar encabezados
     const headers = ["ID", "Descripción", "Unidad", "PhM", "RhM", "Importe"];
@@ -2194,13 +3207,31 @@ async function ExportarExcelMaquinarias() {
 
     // Agregar total como última fila
     const total = document.getElementById("TotalSumaMaquinaria").innerHTML;
-    worksheet.addRow(["", "", "", "", "Total", total]).eachCell((cell, colNumber) => {
-        if (colNumber == 6) {
-            cell.font = { bold: true };
+    // Agregar la fila del total
+    const totalRow = worksheet.addRow(["Total", "", "", "", "Total", total]);
+    const lastRowNumber = totalRow.number;
+    worksheet.mergeCells(`A${lastRowNumber}:E${lastRowNumber}`);
+
+    // Aplicar formato a todas las celdas de la fila
+    totalRow.eachCell((cell, colNumber) => {
+        // Negritas para toda la fila
+        cell.font = { bold: true };
+
+        // Bordes alrededor de la fila completa
+        //borde grueso
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin", }
+        };
+
+        // Alineación personalizada según la columna
+        if (colNumber === 5) { // Columna "Total"
             cell.alignment = { horizontal: "right", vertical: "middle" };
-        }
-        if (colNumber == 5) {
-            cell.font = { bold: true };
+        } else if (colNumber === 6) { // Columna "Importe total"
+            cell.alignment = { horizontal: "right", vertical: "middle" };
+        } else {
             cell.alignment = { horizontal: "center", vertical: "middle" };
         }
     });
@@ -2226,70 +3257,191 @@ async function ExportarExcelMaquinarias() {
     document.body.removeChild(link);
 }
 async function ExportarExcelConceptosProyecto() {
-    // Crear un nuevo libro de trabajo
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Conceptos");
 
-    // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    // --- Cargar logo ---
+    const imageUrl = urlImagenLogo;
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
-        .then(blob => {
-            return new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.readAsDataURL(blob);
-            });
-        });
+        .then(blob => new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.readAsDataURL(blob);
+        }));
 
     const imageId = workbook.addImage({
-        base64: imageBase64.split(",")[1], // Remover el encabezado `data:image/png;base64,`
+        base64: imageBase64.split(",")[1],
         extension: "png",
     });
 
     worksheet.addImage(imageId, {
-        tl: { col: 0.2, row: 0.2 }, // Posición superior izquierda
-        ext: { width: 150, height: 50 }, // Tamaño de la imagen
+        tl: { col: 0.2, row: 0.2 },
+        ext: { width: 150, height: 50 },
     });
 
-    // Determinar las columnas visibles
+    // --- Determinar columnas visibles ---
     const visibleColumns = [];
     if (showCostoDirecto) visibleColumns.push("Costo directo");
     if (showPrecioUnitario) visibleColumns.push("Precio unitario");
     if (showPUCantidad) visibleColumns.push("PU * Cantidad");
 
-    // Ajustar el rango de celdas combinadas según las columnas visibles
-    const mergeRange = `B1:${String.fromCharCode(65 + 3 + visibleColumns.length)}1`;
-    worksheet.mergeCells(mergeRange);
-    const line1 = worksheet.getCell("B1");
-    line1.value = "División de Distribución Jalisco";
-    line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
-    line1.alignment = { horizontal: "right", vertical: "middle" };
+    // --- Función para convertir número de columna a letra Excel ---
+    function getExcelColumnLetter(colNumber) {
+        let letter = "";
+        while (colNumber > 0) {
+            let remainder = (colNumber - 1) % 26;
+            letter = String.fromCharCode(65 + remainder) + letter;
+            colNumber = Math.floor((colNumber - 1) / 26);
+        }
+        return letter;
+    }
 
-    worksheet.mergeCells(`B2:${String.fromCharCode(65 + 3 + visibleColumns.length)}2`);
-    const line2 = worksheet.getCell("B2");
-    line2.value = "Zona " + datosProyecto.zona; // Asegúrate de que `datosProyecto.zona` esté definido
-    line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
-    line2.alignment = { horizontal: "right", vertical: "middle" };
+    // --- Calcular última columna dinámica ---
+    const endColIndex = 5 + visibleColumns.length; // A=1
+    const endColLetter = getExcelColumnLetter(endColIndex);
 
-    worksheet.mergeCells(`B3:${String.fromCharCode(65 + 3 + visibleColumns.length)}3`);
-    const line3 = worksheet.getCell("B3");
-    line3.value = "Departamento de Planeación, Proyectos y Construcción";
-    line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-    line3.alignment = { horizontal: "right", vertical: "middle" };
+    // ******************************************************************
+    // ENCABEZADO - VERSIÓN SIMPLIFICADA SIN CONFLICTOS DE MERGE
+    // ******************************************************************
 
-    // Agregar título
-    worksheet.mergeCells(`A5:${String.fromCharCode(65 + 3 + visibleColumns.length)}5`);
-    const titleCell = worksheet.getCell("A5");
-    titleCell.value = "Conceptos";
+    // CONTENIDO PRINCIPAL - ajustar según si hay columnas visibles o no
+    if (visibleColumns.length > 0) {
+        // CON columnas visibles: contenido principal abarca B-E
+        worksheet.mergeCells(`B1:E1`);
+        const cen1 = worksheet.getCell("B1");
+        cen1.value = "División de Distribución Jalisco";
+        cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+        cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells(`B2:E2`);
+        const cen2 = worksheet.getCell("B2");
+        cen2.value = "Subgerencia de Distribución";
+        cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+        cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells(`B3:E3`);
+        const cen3 = worksheet.getCell("B3");
+        cen3.value = "Departamento Divisional de Planeación";
+        cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+        cen3.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells(`B4:E4`);
+        const lincen4 = worksheet.getCell("B4");
+        lincen4.value = datosProyecto.nombre;
+        lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+        lincen4.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+    } else {
+        // SIN columnas visibles: contenido principal abarca B-D (una columna menos)
+        worksheet.mergeCells(`B1:D1`);
+        const cen1 = worksheet.getCell("B1");
+        cen1.value = "División de Distribución Jalisco";
+        cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+        cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells(`B2:D2`);
+        const cen2 = worksheet.getCell("B2");
+        cen2.value = "Subgerencia de Distribución";
+        cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+        cen2.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells(`B3:D3`);
+        const cen3 = worksheet.getCell("B3");
+        cen3.value = "Departamento Divisional de Planeación";
+        cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+        cen3.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells(`B4:D4`);
+        const lincen4 = worksheet.getCell("B4");
+        lincen4.value = datosProyecto.nombre;
+        lincen4.font = { bold: true, size: 12, color: { argb: "#000" } };
+        lincen4.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+    }
+
+    // Celda "Obra:" siempre en A4
+    worksheet.mergeCells(`A4`);
+    const cen4 = worksheet.getCell("A4");
+    cen4.value = "Obra:";
+    cen4.font = { size: 12, color: { argb: "#000" } };
+    cen4.alignment = { horizontal: "center", vertical: "middle" };
+
+    // INFORMACIÓN ADICIONAL - ESTRATEGIA MEJORADA
+    if (visibleColumns.length > 0) {
+        // CON columnas visibles: usar columnas F en adelante
+        worksheet.mergeCells(`F1:${endColLetter}1`);
+        worksheet.getCell("F1").value = "División de Distribución Jalisco";
+        worksheet.getCell("F1").font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
+        worksheet.getCell("F1").alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells(`F2:${endColLetter}2`);
+        worksheet.getCell("F2").value = "Zona " + datosProyecto.zona;
+        worksheet.getCell("F2").font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
+        worksheet.getCell("F2").alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells(`F3:${endColLetter}4`);
+        worksheet.getCell("F3").value = "Departamento de Planeación, Proyectos y Construcción";
+        worksheet.getCell("F3").font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
+        worksheet.getCell("F3").alignment = { horizontal: "right", vertical: "middle", wrapText: true };
+
+        // Fila 5 - versión con columnas visibles
+        worksheet.mergeCells(`A5:E5`);
+        worksheet.getCell("A5").value = "Fecha:";
+        worksheet.getCell("A5").font = { size: 10, color: { argb: "#000" } };
+        worksheet.getCell("A5").alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells(`F5:${endColLetter}5`);
+        worksheet.getCell("F5").value = ObtenerFechaActualDMY();
+        worksheet.getCell("F5").font = { size: 10, color: { argb: "#000" } };
+        worksheet.getCell("F5").alignment = { horizontal: "center", vertical: "middle" };
+
+    } else {
+        // SIN columnas visibles: usar columna E para información adicional
+        worksheet.mergeCells(`E1`);
+        worksheet.getCell("E1").value = "División de Distribución Jalisco";
+        worksheet.getCell("E1").font = { bold: true, size: 8, color: { argb: "FF008e5a" } };
+        worksheet.getCell("E1").alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells(`E2`);
+        worksheet.getCell("E2").value = "Zona " + datosProyecto.zona;
+        worksheet.getCell("E2").font = { bold: true, size: 8, color: { argb: "FF008e5a" } };
+        worksheet.getCell("E2").alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells(`E3`);
+        worksheet.getCell("E3").value = "Depto. Planeación";
+        worksheet.getCell("E3").font = { bold: true, size: 7, color: { argb: "FF008e5a" } };
+        worksheet.getCell("E3").alignment = { horizontal: "right", vertical: "middle" };
+
+        // Fila 5 - versión sin columnas visibles
+        worksheet.mergeCells(`A5:D5`);
+        worksheet.getCell("A5").value = "Fecha:";
+        worksheet.getCell("A5").font = { size: 10, color: { argb: "#000" } };
+        worksheet.getCell("A5").alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells(`E5`);
+        worksheet.getCell("E5").value = ObtenerFechaActualDMY();
+        worksheet.getCell("E5").font = { size: 10, color: { argb: "#000" } };
+        worksheet.getCell("E5").alignment = { horizontal: "center", vertical: "middle" };
+    }
+
+    // TÍTULO PRINCIPAL
+    if (visibleColumns.length > 0) {
+        worksheet.mergeCells(`A6:${endColLetter}6`);
+    } else {
+        worksheet.mergeCells(`A6:E6`);
+    }
+    const titleCell = worksheet.getCell("A6");
+    titleCell.value = "Catalogo de Conceptos";
     titleCell.font = { bold: true, size: 14, color: { argb: "FF008e5a" } };
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
 
-    // Agregar encabezados
-    const headers = ["ID", "Nombre", "Unidad", "Cantidad", ...visibleColumns];
+    // ******************************************************************
+    // ENCABEZADOS DE TABLA
+    // ******************************************************************
+    const headers = ["No. Concepto", "ID", "Nombre", "Unidad", "Cantidad", ...visibleColumns];
+
     worksheet.addRow(headers).eachCell((cell) => {
         cell.font = { bold: true };
-        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" }, bgColor: { argb: "FFFFFFFF" } };
+        cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF008e5a" } };
         cell.alignment = { horizontal: "center", vertical: "middle" };
         cell.border = {
             top: { style: "thin" },
@@ -2299,89 +3451,113 @@ async function ExportarExcelConceptosProyecto() {
         };
     });
 
-    // Obtener datos de la tabla
+    // ******************************************************************
+    // DATOS DE TABLA
+    // ******************************************************************
     const tableBody = document.getElementById("table-bodyConceptos");
     const rows = tableBody.querySelectorAll("tr");
 
     rows.forEach((row, rowIndex) => {
         const cells = row.querySelectorAll("td");
         const rowData = [
-            cells[0].innerText, // ID
-            cells[1].innerText, // Nombre
-            cells[2].innerText, // Unidad
-            cells[3].innerText, // Cantidad
+            cells[0].innerText,
+            cells[1].innerText,
+            cells[2].innerText,
+            cells[3].innerText,
+            cells[4].innerText,
         ];
 
-        if (showCostoDirecto) rowData.push(cells[4].innerText); // Costo directo
-        if (showPrecioUnitario) rowData.push(cells[5].innerText); // Precio unitario
-        if (showPUCantidad) rowData.push(cells[6].innerText); // PU * Cantidad
+        if (showCostoDirecto) rowData.push(cells[5].innerText);
+        if (showPrecioUnitario) rowData.push(cells[6].innerText);
+        if (showPUCantidad) rowData.push(cells[7].innerText);
 
-        // Agregar una fila al Excel
         const excelRow = worksheet.addRow(rowData);
 
-        // Aplicar color alterno a las filas
         excelRow.eachCell((cell, colNumber) => {
-            // Configuración de alineación según la columna
+            let horizontalAlignment;
             switch (colNumber) {
-                case 1: // ID
-                    cell.alignment = { horizontal: "left", vertical: "middle" };
+                case 1: // "No. Concepto"
+                    horizontalAlignment = "right";
                     break;
-                case 2: // Nombre
-                    cell.alignment = { horizontal: "justify", vertical: "middle" };
+                case 2: // "ID"
+                    horizontalAlignment = "left";
                     break;
-                case 3: // Unidad
-                    cell.alignment = { horizontal: "left", vertical: "middle" };
+                case 3: // "Nombre"
+                    horizontalAlignment = "left"; // Cambié a "left"
                     break;
-                case 4: // Cantidad
-                    cell.alignment = { horizontal: "right", vertical: "middle" };
+                case 4: // "Unidad"
+                    horizontalAlignment = "left";
                     break;
-                default:
-                    cell.alignment = { horizontal: "right", vertical: "middle" }; // Por defecto
+                default: // Resto de columnas
+                    horizontalAlignment = "right";
             }
 
-            // Aplicar colores alternos en las filas
-            if (rowIndex % 2 === 0) {  // Filas pares
-                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFF0F0F0" } }; // Gris claro
-            } else {  // Filas impares
-                cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } }; // Blanco
-            }
-
-            // Configurar bordes solo en los lados (izquierda y derecha)
-            cell.border = {
-                left: { style: "thin" },
-                right: { style: "thin" },
-                top: { style: "none" },
-                bottom: { style: "none" }
-            };
+            cell.alignment = { horizontal: horizontalAlignment, vertical: "middle" };
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: rowIndex % 2 === 0 ? "FFF0F0F0" : "FFFFFFFF" } };
+            cell.border = { left: { style: "thin" }, right: { style: "thin" } };
         });
     });
 
-    // Agregar total como última fila si la columna PU * Cantidad está visible
+    // ******************************************************************
+    // FILA TOTAL - SOLO SI HAY COLUMNAS MONETARIAS VISIBLES
+    // ******************************************************************
+
     if (showPUCantidad) {
         const total = document.getElementById("TotalSumaImporteConceptos").innerHTML;
-        const totalRowData = ["", "", "", ...Array(visibleColumns.length - 1).fill(""), "Total", total];
-        worksheet.addRow(totalRowData).eachCell((cell, colNumber) => {
-            if (colNumber == 4 + visibleColumns.length) {
-                cell.font = { bold: true };
-                cell.alignment = { horizontal: "right", vertical: "middle" };
-            }
-            if (colNumber == 3 + visibleColumns.length) {
-                cell.font = { bold: true };
-                cell.alignment = { horizontal: "center", vertical: "middle" };
-            }
-        });
+
+        const totalColumnsCount = 5 + visibleColumns.length;
+        const lastDataColIndex = totalColumnsCount;
+        const mergeEndColIndex = totalColumnsCount - 1;
+
+        const totalRowData = new Array(totalColumnsCount).fill("");
+        const totalRow = worksheet.addRow(totalRowData);
+        const lastRowNumber = totalRow.number;
+
+        worksheet.mergeCells(`A${lastRowNumber}:${getExcelColumnLetter(mergeEndColIndex)}${lastRowNumber}`);
+
+        const mergedCell = worksheet.getCell(`A${lastRowNumber}`);
+        mergedCell.value = "Total";
+        mergedCell.font = { bold: true, color: { argb: "#000000" } };
+        mergedCell.alignment = { horizontal: "right", vertical: "middle" };
+        mergedCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
+        mergedCell.border = {
+            top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" },
+        };
+
+        const totalValueCell = totalRow.getCell(lastDataColIndex);
+        totalValueCell.value = total;
+        totalValueCell.font = { bold: true, color: { argb: "#000000" } };
+        totalValueCell.alignment = { horizontal: "right", vertical: "middle" };
+        totalValueCell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
+        totalValueCell.border = {
+            top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" },
+        };
+
+        for (let col = 2; col < lastDataColIndex; col++) {
+            const cell = totalRow.getCell(col);
+            cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FFFFFFFF" } };
+            cell.border = {
+                top: { style: "thin" }, left: { style: "thin" }, bottom: { style: "thin" }, right: { style: "thin" },
+            };
+        }
     }
 
-    // Ajustar el ancho de las columnas manualmente
-    worksheet.columns = [
-        { key: 'ID', width: 13 },
-        { key: 'Nombre', width: 90 },
-        { key: 'Unidad', width: 13 },
-        { key: 'Cantidad', width: 15 },
-        ...visibleColumns.map(() => ({ width: 20 }))
+    // ******************************************************************
+    // AJUSTE DE COLUMNAS
+    // ******************************************************************
+    const columnWidths = [
+        { width: 13 }, { width: 13 }, { width: 90 }, { width: 13 }, { width: 15 },
     ];
 
-    // Descargar el archivo Excel
+    if (visibleColumns.length > 0) {
+        columnWidths.push(...visibleColumns.map(() => ({ width: 20 })));
+    }
+
+    worksheet.columns = columnWidths;
+
+    // ******************************************************************
+    // DESCARGA
+    // ******************************************************************
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
@@ -2392,30 +3568,56 @@ async function ExportarExcelConceptosProyecto() {
     document.body.removeChild(link);
 }
 
-
+let totales = {
+    totalMaterial: 0,
+    totalManoObra: 0,
+    totalHerramientasEquipo: 0,
+    totalMaquinaria: 0,
+    totalBasico: 0
+};
 
 async function ExportarExcelTarjetas(pantalla) {
+
     // Crear un nuevo libro de trabajo
-    const container = document.getElementById('contenedor-cfe');
     const workbook = new ExcelJS.Workbook();
-    let conceptos
+    let conceptos;
+
     if (pantalla) {
         conceptos = Object.values(editedRows);
+        // Mostrar el contenedor de progreso
+
     } else {
-        GeneradorTarjetasConceptoPdf(false);
         conceptos = selectedRows;
         if (conceptos.length == 0) {
             mensajePantalla("No hay conceptos seleccionados", false);
+
             return;
         }
     }
+
+    document.getElementById("divCargaExport").style.display = "flex";
+    document.getElementById("porcentajeExportacion").textContent = "0%";
+    precionadoBtnExportarPdf();
+
+    const totalConceptos = conceptos.length;
+    let conceptosProcesados = 0;
+
+    // Función para actualizar el progreso
+    function actualizarProgreso() {
+        conceptosProcesados++;
+        const porcentaje = Math.round((conceptosProcesados / totalConceptos) * 100);
+        document.getElementById("porcentajeExportacion").textContent = `Exportando a Excel ${porcentaje}%`;
+    }
+
     // Obtener los conceptos
     let contador = 0;
     for (const concepto of conceptos) {
         contador++;
+
         // Crear una nueva hoja para cada concepto
-        const worksheet = workbook.addWorksheet(String(contador).padStart(3, '0'));
-        const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+        const worksheet = workbook.addWorksheet(String(conceptosProcesados + 1).padStart(3, '0'));
+
+        const imageUrl = urlImagenLogo;
         const imageBase64 = await fetch(imageUrl)
             .then(response => response.blob())
             .then(blob => {
@@ -2427,37 +3629,76 @@ async function ExportarExcelTarjetas(pantalla) {
             });
 
         const imageId = workbook.addImage({
-            base64: imageBase64.split(",")[1], // Remover el encabezado `data:image/png;base64,`
+            base64: imageBase64.split(",")[1],
             extension: "png",
         });
 
         worksheet.addImage(imageId, {
-            tl: { col: 0.2, row: 0.2 }, // Posición superior izquierda
-            ext: { width: 150, height: 50 }, // Tamaño de la imagen
+            tl: { col: 0.2, row: 0.2 },
+            ext: { width: 150, height: 50 },
         });
 
-        // Agregar encabezado
-        worksheet.mergeCells("B1:H1");
-        const line1 = worksheet.getCell("B1");
+        // ... (todo el resto de tu código para configurar la hoja)
+
+
+        worksheet.mergeCells("B1:F1");
+        const cen1 = worksheet.getCell("B1");
+        cen1.value = "División de Distribución Jalisco";
+        cen1.font = { bold: true, size: 15, color: { argb: "#000" } };
+        cen1.alignment = { horizontal: "center", vertical: "middle" };
+
+        worksheet.mergeCells("G1:H1");
+        const line1 = worksheet.getCell("G1");
         line1.value = "División de Distribución Jalisco";
         line1.font = { bold: true, size: 12, color: { argb: "FF008e5a" } };
         line1.alignment = { horizontal: "right", vertical: "middle" };
 
+        //****************************************************************** */
+
+        worksheet.mergeCells("B2:F2");
+        const cen2 = worksheet.getCell("B2");
+        cen2.value = "Subgerencia de Distribución";
+        cen2.font = { bold: true, size: 15, color: { argb: "#000" } };
+        cen2.alignment = { horizontal: "center", vertical: "middle" };
         if (pantalla) {
-            worksheet.mergeCells("B2:H2");
-            const line2 = worksheet.getCell("B2");
+            worksheet.mergeCells("G2:H2");
+            const line2 = worksheet.getCell("G2");
             line2.value = "Zona " + datosProyecto.zona;
             line2.font = { bold: true, size: 10, color: { argb: "FF008e5a" } };
             line2.alignment = { horizontal: "right", vertical: "middle" };
         }
+        //****************************************************************** */
+        worksheet.mergeCells("B3:F3");
+        const cen3 = worksheet.getCell("B3");
+        cen3.value = "Departamento Divisional de Planeación";
+        cen3.font = { bold: true, size: 13, color: { argb: "#000" } };
+        cen3.alignment = { horizontal: "center", vertical: "middle" };
 
-        worksheet.mergeCells("B3:H3");
-        const line3 = worksheet.getCell("B3");
+        worksheet.mergeCells("G3:H4");
+        const line3 = worksheet.getCell("G3");
         line3.value = "Departamento de Planeación, Proyectos y Construcción";
         line3.font = { bold: true, size: 9, color: { argb: "FF008e5a" } };
-        line3.alignment = { horizontal: "right", vertical: "middle" };
+        line3.alignment = {
+            horizontal: "right",
+            vertical: "middle",
+            wrapText: true // ← Ajustar texto
+        };
+
+        //****************************************************************** */
+        worksheet.mergeCells("A4:D4");
+        const cellFecha = worksheet.getCell("A4");
+        cellFecha.value = "Fecha:";
+        cellFecha.font = { size: 10, color: { argb: "#000" } };
+        cellFecha.alignment = { horizontal: "right", vertical: "middle" };
+
+        worksheet.mergeCells("E4:F4");
+        const cellFechaD = worksheet.getCell("E4");
+        cellFechaD.value = ObtenerFechaActualDMY();
+        cellFechaD.font = { size: 10, color: { argb: "#000" } };
+        cellFechaD.alignment = { horizontal: "center", vertical: "middle" };
+
+        let TituloTabla
         if (pantalla) {
-            worksheet.addRow();
             // Agregar título
             let tituloProy = worksheet.addRow(["Para: " + datosProyecto.nombre, "", "", "", "", "", "", ""]);
             worksheet.mergeCells("A5:H5");
@@ -2471,14 +3712,14 @@ async function ExportarExcelTarjetas(pantalla) {
                 }
             });
             tituloProy.height = 70;
+            TituloTabla = worksheet.addRow(["No. Concepto", String(conceptosProcesados + 1).padStart(3, '0'), "Análisis de los precios unitarios de los conceptos de trabajo", "", "", "", "", ""]);
+
+            worksheet.mergeCells("C6:H6");
         } else {
-            worksheet.addRow();
-            worksheet.addRow();
+            TituloTabla = worksheet.addRow(["No. Concepto", String(conceptosProcesados + 1).padStart(3, '0'), "Análisis de los precios unitarios de los conceptos de trabajo", "", "", "", "", ""]);
+
+            worksheet.mergeCells("C5:H5");
         }
-
-        let TituloTabla = worksheet.addRow(["No. Concepto", String(contador).padStart(3, '0'), "Análisis de los precios unitarios de los conceptos de trabajo", "", "", "", "", ""]);
-        worksheet.mergeCells("C6:H6");
-
         TituloTabla.eachCell((cell, colNumber) => {
             if (colNumber == 1) {
                 cell.font = { bold: true };
@@ -2576,6 +3817,9 @@ async function ExportarExcelTarjetas(pantalla) {
             };
         });
         dataRow.height = 50;
+
+
+
         // Agregar secciones de materiales, mano de obra, etc.
         await agregarSeccionMateriales(worksheet, concepto.idconcepto);
         await agregarSeccionManoObra(worksheet, concepto.idconcepto);
@@ -2585,16 +3829,18 @@ async function ExportarExcelTarjetas(pantalla) {
 
         // Agregar totales
         agregarTotales(worksheet, concepto.idconcepto);
+
+        // Actualizar el progreso después de procesar cada concepto
+
+        actualizarProgreso();
     }
-    // Restaurar los estilos originales del contenedor
-    container.style.display = 'none';
-    container.style.position = '';
-    container.style.left = '';
+
     // Descargar el archivo Excel
     const buffer = await workbook.xlsx.writeBuffer();
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
+
     if (pantalla) {
         link.download = "TarjetasPrecioUnitarioProyecto.xlsx";
     } else {
@@ -2604,6 +3850,23 @@ async function ExportarExcelTarjetas(pantalla) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    // Ocultar el contenedor de progreso después de completar
+
+
+
+    setTimeout(() => {
+        document.getElementById("divCargaExport").style.display = "none";
+        let btn = document.getElementById("btnExportarPDF");
+        btn.removeAttribute("disabled");
+        btn.classList.remove("btnClickeadoExportar");
+
+        let btnExcel = document.getElementById("btnExportar");
+        btnExcel.removeAttribute("disabled");
+        btnExcel.classList.remove("btnClickeadoExportar");
+    }, 1000);
+
+
 }
 async function agregarSeccionMateriales(worksheet, idConceptoProyecto) {
     // Agregar título de la sección
@@ -2619,7 +3882,6 @@ async function agregarSeccionMateriales(worksheet, idConceptoProyecto) {
 
     // Obtener datos de materiales
     const materiales = await TraerMaterialesConceptoPDF(idConceptoProyecto, true);
-
     // Agregar encabezados de la tabla de materiales
     const headers = ["ID", "Descripción", "Descripción", "Unidad", "Precio U", "Cantidad", "Suministrado por CFE", "M = Precio * Cantidad"];
     const headerRow = worksheet.addRow(headers);
@@ -2705,7 +3967,7 @@ async function agregarSeccionMateriales(worksheet, idConceptoProyecto) {
 
     // Calcular la suma de la última columna
     const total = materiales.reduce((sum, item) => sum + (item.suministrado ? 0 : item.precio * item.cantidad), 0);
-
+    totales.totalMaterial = total;
     // Agregar fila de suma
     const totalRow = worksheet.addRow(["", "", "", "", "", "", "SUMA 1", total]);
     totalRow.eachCell((cell, colNumber) => {
@@ -2844,7 +4106,7 @@ async function agregarSeccionManoObra(worksheet, idConceptoProyecto) {
 
     // Calcular la suma de la última columna
     const total = manoObra.reduce((sum, item) => sum + item.importe, 0);
-    totalManoObraTarjeta = total
+    totales.totalManoObra = total;
     // Agregar fila de suma
     const totalRow = worksheet.addRow(["", "", "", "", "", "", "SUMA 2", total]);
     totalRow.eachCell((cell, colNumber) => {
@@ -2893,9 +4155,8 @@ async function agregarSeccionHerramientaEquipo(worksheet, idConceptoProyecto) {
     titleCell.alignment = { horizontal: "center", vertical: "middle" };
 
     // Obtener datos de herramienta y equipo
-    const totalImporteManoObra = parseFloat(document.getElementById(`SumaImporteManoObraPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
+    const totalImporteManoObra = totales.totalManoObra;
     const herramientaEquipo = GeneradorTablaHerramientaEquipoExcel(idConceptoProyecto, totalImporteManoObra);
-
     // Agregar encabezados de la tabla de herramienta y equipo
     const headers = ["Descripción", , , , , "Kh o Ks", "Mo", "HE = Kh * Mo"];
     const headerRow = worksheet.addRow(headers);
@@ -2974,7 +4235,7 @@ async function agregarSeccionHerramientaEquipo(worksheet, idConceptoProyecto) {
 
     // Calcular la suma de la última columna
     const total = herramientaEquipo.reduce((sum, item) => sum + item.he, 0);
-
+    totales.totalHerramientasEquipo = total;
     // Agregar fila de suma
     const totalRow = worksheet.addRow(["", "", "", , , , "SUMA 3", total]);
     totalRow.eachCell((cell, colNumber) => {
@@ -3100,7 +4361,7 @@ async function agregarSeccionMaquinaria(worksheet, idConceptoProyecto) {
 
     // Calcular la suma de la última columna
     const total = maquinaria.reduce((sum, item) => sum + (item.phm / item.rhm), 0);
-
+    totales.totalMaquinaria = total;
     // Agregar fila de suma
     const totalRow = worksheet.addRow(["", "", , "", "", "", "SUMA 4", total]);
     totalRow.eachCell((cell, colNumber) => {
@@ -3227,7 +4488,7 @@ async function agregarSeccionBasico(worksheet, idConceptoProyecto) {
 
     // Calcular la suma de la última columna
     const total = basico.reduce((sum, item) => sum + (item.total * item.cantconbasi), 0);
-
+    totales.totalBasico = total;
     // Agregar fila de suma
     const totalRow = worksheet.addRow(["", "", , , "", "", "SUMA 5", total]);
     totalRow.eachCell((cell, colNumber) => {
@@ -3265,21 +4526,31 @@ async function agregarSeccionBasico(worksheet, idConceptoProyecto) {
 function agregarTotales(worksheet, idConceptoProyecto) {
     // Obtener totales
     worksheet.addRow();
-    const totalMateriales = parseFloat(document.getElementById(`SumaImporteMaterialesPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalManoObra = parseFloat(document.getElementById(`SumaImporteManoObraPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalHerramientaEquipo = parseFloat(document.getElementById(`SumaImporteHerramientaEquipoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalMaquinaria = parseFloat(document.getElementById(`SumaImporteMaquinariaPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
-    const totalBasico = parseFloat(document.getElementById(`SumaImporteBasicoPDF-${idConceptoProyecto}`).innerText.replace(/[^0-9.-]+/g, "")) || 0;
 
-    const costoDirecto = totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico;
-    const costoIndirecto = costoDirecto * (costosAdicionales.CIndirecto / 100);
-    const subTotal1 = costoDirecto + costoIndirecto;
-    const financiamiento = subTotal1 * (costosAdicionales.Financiamiento / 100);
-    const subTotal2 = financiamiento + subTotal1;
-    const utilidad = subTotal2 * (costosAdicionales.utilidad / 100);
-    const subTotal3 = utilidad + subTotal2;
-    const cargosAdicionales = subTotal3 * (costosAdicionales.CAdicionales / 100);
-    const precioUnitario = subTotal3 + cargosAdicionales;
+    // Totales iniciales
+    const totalMateriales = parseFloat(totales.totalMaterial) || 0;
+    const totalManoObra = parseFloat(totales.totalManoObra) || 0;
+    const totalHerramientaEquipo = parseFloat(totales.totalHerramientasEquipo) || 0;
+    const totalMaquinaria = parseFloat(totales.totalMaquinaria) || 0;
+    const totalBasico = parseFloat(totales.totalBasico) || 0;
+
+    // Costos adicionales asegurando que sean números
+    const CIndirecto = parseFloat(costosAdicionales.CIndirecto ?? 15) || 15;
+    const Financiamiento = parseFloat(costosAdicionales.Financiamiento ?? 1) || 1;
+    const utilidadPorc = parseFloat(costosAdicionales.utilidad ?? 10) || 10;
+    const CAdicionales = parseFloat(costosAdicionales.CAdicionales ?? 0.5) || 0.5;
+
+
+    // Cálculos con redondeo a 2 decimales
+    const costoDirecto = parseFloat((totalMateriales + totalManoObra + totalHerramientaEquipo + totalMaquinaria + totalBasico).toFixed(2));
+    const costoIndirecto = parseFloat((costoDirecto * (CIndirecto / 100)).toFixed(2));
+    const subTotal1 = parseFloat((costoDirecto + costoIndirecto).toFixed(2));
+    const financiamiento = parseFloat((subTotal1 * (Financiamiento / 100)).toFixed(2));
+    const subTotal2 = parseFloat((subTotal1 + financiamiento).toFixed(2));
+    const utilidad = parseFloat((subTotal2 * (utilidadPorc / 100)).toFixed(2));
+    const subTotal3 = parseFloat((subTotal2 + utilidad).toFixed(2));
+    const cargosAdicionales = parseFloat((subTotal3 * (CAdicionales / 100)).toFixed(2));
+    const precioUnitario = parseFloat((subTotal3 + cargosAdicionales).toFixed(2));
 
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',

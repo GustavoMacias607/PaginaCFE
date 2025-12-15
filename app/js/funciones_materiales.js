@@ -409,7 +409,7 @@ function displayTableMateriales(page) {
             row.innerHTML = `
                 <td class="Code" style="text-align: right;">${record.codigo}</td>
                 <td>${record.norma ? record.norma : "Sin norma"}</td>
-                <td>${record.descripcion ? record.descripcion : "---"}</td>
+                <td>${record.descripcion ? record.descripcion.replace(/\n/g, "<br>") : "---"}</td>
                 <td style="text-align: right;">${precioFormateado}</td>
                 <td >${record.fechaprecio ? record.fechaprecio : "---"}</td>
                 <td>${record.familia ? record.familia : "---"}</td>
@@ -422,7 +422,7 @@ function displayTableMateriales(page) {
                     </div>
                     <div style="display: flex; justify-content: space-around; align-items: center;">
                         <i class="miImagen coloresIcono fa-regular fa-images" style="cursor: pointer;" alt="Mostrar Imagen" onmouseover="mostrarDiv(this)" onmouseout="ocultarDiv(this)"></i>
-                        ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${record.descripcion}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
+                        ${record.estatus == 1 && (rolUsuarioSe == "Administrador" || rolUsuarioSe == "Analista de Precios") ? `<i class="coloresIcono fa-solid fa-pen-to-square" style="cursor: pointer;" data-bs-toggle="modal" data-bs-target="#EditarModal" onclick="llenarModalModificar(${record.codigo},'${record.norma}','${encodeURIComponent(record.descripcion)}',${record.precio},'${record.fechaprecio}','${record.familia}','${record.unidad}')"></i>` : ``}
 
                        ${rolUsuarioSe == "Administrador" ?
                     (record.estatus == 1 ?
@@ -674,41 +674,51 @@ function AddAgregarImagen() {
 //Metodo para que se cree la carpeta y se le introduzca la imagen seleccionada a la hora de modificar el material
 function UpdAgregarImagen() {
     let id = document.querySelector('#UpdidInput').value;
-    let idAnterior = document.querySelector('#UpdidAnteriorMaterial').value; // Obtener el ID anterior
+    let idAnterior = document.querySelector('#UpdidAnteriorMaterial').value;
     var inputFile = document.getElementById('UpdimagenInput');
-    var file = inputFile.files[0];
+    var file = inputFile.files[0]; // Puede ser undefined si no se seleccionó imagen
 
-    // Verificar el tamaño del archivo (en bytes)
-    var maxSizeBytes = 200 * 1024;
-    if (file.size <= maxSizeBytes) {
-        // Verificar si el archivo es una imagen con formato PNG o JPG
-        if (file.type === 'image/png' || file.type === 'image/jpeg') {
-            var formData = new FormData();
-            formData.append('imagen', file);
-            formData.append('id', id);
-            formData.append('idAnterior', idAnterior); // Añadir el ID anterior al FormData
+    // Crear FormData desde el inicio
+    var formData = new FormData();
+    formData.append('id', id);
+    formData.append('idAnterior', idAnterior);
 
-            // Enviar la imagen al servidor
-            $.ajax({
-                url: './js/guardar_imagen.php', // Asegúrate de que la ruta es correcta
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    console.log('Imagen guardada:', response);
-                },
-                error: function (error) {
-                    console.error('Error al guardar la imagen:', error);
-                }
-            });
-        } else {
-            mensajePantalla('El archivo seleccionado no es una imagen en formato PNG o JPG.', false);
+    // Si hay una imagen seleccionada, validar tipo y tamaño
+    if (file) {
+        var maxSizeBytes = 200 * 1024;
+
+        if (file.size > maxSizeBytes) {
+            mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
+            return;
         }
-    } else {
-        mensajePantalla('El tamaño del archivo excede el límite de 200 KB.', false);
+
+        if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+            mensajePantalla('El archivo seleccionado no es una imagen en formato PNG o JPG.', false);
+            return;
+        }
+
+        // Añadir el archivo al FormData
+        formData.append('imagen', file);
     }
+
+    // Enviar siempre la solicitud (para que también actualice la carpeta si no hay imagen)
+    $.ajax({
+        url: './js/guardar_imagen.php',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            console.log('Respuesta del servidor:', response);
+            mensajePantalla('Actualización completada.', true);
+        },
+        error: function (error) {
+            console.error('Error al guardar la imagen:', error);
+            mensajePantalla('Ocurrió un error al guardar la imagen.', false);
+        }
+    });
 }
+
 
 
 //Metodo para mostrar la imagen en el modal de agregar Material, recibe la imagen seleccionada
@@ -724,7 +734,7 @@ function AddmostrarImagen(input) {
         if (!tiposImagen.includes(archivo.type)) {
             mensajePantalla(msgNoEsImagen, false);
             input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            imagenPreview.src = urlSinImagenMaterial; // Limpiar el preview
             return; // Salir de la función para evitar cargar un archivo no imagen
         }
 
@@ -732,7 +742,7 @@ function AddmostrarImagen(input) {
         if (archivo.size > 204800) {
             mensajePantalla(msgPesoMaximo, false);
             input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            imagenPreview.src = urlSinImagenMaterial; // Limpiar el preview
             return; // Salir de la función para evitar cargar la imagen grande
         }
 
@@ -755,14 +765,14 @@ function UpdmostrarImagen(input) {
         if (!tiposImagen.includes(archivo.type)) {
             mensajePantalla(msgNoEsImagen, false);
             input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            imagenPreview.src = urlSinImagenMaterial; // Limpiar el preview
             return; // Salir de la función para evitar cargar un archivo no imagen
         }
         // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
         if (archivo.size > 204800) {
             mensajePantalla(msgPesoMaximo, false);
             input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = "/paginacfe/app/img/sinimagen.png"; // Limpiar el preview
+            imagenPreview.src = urlSinImagenMaterial; // Limpiar el preview
             return; // Salir de la función para evitar cargar la imagen grande
         }
         // Si pasa las validaciones, lee y muestra la imagen
@@ -810,7 +820,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, famil
     idM.value = id;
     idA.value = id;
     normaM.value = norma;
-    descripcionM.value = descripcion;
+    descripcionM.value = decodeURIComponent(descripcion);
     precioM.value = precio;
     unidadM.value = unidad;
     familiaM.value = familia;
@@ -854,6 +864,7 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, famil
 var rutaCarpeta = '../Materiales/1';
 //Metodo para que cuando se modifique algun material se cargue la imagen que este tenga
 function cargarImagen() {
+
     obtenerArchivosEnCarpeta(rutaCarpeta)
         .then(archivos => {
             // Seleccionar la única imagen encontrada en la carpeta
@@ -861,7 +872,7 @@ function cargarImagen() {
 
             if (imagen == undefined) {
                 const elementoImagen = document.getElementById('UpdimagenPreview');
-                elementoImagen.src = "/paginacfe/app/img/sinimagen.png";
+                elementoImagen.src = urlSinImagenMaterial;
             } else {
                 // Crear la ruta completa de la imagen
                 const rutaImagen = `${rutaCarpeta}/${imagen}`;
@@ -879,14 +890,16 @@ function cargarImagen() {
 //Metodo para buscar la carpeta donde se encuentra la imagen del material
 function cargarImagenCuadro(imagen) {
     var div = imagen.parentElement.querySelector(".miDiv");
+
     // Obtener la lista de archivos en la carpeta
     obtenerArchivosEnCarpeta(rutaCarpeta)
         .then(archivos => {
+            console.log(rutaCarpeta);
             // Seleccionar la única imagen encontrada en la carpeta
             const imagen = archivos.find(archivo => archivo.endsWith('.JPG') || archivo.endsWith('.jpg') || archivo.endsWith('.png') || archivo.endsWith('.jpeg'));
             if (imagen == undefined) {
                 const elementoImagen = div.querySelector(".imagenPreview");
-                elementoImagen.src = "/paginacfe/app/img/sinimagen.png";
+                elementoImagen.src = urlSinImagenMaterial;
             } else {
                 // Crear la ruta completa de la imagen
                 const rutaImagen = `${rutaCarpeta}/${imagen}`;
@@ -905,18 +918,40 @@ function cargarImagenCuadro(imagen) {
 //Metodo para obtener los archivos de la carpeta
 //Recibe la ruta de donde se encuentra la carpeta 
 async function obtenerArchivosEnCarpeta(rutaCarpeta) {
-    const response = await fetch(rutaCarpeta);
-    const textoHtml = await response.text();
-    // Analizar el HTML para extraer los nombres de archivo
-    const parser = new DOMParser();
-    const htmlDocumento = parser.parseFromString(textoHtml, 'text/html');
-    const enlaces = htmlDocumento.querySelectorAll('a');
-    // Filtrar los nombres de archivo
-    const archivos = Array.from(enlaces)
-        .map(enlace => enlace.getAttribute('href'))
-        .filter(archivo => archivo !== '../' && !archivo.startsWith('#'));
-    return archivos;
+    try {
+        const url = new URL(rutaCarpeta, window.location.href);
+        url.protocol = 'https:'; // 🔒 Forzar HTTPS
+        console.log(url.toString());
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const textoHtml = await response.text();
+        const parser = new DOMParser();
+        const htmlDocumento = parser.parseFromString(textoHtml, 'text/html');
+        const enlaces = htmlDocumento.querySelectorAll('a');
+
+        const archivos = Array.from(enlaces)
+            .map(enlace => enlace.getAttribute('href'))
+            .filter(nombre =>
+                nombre &&
+                !nombre.startsWith('?') &&
+                !nombre.startsWith('#') &&
+                nombre !== '../' &&
+                !nombre.endsWith('/') &&
+                /\.(jpg|jpeg|png)$/i.test(nombre)
+            );
+
+        console.log("📁 Archivos encontrados:", archivos);
+        return archivos;
+
+    } catch (error) {
+        console.error('Error al obtener archivos en la carpeta:', error);
+        return [];
+    }
 }
+
 
 //Metodo para cerrar el modal de agregar material
 function AddCerrarModal() {
@@ -962,7 +997,7 @@ async function ExportarMateriales() {
     const worksheet = workbook.addWorksheet("ExportarExcel");
 
     // Cargar la imagen como base64
-    const imageUrl = "/paginacfe/app/img/LogoPdf.PNG"; // Asegúrate de que la ruta sea válida
+    const imageUrl = urlImagenLogo; // Asegúrate de que la ruta sea válida
     const imageBase64 = await fetch(imageUrl)
         .then(response => response.blob())
         .then(blob => {

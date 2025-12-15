@@ -323,7 +323,7 @@ function GetUsuario() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     data = resp.datos;
-                    ObtenerZonas();
+                    ObtenerZonas(false);
                     llenarTablaUsuario();
                     filterDataUsuario();
                 }

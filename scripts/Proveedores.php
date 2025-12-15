@@ -215,18 +215,26 @@ class AuxPropuestas
     {
         $R['estado'] = "OK";
         $c = $this->conn;
+
         try {
-            $consulta = "call spAuxPropuestaInsertar(:IdConcepto,:IdPropuesta,:Precio);";
-            $sql = $c->prepare($consulta);
-            $sql->execute(array(
-                "IdConcepto" => $datos->idconcepto,
-                "IdPropuesta" => $datos->idpropuesta,
-                "Precio" => $datos->precio,
-            ));
-            unset($c);
+            $c->beginTransaction();
+
+            $sql = $c->prepare("CALL spAuxPropuestaInsertar(:IdConcepto,:IdPropuesta,:Precio)");
+
+            foreach ($datos as $item) {
+                $sql->execute([
+                    "IdConcepto" => $item->idconcepto,
+                    "IdPropuesta" => $item->idpropuesta,
+                    "Precio" => $item->precio
+                ]);
+            }
+
+            $c->commit();
         } catch (PDOException $e) {
+            $c->rollBack();
             $R['estado'] = "Error: " . $e->getMessage();
         }
+
         return $R;
     }
     function DelAuxPropuesta($datos)

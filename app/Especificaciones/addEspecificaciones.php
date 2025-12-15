@@ -22,7 +22,7 @@ if (!isset($_SESSION['idusuario'])) {
         }
         ?>
 
-        <a onclick="opcion('proyecto')" class="text-inicio-especificaciones">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-especificaciones">
             <div>Ir al inicio</div>
         </a>
     </div>

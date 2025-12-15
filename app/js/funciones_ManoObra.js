@@ -224,7 +224,6 @@ function UpdAgregarPDF() {
                 processData: false,
                 contentType: false,
                 success: function (response) {
-                    console.log('PDF guardado:', response);
                     guardo = true;
                 },
                 error: function (error) {
@@ -379,10 +378,8 @@ function GetManoObra() {
                 let resp = JSON.parse(responseText);
                 if (resp.estado == "OK") {
                     data = resp.datos;
-                    console.log(data);
                     llenarTablaManoObra();
                     filterDataManoObra();
-                    llenarUnidadTablaManoObra();
                 } else {
                     data = [];
                 }
@@ -448,35 +445,7 @@ function displayTableManoObra(page) {
     }
 }
 
-// Función para abrir el PDF en una nueva pestaña
-function verPDF(idmanoobra) {
-    // Construir la ruta del directorio donde se encuentra el archivo PDF
-    const pdfDirectory = `../PDFManoObra/${idmanoobra}/`;
 
-    // Llamar al servidor para obtener la lista de archivos en la carpeta
-    fetch(pdfDirectory)
-        .then(response => {
-            if (response.ok) {
-                // Si la carpeta existe, buscar el primer archivo PDF
-                return response.text();
-            } else {
-                mensajePantalla("Mano de obra sin PDF");
-            }
-        })
-        .then(data => {
-            // Buscar el primer archivo PDF en la respuesta
-            const pdfFileMatch = data.match(/href="([^"]+\.pdf)"/);
-            if (pdfFileMatch) {
-                // Si encontramos un archivo PDF, construir la URL completa
-                const pdfPath = pdfDirectory + pdfFileMatch[1];
-                // Abrir el PDF en una nueva pestaña
-                window.open(pdfPath, '_blank');
-            }
-        })
-        .catch(error => {
-            console.error('Error al verificar el archivo:', error);
-        });
-}
 
 function setupPaginationManoObra() {
     const paginationDiv = document.getElementById("pagination");
@@ -603,7 +572,35 @@ function llenarTablaManoObra() {
 }
 
 
+// Función para abrir el PDF en una nueva pestaña
+function verPDF(idmanoobra) {
+    // Construir la ruta del directorio donde se encuentra el archivo PDF
+    const pdfDirectory = `../PDFManoObra/${idmanoobra}/`;
 
+    // Llamar al servidor para obtener la lista de archivos en la carpeta
+    fetch(pdfDirectory)
+        .then(response => {
+            if (response.ok) {
+                // Si la carpeta existe, buscar el primer archivo PDF
+                return response.text();
+            } else {
+                mensajePantalla("Mano de obra sin PDF");
+            }
+        })
+        .then(data => {
+            // Buscar el primer archivo PDF en la respuesta
+            const pdfFileMatch = data.match(/href="([^"]+\.pdf)"/);
+            if (pdfFileMatch) {
+                // Si encontramos un archivo PDF, construir la URL completa
+                const pdfPath = pdfDirectory + pdfFileMatch[1];
+                // Abrir el PDF en una nueva pestaña
+                window.open(pdfPath, '_blank');
+            }
+        })
+        .catch(error => {
+            console.error('Error al verificar el archivo:', error);
+        });
+}
 
 //Metodo para limpiar el modal de agregar mano de obra
 function AddlimpiarModalManoObra() {

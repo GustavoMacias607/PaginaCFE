@@ -17,7 +17,7 @@ if (!isset($_SESSION['idusuario'])) {
             onclick="javascript:AbrirModal();">Editar datos de proyecto</button>
         <button type="button" class="btn btn-agregar-Proyecto d-none" onclick="">Cargar cuadro de dispositivos</button>
         <input type="text" class="form-control inputLleno d-none" id="idUsuario" value="<?= $_SESSION['idusuario'] ?>">
-        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -85,6 +85,13 @@ if (!isset($_SESSION['idusuario'])) {
 
                 <li class="page-item active"></li>
             </ul>
+            <div style="margin-left: 1rem; transform: translateY(10px);">
+                <button onclick="cambiarConSeleccionados()" id="btnConSeleccionados"
+                    class="btnTabla btn fa-solid-Siguiente-catalogo">
+                    Mostrar solo seleccionados
+                </button>
+            </div>
+
         </nav>
     </div>
 </div>
@@ -95,10 +102,12 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-MaterialesCatalogo">
                 <thead class="encabezadoTablasTarjeta">
                     <tr>
-                        <th style="width: 8rem;">
-                            <button id="sort-id" class="sort-button">
-                                ID <i class="fa-solid fa-arrow-up-wide-short"></i>
+                        <th style="width: 8rem;"> <button id="sort-id" class="sort-button">
+                                No. <i class="fa-solid fa-arrow-up-wide-short"></i>
                             </button>
+                        </th>
+                        <th style="width: 8rem;">
+                            ID
                         </th>
                         <th>
                             <button id="sort-name" class="sort-button">

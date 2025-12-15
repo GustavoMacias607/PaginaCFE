@@ -57,6 +57,8 @@ async function LlenarTablaConceptoTarjeta() {
     let tbody = document.getElementById("tabla-conceptosCatalogo").getElementsByTagName("tbody")[0];
     if (datosCatalogo.TipoConcepto) {
         document.getElementById('columnaFamilia').style.display = 'none';
+        // document.getElementById('columnaFamilia').style.display = 'none';
+
     }
 
     let fila = document.createElement("tr");
@@ -86,7 +88,6 @@ async function LlenarTablaConceptoTarjeta() {
 
 
 }
-
 
 
 function obtenerDatosTablas() {
@@ -165,6 +166,7 @@ function llenarTablaMaterialesSeleccionadosP() {
 }
 
 // Método para llenar la tabla
+// Método para llenar la tabla
 function displayTableMaterialesTarjetaP(page) {
     importeMateriales = 0; // Inicializar antes de calcular
     materialInactivo = false; // Inicializar la variable
@@ -197,7 +199,7 @@ function displayTableMaterialesTarjetaP(page) {
                 <td>${record.descripcion || "---"}</td>
                 <td>${record.unidad || "---"}</td>
                 <td style="text-align: right;">${precioFormateado}</td>
-                ${rolUsuarioSe == "Invitado" ?
+                ${["Invitado", "Proyectista"].includes(rolUsuarioSe) ?
                     `  <td  class="editable" style="text-align: right; background-color: ${record.cantidad > 0 ? '#82f75780' : 'red'};">
                     ${record.cantidad || 0}
                 </td>`: `  <td contenteditable="true" class="editable" style="text-align: right; background-color: ${record.cantidad > 0 ? '#82f75780' : 'red'};">
@@ -205,7 +207,7 @@ function displayTableMaterialesTarjetaP(page) {
                 </td>`
                 }
                 <td>
-                  ${rolUsuarioSe == "Invitado" ?
+                  ${["Invitado", "Proyectista"].includes(rolUsuarioSe) ?
                     `  <div style="display: flex; justify-content: center;">
                         <input type="checkbox" disabled class="custom-checkbox" id="checkbox_${record.codigo}" ${record.suministrado ? 'checked' : ''}>
                         <label for="checkbox_${record.codigo}" class="checkbox-design"></label>
@@ -220,7 +222,7 @@ function displayTableMaterialesTarjetaP(page) {
                 <td class="resultadoMaterial">---</td>
     `;
 
-            const cantidadCell = row.querySelector('.editable');
+            let cantidadCell = row.querySelector('.editable');
             const checkbox = row.querySelector('input[type="checkbox"]');
             const resultadoCell = row.querySelector('.resultadoMaterial');
 
@@ -243,39 +245,106 @@ function displayTableMaterialesTarjetaP(page) {
                 calcularImporteMateriales();
             }
 
-            // Función para recalcular el importeMateriales total
-            function calcularImporteMateriales() {
-                importeMateriales = Array.from(document.querySelectorAll('.resultadoMaterial'))
-                    .reduce((total, cell) => {
-                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
-                        return total + value;
-                    }, 0);
-                actualizarSumaMateriales();
+            // Configurar eventos para la celda editable
+            function setupCellEvents(cell) {
+                const newCell = cell.cloneNode(true);
+                cell.replaceWith(newCell);
+
+                newCell.addEventListener('input', (e) => {
+                    const originalText = newCell.innerText;
+
+                    // Limpiar y formatear el texto
+                    let cleanedText = originalText.replace(/[^0-9.]/g, '');
+
+                    // Manejar múltiples puntos - mantener solo el primero
+                    const parts = cleanedText.split('.');
+                    if (parts.length > 2) {
+                        cleanedText = parts[0] + '.' + parts.slice(1).join('');
+                    }
+
+                    // Aplicar límites: 5 enteros y 2 decimales
+                    const finalParts = cleanedText.split('.');
+                    if (finalParts[0].length > 5) {
+                        finalParts[0] = finalParts[0].substring(0, 5);
+                    }
+                    if (finalParts.length > 1 && finalParts[1].length > 2) {
+                        finalParts[1] = finalParts[1].substring(0, 2);
+                    }
+
+                    cleanedText = finalParts.join('.');
+
+                    // Solo actualizar si hubo cambios
+                    if (originalText !== cleanedText) {
+                        newCell.innerText = cleanedText;
+
+                        // Mover cursor al final
+                        const range = document.createRange();
+                        const selection = window.getSelection();
+                        range.selectNodeContents(newCell);
+                        range.collapse(false);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+
+                    actualizarCalculos();
+                });
+
+                newCell.addEventListener('blur', () => {
+                    let val = parseFloat(newCell.innerText) || 0;
+                    newCell.innerText = val.toFixed(2);
+                    actualizarCalculos();
+                });
+
+                // Prevenir pegado de texto no numérico
+                newCell.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    const numbersOnly = pastedText.replace(/[^0-9.]/g, '');
+
+                    // Insertar el texto limpio
+                    document.execCommand('insertText', false, numbersOnly);
+                });
+
+                // Validación más permisiva en keydown
+                newCell.addEventListener('keydown', (e) => {
+                    // Permitir todas las teclas de control y navegación
+                    const allowedControls = [
+                        'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                        'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End',
+                        'Enter', 'Escape'
+                    ];
+
+                    if (allowedControls.includes(e.key)) {
+                        return true;
+                    }
+
+                    // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if (e.ctrlKey || e.metaKey) {
+                        return true;
+                    }
+
+                    // Solo permitir números y un solo punto
+                    if (!/[\d.]/.test(e.key)) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Si es punto, verificar que no exista ya uno
+                    if (e.key === '.' && newCell.innerText.includes('.')) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                return newCell;
             }
 
-            // Eventos para cantidad
-            cantidadCell.addEventListener('input', () => {
-                let valor = cantidadCell.innerText;
-                if (!/^\d*\.?\d*$/.test(valor)) {
-                    cantidadCell.innerText = valor.slice(0, -1);
-                } else {
-                    const parts = valor.split('.');
-                    if (parts.length > 1 && parts[1].length > 2) {
-                        cantidadCell.innerText = valor.slice(0, -1);
-                    }
-                }
-                actualizarCalculos();
-            });
-
-            cantidadCell.addEventListener('blur', () => {
-                let valor = parseFloat(cantidadCell.innerText);
-                if (isNaN(valor) || valor < 0) {
-                    cantidadCell.innerText = "0";
-                } else {
-                    cantidadCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
-                }
-                actualizarCalculos();
-            });
+            // Configurar eventos solo si las celdas son editables
+            if (!["Invitado", "Proyectista"].includes(rolUsuarioSe)) {
+                cantidadCell = setupCellEvents(cantidadCell);
+            }
 
             // Evento para el checkbox
             checkbox.addEventListener('change', actualizarCalculos);
@@ -285,13 +354,30 @@ function displayTableMaterialesTarjetaP(page) {
         });
 
         const lecturaMaterial = document.querySelector('#LecturaMaterial');
-        lecturaMaterial.style.display = materialInactivo ? 'flex' : 'none';
+        if (lecturaMaterial) {
+            lecturaMaterial.style.display = materialInactivo ? 'flex' : 'none';
+        }
 
     } else {
-        tableBody.innerHTML += `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
+        tableBody.innerHTML = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
     }
 }
 
+// Función para recalcular el importeMateriales total
+function calcularImporteMateriales() {
+    const formatoMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    importeMateriales = Array.from(document.querySelectorAll('.resultadoMaterial'))
+        .reduce((total, cell) => {
+            const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+            return total + value;
+        }, 0);
+
+    const totalLabel = document.getElementById("TotalSumaMateriales");
+    if (totalLabel) {
+        totalLabel.textContent = formatoMXN.format(importeMateriales);
+    }
+    actualizarSumaMateriales();
+}
 function actualizarSumaMateriales() {
     suma1 = 0;
     suma1 = importeMateriales;
@@ -347,130 +433,202 @@ function llenarTablaManoObraSeleccionadosP() {
 }
 
 function displayTableManoObraTarjetaP(page) {
+    console.log("llenando tabla");
     importeManoObra = 0;
     manoObraInactivo = false;
     const tableBody = document.getElementById("table-bodyManoObraTarjetaPrincipal");
     tableBody.innerHTML = "";
     const start = (page - 1) * cantidadFilasTabla;
     const end = start + cantidadFilasTabla;
-    const paginatedData2 = filteredDataManoObra.slice(start, end);
+    const paginatedData = filteredDataManoObra.slice(start, end);
 
-    if (paginatedData2.length > 0) {
-        paginatedData2.forEach((record, index) => {
-            const formatoMXN = new Intl.NumberFormat('es-MX', {
-                style: 'currency',
-                currency: 'MXN'
-            });
+    if (paginatedData.length > 0) {
+        paginatedData.forEach((record) => {
+            const formatoMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
 
-            if (!record.estatus) {
-                manoObraInactivo = true; // Si hay un material inactivo, cambiar a true
-            }
-            const salario = record.salario || 0;
-            const precioFormateado = salario ? formatoMXN.format(salario) : "---";
+            if (!record.estatus) manoObraInactivo = true;
+            const salario = parseFloat(record.salario) || 0;
+            const cantidad = parseFloat(record.cantidad) || 1;
+            const rendimiento = parseFloat(record.rendimiento) || 0;
 
             const row = document.createElement('tr');
             row.classList.add('fila');
-            if (!record.estatus) {
-                row.classList.add('DatoInactivo');
-            }
+            if (!record.estatus) row.classList.add('DatoInactivo');
 
             row.innerHTML = `
-        <td class="Code" > ${record.idmanoobra}</td>
+                <td class="Code">${record.idmanoobra}</td>
                 <td>${record.categoria || "---"}</td>
                 <td>${record.unidad || "---"}</td>
-                <td style="text-align: right;">${precioFormateado}</td>
-
-                 ${rolUsuarioSe == "Invitado" ?
-                    `  <td class="editable-rendimiento" style="text-align: right;background-color: ${record.rendimiento > 0 ? '#82f75780' : 'red'};">
-                    ${record.rendimiento || 0}
-                </td>`: ` <td contenteditable="true" class="editable-rendimiento" style="text-align: right;background-color: ${record.rendimiento > 0 ? '#82f75780' : 'red'};">
-                    ${record.rendimiento || 0}
-                </td>`
+                <td style="text-align: right;">${salario ? formatoMXN.format(salario) : "---"}</td>
+                ${["Invitado", "Proyectista"].includes(rolUsuarioSe)
+                    ? `
+                        <td class="editable-rendimiento" style="text-align: right; background-color: ${rendimiento > 0 ? '#82f75780' : 'red'};">
+                            ${rendimiento.toFixed(2)}
+                        </td>
+                        <td class="editable-cantidad" style="text-align: right; background-color: ${cantidad > 0 ? '#82f75780' : 'red'};">
+                            ${cantidad.toFixed(2)}
+                        </td>
+                    `
+                    : `
+                        <td contenteditable="true" class="editable-rendimiento" style="text-align: right; background-color: ${rendimiento > 0 ? '#82f75780' : 'red'};">
+                            ${rendimiento.toFixed(2)}
+                        </td>
+                        <td contenteditable="true" class="editable-cantidad" style="text-align: right; background-color: ${cantidad > 0 ? '#82f75780' : 'red'};">
+                            ${cantidad.toFixed(2)}
+                        </td>
+                    `
                 }
-               
-                <td style="text-align: right;" class="cantidad">---</td>
                 <td style="text-align: right;" class="multiplicacion">---</td>
-                <td class="resultadoMano">---</td>
-    `;
+                <td class="resultadoMano" style="text-align: right;">---</td>
+            `;
 
-            const rendimientoCell = row.querySelector('.editable-rendimiento');
-            const cantidadCell = row.querySelector('.cantidad');
+            let rendimientoCell = row.querySelector('.editable-rendimiento');
+            let cantidadCell = row.querySelector('.editable-cantidad');
             const multiplicacionCell = row.querySelector('.multiplicacion');
             const resultadoCell = row.querySelector('.resultadoMano');
 
             function actualizarCalculos() {
-                const rendimiento = parseFloat(rendimientoCell.innerText) || 0;
-                const cantidad = rendimiento > 0 ? 1 / rendimiento : 0;
+                let r = parseFloat(rendimientoCell.innerText) || 0;
+                let c = parseFloat(cantidadCell.innerText) || 1;
 
-                // Actualizar arreglo de objetos con el valor exacto
-                const item = objTabla2ModalManoObraiaPrincipal.find(obj => obj.idmanoobra == record.idmanoobra);
-                if (item) {
-                    item.cantidad = cantidad;
-                    item.rendimiento = rendimiento;
-                }
+                rendimientoCell.style.backgroundColor = r > 0 ? '#82f75780' : 'red';
+                cantidadCell.style.backgroundColor = c > 0 ? '#82f75780' : 'red';
 
-                // Mostrar `cantidad` con dos decimales
-                cantidadCell.textContent = cantidad.toFixed(2);
+                const mult = salario * c;
+                multiplicacionCell.textContent = formatoMXN.format(mult);
 
-                // Cálculo preciso de multiplicación y resultado
-                const multiplicacion = salario * cantidad;
-                multiplicacionCell.textContent = formatoMXN.format(multiplicacion);
-
-                const resultado = rendimiento > 0 ? multiplicacion / rendimiento : 0;
+                const resultado = r > 0 ? mult / r : 0;
                 resultadoCell.textContent = formatoMXN.format(resultado);
 
-                // Color de fondo del rendimiento
-                rendimientoCell.style.backgroundColor = rendimiento > 0 ? '#82f75780' : 'red';
+                const item = objTabla2ModalManoObraiaPrincipal.find(obj => obj.idmanoobra == record.idmanoobra);
+                if (item) {
+                    item.rendimiento = r;
+                    item.cantidad = c;
+                }
 
-                // Recalcula el total
                 calcularImporteManoObra();
             }
 
-            // Función para recalcular el importeManoObra total
-            function calcularImporteManoObra() {
-                importeManoObra = Array.from(document.querySelectorAll('.resultadoMano'))
-                    .reduce((total, cell) => {
-                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
-                        return total + value;
-                    }, 0);
-                actualizarSumaManoObra();
+            function setupCellEvents(cell, isCantidad = false) {
+                const newCell = cell.cloneNode(true);
+                cell.replaceWith(newCell);
+
+                newCell.addEventListener('input', (e) => {
+                    const originalText = newCell.innerText;
+
+                    // Limpiar y formatear el texto
+                    let cleanedText = originalText.replace(/[^0-9.]/g, '');
+
+                    // Manejar múltiples puntos - mantener solo el primero
+                    const parts = cleanedText.split('.');
+                    if (parts.length > 2) {
+                        cleanedText = parts[0] + '.' + parts.slice(1).join('');
+                    }
+
+                    // Aplicar límites: 5 enteros y 2 decimales
+                    const finalParts = cleanedText.split('.');
+                    if (finalParts[0].length > 5) {
+                        finalParts[0] = finalParts[0].substring(0, 5);
+                    }
+                    if (finalParts.length > 1 && finalParts[1].length > 2) {
+                        finalParts[1] = finalParts[1].substring(0, 2);
+                    }
+
+                    cleanedText = finalParts.join('.');
+
+                    // Solo actualizar si hubo cambios
+                    if (originalText !== cleanedText) {
+                        newCell.innerText = cleanedText;
+
+                        // Mover cursor al final
+                        const range = document.createRange();
+                        const selection = window.getSelection();
+                        range.selectNodeContents(newCell);
+                        range.collapse(false);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+
+                    actualizarCalculos();
+                });
+
+                newCell.addEventListener('blur', () => {
+                    let val = parseFloat(newCell.innerText) || (isCantidad ? 1 : 0);
+                    newCell.innerText = val.toFixed(2);
+                    actualizarCalculos();
+                });
+
+                // Prevenir pegado de texto no numérico
+                newCell.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    const numbersOnly = pastedText.replace(/[^0-9.]/g, '');
+
+                    // Insertar el texto limpio
+                    document.execCommand('insertText', false, numbersOnly);
+                });
+
+                // Validación más permisiva en keydown
+                newCell.addEventListener('keydown', (e) => {
+                    // Permitir todas las teclas de control y navegación
+                    const allowedControls = [
+                        'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                        'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End',
+                        'Enter', 'Escape'
+                    ];
+
+                    if (allowedControls.includes(e.key)) {
+                        return true;
+                    }
+
+                    // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if (e.ctrlKey || e.metaKey) {
+                        return true;
+                    }
+
+                    // Solo permitir números y un solo punto
+                    if (!/[\d.]/.test(e.key)) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Si es punto, verificar que no exista ya uno
+                    if (e.key === '.' && newCell.innerText.includes('.')) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                return newCell;
             }
 
-            // Eventos para rendimiento
-            rendimientoCell.addEventListener('input', () => {
-                let valor = rendimientoCell.innerText;
-                if (!/^\d*\.?\d*$/.test(valor)) {
-                    rendimientoCell.innerText = valor.slice(0, -1);
-                } else {
-                    const parts = valor.split('.');
-                    if (parts.length > 1 && parts[1].length > 2) {
-                        rendimientoCell.innerText = valor.slice(0, -1);
-                    }
-                }
-                actualizarCalculos();
-            });
-
-            rendimientoCell.addEventListener('blur', () => {
-                const valor = parseFloat(rendimientoCell.innerText);
-                if (isNaN(valor) || valor <= 0) {
-                    rendimientoCell.innerText = "0";
-                } else {
-                    rendimientoCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
-                }
-                actualizarCalculos();
-            });
+            if (!["Invitado", "Proyectista"].includes(rolUsuarioSe)) {
+                rendimientoCell = setupCellEvents(rendimientoCell, false);
+                cantidadCell = setupCellEvents(cantidadCell, true);
+            }
 
             tableBody.appendChild(row);
             actualizarCalculos();
         });
 
-        const LecturaManoObra = document.querySelector('#LecturaManoObra');
-        LecturaManoObra.style.display = manoObraInactivo ? 'flex' : 'none';
+        const lectura = document.querySelector('#LecturaManoObra');
+        if (lectura) lectura.style.display = manoObraInactivo ? 'flex' : 'none';
 
     } else {
-        const row = `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
-        tableBody.innerHTML += row;
+        tableBody.innerHTML = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
     }
+}
+
+function calcularImporteManoObra() {
+    const formatoMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    importeManoObra = Array.from(document.querySelectorAll('.resultadoMano'))
+        .reduce((total, cell) => total + (parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0), 0);
+
+    const totalLabel = document.getElementById("TotalSumaManoObra");
+    if (totalLabel) totalLabel.textContent = formatoMXN.format(importeManoObra);
+    actualizarSumaManoObra();
 }
 
 
@@ -527,6 +685,9 @@ function hayCantidadRendimientoManoObra() {
  */
 
 function llenarColumnaMo() {
+    if (datosCatalogo.TipoConcepto)
+        return;
+
     const formatoMXN = new Intl.NumberFormat('es-MX', {
         style: 'currency',
         currency: 'MXN'
@@ -627,23 +788,23 @@ function displayTableMaquinariaTarjetaP(page) {
             }
 
             row.innerHTML = `
-        <td class="Code" > ${record.idmaquinaria}</td>
+                <td class="Code">${record.idmaquinaria}</td>
                 <td>${(!record.descripcion == "") ? record.descripcion : "---"}</td>
                 <td>${(!record.unidad == "") ? record.unidad : "---"}</td>
                 <td style="text-align: right;">${precioFormateado}</td>
 
-                   ${rolUsuarioSe == "Invitado" ?
+                   ${["Invitado", "Proyectista"].includes(rolUsuarioSe) ?
                     ` <td class="editable-Rhm" style="text-align: right; background-color: ${record.rhm > 0 ? '#82f75780' : 'red'};">
                     ${record.rhm || 0}
                 </td>`: `  <td contenteditable="true" class="editable-Rhm" style="text-align: right; background-color: ${record.rhm > 0 ? '#82f75780' : 'red'};">
                     ${record.rhm || 0}
                 </td>`
                 }
-               
-                <td class="resultadoMaqui">---</td>
-    `;
 
-            const rhmCell = row.querySelector('.editable-Rhm');
+            <td class="resultadoMaqui">---</td>
+            `;
+
+            let rhmCell = row.querySelector('.editable-Rhm');
             const resultadoCellMaqui = row.querySelector('.resultadoMaqui');
 
             function actualizarCalculosMaquinaria() {
@@ -659,58 +820,142 @@ function displayTableMaquinariaTarjetaP(page) {
                 rhmCell.style.backgroundColor = rhm > 0 ? '#82f75780' : 'red';
 
                 // Calcular el resultado y actualizar celdas
-                const resultado = phm / rhm;
+                const resultado = rhm > 0 ? phm / rhm : 0;
                 resultadoCellMaqui.textContent = formatoMXN.format(resultado);
 
                 // Recalcular el importe total
                 calcularImporteMaquinaria();
             }
 
-            // Función para recalcular el importe total de maquinaria
-            function calcularImporteMaquinaria() {
-                importeMaquinaria = Array.from(document.querySelectorAll('.resultadoMaqui'))
-                    .reduce((total, cell) => {
-                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
-                        return total + value;
-                    }, 0);
-                actualizarSumaMaquinaria();
+            // Configurar eventos para la celda editable
+            function setupCellEvents(cell) {
+                const newCell = cell.cloneNode(true);
+                cell.replaceWith(newCell);
+
+                newCell.addEventListener('input', (e) => {
+                    const originalText = newCell.innerText;
+
+                    // Limpiar y formatear el texto
+                    let cleanedText = originalText.replace(/[^0-9.]/g, '');
+
+                    // Manejar múltiples puntos - mantener solo el primero
+                    const parts = cleanedText.split('.');
+                    if (parts.length > 2) {
+                        cleanedText = parts[0] + '.' + parts.slice(1).join('');
+                    }
+
+                    // Aplicar límites: 5 enteros y 2 decimales
+                    const finalParts = cleanedText.split('.');
+                    if (finalParts[0].length > 5) {
+                        finalParts[0] = finalParts[0].substring(0, 5);
+                    }
+                    if (finalParts.length > 1 && finalParts[1].length > 2) {
+                        finalParts[1] = finalParts[1].substring(0, 2);
+                    }
+
+                    cleanedText = finalParts.join('.');
+
+                    // Solo actualizar si hubo cambios
+                    if (originalText !== cleanedText) {
+                        newCell.innerText = cleanedText;
+
+                        // Mover cursor al final
+                        const range = document.createRange();
+                        const selection = window.getSelection();
+                        range.selectNodeContents(newCell);
+                        range.collapse(false);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+
+                    actualizarCalculosMaquinaria();
+                });
+
+                newCell.addEventListener('blur', () => {
+                    let val = parseFloat(newCell.innerText) || 0;
+                    newCell.innerText = val.toFixed(2);
+                    actualizarCalculosMaquinaria();
+                });
+
+                // Prevenir pegado de texto no numérico
+                newCell.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    const numbersOnly = pastedText.replace(/[^0-9.]/g, '');
+
+                    // Insertar el texto limpio
+                    document.execCommand('insertText', false, numbersOnly);
+                });
+
+                // Validación más permisiva en keydown
+                newCell.addEventListener('keydown', (e) => {
+                    // Permitir todas las teclas de control y navegación
+                    const allowedControls = [
+                        'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                        'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End',
+                        'Enter', 'Escape'
+                    ];
+
+                    if (allowedControls.includes(e.key)) {
+                        return true;
+                    }
+
+                    // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if (e.ctrlKey || e.metaKey) {
+                        return true;
+                    }
+
+                    // Solo permitir números y un solo punto
+                    if (!/[\d.]/.test(e.key)) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Si es punto, verificar que no exista ya uno
+                    if (e.key === '.' && newCell.innerText.includes('.')) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                return newCell;
             }
 
-            // Eventos para rhm
-            rhmCell.addEventListener('input', () => {
-                let valor = rhmCell.innerText;
-                if (!/^\d*\.?\d*$/.test(valor)) {
-                    rhmCell.innerText = valor.slice(0, -1);
-                } else {
-                    const parts = valor.split('.');
-                    if (parts.length > 1 && parts[1].length > 2) {
-                        rhmCell.innerText = valor.slice(0, -1);
-                    }
-                }
-                actualizarCalculosMaquinaria();
-            });
-
-            rhmCell.addEventListener('blur', () => {
-                const valor = parseFloat(rhmCell.innerText);
-                if (isNaN(valor) || valor < 0) {
-                    rhmCell.innerText = "0";
-                } else {
-                    rhmCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
-                }
-                actualizarCalculosMaquinaria();
-            });
+            // Configurar eventos solo si las celdas son editables
+            if (!["Invitado", "Proyectista"].includes(rolUsuarioSe)) {
+                rhmCell = setupCellEvents(rhmCell);
+            }
 
             tableBody.appendChild(row);
             actualizarCalculosMaquinaria();
         });
 
         const LecturaMaquinaria = document.querySelector('#LecturaMaquinaria');
-        LecturaMaquinaria.style.display = maquinariaInactivo ? 'flex' : 'none';
+        if (LecturaMaquinaria) {
+            LecturaMaquinaria.style.display = maquinariaInactivo ? 'flex' : 'none';
+        }
 
     } else {
-        const row = `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
-        tableBody.innerHTML += row;
+        tableBody.innerHTML = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
     }
+}
+
+// Función para recalcular el importe total de maquinaria
+function calcularImporteMaquinaria() {
+    const formatoMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    importeMaquinaria = Array.from(document.querySelectorAll('.resultadoMaqui'))
+        .reduce((total, cell) => {
+            const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+            return total + value;
+        }, 0);
+
+    const totalLabel = document.getElementById("TotalSumaMaquinaria");
+    if (totalLabel) {
+        totalLabel.textContent = formatoMXN.format(importeMaquinaria);
+    }
+    actualizarSumaMaquinaria();
 }
 
 function actualizarSumaMaquinaria() {
@@ -737,6 +982,7 @@ function filterDataMaquinariaTarjetaP() {
         const matchesUnidad = unidadFilter ? record.unidad == unidadFilter : true;
         return matchesUnidad;
     });
+    console.log(filteredDataMaquinaria)
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableMaquinariaTarjetaP(currentPage);
 }
@@ -803,23 +1049,21 @@ function displayTableBasicosTarjetaP(page) {
             }
 
             row.innerHTML = `
-        <td class="Code"> ${record.idconbasi}</td>
+                <td class="Code">${record.idconbasi}</td>
                 <td>${record.nombre != "" ? record.nombre : "---"}</td>
                 <td>${record.unidad != "" ? record.unidad : "---"}</td>
                 <td style="text-align: right;">${precioFormateado}</td>
-   ${rolUsuarioSe == "Invitado" ?
+                ${["Invitado", "Proyectista"].includes(rolUsuarioSe) ?
                     `<td  class="editable-cantidadBasi" style="text-align: right; background-color: ${record.cantconbasi > 0 ? '#82f75780' : 'red'};">
                     ${record.cantconbasi || 0}
                 </td>`: `<td contenteditable="true" class="editable-cantidadBasi" style="text-align: right; background-color: ${record.cantconbasi > 0 ? '#82f75780' : 'red'};">
                     ${record.cantconbasi || 0}
                 </td>`
                 }
-
-                
                 <td class="resultadoBasi">---</td>
-    `;
+            `;
 
-            const cantidadCell = row.querySelector('.editable-cantidadBasi');
+            let cantidadCell = row.querySelector('.editable-cantidadBasi');
             const resultadoCell = row.querySelector('.resultadoBasi');
 
             function actualizarCalculosBasicos() {
@@ -842,51 +1086,135 @@ function displayTableBasicosTarjetaP(page) {
                 calcularImporteBasicos();
             }
 
-            // Función para recalcular el importe total de básicos
-            function calcularImporteBasicos() {
-                importeBasicos = Array.from(document.querySelectorAll('.resultadoBasi'))
-                    .reduce((total, cell) => {
-                        const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
-                        return total + value;
-                    }, 0);
-                actualizarSumaBasicos();
+            // Configurar eventos para la celda editable
+            function setupCellEvents(cell) {
+                const newCell = cell.cloneNode(true);
+                cell.replaceWith(newCell);
+
+                newCell.addEventListener('input', (e) => {
+                    const originalText = newCell.innerText;
+
+                    // Limpiar y formatear el texto
+                    let cleanedText = originalText.replace(/[^0-9.]/g, '');
+
+                    // Manejar múltiples puntos - mantener solo el primero
+                    const parts = cleanedText.split('.');
+                    if (parts.length > 2) {
+                        cleanedText = parts[0] + '.' + parts.slice(1).join('');
+                    }
+
+                    // Aplicar límites: 5 enteros y 2 decimales
+                    const finalParts = cleanedText.split('.');
+                    if (finalParts[0].length > 5) {
+                        finalParts[0] = finalParts[0].substring(0, 5);
+                    }
+                    if (finalParts.length > 1 && finalParts[1].length > 2) {
+                        finalParts[1] = finalParts[1].substring(0, 2);
+                    }
+
+                    cleanedText = finalParts.join('.');
+
+                    // Solo actualizar si hubo cambios
+                    if (originalText !== cleanedText) {
+                        newCell.innerText = cleanedText;
+
+                        // Mover cursor al final
+                        const range = document.createRange();
+                        const selection = window.getSelection();
+                        range.selectNodeContents(newCell);
+                        range.collapse(false);
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
+
+                    actualizarCalculosBasicos();
+                });
+
+                newCell.addEventListener('blur', () => {
+                    let val = parseFloat(newCell.innerText) || 0;
+                    newCell.innerText = val.toFixed(2);
+                    actualizarCalculosBasicos();
+                });
+
+                // Prevenir pegado de texto no numérico
+                newCell.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    const numbersOnly = pastedText.replace(/[^0-9.]/g, '');
+
+                    // Insertar el texto limpio
+                    document.execCommand('insertText', false, numbersOnly);
+                });
+
+                // Validación más permisiva en keydown
+                newCell.addEventListener('keydown', (e) => {
+                    // Permitir todas las teclas de control y navegación
+                    const allowedControls = [
+                        'Backspace', 'Delete', 'ArrowLeft', 'ArrowRight',
+                        'ArrowUp', 'ArrowDown', 'Tab', 'Home', 'End',
+                        'Enter', 'Escape'
+                    ];
+
+                    if (allowedControls.includes(e.key)) {
+                        return true;
+                    }
+
+                    // Permitir Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+                    if (e.ctrlKey || e.metaKey) {
+                        return true;
+                    }
+
+                    // Solo permitir números y un solo punto
+                    if (!/[\d.]/.test(e.key)) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    // Si es punto, verificar que no exista ya uno
+                    if (e.key === '.' && newCell.innerText.includes('.')) {
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                return newCell;
             }
 
-            // Eventos para cantidad
-            cantidadCell.addEventListener('input', () => {
-                let valor = cantidadCell.innerText;
-                if (!/^\d*\.?\d*$/.test(valor)) {
-                    cantidadCell.innerText = valor.slice(0, -1);
-                } else {
-                    const parts = valor.split('.');
-                    if (parts.length > 1 && parts[1].length > 2) {
-                        cantidadCell.innerText = valor.slice(0, -1);
-                    }
-                }
-                actualizarCalculosBasicos();
-            });
-
-            cantidadCell.addEventListener('blur', () => {
-                const valor = parseFloat(cantidadCell.innerText);
-                if (isNaN(valor) || valor < 0) {
-                    cantidadCell.innerText = "0";
-                } else {
-                    cantidadCell.innerText = valor.toFixed(2); // Redondear a 2 decimales
-                }
-                actualizarCalculosBasicos();
-            });
+            // Configurar eventos solo si las celdas son editables
+            if (!["Invitado", "Proyectista"].includes(rolUsuarioSe)) {
+                cantidadCell = setupCellEvents(cantidadCell);
+            }
 
             tableBody.appendChild(row);
             actualizarCalculosBasicos();
         });
 
         const LecturaBasicos = document.querySelector('#LecturaBasicos');
-        LecturaBasicos.style.display = basicosInactivo ? 'flex' : 'none';
+        if (LecturaBasicos) {
+            LecturaBasicos.style.display = basicosInactivo ? 'flex' : 'none';
+        }
 
     } else {
-        const row = `<tr> <td colspan="8" class="Code">Sin resultados</td></tr> `;
-        tableBody.innerHTML += row;
+        tableBody.innerHTML = `<tr><td colspan="8" class="Code">Sin resultados</td></tr>`;
     }
+}
+
+// Función para recalcular el importe total de básicos
+function calcularImporteBasicos() {
+    const formatoMXN = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' });
+    importeBasicos = Array.from(document.querySelectorAll('.resultadoBasi'))
+        .reduce((total, cell) => {
+            const value = parseFloat(cell.textContent.replace(/[^0-9.-]+/g, "")) || 0;
+            return total + value;
+        }, 0);
+
+    const totalLabel = document.getElementById("TotalSumaBasicos");
+    if (totalLabel) {
+        totalLabel.textContent = formatoMXN.format(importeBasicos);
+    }
+    actualizarSumaBasicos();
 }
 function actualizarSumaBasicos() {
     suma5 = 0;
@@ -979,11 +1307,13 @@ function AgregartablaManoObraTarjeta() {
             manoObra.fechasalario = "2024-10-30"
         }
         let json = JSON.stringify(manoObra);
+
         let url = "../ws/TarjetaManoObra/wsAddManoObraTarjeta.php";
         $.post(url, json, (responseText, status) => {
             try {
+                let resp = JSON.parse(responseText);
                 if (status == "success") {
-                    let resp = JSON.parse(responseText);
+
                     if (resp.estado == "OK") {
                         mensajePantalla(mgsCatalogoAgregado, true);
                     }
@@ -996,6 +1326,7 @@ function AgregartablaManoObraTarjeta() {
         });
     })
 }
+
 
 function AgregartablaMaquinariaTarjeta() {
     objTabla2ModalMaquinariaPrincipal.forEach(maquinaria => {
@@ -1170,15 +1501,13 @@ function MostrartablaMaterialesTarjeta() {
 }
 
 function MostrartablaManoObraTarjeta() {
-    objTabla2ModalManoObraiaPrincipal = []
-    const datos = {}
-    datos.idConcepto = datosCatalogo.id;
-    let json = JSON.stringify(datos);
-    let url = "../ws/TarjetaManoObra/wsGetManoObraTarjeta.php";
-    $.post(url, json, (responseText, status) => {
+    objTabla2ModalManoObraiaPrincipal = [];
+    const datos = { idConcepto: datosCatalogo.id };
+    $.post("../ws/TarjetaManoObra/wsGetManoObraTarjeta.php", JSON.stringify(datos), (responseText, status) => {
         try {
             if (status == "success") {
                 let resp = JSON.parse(responseText);
+                console.log(responseText);
                 let datosBd = resp.datos;
                 if (datosBd) {
                     datosBd.forEach((datos) => {
@@ -1188,21 +1517,20 @@ function MostrartablaManoObraTarjeta() {
                             fechasalario: datos.fechasalario,
                             unidad: datos.unidad,
                             categoria: datos.categoria,
-                            cantidad: datos.cantmanoobra,
+                            cantidad: datos.cantidad,
                             rendimiento: datos.rendimiento,
-                            estatus: datos.estatus,
+                            estatus: datos.estatus
                         });
                     })
                     llenarTablaManoObraSeleccionadosP();
                 }
-            } else {
-                throw e = status;
-            }
-        } catch (error) {
-            alert("Error: " + error)
+            } else throw status;
+        } catch (e) {
+            alert("Error: " + e);
         }
     });
 }
+
 
 function MostrartablaMaquinariaTarjeta() {
     objTabla2ModalMaquinariaPrincipal = []
@@ -1212,6 +1540,7 @@ function MostrartablaMaquinariaTarjeta() {
     let url = "../ws/TarjetaMaquinaria/wsGetMaquinariaTarjeta.php";
     $.post(url, json, (responseText, status) => {
         try {
+
             if (status == "success") {
                 let resp = JSON.parse(responseText);
                 let datosBd = resp.datos;
@@ -1286,7 +1615,6 @@ function AgregarTotalConcepto() {
     datos = datosCatalogo;
     datos.idAnterior = datosCatalogo.id;
 
-    console.log(datos)
     let total;
     const convertirAMoneda = (valor) => {
         return parseFloat(valor.replace(/[$,]/g, '')); // Eliminar el símbolo de dólar y las comas
@@ -1304,7 +1632,6 @@ function AgregarTotalConcepto() {
         url = "../ws/Conceptos/wsUpdConcepto.php";
         total = document.getElementById('tarTotalTarjeta').innerHTML;
     }
-
 
     $.post(url, json, (responseText, status) => {
         try {

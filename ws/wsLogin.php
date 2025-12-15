@@ -23,6 +23,11 @@ if (isset($datos->usuario) && isset($datos->password)) {
             $_SESSION["idzona"] = $fila['idzona'];
             $_SESSION["zona"] = $fila['zona'];
         }
+        if ($_SESSION["estatus"] != 1) {
+            $resultado['estado'] = "Usuario inactivo. Contacte al administrador.";
+            echo json_encode($resultado);
+            exit;
+        }
         $resultado['estado'] = "OK";
     } else {
         $resultado['estado'] = "Usuario y/o contaseña incorrectos";

@@ -10,16 +10,16 @@ if (!isset($_SESSION['idusuario'])) {
 
 <div class="fondBlanProveedores">
     <div class="bottom-rectangle-conceptos" style="gap: 1rem;">
-        <div class="text-conceptos">Selección proveedores ICM</div>
+        <div class="text-conceptos">Selección de proveedores ICM</div>
         <?php
-        if ($_SESSION["rol"] == "Administrador" || $_SESSION["rol"] == "Analista de Precios") {
+        if ($_SESSION["rol"] != "Invitado") {
             echo  '<button type="button" class="btn btn-agregar-zonas" data-bs-toggle="modal" data-bs-target="#AgregarModal"
             onclick="javascript:AbrirApartadoAgregar();">Agregar proveedor</button>';
         }
         ?>
         <button type="button" class="btn btn-agregar-zonas" onclick="opcion('SeleccionConceptosICMReturn')">Selección
             conceptos</button>
-        <a onclick="opcion('proyecto')" class="text-inicio-conceptos">
+        <a onclick="opcion('proyecto'); deseleccionar()" class="text-inicio-conceptos">
             <div>Ir al inicio</div>
         </a>
     </div>
@@ -288,10 +288,13 @@ if (!isset($_SESSION['idusuario'])) {
             <div class="modal-header" style="border-bottom: none; padding-bottom: 0px;">
                 <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: #303030; padding:0px 0px 0px 1rem;">
                     Agregar propuesta</h1>
+
                 <div class="label-container-materiales_catalogo">
                     <input type="text" placeholder="Buscar" id="search-Propuestas">
                     <i class="fas fa-search icon-materiales" id="searchIcon"></i>
                 </div>
+                <button type="button" style="padding-right: 20px;" class="fa-solid fa-xmark btnclose-zonas"
+                    data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div>
                 <button type="button" onclick="abrirModalAddPropuesta();" class="btn fa-solid-agregar-materiales"
@@ -315,14 +318,21 @@ if (!isset($_SESSION['idusuario'])) {
                         </ul>
                     </nav>
                     <div style="display: flex;">
-                        <div class="d-flex align-items-center">
-                            <span style="margin-right: .5rem; font-size: 1.1rem;">zona:</span>
+                        <div class="d-flex align-items-center" style="margin-left: 1rem;">
+                            <span class="text1" style="margin-right: .5rem; font-size: 1.1rem;">Año: </span>
+                            <select class="form-select form-select-sm ml-2" id="filtro-anio"
+                                style="font-size: 1.1rem; background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
+                                <option value="" selected>Todo</option>
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-center" style="margin-left: 1rem;">
+                            <span class="text1" style="margin-right: .5rem; font-size: 1.1rem;">zona:</span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filterZona"
                                 style="font-size: 1.1rem; background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif; width: 8rem;">
                             </select>
                         </div>
                         <div class="d-flex align-items-center" style="margin-left: 1rem;">
-                            <span style="margin-right: .5rem; font-size: 1.1rem;">obra: </span>
+                            <span class="text1" style="margin-right: .5rem; font-size: 1.1rem;">obra: </span>
                             <select class="form-select form-select-sm ml-2" id="unidad-filterObra"
                                 style="font-size: 1.1rem; background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
                                 <option value="" selected>Todo</option>
@@ -331,13 +341,7 @@ if (!isset($_SESSION['idusuario'])) {
                                 <option value="Solicitudes">Solicitudes</option>
                             </select>
                         </div>
-                        <div class="d-flex align-items-center" style="margin-left: 1rem;">
-                            <span style="margin-right: .5rem; font-size: 1.1rem;">Año: </span>
-                            <select class="form-select form-select-sm ml-2" id="filtro-anio"
-                                style="font-size: 1.1rem; background-color: #008E5A; color:#ffffff; border: none; font-family: 'LatoBold', sans-serif;">
-                                <option value="" selected>Todo</option>
-                            </select>
-                        </div>
+
                     </div>
                     <!-- <div class="toggle-estatus-materiales">
                         <div class="text">Estatus</div>

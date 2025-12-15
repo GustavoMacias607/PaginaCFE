@@ -80,6 +80,7 @@ function displayTableConceptoEspecificacion(page) {
                 if (!existe) {
                     objTabla2ModalConcepto.push({
                         idconcepto: record.idconcepto,
+                        idconteo: record.idconteo,
                         nombre: record.nombre,
                         unidad: record.unidad,
                         total: record.total,
