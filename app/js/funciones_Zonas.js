@@ -187,13 +187,7 @@ function UpdZonaValidar() {
 
     }
     datos.adicionales = adicionales.value;
-    let fechita = document.querySelector('#UpdFecha');
-    if (fechita.value == "0000-00-00") {
-        console.log(SacarFecha())
-        datos.fecha = SacarFecha();
-    } else {
-        datos.fecha = fechita.value
-    }
+    datos.fecha = SacarFecha();
     guardo = true;
     let inputFile = document.getElementById('UpdpdfInput');
     if (inputFile.value) {
@@ -203,6 +197,7 @@ function UpdZonaValidar() {
         }
     }
     let json = JSON.stringify(datos);
+    console.log(json)
     let url = "../ws/Zonas/wsUpdZona.php";
     $.post(url, json, (responseText, status) => {
         try {
@@ -255,11 +250,6 @@ function CambioEstatusZona() {
 }
 
 
-
-
-
-
-
 //Metodo para hacer la consulta de los usuarios tomando en cuanta los filtros
 function GetZona() {
     let json = "";
@@ -293,7 +283,6 @@ function displayTableZona(page) {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const paginatedData = filteredData.slice(start, end);
-
     if (paginatedData.length > 0) {
         paginatedData.forEach(record => {
             // Crear un elemento de fila (tr)
@@ -427,7 +416,6 @@ function filterDataZona() {
     const searchText = document.getElementById("search-inputZona").value.toLowerCase();
     const obraFilter = document.getElementById("FilterObra").value;
     const statusFilter = estatusZona;
-    console.log(data);
     filteredData = data.filter(record => {
         const matchesSearch = Object.values(record).some(value =>
             value.toString().toLowerCase().includes(searchText)
@@ -436,7 +424,6 @@ function filterDataZona() {
         const matchesStatus = record.estatus == statusFilter;
         return matchesSearch && matchesStatus && matchesObra;
     });
-    console.log(filteredData);
     currentPage = 1; // Reiniciar a la primera página después de filtrar
     displayTableZona(currentPage);
     setupPaginationZona();
