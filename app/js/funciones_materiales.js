@@ -756,35 +756,36 @@ function AddmostrarImagen(input) {
 
 function UpdmostrarImagen(input) {
     const imagenPreview = document.getElementById('UpdimagenPreview');
-    // Verifica que haya un archivo seleccionado
-    if (input.files && input.files[0]) {
 
-        const archivo = input.files[0]; // Obtener el archivo seleccionado
-        // Verifica el tipo MIME del archivo para asegurarse de que es una imagen
-        const tiposImagen = ['image/jpeg', 'image/png', 'image/gif']; // Tipos MIME permitidos para imágenes
+    if (input.files && input.files[0]) {
+        const archivo = input.files[0];
+
+        const tiposImagen = ['image/jpeg', 'image/png', 'image/gif'];
         if (!tiposImagen.includes(archivo.type)) {
             mensajePantalla(msgNoEsImagen, false);
-            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = urlSinImagenMaterial; // Limpiar el preview
-            return; // Salir de la función para evitar cargar un archivo no imagen
+            input.value = "";
+            imagenPreview.src = urlSinImagenMaterial;
+            return;
         }
-        // Comprueba si el tamaño del archivo es mayor a 200 KB (200 * 1024 = 204800 bytes)
+
         if (archivo.size > 204800) {
             mensajePantalla(msgPesoMaximo, false);
-            input.value = ""; // Limpiar el input para que el usuario pueda seleccionar otro archivo
-            imagenPreview.src = urlSinImagenMaterial; // Limpiar el preview
-            return; // Salir de la función para evitar cargar la imagen grande
+            input.value = "";
+            imagenPreview.src = urlSinImagenMaterial;
+            return;
         }
-        // Si pasa las validaciones, lee y muestra la imagen
-        const reader = new FileReader(); // Crea un lector de archivos
+
+        const reader = new FileReader();
+
         reader.onload = function (e) {
             imagenPreview.src = e.target.result;
-            imagenPreview.src = e.target.result; // Muestra la imagen en el preview
-        }
-        reader.readAsDataURL(input.files[0]);
-        reader.readAsDataURL(archivo); // Lee el archivo seleccionado
+        };
+
+        // ✅ SOLO UNA LECTURA
+        reader.readAsDataURL(archivo);
     }
 }
+
 
 //Metodo para cambiar la imagen del toggle a la hora de darle clic para cambiar entre materiales activos e inactivos
 function valStatus() {
@@ -861,96 +862,59 @@ function llenarModalModificar(id, norma, descripcion, precio, fechaPrecio, famil
     familiaM.classList.remove("inputVacio");
 }
 
+
 var rutaCarpeta = '../Materiales/1';
 //Metodo para que cuando se modifique algun material se cargue la imagen que este tenga
 function cargarImagen() {
 
-    obtenerArchivosEnCarpeta(rutaCarpeta)
-        .then(archivos => {
-            // Seleccionar la única imagen encontrada en la carpeta
-            const imagen = archivos.find(archivo => archivo.endsWith('.JPG') || archivo.endsWith('.jpg') || archivo.endsWith('.png') || archivo.endsWith('.jpeg'));
+    const idMaterial = obtenerIdDesdeRuta(rutaCarpeta);
 
-            if (imagen == undefined) {
-                const elementoImagen = document.getElementById('UpdimagenPreview');
-                elementoImagen.src = urlSinImagenMaterial;
+    $.post(
+
+        '../ws/getImagenMaterial.php',
+        { idmaterial: idMaterial },
+        function (resp) {
+            console.log(resp);
+            const elementoImagen = document.getElementById('UpdimagenPreview');
+
+            if (resp.estado === "OK" && resp.imagen) {
+                elementoImagen.src = resp.imagen;
             } else {
-                // Crear la ruta completa de la imagen
-                const rutaImagen = `${rutaCarpeta}/${imagen}`;
-
-                // Obtener el elemento img
-                const elementoImagen = document.getElementById('UpdimagenPreview');
-
-                // Asignar la ruta de la imagen al src del elemento img
-                elementoImagen.src = rutaImagen;
+                elementoImagen.src = urlSinImagenMaterial;
             }
-        })
-        .catch(error => console.error('Error al obtener archivos en la carpeta.', error));
+        },
+        "json"
+    );
 }
 
-//Metodo para buscar la carpeta donde se encuentra la imagen del material
+
 function cargarImagenCuadro(imagen) {
-    var div = imagen.parentElement.querySelector(".miDiv");
 
-    // Obtener la lista de archivos en la carpeta
-    obtenerArchivosEnCarpeta(rutaCarpeta)
-        .then(archivos => {
-            console.log(rutaCarpeta);
-            // Seleccionar la única imagen encontrada en la carpeta
-            const imagen = archivos.find(archivo => archivo.endsWith('.JPG') || archivo.endsWith('.jpg') || archivo.endsWith('.png') || archivo.endsWith('.jpeg'));
-            if (imagen == undefined) {
-                const elementoImagen = div.querySelector(".imagenPreview");
-                elementoImagen.src = urlSinImagenMaterial;
+    const div = imagen.parentElement.querySelector(".miDiv");
+    const elementoImagen = div.querySelector(".imagenPreview");
+
+    const idMaterial = obtenerIdDesdeRuta(rutaCarpeta);
+    console.log(idMaterial);
+    $.post(
+        '../ws/getImagenMaterial.php',
+        { idmaterial: idMaterial },
+        function (resp) {
+
+            if (resp.estado === "OK" && resp.imagen) {
+                elementoImagen.src = resp.imagen;
             } else {
-                // Crear la ruta completa de la imagen
-                const rutaImagen = `${rutaCarpeta}/${imagen}`;
-
-                // Obtener el elemento img
-                const elementoImagen = div.querySelector(".imagenPreview");
-
-                // Asignar la ruta de la imagen al src del elemento img
-                elementoImagen.src = rutaImagen;
+                elementoImagen.src = urlSinImagenMaterial;
             }
-        })
-        .catch(error => {
-            console.error('Error al obtener archivos en la carpeta.', error);
-        })
+        },
+        "json"
+    );
 }
-//Metodo para obtener los archivos de la carpeta
-//Recibe la ruta de donde se encuentra la carpeta 
-async function obtenerArchivosEnCarpeta(rutaCarpeta) {
-    try {
-        const url = new URL(rutaCarpeta, window.location.href);
-        url.protocol = 'https:'; // 🔒 Forzar HTTPS
-        console.log(url.toString());
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
 
-        const textoHtml = await response.text();
-        const parser = new DOMParser();
-        const htmlDocumento = parser.parseFromString(textoHtml, 'text/html');
-        const enlaces = htmlDocumento.querySelectorAll('a');
-
-        const archivos = Array.from(enlaces)
-            .map(enlace => enlace.getAttribute('href'))
-            .filter(nombre =>
-                nombre &&
-                !nombre.startsWith('?') &&
-                !nombre.startsWith('#') &&
-                nombre !== '../' &&
-                !nombre.endsWith('/') &&
-                /\.(jpg|jpeg|png)$/i.test(nombre)
-            );
-
-        console.log("📁 Archivos encontrados:", archivos);
-        return archivos;
-
-    } catch (error) {
-        console.error('Error al obtener archivos en la carpeta:', error);
-        return [];
-    }
+function obtenerIdDesdeRuta(ruta) {
+    // '../Materiales/1' → '1'
+    return ruta.split('/').pop();
 }
+
 
 
 //Metodo para cerrar el modal de agregar material

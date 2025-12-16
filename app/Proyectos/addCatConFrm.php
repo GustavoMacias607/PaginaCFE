@@ -102,12 +102,13 @@ if (!isset($_SESSION['idusuario'])) {
             <table id="tabla-MaterialesCatalogo">
                 <thead class="encabezadoTablasTarjeta">
                     <tr>
-                        <th style="width: 8rem;"> <button id="sort-id" class="sort-button">
-                                No. <i class="fa-solid fa-arrow-up-wide-short"></i>
-                            </button>
+                        <th style="width: 8rem;">
+                            No.
                         </th>
                         <th style="width: 8rem;">
-                            ID
+                            <button id="sort-id" class="sort-button">
+                                ID <i class="fa-solid fa-arrow-up-wide-short"></i>
+                            </button>
                         </th>
                         <th>
                             <button id="sort-name" class="sort-button">
